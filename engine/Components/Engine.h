@@ -1,8 +1,8 @@
 #pragma once
 
-#include "engine/Libraries/include/imgui/imgui.h"
-#include "engine/Libraries/include/imgui/imgui_impl_glfw.h"
-#include "engine/Libraries/include/imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 #include <stdio.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -34,8 +34,6 @@
 // Engine parts
 #include "engine/Components/Shader.h"
 #include "engine/Components/Mathematics.h"
-#include "engine/Components/Collisions.h"
-
 #include "engine/Components/Structs.h"
 
 
@@ -72,7 +70,11 @@ float SceneExposure = 0.7f;
 float dt_of_sim = 0.017f;
 int substeps = 1;
 
+glm::vec2 g = glm::vec2(0.0f);
+float friction = 1.0f;
+
 #include "engine/Components/Structs.h"
+#include "engine/Components/Collisions.h"
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -124,6 +126,7 @@ std::vector <glm::mat4> Quadtranslations;
 std::vector <glm::vec4> Quadcolors;
 void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f))
 {
+	scale *= 0.04;
 	glm::mat4 trans = glm::mat4(1.0f);
 	trans = glm::translate(trans, glm::vec3((position.x) / (HEIGHT / 2) - 1.25f + scrpos.x * 2, (position.y) / (HEIGHT / 2) - 1.0f + scrpos.y * 2, 0.0f));
 
@@ -149,7 +152,7 @@ void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 0.1f, glm::vec4 color = 
 	float rotation = get_angle_between_points(p1, p2);
 	glm::vec2 dif = p1 - p2;
 	float length = sqrt(dif.x * dif.x + dif.y * dif.y) / (0.20 * 1280);
-	DrawCube(midpos, glm::vec2(length*5.56f, width), glm::vec3(0.0f, 0.0f, rotation),color);
+	DrawCube(midpos, glm::vec2(length*5.56f*25, width), glm::vec3(0.0f, 0.0f, rotation),color);
 }
 
 
