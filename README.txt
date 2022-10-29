@@ -28,8 +28,10 @@ float dt_of_sim = 0.017f; // controls the dt of simulation, 0.017 will be a real
 
 int substeps = 8; // substeps of simulation per frame. the more substeps, the more preciese is sim, but it is wery hungry on CPU. 8 is stable for 99% of the cases.
 
-glm::vec2 g = glm::vec2(0.0f); //gravity, 
-float friction = 1.0f; // friction
+glm::vec2 g = glm::vec2(0.0f);
+float friction = 1.0f; 
+// gravity and friction, not used anywhere, line 72 and 73 in engine.h, feel free to delete or use it, i left it there for my comfort.
+
 for more stuff chek Structs.h in engine/Components
 
 functions:
