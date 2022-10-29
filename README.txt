@@ -24,6 +24,10 @@ float delta = 0.0f; // dt of whole application
 
 float SceneExposure = 0.7f; // HDR setting, controls exposure.
 
+
+std::vector <ball> balls; and std::vector <cube> Cubes; are arrays of balls and cubes in simulation
+
+
 float dt_of_sim = 0.017f; // controls the dt of simulation, 0.017 will be a real time at 60fps, to make simulation realtime 100% of the time, simply dt_of_sim = delta. Helpfull if simulation is too big to be realtime, and precision is required
 
 int substeps = 8; // substeps of simulation per frame. the more substeps, the more preciese is sim, but it is wery hungry on CPU. 8 is stable for 99% of the cases.
