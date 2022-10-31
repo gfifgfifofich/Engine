@@ -10,7 +10,7 @@ Also, i don't know what are the rigths of everything that is in directory "Libra
 used libraries:
 Dear imgui for GUI
 GLM, for mathematics (glm::vec2, glm::mat4x4)
-
+GLFW, glew, glad
 
 
 physics.cpp - example project.
@@ -51,6 +51,7 @@ functions:
  
    DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f))
    !! rotation is for all 3 axis, for simple 2D rotation, z = rotation. I've done that for some cool shenanigans with rotations.
+   i'll change transform matrix from pointless 4x4 to 3x3, cuz everything is 2d, and its a pointless used memory and calculations.
    
    
    DrawCircle(glm::vec2 position, float r, float edgesmoothness = 0.0001f, glm::vec4 color = glm::vec4(1.0f))
