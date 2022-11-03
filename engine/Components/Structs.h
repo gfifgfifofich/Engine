@@ -37,8 +37,9 @@ struct circle
 struct ball
 {
 	float r = 10;
-	float heat = 0.0f;
 	glm::vec4 color = glm::vec4(1.0f);
 	glm::vec2 position = glm::vec2(0.0f);
 	glm::vec2 velocity = glm::vec2(0.0f);
+	bool del = false;
+	bool Kinematic = false;
 };

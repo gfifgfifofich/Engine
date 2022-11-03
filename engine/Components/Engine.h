@@ -53,7 +53,6 @@ glm::vec2 MousePosition;
 glm::vec2 scrpos = glm::vec2(0, 0);
 bool keys[1024];
 bool buttons[64];
-bool onesecond = false;
 bool SettingsWindow = false;
 
 bool DrawingOrder = true; // 1 - cubes, 0- ballllz
@@ -141,8 +140,8 @@ void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec
 
 	Quadtranslations.push_back(trans);
 	Quadcolors.push_back(color);
-
-
+	
+	
 }
 
 
@@ -179,7 +178,7 @@ class Engine
 
 	
 
-	 unsigned int FrameBuffer, ColorBuffer;
+	unsigned int FrameBuffer, ColorBuffer;
 
 	virtual void On_Create()
 	{
@@ -410,7 +409,6 @@ class Engine
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 330");
-
 		
 
 		
@@ -421,6 +419,9 @@ class Engine
 		unsigned int instanceVBO;
 
 		On_Create();
+
+		
+
 		while (!glfwWindowShouldClose(window)) {
 			glfwPollEvents();
 
@@ -444,7 +445,28 @@ class Engine
 
 
 
-			//DrawCircle(glm::vec2(100, 100), 100);
+
+			// Collision processing
+			for (int i = 0; i < ballsptr.size(); i++)
+			{
+
+				for (int a = 0; a < ballsptr.size(); a++)
+				{
+					if (a > i)
+						BtBCollision(ballsptr[i], ballsptr[a]);
+				}
+
+			}
+
+			// Main update
+			On_Update();
+
+
+
+
+
+
+			// instancing
 			{
 				glGenBuffers(1, &instanceCircleVBO);
 				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
@@ -562,6 +584,9 @@ class Engine
 			}
 
 
+			
+
+
 
 			if (DrawingOrder)
 			{
@@ -675,7 +700,6 @@ class Engine
 				//}
 			}
 			*/
-			On_Update();
 			
 		   
 
@@ -763,9 +787,10 @@ class Engine
 
 			//float delta = 0.0f;
 			//float timer = 0.0f, lt = 0.0f;
-			delta = clock() - lt;
+			delta = (clock() - lt)*0.001f;
 			lt = clock();
-
+			if(17 - delta * 1000>0)
+				Sleep(16 - delta * 1000);
 			// Rendering
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
