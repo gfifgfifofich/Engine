@@ -4,8 +4,7 @@ To boot this engine up you need:
 
 
 
-Also, i don't know what are the rigths of everything that is in directory "Libraries", so in future i'll simply add all the links to "assemble" this directory by yourself
-+ some of .lib's are better to compile on the OS you're using, cuz now this thing can completely not work on different PC's.
+
 
 used libraries:
 Dear imgui for GUI
