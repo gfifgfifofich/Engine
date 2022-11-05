@@ -34,7 +34,6 @@
 // Engine parts
 #include "engine/Components/Shader.h"
 #include "engine/Components/Mathematics.h"
-#include "engine/Components/Structs.h"
 
 
 
@@ -72,8 +71,19 @@ int substeps = 1;
 glm::vec2 g = glm::vec2(0.0f);
 float friction = 1.0f;
 
-#include "engine/Components/Structs.h"
-#include "engine/Components/Collisions.h"
+#include "engine/Components/Objects/VerletObject.h";
+
+#include "engine/Components/Objects/Ball.h";
+#include "engine/Components/Collisions/BallToBall.h";
+
+#include "engine/Components/Objects/Quad.h";
+#include "engine/Components/Collisions/CircleToQuad.h";
+
+
+#include "engine/Components/Objects/Line.h";
+#include "engine/Components/Collisions/BallToLine.h";
+
+#include "engine/Components/Objects/Polygon.h";
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -145,7 +155,7 @@ void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec
 }
 
 
-void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 0.1f, glm::vec4 color = glm::vec4(1.0f))
+void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = glm::vec4(1.0f))
 {
 	glm::vec2 midpos = (p2 + p1) / 2.0f;
 	float rotation = get_angle_between_points(p1, p2);
@@ -789,8 +799,8 @@ class Engine
 			//float timer = 0.0f, lt = 0.0f;
 			delta = (clock() - lt)*0.001f;
 			lt = clock();
-			if(17 - delta * 1000>0)
-				Sleep(16 - delta * 1000);
+			//if(17 - delta * 1000>0)
+				//Sleep(16 - delta * 1000);
 			// Rendering
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

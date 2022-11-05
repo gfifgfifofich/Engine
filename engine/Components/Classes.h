@@ -2,25 +2,22 @@
 class KinematicBody
 {
 public:
-	ball colider;
-	glm::vec2 position = glm::vec2(0.0f);
+	ball body;
 	glm::vec4 Color = glm::vec4(1.0f);
 	void init(glm::vec2 position, float radius,glm::vec4 color = glm::vec4(1.0f))
 	{
-		colider.position = position;
-		this->position = position;
-		colider.r = radius;
-		colider.Kinematic = true;
-		ballsptr.push_back(&colider);
+		body.position = position;
+		body.r = radius;
+		body.Kinematic = true;
+		ballsptr.push_back(&body);
 	}
 	void Draw()
 	{
-		DrawCircle(colider.position, colider.r, 1.0f, Color);
+		DrawCircle(body.position, body.r, 1.0f, Color);
 	}
 	void PreProcess(float dt)
 	{
 		Draw();
-		colider.position = position;
 	}
 
 	virtual void Process(float dt)
@@ -35,25 +32,23 @@ public:
 class RigidBody
 {
 public:
-	ball colider;
-	glm::vec2 velocity = glm::vec2(0.0f);
+	ball body;
 	glm::vec4 Color = glm::vec4(1.0f);
 	void init(glm::vec2 position, float radius, glm::vec4 color = glm::vec4(1.0f))
 	{
-		colider.position = position;
-		colider.r = radius;
-		colider.Kinematic = false;
-		ballsptr.push_back(&colider);
+		body.position = position;
+		body.r = radius;
+		body.Kinematic = false;
+		ballsptr.push_back(&body);
 	}
 	void Draw()
 	{
-		DrawCircle(colider.position, colider.r, 1.0f, Color);
+		DrawCircle(body.position, body.r, 1.0f, Color);
 	}
 	void PreProcess(float dt)
 	{
 		Draw();
-		colider.position += colider.velocity * dt;
-		velocity = colider.velocity;
+		body.position += body.velocity * dt;
 	}
 
 	virtual void Process(float dt)
@@ -61,3 +56,5 @@ public:
 		PreProcess(dt);
 	}
 };
+
+
