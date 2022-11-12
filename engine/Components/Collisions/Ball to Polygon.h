@@ -35,7 +35,7 @@ void BallToPolygonCollision(ball* b, polygon p, float roughness = 1.0f)
 				PointOnLine = glm::vec2(dif_x, dif_y) + l.P1;
 			}
 
-			glm::vec2 newpos = PointOnLine + l.normal * (b->r + l.width);
+			glm::vec2 newpos = PointOnLine + l.normal * (b->r + l.width*1.0f);
 
 
 			glm::vec2 LineVector = l.P1 - l.P2;
@@ -51,7 +51,7 @@ void BallToPolygonCollision(ball* b, polygon p, float roughness = 1.0f)
 				b->velocity = velocity;
 			}
 		}
-		if (sqrlength(b->position - p.triangles[i].l1.P1) < b->r * b->r ||
+		else if (sqrlength(b->position - p.triangles[i].l1.P1) < b->r * b->r ||
 			sqrlength(b->position - p.triangles[i].l2.P1) < b->r * b->r ||
 			sqrlength(b->position - p.triangles[i].l3.P1) < b->r * b->r)
 		{
