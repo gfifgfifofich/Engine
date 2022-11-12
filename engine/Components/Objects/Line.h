@@ -3,6 +3,7 @@
 class line
 {
 public:
+	int Collision_Level = -1; // -1 - do not collide, >=0 - collision levels
 	float width = 1.0f;
 	glm::vec2 P1 = glm::vec2(0.0f);
 	glm::vec2 P2 = glm::vec2(0.0f);

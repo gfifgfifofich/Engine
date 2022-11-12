@@ -8,6 +8,7 @@ struct circle
 
 struct ball
 {
+	int Collision_Level = -1; // -1 - do not collide, >=0 - collision levels
 	float r = 10;
 	glm::vec4 color = glm::vec4(1.0f);
 	glm::vec2 position = glm::vec2(0.0f);

@@ -8,7 +8,6 @@ void BtBCollision(ball* b1, ball* b2)
 	glm::vec2 dif = b2->position - b1->position;
 	if (sqrlength(dif) < (b1->r + b2->r) * (b1->r + b2->r))
 	{
-		//colidded blyat
 		float dist = length(dif);
 		float distancedifference = (b1->r + b2->r) - dist;
 
