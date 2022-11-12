@@ -35,7 +35,7 @@ void BallToPolygonCollision(ball* b, polygon p, float roughness = 1.0f)
 				PointOnLine = glm::vec2(dif_x, dif_y) + l.P1;
 			}
 
-			glm::vec2 newpos = PointOnLine + l.normal * (b->r + l.width * 0.5f);
+			glm::vec2 newpos = PointOnLine + l.normal * (b->r + l.width);
 
 
 			glm::vec2 LineVector = l.P1 - l.P2;
