@@ -8,7 +8,7 @@ To boot this engine up you need:
 
 used libraries:
 Dear imgui for GUI
-GLM, for mathematics (glm::vec2, glm::mat4x4)
+GLM, for mathematics
 GLFW, glew, glad
 
 
