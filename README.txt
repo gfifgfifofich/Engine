@@ -1,6 +1,6 @@
 To boot this engine up you need:
 1) in engine/components unpack Libraries.rar // cuz there is too many files, and github allows to upload only 100/time
-2) in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path. This directories are located in Libraries.
+2) in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path. This directories are located in Libraries. Set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
 
 
 
@@ -29,7 +29,6 @@ Libraries.lib should contain:
 	OpenAL32.dll
 
 
-in project settings set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
 
 
 all of .cpp's - example projects.
