@@ -1,0 +1,19 @@
+﻿  Source.cpp
+glfw3.lib(init.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(init.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(window.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(window.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(input.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(input.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(context.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(context.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_init.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(win32_init.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_monitor.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(win32_monitor.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_time.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(win32_time.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_thread.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(win32_thread.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(monitor.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(monitor.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(vulkan.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(vulkan.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_window.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(win32_window.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(win32_joystick.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(win32_joystick.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(wgl_context.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(wgl_context.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(egl_context.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(egl_context.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glfw3.lib(osmesa_context.obj) : warning LNK4099: "glfw3.pdb" PDB не найден с "glfw3.lib(osmesa_context.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Debug\glfw3.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+Source.obj : error LNK2001: неразрешенный внешний символ glewExperimental.
+C:\Users\gfif\Libraries\lib\glew32s.lib : warning LNK4272: тип компьютера библиотеки "x86" конфликтует с типом целевого компьютера "x64"
+C:\Users\gfif\source\repos\opengltry2\x64\Debug\opengltry2.exe : fatal error LNK1120: неразрешенных внешних элементов: 1

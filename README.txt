@@ -7,12 +7,33 @@ To boot this engine up you need:
 
 
 used libraries:
-Dear imgui for GUI
-GLM, for mathematics
-GLFW, glew, glad
+Dear imgui,
+GLM,
+GLFW,
+glew,
+glad,
+freetype,
+OpenAL,
+stb_image
+
+Libraries.lib should contain:
+	freetype.lib
+	glew32s.lib
+	glfw3.lib
+	OpenAL32.lib
+	sndfile.lib
 
 
-physics.cpp - example project.
+.dll's in folder "Engine/opengltry2":
+	freetype.dll
+	OpenAL32.dll
+
+
+in project settings set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
+
+
+all of .cpp's - example projects.
+
 
 Some features:
 
