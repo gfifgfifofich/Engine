@@ -50,6 +50,8 @@ struct circle
 class ball
 {
 public:
+	int Textureid = -1;
+
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels

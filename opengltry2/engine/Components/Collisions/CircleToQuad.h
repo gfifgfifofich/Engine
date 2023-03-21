@@ -140,3 +140,12 @@ bool BtCCollisionCheck(ball b, cube c)
 	return false;
 }
 
+bool PointToQuadCollisionCheck(cube quad1, glm::vec2 p)
+{
+	if (quad1.position.x + quad1.width < p.x||
+		quad1.position.x - quad1.width > p.x||
+		quad1.position.y + quad1.height < p.y ||
+		quad1.position.y - quad1.height > p.y)
+		return false;
+	return true;
+}

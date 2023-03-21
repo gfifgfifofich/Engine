@@ -195,6 +195,11 @@ std::vector <ParticleEmiter*> ParticleEmiters;
 
 
 
+#include "engine/Components/Objects/Scene.h";
+
+
+
+
 
 
 

@@ -79,6 +79,7 @@ public:
 	};
 
 
+
 	glm::vec2 acceleration = glm::vec2(0.0f);
 	glm::vec2 InitialVelocity = glm::vec2(0.0f);
 	glm::vec4 VelocityRandomness = glm::vec4(0.0f);// (-x,x,-y,y), rand from -x to x, from -y to y
@@ -105,15 +106,15 @@ public:
 	std::vector <Particle> Particles;
 
 	std::string Type = "QUAD";// QUAD, LINE, CIRCLE, TEXTURED ( for QUAD & TEXTURED - Size(width,height), Line - Size(length,width), Circle - Size(r,nothing))
+	std::string Name = "Particles yay";
 
 	std::vector<unsigned int> textures;
-
-	
+	std::vector<int> Textureids;
 	bool influenced = false;
 	std::vector<influenceSphere> SpheresOfInfluence;
 	std::vector<influenceCube> CubesOfInfluence;
 
-	std::vector<EmitionPoint> EmitionPoints;// vec4(p.x,p.y,vel.x,vel.y);
+	std::vector<EmitionPoint> EmitionPoints;
 	std::vector<EmitionCircle> EmitionCircles;
 	std::vector<EmitionCube> EmitionCubes;
 
@@ -290,6 +291,9 @@ public:
 
 			ImGui::DragFloat("lifetime", &lifetime, 0.1f);
 			ImGui::SliderFloat("lifetimeRandomness", &lifetimeRandomness,0,1);
+			ImGui::Checkbox("Influenced", &influenced);
+			ImGui::Checkbox("Lighted", &lighted);
+
 
 			ImGui::End();
 		}
@@ -396,20 +400,12 @@ public:
 								}
 								for (int s = 0; s < CubesOfInfluence.size(); s++)
 								{
-									glm::vec2 posdifference = CubesOfInfluence[s].position - Particles[i].position;
-
-									if (posdifference.x > CubesOfInfluence[s].scale.x)
-										posdifference.x = CubesOfInfluence[s].scale.x;
-									else if (posdifference.x < -CubesOfInfluence[s].scale.x)
-										posdifference.x = -CubesOfInfluence[s].scale.x;
-
-									if (posdifference.y > CubesOfInfluence[s].scale.y)
-										posdifference.y = CubesOfInfluence[s].scale.y;
-									else if (posdifference.y < -CubesOfInfluence[s].scale.y)
-										posdifference.y = -CubesOfInfluence[s].scale.y;
-
-									if (sqrlength((CubesOfInfluence[s].position - posdifference) - Particles[i].position) < 0)
+									if (CubesOfInfluence[s].position.x + CubesOfInfluence[s].scale.x >= Particles[i].position.x &&
+										CubesOfInfluence[s].position.x - CubesOfInfluence[s].scale.x <= Particles[i].position.x &&
+										CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
+										CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
 									{
+
 										Particles[i].velocity += CubesOfInfluence[s].velocity * delta;
 										if (CubesOfInfluence[s].attractive)
 											Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * delta;
@@ -433,17 +429,18 @@ public:
 								}
 								for (int s = 0; s < LightCubes.size(); s++)
 								{
-									if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x * 0.5f &&
-										Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x * 0.5f &&
-										Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y * 0.5f &&
-										Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y * 0.5f)
+									if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x  &&
+										Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x  &&
+										Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y  &&
+										Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y )
 									{
 
 										float stage = (abs(Particles[i].position.x - LightCubes[s].position.x) + abs(Particles[i].position.y - LightCubes[s].position.y)) / (LightCubes[s].scale.x * 0.5f + LightCubes[s].scale.y * 0.5f);
-
-										color.r += LightSpheres[s].Color.r * LightSpheres[s].Color.a * (0.5f - stage);
-										color.g += LightSpheres[s].Color.g * LightSpheres[s].Color.a * (0.5f - stage);
-										color.b += LightSpheres[s].Color.b * LightSpheres[s].Color.a * (0.5f - stage);
+										if (stage > 1.0f)
+											stage = 1.0f;
+										color.r += LightCubes[s].Color.r * LightCubes[s].Color.a * (1.0f - stage);
+										color.g += LightCubes[s].Color.g * LightCubes[s].Color.a * (1.0f - stage);
+										color.b += LightCubes[s].Color.b * LightCubes[s].Color.a * (1.0f - stage);
 									}
 								}
 							}
@@ -533,20 +530,14 @@ public:
 					}
 					for (int s = 0; s < CubesOfInfluence.size(); s++)
 					{
-						glm::vec2 posdifference = CubesOfInfluence[s].position - Particles[i].position;
-
-						if (posdifference.x > CubesOfInfluence[s].scale.x)
-							posdifference.x = CubesOfInfluence[s].scale.x;
-						else if (posdifference.x < -CubesOfInfluence[s].scale.x)
-							posdifference.x = -CubesOfInfluence[s].scale.x;
-
-						if (posdifference.y > CubesOfInfluence[s].scale.y)
-							posdifference.y = CubesOfInfluence[s].scale.y;
-						else if (posdifference.y < -CubesOfInfluence[s].scale.y)
-							posdifference.y = -CubesOfInfluence[s].scale.y;
-
-						if (sqrlength((CubesOfInfluence[s].position - posdifference) - Particles[i].position) < 0)
+						
+						
+						if (CubesOfInfluence[s].position.x + CubesOfInfluence[s].scale.x >= Particles[i].position.x &&
+							CubesOfInfluence[s].position.x - CubesOfInfluence[s].scale.x <= Particles[i].position.x &&
+							CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
+							CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
 						{
+
 							Particles[i].velocity += CubesOfInfluence[s].velocity * dt;
 							if (CubesOfInfluence[s].attractive)
 								Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * dt;
@@ -569,17 +560,18 @@ public:
 					}
 					for (int s = 0; s < LightCubes.size(); s++)
 					{
-						if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x * 0.5f&&
-							Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x * 0.5f&&
-							Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y * 0.5f&&
-							Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y * 0.5f)
+						if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x&&
+							Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x&&
+							Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y&&
+							Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y)
 						{
 
 							float stage = (abs(Particles[i].position.x - LightCubes[s].position.x) + abs(Particles[i].position.y-LightCubes[s].position.y))/(LightCubes[s].scale.x*0.5f+ LightCubes[s].scale.y * 0.5f);
-
-							color.r += LightSpheres[s].Color.r * LightSpheres[s].Color.a * (0.5f - stage);
-							color.g += LightSpheres[s].Color.g * LightSpheres[s].Color.a * (0.5f - stage);
-							color.b += LightSpheres[s].Color.b * LightSpheres[s].Color.a * (0.5f - stage);
+							if (stage > 1.0f)
+								stage = 1.0f;
+							color.r += LightCubes[s].Color.r * LightCubes[s].Color.a * (1.0f - stage);
+							color.g += LightCubes[s].Color.g * LightCubes[s].Color.a * (1.0f - stage);
+							color.b += LightCubes[s].Color.b * LightCubes[s].Color.a * (1.0f - stage);
 						}
 					}
 				}
@@ -625,7 +617,7 @@ public:
 					Quadtranslations[start + i] = trans;
 					Quadcolors[start + i] = color;
 				}
-				else if (Type == "TEXTURED")
+				else if (Type == "TEXTURED" && textures.size()>0)
 				{
 					DrawTexturedQuad(Particles[i].position, Size, textures[Particles[i].id % textures.size()], glm::vec3(0.0f, 0.0f, Particles[i].Rotation), color);
 				}

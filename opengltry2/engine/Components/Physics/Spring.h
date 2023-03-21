@@ -14,7 +14,7 @@ void Spring(point* p1, point* p2, glm::vec2 Difference, float stiffness, float a
 
 	glm::vec2 axis1 = DOT(vel1, norm) * norm;
 	glm::vec2 axis2 = DOT(vel2, norm) * norm;
-
+	
 
 	p1->Force += Change1 - axis1 * absorption;
 	p2->Force += Change2 - axis2 * absorption;

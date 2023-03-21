@@ -72,3 +72,35 @@ bool BallToTriangleCollisionCheck(ball b, Triangle p)
 	return false;
 	
 }
+bool PointToTriangleCollisionCheck(glm::vec2 b, Triangle p)
+{
+	if (PointToLineSideCheck(b, p.lines[0]) &&
+		PointToLineSideCheck(b, p.lines[1]) &&
+		PointToLineSideCheck(b, p.lines[2])) return true;
+	return false;
+
+}
+bool PointToPolygonCollisionCheck(glm::vec2 b, polygon p)
+{
+	int i = 0;
+	while (i < p.triangles.size())
+	{
+		if (PointToTriangleCollisionCheck(b, p.triangles[i]))
+			return true;
+		i++;
+	}
+	return false;
+
+}
+bool BallToPolygonCollisionCheck(ball b, polygon p)
+{
+	int i = 0;
+	while (i < p.triangles.size()) 
+	{
+		if (BallToTriangleCollisionCheck(b, p.triangles[i]))
+			return true;
+		i++;
+	}
+	return false;
+
+}

@@ -27,6 +27,7 @@ float ScreenDivisorY = 1.0;
 
 
 
+
 void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f))
 {
 	position -= CameraPosition;
@@ -161,6 +162,8 @@ void LoadTexture(const char* filename,unsigned int* texture,int chanelsAmount = 
 	}
 	else
 	{
+		glDeleteTextures(1, texture);
+		*texture = NULL;
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(Texture);
@@ -172,13 +175,14 @@ Shader* NoizeGenShaderptr;
 Shader* BlurShaderPtr;
 Shader* RoundShaderptr;
 
-
 enum
 {
 	SQUERE = 0,
 	SMOOTH_EDGE = 1,
 	ROUND = 2
 };
+
+
 void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq = 10, int shape = ROUND)
 {
 
@@ -191,8 +195,8 @@ void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq =
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[0]);
 	glBindTexture(GL_TEXTURE_2D, texture2);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -201,8 +205,8 @@ void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq =
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[1]);
 	glBindTexture(GL_TEXTURE_2D, *texture1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -212,10 +216,11 @@ void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq =
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 
-	glm::vec2 rngoffset = glm::vec2(rand(), rand());
 
 	for (int i = 0; i < Layers; i++)
 	{
+		glm::vec2 rngoffset = glm::vec2(rand()%10000, rand() % 10000);
+
 		NoizeGenShaderptr->Use();
 
 		float weight = 1.0f / (i + 1);
@@ -254,7 +259,29 @@ void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq =
 }
 
 
+class Texture
+{
+public:
+	int id = 0;
+	std::string FileName;
+	int Type = 0;// 0-Texture, 1-ROUNDNOIZE, 2-SQUERENOIZE, 3-SMOOTH_EDGENOIZE;
+	unsigned int texture;
+	void Load()
+	{
 
+		if (Type == 0)
+			LoadTexture(FileName.c_str(), &texture);
+		else if (Type == 1)
+			GenNoizeTexture(&texture, 100, 3, 10.0f, ROUND);
+		else if (Type == 2)
+			GenNoizeTexture(&texture, 100, 3, 10.0f, SQUERE);
+		else
+			GenNoizeTexture(&texture, 100, 3, 10.0f, SMOOTH_EDGE);
+		if (texture == NULL)
+			std::cout << "Failed to load texture:  " << FileName.c_str() << std::endl;
+
+	}
+};
 
 
 
@@ -298,8 +325,8 @@ void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(
 	glm::vec2 scale = glm::vec2(c.width, c.height);
 	position -= CameraPosition;
 	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-		(position.x) / ScreenDivisorX * CameraScale.x,
-		(position.y) / ScreenDivisorY * CameraScale.y,
+		(position.x) * ScreenDivisorX * CameraScale.x,
+		(position.y) * ScreenDivisorY * CameraScale.y,
 		0.0f));
 
 

@@ -14,12 +14,11 @@ float BufferNoize[WorldSizeX][WorldSizeY];
 
 float mod = 1000.0f;
 float modx = 100.0f;
-int  Smoooothness =20;
+int  Smoooothness =5000;
 
 
 int Stage = 1;
 
-ParticleEmiter Sparker;
 
 
 
@@ -30,7 +29,9 @@ public:
 	{
 	public:
 		unsigned int sound;
+		unsigned int idlesound;
 		unsigned int soundsource;
+		unsigned int idlesoundsource;
 
 
 		float ActiveRot = 0.0f;// 0 to 4*pi
@@ -38,20 +39,24 @@ public:
 
 		float offset = 0.0f;
 		
-		float force = 100.0f;
-		float idleforce = -0.001f;
-
+		float force = 300.0f;
+		float idleforce = -0.01f;
+		float state = 0.0f;
 		bool idleState = false;
-		void ready(unsigned int* sound)
+		void ready(unsigned int* snd, unsigned int* idlsound)
 		{
 			GenSource(&soundsource);
-			SetSourceSound(&soundsource, sound);
+			GenSource(&idlesoundsource);
+			sound = *snd;
+			idlesound = *idlsound;
+			SetSourceSound(&soundsource, snd);
+			SetSourceSound(&idlesoundsource, idlsound);
 		}
 		float Process(float rotation, bool fire)
 		{
-			if (fire) 
+			rotation -= offset;
+			if (fire)
 			{
-				rotation -= offset;
 				if (rotation >= ActiveRot && rotation <= ActivePeriod)
 				{
 					if (idleState)
@@ -59,15 +64,29 @@ public:
 						idleState = false;
 						PlaySource(&soundsource);
 					}
-					return (ActivePeriod - rotation) / ActivePeriod * force;
+					state = (ActivePeriod - rotation) / ActivePeriod;
+					return state * force;
 				}
 				else
 				{
-					idleState = true;
+					idleState = true; 
+					state = 0.0f;
 					return force * idleforce;
 				}
 			}
-			else return force* idleforce;
+			else 
+			{
+				state = 0.0f;
+				if (rotation >= ActiveRot && rotation <= ActivePeriod) 
+					if (idleState)
+					{
+						idleState = false;
+						PlaySource(&idlesoundsource);
+					}
+				else
+					idleState = true;
+				return force * idleforce;
+			}
 		}
 	};
 	float rotation=0.0f;
@@ -76,12 +95,14 @@ public:
 	
 	float ForceMult = 4000.0f;
 
-	float frictionP = 0.001f;// in percents
-	float frictionC = 1.0f;// constant
+	float frictionP = 5.0f;// in percents
+	float frictionC = 0.0f;// constant
 
 	bool ignited = false;
 
 	int substeps = 8;
+
+	bool test = false;
 
 	float shaftRad = 30.0f;
 	float cylinderOffset = 40.0f;
@@ -97,24 +118,29 @@ public:
 		Cylinders.push_back(c);
 	}
 
-	void init(unsigned int*Sound)
+	void init(unsigned int* Sound, unsigned int* idleSound)
 	{
 		for (int i = 0; i < Cylinders.size(); i++)
-			Cylinders[i].ready(Sound);
+			Cylinders[i].ready(Sound, idleSound);
 	}
 
-	void Draw()
+	void Draw(float power = 1.0f)
 	{
 		for (int i = 0; i < Cylinders.size(); i++)
 		{
 			float sine = sin(rotation + Cylinders[i].offset);
+
+			ball bob;
+			bob.r = sine * shaftRad;
+			bob.position = EngPos + glm::vec2(cylinderOffset * i, shaftRad);
 
 			glm::vec2 point1 = EngPos + glm::vec2(cylinderOffset*i,  sine * shaftRad - 200);
 			glm::vec2 point2 = EngPos + glm::vec2(cylinderOffset * i, sine * shaftRad);
 
 
 
-			DrawLine(point1, point2, 15);
+			DrawCircle(bob, { 10.0f,2.0f,0.4f, Cylinders[i].state * power });
+			DrawLine(point1, point2, 15,glm::vec4(1.0f,1.0f,1.0f, power));
 		}
 	}
 
@@ -122,11 +148,18 @@ public:
 	{
 
 		for (int i = 0; i < Cylinders.size(); i++)
-			SetSourcePosition(&Cylinders[i].soundsource, glm::vec3(SoundPos,0.0f));
+		{
+			SetSourcePosition(&Cylinders[i].soundsource, glm::vec3(SoundPos, 0.0f));
+			SetSourcePosition(&Cylinders[i].idlesoundsource, glm::vec3(SoundPos, 0.0f));
+			SetSourcePitch(&Cylinders[i].soundsource, rotationVelocity/60);
+			SetSourcePitch(&Cylinders[i].idlesoundsource, rotationVelocity/60);
+		}
 		dt /= substeps;
 		for (int s = 0; s < substeps; s++)
 		{
+			Draw(float(s) / substeps);
 			rotation += rotationVelocity * dt;
+			if (test) rotationVelocity = pi;
 			float f = 0.0f;
 			for (int i = 0; i < Cylinders.size(); i++)
 				f += Cylinders[i].Process(rotation, ignited)*dt;
@@ -135,10 +168,13 @@ public:
 				f *= -1.0f;
 
 			rotationVelocity += f * dt * ForceMult;
-			float constforce = frictionC * dt;
+			float constforce = frictionC * dt * ForceMult * 0.00025f;
 			if (rotationVelocity < 0.0f)
 				constforce *= -1.0f;
-			rotationVelocity -= constforce + rotationVelocity * frictionP * dt;
+			float relativeforce = rotationVelocity * frictionP * dt * ForceMult * 0.00025f;
+			if (!ignited)
+				relativeforce = 0.0f;
+			rotationVelocity -= constforce + relativeforce;
 
 			if (rotation > pi * 4.0f)
 				rotation = 0.0f;
@@ -208,10 +244,10 @@ public:
 
 
 
-	float springStiffness = 10.0f;
+	float springStiffness = 100.0f;
 	float BodySpringsStiffnessa = 100.0f;
-	float absorption = 0.2f;
-	float BodyMass = 20.0f;
+	float absorption = 10.2f;
+	float BodyMass = 15.0f;
 	float g = 100.0f;
 	float dt = 20.0f;
 	bool DrawMassPoints = false;
@@ -234,6 +270,7 @@ public:
 	unsigned int CarSound;
 	unsigned int CarSoundOverrunning;
 	unsigned int VineBoom;
+	unsigned int AfterVine;
 
 	bool EngRunning = false;
 
@@ -245,8 +282,13 @@ public:
 		CarSound = LoadSound("Sounds/carenginesound.wav");
 		CarSoundOverrunning = LoadSound("Sounds/overruning.wav");
 		VineBoom = LoadSound("Sounds/VineBoom.wav");
+		AfterVine = LoadSound("Sounds/aftervine.wav");
 
-		engine.AddCylinder(0.0f);
+		int viv =8;
+		for(int pog = 0;pog<viv;pog++)
+			engine.AddCylinder(1.0f/viv*pog* pi);
+
+		/*engine.AddCylinder(0.0f);
 		engine.AddCylinder(0.5f*pi);
 
 		engine.AddCylinder(1.0f*pi);
@@ -256,22 +298,17 @@ public:
 		engine.AddCylinder(2.5f * pi);
 
 		engine.AddCylinder(3.0f * pi);
-		engine.AddCylinder(3.5f * pi);
+		engine.AddCylinder(3.5f * pi);*/
 
-		engine.init(&VineBoom);
+		engine.init(&VineBoom,&AfterVine);
 
-		GenSource(&CarSoundSource);
 
-		SetSourceLooping(&CarSoundSource, true);
-		SetSourceSound(&CarSoundSource, &CarSound);
 
-		PlaySource(&CarSoundSource);
-
-		gears[0] = -0.1;
-		gears[1] = 0.1f;
-		gears[2] = 0.25;
-		gears[3] = 0.5;
-		gears[4] = 0.75;
+		gears[0] = -0.7f;
+		gears[1] = 0.7f;
+		gears[2] = 0.5f;
+		gears[3] = 0.4f;
+		gears[4] = 0.2f;
 
 
 		//Perlin noize
@@ -320,29 +357,6 @@ public:
 
 		for (int i = 0; i < 100; i++)
 			dino[i] *= 0.0005f;
-		// particles
-		Sparker.acceleration = glm::vec2(0.0f, 0.0f);
-		Sparker.InitialVelocity = glm::vec2(0.0f, 0000.0f);
-		Sparker.VelocityRandomness = glm::vec4(-10.0f, 10.0f, -1.0f,400.0f);
-		Sparker.InitialOrbitalVelocity = 0.0f;
-		Sparker.OrbitalVelocityRandomness = 0.1f;
-
-		Sparker.lifetime = 0.2f;
-		Sparker.lifetimeRandomness = 1.0f;
-
-		Sparker.StartSize = glm::vec2(1.0f, 3.0f);
-		Sparker.EndSize = glm::vec2(0.0f);
-
-		Sparker.StartColor = glm::vec4(2.0f, 0.2f, 0.04f, 0.1f) * 10.0f;
-		Sparker.EndColor = glm::vec4(1.0f, 0.2f, 0.04f, 0.0f) ;
-
-		Sparker.InitialRotation = 0.0f;
-		Sparker.RotationVelocity = 0.0f;
-		Sparker.RotationRandomness = 0.0f;
-		Sparker.RotationAcceleration = 0.0f;
-
-		Sparker.Type = "LINE";
-		ParticleEmiters.push_back(&Sparker);
 
 		//wheels
 		Wheel1.position = glm::vec2(500 + 3000, 300);
@@ -384,11 +398,11 @@ public:
 		{
 			ImGui::Begin("Gears");
 
-			ImGui::SliderFloat("Revers", &gears[0], -1.0f, 0.0f);
-			ImGui::SliderFloat("1", &gears[1], 0.0f, 1.0f);
-			ImGui::SliderFloat("2", &gears[2], 0.0f, 1.0f);
-			ImGui::SliderFloat("3", &gears[3], 0.0f, 1.0f);
-			ImGui::SliderFloat("4", &gears[4], 0.0f, 1.0f);
+			ImGui::SliderFloat("Revers", &gears[0], -10.0f, -1.0f);
+			ImGui::SliderFloat("1", &gears[1], 1.0f, 10.0f);
+			ImGui::SliderFloat("2", &gears[2], 1.0f, 10.0f);
+			ImGui::SliderFloat("3", &gears[3], 1.0f, 10.0f);
+			ImGui::SliderFloat("4", &gears[4], 0.1f, 1.0f);
 			ImGui::End();
 		}
 
@@ -406,12 +420,10 @@ public:
 		ImGui::Checkbox("Draw Mass Points", &DrawMassPoints);
 		ImGui::Checkbox("Speed Camera(Trippy most of the time)", &SpeedCamera);
 		ImGui::Checkbox("Tweak gears", &gearssettingswindow);
-		ImGui::Checkbox("Show Particles Settings", &Sparker.ShowWindow);
 
 		BodyPoint1.mass = BodyMass;
 		BodyPoint2.mass = BodyMass;
 
-		Sparker.Spawn(glm::vec2(-10000, -100000));
 
 		if (keys[GLFW_KEY_R]) gear = 0;
 		if (keys[GLFW_KEY_1]) gear = 1;
@@ -420,102 +432,37 @@ public:
 		if (keys[GLFW_KEY_4]) gear = 4;
 
 
-		engine.SoundPos = CameraPosition;
-		if (engine.rotationVelocity < 1 * pi && keys[GLFW_KEY_LEFT_SHIFT])
-			engine.rotationVelocity = 1 * pi;
-		engine.Process(delta);
-
-
 		if (keys[GLFW_KEY_D])
 			engine.ignited = true;
 		else
-		{
 			engine.ignited = false;
-		}
+
+		engine.SoundPos = CameraPosition;
+		if (engine.rotationVelocity < 1 * pi && keys[GLFW_KEY_LEFT_SHIFT])
+			engine.rotationVelocity = 1 * pi;
+		engine.ForceMult = 4000.0f * gears[gear];
+		engine.Process(delta);
+
+
+
 		if (!keys[GLFW_KEY_LEFT_CONTROL]) 
 		{
-			float avgrot = ((engine.rotationVelocity) * 0.01f + abs(Wheel1.rotationVelocity)) * 0.5f;
-			engine.rotationVelocity = avgrot * 100.0f;
-			Wheel1.rotationVelocity = -avgrot;
-		}
+			float gearratio =gears[gear];
 
+			float avgrot = ((engine.rotationVelocity) * 0.01f - Wheel1.rotationVelocity);
+			engine.rotationVelocity = avgrot * 100.0f *gearratio;
+			Wheel1.rotationVelocity = -avgrot * (1.0f-gearratio);
+			engine.test = false;
+		}
+		else
+		{
+			if (keys[GLFW_KEY_SPACE])
+				engine.test = true;
+			else engine.test = false;
+		}
 
 		engine.EngPos = CameraPosition + glm::vec2(1000.0f, -700.0f);
 
-		engine.Draw();
-		//inputs
-	/*	float torque = 0.001f;
-		float MaxRotationSpeed = -0.1f * pi * gears[gear];*/
-
-
-		//if (Wheel1.rotationVelocity < MaxRotationSpeed && gear != 0)Wheel1.rotationVelocity = MaxRotationSpeed;
-		//else if (Wheel1.rotationVelocity > -MaxRotationSpeed && gear != 0)Wheel1.rotationVelocity = -MaxRotationSpeed;
-
-		//if (Wheel1.rotationVelocity > MaxRotationSpeed && gear == 0)Wheel1.rotationVelocity = MaxRotationSpeed;
-		//else if (Wheel1.rotationVelocity < -MaxRotationSpeed && gear == 0)Wheel1.rotationVelocity = -MaxRotationSpeed;
-
-
-		//if (Wheel2.rotationVelocity < MaxRotationSpeed && gear != 0)Wheel2.rotationVelocity = MaxRotationSpeed;
-		//else if (Wheel2.rotationVelocity > -MaxRotationSpeed && gear != 0)Wheel2.rotationVelocity = -MaxRotationSpeed;
-
-		//if (Wheel2.rotationVelocity > MaxRotationSpeed && gear == 0)Wheel2.rotationVelocity = MaxRotationSpeed;
-		//else if (Wheel2.rotationVelocity < -MaxRotationSpeed && gear == 0)Wheel2.rotationVelocity = -MaxRotationSpeed;
-
-
-		/*float DinoPosition = Wheel1.rotationVelocity / MaxRotationSpeed;
-		int DinoPositionInt = DinoPosition * 100;
-
-		if ((int)DinoPositionInt <= 0)DinoPositionInt = 1;
-		if ((int)DinoPositionInt >= 100)DinoPositionInt = 99;
-
-		float w = DinoPosition * 100 - DinoPositionInt;
-
-		torque = -0.15f * LinearInterpolation(dino[DinoPositionInt - 1], dino[DinoPositionInt], w) / gears[gear];*/
-
-		
-
-
-		//if (gear == 0 && torque < 0.0f) torque = 0.0f;
-		//else if (gear != 0 && torque > 0.0f) torque = 0.0f;
-
-		//ImGui::Text("torque %.3f", torque * 1000);
-		//ImGui::Text("Wheel1.rotationVelocity %.3f", DinoPosition * 1.0f);
-
-
-
-
-		//if (keys[GLFW_KEY_LEFT_SHIFT])torque *= 2.0f;
-
-		/*if (keys[GLFW_KEY_D])
-		{
-
-			Wheel1.rotationForce = torque * Wheel1.mass * 10.0f;
-			if(!EngRunning)
-			{
-				SwapSourceSound(&CarSoundSource, &CarSound);
-				EngRunning = true; 
-			}
-		}
-		else 
-		{
-
-			Wheel1.rotationForce = 0.0f;
-
-			Wheel1.rotationVelocity *= 0.99f;
-			if (Wheel1.rotationVelocity < 0.001f && Wheel1.rotationVelocity > -0.001f)Wheel1.rotationVelocity = 0.0f;
-			if (Wheel2.rotationVelocity < 0.001f && Wheel2.rotationVelocity > -0.001f)Wheel2.rotationVelocity = 0.0f;
-			
-
-			if (EngRunning)
-			{
-				SwapSourceSound(&CarSoundSource, &CarSoundOverrunning);
-				EngRunning = false;
-			}
-		}*/
-
-		//SetSourcePitch(&CarSoundSource, max(1.0f, abs(DinoPosition * 1.0f)));
-		//SetSourcePosition(&CarSoundSource, glm::vec3(CameraPosition.x, CameraPosition.y, 0.0f));
-		SetSourceGain(&CarSoundSource, 0.0f);
 
 
 		Wheel1.bounciness = 0.0f;
@@ -563,8 +510,11 @@ public:
 			//else if (Wheel1.rotationVelocity > MaxRotationSpeed && gear == 0)Wheel1.rotationVelocity = MaxRotationSpeed;
 
 			//springs
-			SpringBetweenBalls(&Wheel1, &Wheel2, springLength * 1.5f, springStiffness * subdt, absorption);
+			//SpringBetweenBalls(&Wheel1, &Wheel2, springLength * 1.5f, springStiffness * subdt, absorption);
 			SpringBetweenBalls(&BodyPoint1, &BodyPoint2, springLength, springStiffness * subdt, absorption);
+
+			SpringBetweenBalls(&Wheel1, &BodyPoint2, springLength + 0.7 * leftWhellHeight, springStiffness * subdt, absorption);
+			SpringBetweenBalls(&Wheel2, &BodyPoint1, springLength + 0.7 * rightWhellHeight, springStiffness * subdt, absorption);
 
 			FixedSpringBetweenBalls(&Wheel1, &BodyPoint1, Rotate(GetNormal(Wheel2.position - Wheel1.position), -0.785) * leftWhellHeight, BodySpringsStiffnessa * subdt, absorption );
 			FixedSpringBetweenBalls(&Wheel2, &BodyPoint2, Rotate(GetNormal(Wheel2.position - Wheel1.position), 0.785) * rightWhellHeight, BodySpringsStiffnessa * subdt, absorption );
@@ -642,8 +592,14 @@ public:
 		// body of """""car"""""
 		glm::vec2 mid = (BodyPoint1.position + BodyPoint2.position) * 0.5f;
 		glm::vec2 dif = (BodyPoint1.position - BodyPoint2.position);
-		DrawTexturedQuad(mid + Normalize(glm::vec2(dif.y, -dif.x))*300.0f,
-			glm::vec2(410, 410), ContainerTexture, glm::vec3(0.0f, 0.0f, get_angle_between_points(BodyPoint1.position, BodyPoint2.position)) , glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		DrawTexturedQuad(mid + Normalize(glm::vec2(dif.y, -dif.x))*100.0f,
+			glm::vec2(410, 110), ContainerTexture,
+			glm::vec3(0.0f, 0.0f, get_angle_between_points(BodyPoint1.position, BodyPoint2.position)) ,
+			glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+
+		if (keys[GLFW_KEY_A])
+			DrawCircle(mid + Normalize(glm::vec2(dif.x, dif.y)) * 410.0f + Normalize(glm::vec2(dif.y, -dif.x)) * 50.0f,10.0f, glm::vec4(150.0f, 0.0f, 0.0f, 1.0f));
 
 		ImGui::Begin("Settings");
 		ImGui::Text("rotation = %.3f", get_angle_between_points(BodyPoint1.position, BodyPoint2.position));

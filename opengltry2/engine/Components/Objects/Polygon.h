@@ -114,14 +114,17 @@ public:
 class polygon
 {
 public:
+	int Textureid = -1;
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels
 	float roughness = 1.0f;
 	std::vector <Triangle> triangles;
 
-	std::vector <glm::vec4> colors; // one - for whole poly, two or more for random color, colors_amount=triangles_amount foreach
+	std::vector <glm::vec4> colors = { {1.0f,1.0f,1.0f,1.0f} }; // one - for whole poly, two or more for random color, colors_amount=triangles_amount foreach
 
+
+	//glm::vec2 position = glm::vec2(0.0f);
 
 	std::vector <glm::vec2> points;
 	std::vector <glm::vec2> TexturePoints;

@@ -141,7 +141,7 @@ bool BtBCollisionCheck(ball b1, ball b2)
 	else
 		return false;
 }
-bool BalltPointCollisionCheck(ball b, glm::vec2 p)
+bool BalltoPointCollisionCheck(ball b, glm::vec2 p)
 {
 
 	glm::vec2 dif = b.position - p;
