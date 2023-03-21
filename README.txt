@@ -1,41 +1,74 @@
 To boot this engine up you need:
 1) in engine/components unpack Libraries.rar // cuz there is too many files, and github allows to upload only 100/time
-2) in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path. This directories are located in Libraries.
+2) in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path. This directories are located in Libraries. Set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
 
 
 
 
 
 used libraries:
-Dear imgui,
-GLM,
-GLFW,
-glew,
-glad,
-freetype,
-OpenAL,
-stb_image
+Dear imgui (https://github.com/ocornut/imgui),
+GLM (https://github.com/g-truc/glm),
+GLFW (https://github.com/glfw/glfw),
+glew (https://glew.sourceforge.net/),
+glad (https://github.com/Dav1dde/glad),
+freetype (https://freetype.org/download.html or https://github.com/freetype/freetype),
+OpenAL (https://github.com/kcat/openal-soft),
+stb_image (https://github.com/nothings/stb/blob/master/stb_image.h)
 
-Libraries.lib should contain:
+
+in case of need to rebuild libraries:
+
+Libraries/lib should contain:
 	freetype.lib
 	glew32s.lib
 	glfw3.lib
 	OpenAL32.lib
 	sndfile.lib
+Libraries/Include should contain folowing directories:
+	AL (flom openAL),
+	freetype (flom freetype),
+	GL (flom glew),
+	glad (flom glad),
+	GLFW (flom GLFW),
+	glm (flom GLM),
+	stb (that contains stb_image.h)
+	imgui (flom ImGui) which contains:
+		{
+			imconfig.h
+			imgui.cpp
+			imgui.h
+			imgui_demo.cpp
+			imgui_draw.cpp
+			imgui_impl_glfw.cpp
+			imgui_impl_glfw.h
+			imgui_impl_opengl3.cpp
+			imgui_impl_opengl3.h
+			imgui_impl_opengl3_loader.h
+			imgui_internal.h
+			imgui_tables.cpp
+			imgui_widgets.cpp
+			imstb_rectpack.h
+			imstb_textedit.h
+			imstb_truetype.h
+		}
+	and files:
+		ft2build.h
+		sndfile.h
+		sndfile.hh
 
 
-.dll's in folder "Engine/opengltry2":
+.dll's in directory "Engine/opengltry2":
 	freetype.dll
 	OpenAL32.dll
 
 
-in project settings set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
 
 
 all of .cpp's - example projects.
 
 
-Some features:
+Some features (old):
 
 existing variables:
   BackgroundColor, type glm::vec4, color of background;
