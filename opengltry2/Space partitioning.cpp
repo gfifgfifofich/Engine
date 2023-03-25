@@ -1,8 +1,8 @@
 #include "engine/Components/Engine.h"
 
 
-const int Cellsx = 128*4.0f;
-const int Cellsy =98 *4.0f ;
+const int Cellsx = 128*1.0f;
+const int Cellsy =98 *1.0f ;
 
 
 float CellsSizex = (float)WIDTH / (float) Cellsx;
@@ -15,7 +15,7 @@ struct cell
 	int iter = 0;
 };
 
-const int objAmount = 5000;
+const int objAmount = 2500;
 
 cell cells[Cellsx][Cellsy];
 
@@ -65,7 +65,7 @@ class application : public Engine
 			b.cpos = b.ppos;*/
 			b.position= glm::vec2(rand() % WIDTH, rand() % HEIGHT);
 			//b.velocity = glm::vec2(rand() % 100 - 100* 0.5f, rand() % 100 - 100 * 0.5f);
-			b.r = 2.5;
+			b.r = 10;
 			objects[i] = b;
 		}
 		CameraPosition = glm::vec2(WIDTH*0.5f,HEIGHT * 0.5f);
@@ -75,6 +75,7 @@ class application : public Engine
 		std::cout << "Scrsizex = " << CellsSizex * Cellsx << " Scrsizey = " << CellsSizey* Cellsy << "\n";
 		std::cout << "TrueScrsizex = " << WIDTH << " TrueScrsizey = " << HEIGHT << "\n";
 		BackgroundColor = glm::vec4(0.0f);
+		AmbientLight = 0.01f;
 	}
 	int amopunt = 3;
 	void On_Update() override
@@ -91,12 +92,13 @@ class application : public Engine
 		glm::vec2 mid = glm::vec2(0.0f);
 		mid = MousePosition;
 
-		if (JustPressedLMB)
-			pm.Spawn(MousePosition, amopunt);
-
+		//if (JustPressedLMB)
+		//	pm.Spawn(MousePosition, amopunt);
+		DrawLight(MousePosition, { 1000.0f,1000.0f },glm::vec4(1.0f), 0.1f);
 		for (int i = 0; i < objAmount; i++) 
 		{
 			//pm.Spawn(objects[i].position, amopunt);
+			DrawCircle(objects[i].position, objects[i].r, glm::vec4(4.0f, 0.8f, 0.16f, 1.0f),true);
 
 			if (keys[GLFW_KEY_1])
 			{
@@ -125,7 +127,6 @@ class application : public Engine
 				objects[i].UpdatePos();*/
 				objects[i].Process(subdt);
 
-				DrawCircle(objects[i].position, objects[i].r, glm::vec4(4.0f, 0.8f, 0.16f, 1.0f));
 
 
 				if (objects[i].position.x + objects[i].r > WIDTH)
@@ -225,7 +226,7 @@ class application : public Engine
 
 			//DrawCircle(objects[i].position, objects[i].r, glm::vec4(2.0f,0.4f,0.08f,1.0f));
 
-		pm.Process(delta);
+		//pm.Process(delta);
 
 	}
 };

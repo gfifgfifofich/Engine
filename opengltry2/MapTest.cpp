@@ -26,6 +26,7 @@ bool RedactingParticlesEmiter = false;
 bool RedactingScene = false;
 bool GrabSelectTool = true;
 bool RedactingPolygon = false;
+bool AddRedact = false;
 
 int RedactorObject = 0;
 int CurrentRedactorObject = -1;
@@ -35,8 +36,10 @@ ball* SelectedBall = NULL;
 cube* SelectedCube = NULL;
 polygon* SelectedPolygon = NULL;
 ParticleEmiter* CurrentParticleEmiter = NULL;
+LightSource* CurrentLightSource = NULL;
 
 char ParticleEmitterCharName[256];
+char LightSourceCharName[256];
 std::string ParticleEmitterName = "New ParticleEmitter";
 ParticleEmiter pt;
 int selectedTexture = 0;
@@ -44,6 +47,8 @@ int selectedTexture = 0;
 
 int ParticleObject = 0;
 int CurrentParticleObject = -1;
+int CurrentRedactingParticleObject = -1;
+int CurrentRedactingParticleObjectType = -1;
 
 float vel[2] = { 0.0f,0.0f };
 float size[2] = { 10.0f,10.0f };
@@ -53,8 +58,147 @@ int amount = 1;
 float AttractionForce = 10.0f;
 bool attracticve = false;
 float LightColor[4] = { 1.0f, 1.0f,1.0f,1.0f };
+bool Lighted = false;
 
 int noizeiterator = 0;
+
+bool ShowParticlesWindow = false;
+bool ShowLightSourcesWindow = false;
+bool ShowTexturesWindow = false;
+
+float LightVolume = 0.005f;
+
+void ShowParticleObjectRedactorWindow(ParticleEmiter* PE,int type,int i)
+{
+	ImGui::Begin("Particle Object");
+	if (type == 0)
+	{
+		ImGui::Text("Sphere of influence");
+
+		ImGui::DragFloat("attractionForce",&PE->SpheresOfInfluence[i].attractionStrength);
+		ImGui::Checkbox("attractive",&PE->SpheresOfInfluence[i].attractive);
+
+		ImGui::DragFloat("Radius", &PE->SpheresOfInfluence[i].r);
+
+		float p[2] = { PE->SpheresOfInfluence[i].position.x,PE->SpheresOfInfluence[i].position.y };
+		ImGui::DragFloat2("Position",p);
+		PE->SpheresOfInfluence[i].position = { p[0],p[1] };
+
+		float v[2] = { PE->SpheresOfInfluence[i].velocity.x,PE->SpheresOfInfluence[i].velocity.y };
+		ImGui::DragFloat2("velocity", v);
+		PE->SpheresOfInfluence[i].velocity = { v[0],v[1] };
+	}
+	else if (type == 1)
+	{
+		ImGui::Text("Cube of influence");
+
+		ImGui::DragFloat("attractionForce", &PE->CubesOfInfluence[i].attractionStrength);
+		ImGui::Checkbox("attractive", &PE->CubesOfInfluence[i].attractive);
+
+		float s[2] = { PE->CubesOfInfluence[i].scale.x,PE->CubesOfInfluence[i].scale.y };
+		ImGui::DragFloat2("Scale", s);
+		PE->CubesOfInfluence[i].scale = { s[0],s[1] };
+
+		float p[2] = { PE->CubesOfInfluence[i].position.x,PE->CubesOfInfluence[i].position.y };
+		ImGui::DragFloat2("Position", p);
+		PE->CubesOfInfluence[i].position = { p[0],p[1] };
+
+		float v[2] = { PE->CubesOfInfluence[i].velocity.x,PE->CubesOfInfluence[i].velocity.y };
+		ImGui::DragFloat2("Velocity", v);
+		PE->CubesOfInfluence[i].velocity = { v[0],v[1] };
+	}
+	else if (type == 2)
+	{
+		ImGui::Text("PointEmiter");
+
+		ImGui::DragFloat("Tick", &PE->EmitionPoints[i].tick);
+		ImGui::DragInt("Amount", &PE->EmitionPoints[i].amount);
+
+		float p[2] = { PE->EmitionPoints[i].position.x,PE->EmitionPoints[i].position.y };
+		ImGui::DragFloat2("Position", p);
+		PE->EmitionPoints[i].position = { p[0],p[1] };
+
+		float v[2] = { PE->EmitionPoints[i].velocity.x,PE->EmitionPoints[i].velocity.y };
+		ImGui::DragFloat2("Velocity", v);
+		PE->EmitionPoints[i].velocity = { v[0],v[1] };
+	}
+	else if (type == 3)
+	{
+		ImGui::Text("Crcle Emiter");
+
+		ImGui::DragFloat("Tick", &PE->EmitionCircles[i].tick);
+		ImGui::DragInt("Amount", &PE->EmitionCircles[i].amount);
+		ImGui::DragFloat("Radius", &PE->EmitionCircles[i].r);
+
+		float p[2] = { PE->EmitionCircles[i].position.x,PE->EmitionCircles[i].position.y };
+		ImGui::DragFloat2("Position", p);
+		PE->EmitionCircles[i].position = { p[0],p[1] };
+
+		float v[2] = { PE->EmitionCircles[i].velocity.x,PE->EmitionCircles[i].velocity.y };
+		ImGui::DragFloat2("Velocity", v);
+		PE->EmitionCircles[i].velocity = { v[0],v[1] };
+	}
+	else if (type == 4)
+	{
+		ImGui::Text("Cube Emiter");
+
+		ImGui::DragFloat("Tick", &PE->EmitionCubes[i].tick);
+		ImGui::DragInt("Amount", &PE->EmitionCubes[i].amount);
+
+		float s[2] = { PE->EmitionCubes[i].scale.x,PE->EmitionCubes[i].scale.y };
+		ImGui::DragFloat2("scale", s);
+		PE->EmitionCubes[i].scale = { s[0],s[1] };
+
+		float p[2] = { PE->EmitionCubes[i].position.x,PE->EmitionCubes[i].position.y };
+		ImGui::DragFloat2("Position", p);
+		PE->EmitionCubes[i].position = { p[0],p[1] };
+
+		float v[2] = { PE->EmitionCubes[i].velocity.x,PE->EmitionCubes[i].velocity.y };
+		ImGui::DragFloat2("Velocity", v);
+		PE->EmitionCubes[i].velocity = { v[0],v[1] };
+	}
+	else if (type == 5)
+	{
+		ImGui::Text("Light sphere");
+
+		ImGui::DragFloat("Radius", &PE->LightSpheres[i].r);
+
+
+
+		float p[2] = { PE->LightSpheres[i].position.x,PE->LightSpheres[i].position.y };
+		ImGui::DragFloat2("Position", p);
+		PE->LightSpheres[i].position = { p[0],p[1] };
+
+		float v[4] = { PE->LightSpheres[i].Color.x,PE->LightSpheres[i].Color.y ,PE->LightSpheres[i].Color.z,PE->LightSpheres[i].Color.w };
+		ImGui::ColorEdit4("Color", v);
+		PE->LightSpheres[i].Color = { v[0],v[1],v[2],v[3] };
+	}
+	else if (type == 6)
+	{
+		ImGui::Text("Light cube");
+
+
+		float s[2] = { PE->LightCubes[i].scale.x,PE->LightCubes[i].scale.y };
+		ImGui::DragFloat2("scale", s);
+		PE->LightCubes[i].scale = { s[0],s[1] };
+
+		float p[2] = { PE->LightCubes[i].position.x,PE->LightCubes[i].position.y };
+		ImGui::DragFloat2("Position", p);
+		PE->LightCubes[i].position = { p[0],p[1] };
+
+		float v[4] = { PE->LightCubes[i].Color.x,PE->LightCubes[i].Color.y ,PE->LightCubes[i].Color.z,PE->LightCubes[i].Color.w };
+		ImGui::ColorEdit4("Color", v);
+		PE->LightCubes[i].Color = { v[0],v[1],v[2],v[3] };
+	}
+	else
+	{
+		std::cerr << "ERROR:Incorrect type of Particle object";
+
+		CurrentRedactingParticleObject = -1;
+		CurrentRedactingParticleObjectType = -1;
+	}
+	ImGui::End();
+}
 
 void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 {
@@ -85,7 +229,6 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	}
 	if (RedactingParticlesEmiter)
 	{
-		ImGui::Text("Hold Shift to add 1 object/click ");
 		ImGui::Text("object Type:");
 		const char* str;
 		if (ParticleObject == 0)str = "InfluenceSphere";
@@ -102,115 +245,194 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 			ImGui::DragFloat("tick", &tick, 0.001f, 0);
 			ImGui::DragFloat2("velocity", vel, 1.0f);
 		}
-
-
-		if (ParticleObject == 0)
+		if (ImGui::Button("Add/Redact"))
+			AddRedact = !AddRedact;
+		if (AddRedact)
 		{
-			ImGui::DragFloat2("velocity", vel, 1.0f);
-			ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-			ImGui::DragFloat("AttractionForce", &AttractionForce, 0.1f);
-			ImGui::Checkbox("attracticve", &attracticve);
-			ImGui::Text("if holding Shift, drag mouse to change raduis");
-		}
-		if (ParticleObject == 1)
-		{
-			ImGui::DragFloat2("velocity", vel, 1.0f);
-			ImGui::DragFloat2("Size", size, 1.0f, 0);
-			ImGui::DragFloat("AttractionForce", &AttractionForce, 0.1f);
-			ImGui::Checkbox("attracticve", &attracticve);
-			ImGui::Text("if holding Shift, drag mouse to change size");
-		}
-		if (ParticleObject == 2)
-		{
-			ImGui::Text("if holding Shift, drag mouse to change velocity");
-		}
-		if (ParticleObject == 3)
-		{
-			ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-			ImGui::Text("if holding Shift, drag mouse to change Raduis");
-		}
-		if (ParticleObject == 4)
-		{
-			ImGui::DragFloat2("Size", size, 1.0f, 0);
-			ImGui::Text("if holding Shift, drag mouse to change Size");
-		}
-		if (ParticleObject == 5)
-		{
-			ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-			ImGui::ColorEdit4("Color", LightColor);
-			ImGui::Text("if holding Shift, drag mouse to change raduis");
-		}
-		if (ParticleObject == 6)
-		{
-			ImGui::DragFloat2("Size", size, 1.0f, 0);
-			ImGui::ColorEdit4("Color", LightColor);
-			ImGui::Text("if holding Shift, drag mouse to change size");
-		}
-
-		if (keys[GLFW_KEY_LEFT_SHIFT] && JustPressedLMB)
-		{
-			PrevMousePosition = MousePosition;
-			if (ParticleObject == 0)
-				CurrentParticleObject = CurrentParticleEmiter->AddSpheresOfInfluence(MousePosition, radius,{ vel[0],vel[1] }, attracticve, AttractionForce);
-
-			if (ParticleObject == 1)
-				CurrentParticleObject = CurrentParticleEmiter->AddCubeOfInfluence(MousePosition, { size[0],size[1]}, {vel[0],vel[1]}, attracticve, AttractionForce);
-
-			if (ParticleObject == 2)
-				CurrentParticleObject = CurrentParticleEmiter->AddPointEmiter(MousePosition, { vel[0],vel[1] }, amount, tick);
-
-			if (ParticleObject == 3)
-				CurrentParticleObject = CurrentParticleEmiter->AddCircleEmiter(MousePosition, { vel[0],vel[1] }, radius , amount, tick);
-
-			if (ParticleObject == 4)
-				CurrentParticleObject = CurrentParticleEmiter->AddCubeEmiter(MousePosition, {size[0],size[1]}, { vel[0], vel[1] }, amount, tick);
-
-			if (ParticleObject == 5)
-				CurrentParticleObject = CurrentParticleEmiter->AddLightSphere(MousePosition,radius,{ LightColor[0] ,LightColor[1] ,LightColor[2] ,LightColor[3] });
-
-			if (ParticleObject == 6)
-				CurrentParticleObject = CurrentParticleEmiter->AddLightCube(MousePosition, {size[0],size[1]}, {LightColor[0] ,LightColor[1] ,LightColor[2] ,LightColor[3]});
-
-		}
-		if (keys[GLFW_KEY_LEFT_SHIFT] && buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition)
-		{
+			ImGui::Text("Hold Shift to add 1 object/click ");
 
 			if (ParticleObject == 0)
-				CurrentParticleEmiter->SpheresOfInfluence[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
-
+			{
+				ImGui::DragFloat2("velocity", vel, 1.0f);
+				ImGui::DragFloat("Radius", &radius, 0.1f, 0);
+				ImGui::DragFloat("AttractionForce", &AttractionForce, 0.1f);
+				ImGui::Checkbox("attracticve", &attracticve);
+				ImGui::Text("if holding Shift, drag mouse to change raduis");
+			}
 			if (ParticleObject == 1)
 			{
-				if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
-					CurrentParticleEmiter->CubesOfInfluence[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
-				
-				CurrentParticleEmiter->CubesOfInfluence[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
+				ImGui::DragFloat2("velocity", vel, 1.0f);
+				ImGui::DragFloat2("Size", size, 1.0f, 0);
+				ImGui::DragFloat("AttractionForce", &AttractionForce, 0.1f);
+				ImGui::Checkbox("attracticve", &attracticve);
+				ImGui::Text("if holding Shift, drag mouse to change size");
 			}
 			if (ParticleObject == 2)
-				CurrentParticleEmiter->EmitionPoints[CurrentParticleObject].velocity = MousePosition - PrevMousePosition;
-
+			{
+				ImGui::Text("if holding Shift, drag mouse to change velocity");
+			}
 			if (ParticleObject == 3)
-				CurrentParticleEmiter->EmitionCircles[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
-
+			{
+				ImGui::DragFloat("Radius", &radius, 0.1f, 0);
+				ImGui::Text("if holding Shift, drag mouse to change Raduis");
+			}
 			if (ParticleObject == 4)
 			{
-				if((MousePosition - PrevMousePosition).x!=0.0f&& (MousePosition - PrevMousePosition).y != 0.0f)
-					CurrentParticleEmiter->EmitionCubes[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition))*0.5f;
-
-				CurrentParticleEmiter->EmitionCubes[CurrentParticleObject].position = (MousePosition + PrevMousePosition)*0.5f;
+				ImGui::DragFloat2("Size", size, 1.0f, 0);
+				ImGui::Text("if holding Shift, drag mouse to change Size");
 			}
 			if (ParticleObject == 5)
-				CurrentParticleEmiter->LightSpheres[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
-
+			{
+				ImGui::DragFloat("Radius", &radius, 0.1f, 0);
+				ImGui::ColorEdit4("Color", LightColor);
+				ImGui::Text("if holding Shift, drag mouse to change raduis");
+			}
 			if (ParticleObject == 6)
 			{
-				if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
-					CurrentParticleEmiter->LightCubes[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
+				ImGui::DragFloat2("Size", size, 1.0f, 0);
+				ImGui::ColorEdit4("Color", LightColor);
+				ImGui::Text("if holding Shift, drag mouse to change size");
+			}
 
-				CurrentParticleEmiter->LightCubes[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
+			if (keys[GLFW_KEY_LEFT_SHIFT] && JustPressedLMB)
+			{
+				PrevMousePosition = MousePosition;
+				if (ParticleObject == 0)
+					CurrentParticleObject = CurrentParticleEmiter->AddSpheresOfInfluence(MousePosition, radius, { vel[0],vel[1] }, attracticve, AttractionForce);
+
+				if (ParticleObject == 1)
+					CurrentParticleObject = CurrentParticleEmiter->AddCubeOfInfluence(MousePosition, { size[0],size[1] }, { vel[0],vel[1] }, attracticve, AttractionForce);
+
+				if (ParticleObject == 2)
+					CurrentParticleObject = CurrentParticleEmiter->AddPointEmiter(MousePosition, { vel[0],vel[1] }, amount, tick);
+
+				if (ParticleObject == 3)
+					CurrentParticleObject = CurrentParticleEmiter->AddCircleEmiter(MousePosition, { vel[0],vel[1] }, radius, amount, tick);
+
+				if (ParticleObject == 4)
+					CurrentParticleObject = CurrentParticleEmiter->AddCubeEmiter(MousePosition, { size[0],size[1] }, { vel[0], vel[1] }, amount, tick);
+
+				if (ParticleObject == 5)
+					CurrentParticleObject = CurrentParticleEmiter->AddLightSphere(MousePosition, radius, { LightColor[0] ,LightColor[1] ,LightColor[2] ,LightColor[3] });
+
+				if (ParticleObject == 6)
+					CurrentParticleObject = CurrentParticleEmiter->AddLightCube(MousePosition, { size[0],size[1] }, { LightColor[0] ,LightColor[1] ,LightColor[2] ,LightColor[3] });
 
 			}
-		}
+			if (keys[GLFW_KEY_LEFT_SHIFT] && buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition)
+			{
 
+				if (ParticleObject == 0)
+					CurrentParticleEmiter->SpheresOfInfluence[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
+
+				if (ParticleObject == 1)
+				{
+					if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
+						CurrentParticleEmiter->CubesOfInfluence[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
+
+					CurrentParticleEmiter->CubesOfInfluence[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
+				}
+				if (ParticleObject == 2)
+					CurrentParticleEmiter->EmitionPoints[CurrentParticleObject].velocity = MousePosition - PrevMousePosition;
+
+				if (ParticleObject == 3)
+					CurrentParticleEmiter->EmitionCircles[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
+
+				if (ParticleObject == 4)
+				{
+					if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
+						CurrentParticleEmiter->EmitionCubes[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
+
+					CurrentParticleEmiter->EmitionCubes[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
+				}
+				if (ParticleObject == 5)
+					CurrentParticleEmiter->LightSpheres[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
+
+				if (ParticleObject == 6)
+				{
+					if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
+						CurrentParticleEmiter->LightCubes[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
+
+					CurrentParticleEmiter->LightCubes[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
+
+				}
+			}
+		}
+		else
+		{
+			if (ParticleObject == 0)
+			{
+				ImGui::Text("SpheresOfInfluence:");
+				for (int i = 0; i < CurrentParticleEmiter->SpheresOfInfluence.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 0;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (ParticleObject == 1)
+			{
+				ImGui::Text("CubeOfInfluence:");
+				for (int i = 0; i < CurrentParticleEmiter->CubesOfInfluence.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 1;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (ParticleObject == 2)
+			{
+				ImGui::Text("EmitionPoints:");
+				for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 2;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (ParticleObject == 3)
+			{
+				ImGui::Text("EmitionCircles:");
+				for (int i = 0; i < CurrentParticleEmiter->EmitionCircles.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 3;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (ParticleObject == 4)
+			{
+				ImGui::Text("EmitionCubes:");
+				for (int i = 0; i < CurrentParticleEmiter->EmitionCubes.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 4;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (ParticleObject == 5)
+			{
+				ImGui::Text("LightSpheres:");
+				for (int i = 0; i < CurrentParticleEmiter->LightSpheres.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 5;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (ParticleObject == 6)
+			{
+				ImGui::Text("LightCubes:");
+				for (int i = 0; i < CurrentParticleEmiter->LightCubes.size(); i++)
+					if (ImGui::Button(std::to_string(i).c_str()))
+					{
+						CurrentRedactingParticleObjectType = 6;
+						CurrentRedactingParticleObject = i;
+					}
+			}
+			if (CurrentRedactingParticleObjectType > -1 && CurrentRedactingParticleObject > -1)
+				ShowParticleObjectRedactorWindow(CurrentParticleEmiter, CurrentRedactingParticleObjectType, CurrentRedactingParticleObject);
+		}
 		for (int i = 0; i < CurrentParticleEmiter->SpheresOfInfluence.size(); i++)
 			DrawCircle(CurrentParticleEmiter->SpheresOfInfluence[i].position, CurrentParticleEmiter->SpheresOfInfluence[i].r, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
 
@@ -232,7 +454,7 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 		for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
 			DrawCircle(CurrentParticleEmiter->EmitionPoints[i].position,10, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-
+		ImGui::End();
 	}
 	else
 	{
@@ -271,6 +493,35 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	}
 	ImGui::End();
 }
+void ShowRedactorWindow(LightSource* ls)
+{
+	ImGui::Begin(CurrentLightSource->name.c_str());
+	float s[2] = { CurrentLightSource->scale.x ,CurrentLightSource->scale.y };
+	ImGui::DragFloat2("Scale", s);
+	CurrentLightSource->scale = { s[0],s[1] };
+
+
+	float pos[2] = { CurrentLightSource->position.x ,CurrentLightSource->position.y };
+	ImGui::DragFloat2("Position", pos);
+	CurrentLightSource->position = { pos[0],pos[1] };
+
+	float col[4] = { CurrentLightSource->color.r ,CurrentLightSource->color.g,CurrentLightSource->color.b,CurrentLightSource->color.a };
+	ImGui::ColorEdit4("Color", col);
+	CurrentLightSource->color = { col[0],col[1],col[2],col[3] };
+
+	ImGui::DragFloat("Volume", &CurrentLightSource->volume, 0.01f);
+
+	if (CurrentLightSource->TextureId > 0)
+		ImGui::Text(Map.Textures[CurrentLightSource->TextureId].FileName.c_str());
+	else
+		ImGui::Text("Light Sphere Texture");
+
+	ImGui::DragInt("Texture", &CurrentLightSource->TextureId, 0.01f, -1, Map.Textures.size() - 1);
+
+	if (ImGui::Button("Close window"))
+		CurrentLightSource = NULL;
+	ImGui::End;
+}
 void ShowRedactorWindow(ball* Ball)
 {
 	ImGui::Begin("Ball");
@@ -292,6 +543,7 @@ void ShowRedactorWindow(ball* Ball)
 	else 
 		ImGui::Text("Clear Color");
 	ImGui::DragInt("Texture", &SelectedBall->Textureid, 0.01f, -1, Map.Textures.size() - 1);
+	ImGui::Checkbox("Lighted", &SelectedBall->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedBall->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedBall->Collision_Mask, 0.01f);
 
@@ -299,6 +551,7 @@ void ShowRedactorWindow(ball* Ball)
 		SelectedBall = NULL;
 	ImGui::End;
 }
+
 void ShowRedactorWindow(cube* Cube)
 {
 	ImGui::Begin("Cube");
@@ -320,6 +573,7 @@ void ShowRedactorWindow(cube* Cube)
 	else
 		ImGui::Text("Clear Color");
 	ImGui::DragInt("Texture", &SelectedCube->Textureid, 0.01f, -1, Map.Textures.size() - 1);
+	ImGui::Checkbox("Lighted", &SelectedCube->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedCube->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedCube->Collision_Mask, 0.01f);
 
@@ -339,6 +593,7 @@ void ShowRedactorWindow(polygon* Polygon)
 	else
 		ImGui::Text("Clear Color");
 	ImGui::DragInt("Texture", &SelectedPolygon->Textureid, 0.01f, -1, Map.Textures.size() - 1);
+	ImGui::Checkbox("Lighted", &SelectedPolygon->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedPolygon->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedPolygon->Collision_Mask, 0.01f);
 
@@ -404,15 +659,12 @@ class application : public Engine
 		if (keys[GLFW_KEY_Q]) CameraScale *= 1.01f;
 		if (keys[GLFW_KEY_E]) CameraScale *= 0.99f;
 
-
-
 		ImGui::Begin("Tools");
 		if (ImGui::Button("Save"))
 			Map.SaveAs("Maps/mappa.sav");
 		if (ImGui::Button("Load"))
 			Map.LoadFrom("Maps/mappa.sav");
 	
-
 
 		if (RedactingParticlesEmiter)ImGui::Text("RedactingParticlesEmiter");
 		else if (RedactingPolygon)ImGui::Text("RedactingPolygon");
@@ -457,7 +709,8 @@ class application : public Engine
 			{
 				ImGui::DragFloat("Radius ish", &radius, 0.1f, 0);
 			}
-			
+			ImGui::Checkbox("Lighted", &Lighted);
+
 
 			if (JustPressedLMB && keys[GLFW_KEY_LEFT_SHIFT])
 			{
@@ -467,6 +720,7 @@ class application : public Engine
 					ball b;
 					b.position = PrevMousePosition;
 					b.r = radius;
+					b.lighted = Lighted;
 					Map.balls.push_back(b);
 					CurrentRedactorObject = Map.balls.size() - 1;
 				}
@@ -476,6 +730,7 @@ class application : public Engine
 					c.width = size[0];
 					c.height = size[1];
 					c.position = PrevMousePosition;
+					c.lighted = Lighted;
 					Map.cubes.push_back(c);
 					CurrentRedactorObject = Map.cubes.size() - 1;
 				}
@@ -486,6 +741,7 @@ class application : public Engine
 					p.add_Point(PrevMousePosition - glm::vec2(-radius, radius * 0.5f));
 					p.add_Point(PrevMousePosition + glm::vec2(0, radius ));
 					p.indexes.push_back(glm::ivec3(0, 1, 2));
+					p.lighted = Lighted;
 					Map.polygons.push_back(p);
 					CurrentRedactorObject = Map.polygons.size() - 1;
 				}
@@ -588,86 +844,142 @@ class application : public Engine
 		}
 
 
+		if(ImGui::Button("ParticlesWindow"))
+			ShowParticlesWindow = !ShowParticlesWindow;
+
+		if (ImGui::Button("LightSourcesWindow"))
+			ShowLightSourcesWindow = !ShowLightSourcesWindow;
+
+		if (ImGui::Button("TexturesWindow"))
+			ShowTexturesWindow = !ShowTexturesWindow;
 
 
-
-
-		ImGui::Text("texture/path/... or RN for (Round noize), SQRN for squere noize, SMN for smooth edged noize");
-		ImGui::InputText("Texture path:", TexturePath, 128);
-
-
-		if (ImGui::Button("LoadTexture"))
-		{
-			std::string s = "";
-			for (int i = 0; i < 128; i++)
-			{
-				if (TexturePath[i] != ' ')
-					s += TexturePath[i];
-			}
-			if (TexturePath[0] == 'R' && TexturePath[1] == 'N')
-			{
-				s = "RoundNoize";
-				tex.Type = 1;
-				s += std::to_string(noizeiterator);
-				noizeiterator++;
-			}
-			if (TexturePath[0] == 'S' && TexturePath[1] == 'Q' && TexturePath[2] == 'R' && TexturePath[3] == 'N')
-			{
-				s = "SquereNoize";
-				tex.Type = 2;
-				s += std::to_string(noizeiterator);
-				noizeiterator++;
-			}
-			if (TexturePath[0] == 'S' && TexturePath[1] == 'M' && TexturePath[2] == 'N')
-			{
-				s = "SmoothEdgedNoize";
-				tex.Type = 3;
-				s += std::to_string(noizeiterator);
-				noizeiterator++;
-			}
-			tex.FileName = s;
-			tex.id = Map.Textures.size();
-			tex.Load();
-			if(tex.texture!=NULL)
-				Map.Textures.push_back(tex);
-		}
-
-		ImGui::Text("Textures:");
-		for (int i = 0; i < Map.Textures.size(); i++)
-		{
-			if (ImGui::Button(Map.Textures[i].FileName.c_str()))
-				CurrentTexture = &Map.Textures[i];
-		}
-		ImGui::InputText("Particle Emitter Name:", ParticleEmitterCharName, 256);
-		if (ImGui::Button("Add"))
-		{
-			int EndOfName = -1;
-			for (int i = 255; i >= 0; i--)
-				if (ParticleEmitterCharName[i] != char() && ParticleEmitterCharName[i] != ' ' && EndOfName < 0)
-					EndOfName = i;
-
-
-			std::string nm;
-			if (EndOfName > 0)
-				for (int i = 0; i >= EndOfName; i++)
-					nm += ParticleEmitterCharName[i];
-			else if (EndOfName == 0)
-				nm += ParticleEmitterCharName[0];
-			else
-				std::cerr << "ERROR: WRONG NAME";
-			pt.Name = nm;
-			Map.ParticleEmiters.push_back(pt);
-		}
-		
-		ImGui::Text("Particles:");
-		for (int i = 0; i < Map.ParticleEmiters.size(); i++)
-		{
-			if (ImGui::Button(Map.ParticleEmiters[i].Name.c_str()))
-				CurrentParticleEmiter = &Map.ParticleEmiters[i];
-		}
+		if (ImGui::Button("SceneSettingsWindow"))
+			SettingsWindow = !SettingsWindow;
 		ImGui::End();
 
 
+		if (ShowTexturesWindow)
+		{
+			ImGui::Begin("Textures:");
+			ImGui::Text("texture/path/... or RN for (Round noize), SQRN for squere noize, SMN for smooth edged noize");
+			ImGui::InputText("Texture path:", TexturePath, 128);
+
+
+			if (ImGui::Button("LoadTexture"))
+			{
+				std::string s = "";
+				for (int i = 0; i < 128; i++)
+				{
+					if (TexturePath[i] != ' ')
+						s += TexturePath[i];
+				}
+				if (TexturePath[0] == 'R' && TexturePath[1] == 'N')
+				{
+					s = "RoundNoize";
+					tex.Type = 1;
+					s += std::to_string(noizeiterator);
+					noizeiterator++;
+				}
+				if (TexturePath[0] == 'S' && TexturePath[1] == 'Q' && TexturePath[2] == 'R' && TexturePath[3] == 'N')
+				{
+					s = "SquereNoize";
+					tex.Type = 3;
+					s += std::to_string(noizeiterator);
+					noizeiterator++;
+				}
+				if (TexturePath[0] == 'S' && TexturePath[1] == 'M' && TexturePath[2] == 'N')
+				{
+					s = "SmoothEdgedNoize";
+					tex.Type = 3;
+					s += std::to_string(noizeiterator);
+					noizeiterator++;
+				}
+				tex.FileName = s;
+				tex.id = Map.Textures.size();
+				tex.Load();
+				if (tex.texture != NULL)
+					Map.Textures.push_back(tex);
+			}
+
+			ImGui::Text("Textures:");
+			for (int i = 0; i < Map.Textures.size(); i++)
+			{
+				if (ImGui::Button(Map.Textures[i].FileName.c_str()))
+					CurrentTexture = &Map.Textures[i];
+			}
+			ImGui::End();
+		}
+
+		if (ShowParticlesWindow)
+		{
+			ImGui::Begin("Particles:");
+			ImGui::InputText("Particle Emitter Name:", ParticleEmitterCharName, 256);
+			if (ImGui::Button("Add"))
+			{
+				int EndOfName = -1;
+				for (int i = 255; i >= 0; i--)
+					if (ParticleEmitterCharName[i] != char() && ParticleEmitterCharName[i] != ' ' && EndOfName < 0)
+						EndOfName = i;
+
+
+				std::string nm;
+				if (EndOfName > 0)
+					for (int i = 0; i >= EndOfName; i++)
+						nm += ParticleEmitterCharName[i];
+				else if (EndOfName == 0)
+					nm += ParticleEmitterCharName[0];
+				else
+					std::cerr << "ERROR: WRONG NAME";
+				pt.Name = nm;
+				Map.ParticleEmiters.push_back(pt);
+			}
+
+			ImGui::Text("Particles:");
+			for (int i = 0; i < Map.ParticleEmiters.size(); i++)
+			{
+				if (ImGui::Button(Map.ParticleEmiters[i].Name.c_str()))
+					CurrentParticleEmiter = &Map.ParticleEmiters[i];
+			}
+			ImGui::End();
+		}
+		if (ShowLightSourcesWindow)
+		{
+			ImGui::Begin("LightSources:");
+
+			ImGui::InputText("LightSource Name:", LightSourceCharName, 256);
+			if (ImGui::Button("Add"))
+			{
+				LightSource ls;
+				int EndOfName = -1;
+				for (int i = 255; i >= 0; i--)
+					if (LightSourceCharName[i] != char() && LightSourceCharName[i] != ' ' && EndOfName < 0)
+						EndOfName = i;
+
+
+				std::string nm = "";
+				if (EndOfName > 0)
+					for (int i = 0; i >= EndOfName; i++)
+						nm += LightSourceCharName[i];
+				else if (EndOfName == 0)
+					nm += LightSourceCharName[0];
+				else
+					nm = "LightSource"+std::to_string(Map.LightSources.size());
+				ls.name = nm;
+				Map.LightSources.push_back(ls);
+			}
+
+
+			ImGui::Text("LightSources:");
+			for (int i = 0; i < Map.LightSources.size(); i++)
+			{
+				if (ImGui::Button(Map.LightSources[i].name.c_str()))
+					CurrentLightSource = &Map.LightSources[i];
+			}
+
+
+			ImGui::End();
+		}
 		
 
 		if (CurrentTexture != NULL)
@@ -684,6 +996,9 @@ class application : public Engine
 
 		if (SelectedPolygon != NULL)
 			ShowRedactorWindow(SelectedPolygon);
+
+		if (CurrentLightSource != NULL)
+			ShowRedactorWindow(CurrentLightSource);
 
 		Map.Draw();
 	}

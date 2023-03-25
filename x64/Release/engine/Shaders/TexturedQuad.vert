@@ -10,7 +10,8 @@ uniform bool flipY = false;
 void main()
 {
 	vec4 pos = transform*vec4(aPos.xy,0.0f,1.0f);
-	pos.x /=scr.x/scr.y;
+	pos.x /=scr.x;
+	pos.x *=scr.y;
 	gl_Position =  pos;
 	if(!flipY)
 	{

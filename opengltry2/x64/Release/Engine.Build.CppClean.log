@@ -1,5 +1,5 @@
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\vc143.pdb
-c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\softbody.obj
+c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\alhelpers.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\imgui_widgets.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\imgui_tables.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\imgui_impl_opengl3.obj
@@ -8,12 +8,14 @@ c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\imgui_draw.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\imgui_demo.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\imgui.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\glm.obj
-c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\nothillclimbracing.obj
-c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\struttest.obj
+c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\maptest.obj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\polygonpaint.obj
+c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\space partitioning.obj
+c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\terrariaclone.obj
+c:\users\gfif\source\repos\opengltry2\x64\release\engine.exe
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\engine.ipdb
-c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\engine.iobj
 c:\users\gfif\source\repos\opengltry2\x64\release\engine.pdb
+c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\engine.iobj
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\engine.tlog\cl.command.1.tlog
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\engine.tlog\cl.read.1.tlog
 c:\users\gfif\source\repos\opengltry2\opengltry2\x64\release\engine.tlog\cl.write.1.tlog

@@ -13,7 +13,7 @@ void main()
 
 	vec2 uv = UV *2.0f - vec2(1.0f);
 	float dist = uv.x*uv.x+uv.y*uv.y;
-	if (dist<=0.99f)
+	if (dist<=0.95f)
 		color = fColor;
 	else
 	{

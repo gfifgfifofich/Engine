@@ -7,10 +7,32 @@ public:
 	glm::vec2 velocity = glm::vec2(0.0f);
 	ParticleEmiter rockParticles;
 	
+	ball LightBall;
+
 	void Process(float dt) override
 	{
+
+		glm::vec2 avg = body.c.position + glm::vec2(0.0f, 100);
+		glm::vec2 p = avg - LightBall.position;
+
+		LightBall.Force = p * 1.0f;
+
+		if (sqrlength(p) < 10000)
+			LightBall.velocity -= LightBall.velocity * dt * 10.0f;
+		LightBall.Process(dt);
+		DrawBall(LightBall, glm::vec4(10.0f, 2.0f, 1.0f, 1.0f), glm::vec4(10.0f, 2.0f, 1.0f, 1.0f), true);
+
+		rockParticles.lighted = true;
+
+
 		PreProcess(dt);
+		NormalMapDraw(body.c.position, { body.c.width ,body.c.height }, CubeNormalMapTexture);
 		rockParticles.InitialVelocity = velocity*0.25f + glm::vec2(0.0f,100);
+
+		DrawLight(LightBall.position , glm::vec2(500), glm::vec4(10.0f,2.0f,0.4f,1.0f), 0.0f);
+		DrawLight(body.c.position, { 100.0f,100.0f }, glm::vec4(1.0f), 0.0f);
+		rockParticles.LightSpheres[0].position = LightBall.position;
+		rockParticles.LightSpheres[1].position = body.c.position;
 
 		glm::vec2 velocityrandomness = velocity;
 		if (velocity.x < 0.0f) velocityrandomness.x *= -1;
@@ -180,8 +202,8 @@ public:
 				}
 				t.color = tiles[x][y].color;
 				TileCube.Collision_Mask = -1;
-				TileCube.height = step;
-				TileCube.width = step;
+				TileCube.height = step * 0.51f;
+				TileCube.width = step*0.51f;
 				TileCube.position = glm::vec2(step * x - step* WorldSizeX*0.5f, -step * (y-20));
 				t.body = TileCube;
 				tiles[x][y] = t;
@@ -206,6 +228,8 @@ public:
 		player.rockParticles.EndColor = glm::vec4(0.7f,0.7f,0.7f,0.0f);
 		player.rockParticles.Type = "LINE";
 
+		player.rockParticles.AddLightSphere(MousePosition, 500, glm::vec4(10.0f, 2.0f, 0.4f, 1.0f));
+		player.rockParticles.AddLightSphere(MousePosition, 100, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 		Sparks.acceleration = glm::vec2(0.0f, -500.0f);
 		Sparks.StartSize = glm::vec2(2.5f, 2.5f);
@@ -216,8 +240,10 @@ public:
 		Sparks.EndColor = glm::vec4(0.7f, 0.7f, 0.7f, 0.0f);
 		Sparks.Type = "LINE";
 		ParticleEmiters.push_back(&Sparks);
-
+		player.LightBall.position = player.body.c.position;
+		player.LightBall.r = 10.0f;
 		ParticleEmiters.push_back(&player.rockParticles);
+		AmbientLight = 1.0f;
 	}
 
 	void On_Update() override
@@ -283,7 +309,9 @@ public:
 			for (int a = 0; a < debris.size(); a++)
 				if (a > i)
 					BtBCollision(&debris[i], &debris[a],0.6f);
-			DrawCircle(debris[i].position, debris[i].r);
+			DrawLight(debris[i].position , glm::vec2(50), glm::vec4(10.0f, 2.0f, 0.4f, 1.0f), 0.0f);
+
+			DrawCircle(debris[i].position, debris[i].r, glm::vec4(10.0f, 2.0f, 0.4f, 1.0f),true);
 		}
 
 
@@ -306,11 +334,10 @@ public:
 		// TNT Cursor
 		if (buttons[GLFW_MOUSE_BUTTON_2])
 		{
-			glm::vec2 Pos = *player.position + (MousePosition - glm::vec2(WIDTH * 0.5f, HEIGHT * 0.5f)) / CameraScale.x;
 			ball mouseball;
-			mouseball.position = Pos;
+			mouseball.position = MousePosition;
 			mouseball.r = 1;
-			DrawCircle(Pos, mouseball.r, glm::vec4(1.0f, 0.2f, 0.04f, 0.1f) * 10.0f);
+			DrawCircle(MousePosition, mouseball.r, glm::vec4(1.0f, 0.2f, 0.04f, 0.1f) * 10.0f);
 			for (int x = 0; x < WorldSizeX; x++)
 				for (int y = 0; y < WorldSizeY; y++)
 					if (BtCCollisionCheck(mouseball, tiles[x][y].body) && tiles[x][y].body.Collision_Level != -1)//Pos.x >= 0 && Pos.x < WorldSizeX && Pos.y >= 0 && Pos.y < WorldSizeY && 
@@ -323,15 +350,15 @@ public:
 		//"Destructive Cursor"
 		if (buttons[GLFW_MOUSE_BUTTON_1])
 		{
-			glm::vec2 Pos = *player.position + (MousePosition - glm::vec2(WIDTH*0.5f,HEIGHT * 0.5f))/CameraScale.x;
-			glm::vec2 P = Pos ;
+			/*glm::vec2 Pos = *player.position + (MousePosition - glm::vec2(WIDTH*0.5f,HEIGHT * 0.5f))/CameraScale.x;
+			glm::vec2 P = Pos ;*/
 
 			ball mouseball;
-			mouseball.position = Pos;
+			mouseball.position = MousePosition;
 			mouseball.r = 1;
-			P = glm::vec2((Pos.x) / step + WorldSizeX * 0.5f, -1 * (Pos.y) / step + 20);
+			glm::vec2 P = glm::vec2((MousePosition.x) / step + WorldSizeX * 0.5f, -1 * (MousePosition.y) / step + 20);
 			P = glm::vec2((int)P.x, (int)P.y);
-			DrawCircle(Pos, mouseball.r, glm::vec4(1.0f, 0.2f, 0.04f, 0.1f)*10.0f);
+			DrawCircle(MousePosition, mouseball.r, glm::vec4(1.0f, 0.2f, 0.04f, 0.1f)*10.0f);
 			for (int x = P.x-3;x< P.x+3;x++)
 			for (int y = P.y - 3;y< P.y + 3;y++)
 				if(x>0&&x<WorldSizeX &&y>0&&y<WorldSizeY)
@@ -357,16 +384,18 @@ public:
 		for (int x = 0; x < WorldSizeX; x++)
 			for (int y = 0; y < WorldSizeY; y++)
 			{
-				/*if(tiles[x][y].body.Collision_Level==1 &&
+				if(tiles[x][y].body.Collision_Level==1 &&
 					tiles[x][y].body.position.x - CameraPosition.x > -1000 &&
 					tiles[x][y].body.position.x - CameraPosition.x < WIDTH+1000 &&
 					tiles[x][y].body.position.y - CameraPosition.y > -1000 &&
-					tiles[x][y].body.position.y - CameraPosition.y < HEIGHT+1000 )*/
-				if (tiles[x][y].body.Collision_Level == 1)
-					DrawCube(tiles[x][y].body.position, glm::vec2(tiles[x][y].body.width, tiles[x][y].body.height), glm::vec3(0.0f), tiles[x][y].color);
+					tiles[x][y].body.position.y - CameraPosition.y < HEIGHT+1000 )
+					if (tiles[x][y].body.Collision_Level == 1)
+					{
+						NormalMapDraw(tiles[x][y].body.position, { 25.0f ,25.0f }, CubeNormalMapTexture);
+						DrawCube(tiles[x][y].body.position, glm::vec2(tiles[x][y].body.width, tiles[x][y].body.height), glm::vec3(0.0f), tiles[x][y].color);
+					}
 			}
 		player.Process(delta);
-
 
 	}
 };

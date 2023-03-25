@@ -17,6 +17,7 @@ public:
 	std::vector<miscPoint> points;
 	std::vector<Texture> Textures;
 	std::vector<ParticleEmiter> ParticleEmiters;
+	std::vector<LightSource> LightSources;
 
 
 	void SaveAs(std::string filename)
@@ -47,6 +48,8 @@ public:
 			SaveFile << std::to_string(balls[i].color.b);
 			SaveFile << " ";
 			SaveFile << std::to_string(balls[i].color.a);
+			SaveFile << " ";
+			SaveFile << std::to_string(balls[i].lighted);
 			SaveFile << "\n";
 		}
 		for (int i = 0; i < cubes.size(); i++)
@@ -73,6 +76,8 @@ public:
 			SaveFile << std::to_string(cubes[i].color.b);
 			SaveFile << " ";
 			SaveFile << std::to_string(cubes[i].color.a);
+			SaveFile << " ";
+			SaveFile << std::to_string(cubes[i].lighted);
 			SaveFile << "\n";
 		}
 		for (int i = 0; i < points.size(); i++)
@@ -111,6 +116,8 @@ public:
 			SaveFile << std::to_string(polygons[i].colors[0].b);
 			SaveFile << " ";
 			SaveFile << std::to_string(polygons[i].colors[0].a);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].lighted);
 			SaveFile << "\n";
 			for (int p = 0; p < polygons[i].points.size(); p++)
 			{
@@ -358,10 +365,37 @@ public:
 				SaveFile << " ";
 				SaveFile << "\n";
 			}
-
 			SaveFile << "E";
 			SaveFile << "\n";
 		}
+		for (int i = 0; i < LightSources.size(); i++)
+		{
+			SaveFile << "LS";
+			SaveFile << std::to_string(LightSources[i].position.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].position.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].scale.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].scale.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].volume);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].color.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].color.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].color.z);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].color.w);
+			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].TextureId);
+			SaveFile << " ";
+			SaveFile <<	LightSources[i].name;
+			SaveFile << " ";
+			SaveFile << "\n";
+		}
+		SaveFile.close();
 	}
 
 	void LoadFrom(std::string filename)
@@ -372,6 +406,7 @@ public:
 		points.clear();
 		polygons.clear();
 		ParticleEmiters.clear();
+		LightSources.clear();
 
 		bool readingPoly = false;
 		bool readingParticle = false;
@@ -396,13 +431,13 @@ public:
 			if (line[0] == 'b' && !readingPoly && !readingParticle)
 			{
 				ball b;
-				s >> junk >> b.position.x >> b.position.y >> b.r >> b.rotation >> b.Textureid >> b.Collision_Level >> b.Collision_Mask >> b.color.r >> b.color.g >> b.color.b >> b.color.a;
+				s >> junk >> b.position.x >> b.position.y >> b.r >> b.rotation >> b.Textureid >> b.Collision_Level >> b.Collision_Mask >> b.color.r >> b.color.g >> b.color.b >> b.color.a>> b.lighted;
 				balls.push_back(b);
 			}
 			else if (line[0] == 'c' && !readingPoly && !readingParticle)
 			{
 				cube c;
-				s >> junk >> c.position.x >> c.position.y >> c.width >> c.height >> c.Textureid >> c.Collision_Level >> c.Collision_Mask >> c.color.r >> c.color.g >> c.color.b >> c.color.a;
+				s >> junk >> c.position.x >> c.position.y >> c.width >> c.height >> c.Textureid >> c.Collision_Level >> c.Collision_Mask >> c.color.r >> c.color.g >> c.color.b >> c.color.a >> c.lighted;
 				cubes.push_back(c);
 			}
 			else if (line[0] == 'p' && !readingPoly && !readingParticle)
@@ -420,10 +455,17 @@ public:
 
 
 			}
+			else if (line[0] == 'L' && line[1] == 'S' && !readingPoly && !readingParticle)
+			{
+				LightSource ls;
+				s >> junk >> junk >> ls.position.x >> ls.position.y >> ls.scale.x >> ls.scale.y >> ls.volume >> ls.color.r >> ls.color.g >> ls.color.b >> ls.color.a >> ls.TextureId >> ls.name;
+				LightSources.push_back(ls);
+			}
+
 			else if (line[0] == 'P' && !readingParticle)
 			{
 				readingPoly = true;
-				s >> junk >> pol.Textureid >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a;
+				s >> junk >> pol.Textureid >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> pol.lighted;
 			}
 
 			else if (line[0] == 'e' && !readingPoly)
@@ -586,6 +628,7 @@ public:
 				}
 			}
 		}
+		f.close();
 	}
 
 
@@ -594,18 +637,29 @@ public:
 
 
 		for (int i = 0; i < balls.size(); i++)
+		{
+			if (balls[i].lighted)
+				NormalMapDraw(balls[i].position, { balls[i].r,balls[i].r },BallNormalMapTexture);
 			if (balls[i].Textureid == -1)
 				DrawCircle(balls[i], balls[i].color);
 			else
 				DrawTexturedQuad(balls[i].position, glm::vec2(balls[i].r), Textures[balls[i].Textureid].texture, glm::vec3(0.0f, 0.0f, balls[i].rotation), balls[i].color);
-
+		}
 		for (int i = 0; i < cubes.size(); i++)
+		{
+
+			if (cubes[i].lighted)
+				NormalMapDraw(cubes[i].position, { cubes[i].width,cubes[i].height }, CubeNormalMapTexture);
 			if (cubes[i].Textureid == -1)
 				DrawCube(cubes[i], cubes[i].color);
 			else
 				DrawTexturedQuad(cubes[i], Textures[cubes[i].Textureid].texture, cubes[i].color);
-
+		}
 		for (int i = 0; i < polygons.size(); i++)
+		{
+
+			//if (polygons[i].lighted)
+				//NormalMapDrawPolygon(cubes[i].position, { cubes[i].width,cubes[i].height }, CubeNormalMapTexture);
 			if (polygons[i].Textureid == -1)
 			{
 				polygons[i].Texture = NULL;
@@ -616,9 +670,25 @@ public:
 				polygons[i].Texture = Textures[polygons[i].Textureid].texture;
 				polygons[i].DrawTriangles();
 			}
+		}
 		for (int i = 0; i < ParticleEmiters.size(); i++)
 			ParticleEmiters[i].Process();
-		
+
+
+
+		for (int i = 0; i < LightSources.size(); i++)
+		{
+			unsigned int t = LightSphereTexture;
+
+			if(LightSources[i].TextureId <=0)
+				DrawLight(LightSources[i].position, LightSources[i].scale, LightSources[i].color, LightSources[i].volume,t);
+			else if (LightSources[i].TextureId > 0)
+			{
+				t = Textures[LightSources[i].TextureId].texture;
+				DrawLight(LightSources[i].position, LightSources[i].scale, LightSources[i].color, LightSources[i].volume, t);
+			}
+
+		}
 	}
 	void ReloadTextures()
 	{

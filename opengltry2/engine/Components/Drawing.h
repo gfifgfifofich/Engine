@@ -7,6 +7,23 @@ glm::vec2 CameraScale = glm::vec2(1.0f);
 Shader* TexturedQuadShader;
 Shader* FilShader;
 Shader* TexturedTriangleShader;
+Shader*	AddTexturesShader;
+
+Shader* NormalMapDrawShader;
+Shader* LightShader;
+Shader* GenNormalMapShader;
+Shader* GenLightSphereShader;
+
+
+
+unsigned int BallNormalMapTexture;
+unsigned int CubeNormalMapTexture;
+unsigned int LightSphereTexture;
+
+unsigned int FrameBuffer, ColorBuffer;
+unsigned int NormalMapFBO, NormalMapColorBuffer;
+unsigned int LightColorFBO, LightColorBuffer;
+
 
 
 unsigned int quadVAO, quadVBO,
@@ -27,9 +44,152 @@ float ScreenDivisorY = 1.0;
 
 
 
-
-void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f))
+struct LightSource
 {
+	float volume = 0.0f;
+	glm::vec2 position = glm::vec2(0.0f);
+	glm::vec2 scale = glm::vec2(0.0f);
+	glm::vec4 color = glm::vec4(0.0f);
+	unsigned int texture = LightSphereTexture;
+	int TextureId = 0;
+	std::string name = "LightSource";
+};
+std::vector <LightSource> LightSources;
+void DrawLight(glm::vec2 position, glm::vec2 scale,glm::vec4 color, float volume = 0.0f,unsigned int texture = LightSphereTexture)
+{
+	LightSource ls;
+	ls.volume =volume;
+	ls.position = position;
+	ls.scale = scale;
+	ls.color = color;
+	ls.texture = texture;
+	LightSources.push_back(ls);
+}
+
+std::vector <glm::mat4> NormalMapCircleMatrixes;
+std::vector <glm::mat4> NormalMapCubeMatrixes;
+
+void NormalMapDraw(glm::vec2 position,glm::vec2 scale,unsigned int NormalMap= BallNormalMapTexture)
+{
+	if (NormalMap != BallNormalMapTexture && NormalMap != CubeNormalMapTexture) 
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+
+		position -= CameraPosition;
+		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
+			(position.x) * ScreenDivisorX * CameraScale.x,
+			(position.y) * ScreenDivisorY * CameraScale.y,
+			0.0f));
+
+		trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+
+		NormalMapDrawShader->Use();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, NormalMap);
+		glUniform1i(glGetUniformLocation(NormalMapDrawShader->Program, "Texture"), 0);
+
+
+		glUniform2f(glGetUniformLocation(NormalMapDrawShader->Program, "scr"), WIDTH, HEIGHT);
+		glUniformMatrix4fv(glGetUniformLocation(NormalMapDrawShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+
+		glBindVertexArray(quadVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+
+		if (HDR)
+			glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+		else
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	else 
+	{
+		position -= CameraPosition;
+		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
+			(position.x) * ScreenDivisorX * CameraScale.x,
+			(position.y) * ScreenDivisorY * CameraScale.y,
+			0.0f));
+
+		trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+		if (NormalMap == BallNormalMapTexture)
+			NormalMapCircleMatrixes.push_back(trans);
+		else
+			NormalMapCubeMatrixes.push_back(trans);
+		//NormalMapDrawShader->Use();
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, NormalMap);
+		//glUniform1i(glGetUniformLocation(NormalMapDrawShader->Program, "Texture"), 0);
+
+
+		//glUniform2f(glGetUniformLocation(NormalMapDrawShader->Program, "scr"), WIDTH, HEIGHT);
+		//glUniformMatrix4fv(glGetUniformLocation(NormalMapDrawShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+
+		//glBindVertexArray(quadVAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glBindVertexArray(0);
+	}
+}
+void NormalMapDrawTriangle(
+	glm::vec2 p1,
+	glm::vec2 p2,
+	glm::vec2 p3,
+	unsigned int NormalMap,
+	glm::vec2 texcoord1 = glm::vec2(0.0f, 1.0f),
+	glm::vec2 texcoord2 = glm::vec2(0.5f, 0.0f),
+	glm::vec2 texcoord3 = glm::vec2(1.0f, 1.0f)
+)
+{
+
+	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+	TexturedTriangleShader->Use();
+	glBindVertexArray(TexturedTriangleVAO);
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
+	p1.x = (p1.x - CameraPosition.x) * aspx;
+	p1.y = (p1.y - CameraPosition.y) * aspy;
+
+	p2.x = (p2.x - CameraPosition.x) * aspx;
+	p2.y = (p2.y - CameraPosition.y) * aspy;
+
+	p3.x = (p3.x - CameraPosition.x) * aspx;
+	p3.y = (p3.y - CameraPosition.y) * aspy;
+
+	GLfloat vertices[3][4] =
+	{
+		{ p1.x, p1.y,texcoord1.x,texcoord1.y},
+		{ p2.x, p2.y,texcoord2.x,texcoord2.y},
+		{ p3.x, p3.y,texcoord3.x,texcoord3.y}
+	};
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, TexturedTriangleVBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, NormalMap);
+	glUniform1i(glGetUniformLocation(TexturedTriangleShader->Program, "Texture"), 0);
+
+	glUniform4f(glGetUniformLocation(TexturedTriangleShader->Program, "color"), 1.0f,1.0f,1.0f,1.0f);
+	glUniform2f(glGetUniformLocation(TexturedTriangleShader->Program, "scr"), WIDTH, HEIGHT);
+
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
+
+
+	if (HDR)
+		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	else
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = NULL)
+{
+	if (Lighted)
+		NormalMapDraw(position, { r,r });
+
 	position -= CameraPosition;
 	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
 		(position.x ) * ScreenDivisorX * CameraScale.x,
@@ -42,8 +202,11 @@ void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f))
 	Circletranslations.push_back(trans);
 	Circlecolors.push_back(color);
 }
-void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f))
+void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = NULL)
 {
+	if (Lighted)
+		NormalMapDraw(b.position, { b.r,b.r });
+
 	glm::vec2 position = b.position;
 	float r = b.r;
 	position -= CameraPosition;
@@ -58,8 +221,10 @@ void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f))
 
 std::vector <glm::mat4> Quadtranslations;
 std::vector <glm::vec4> Quadcolors;
-void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f))
+void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = NULL)
 {
+	if (Lighted)
+		NormalMapDraw(position, scale, CubeNormalMapTexture);
 	position -= CameraPosition;
 	glm::mat4 trans = glm::translate(glm::mat4(1.0f),glm::vec3(
 		(position.x) * ScreenDivisorX * CameraScale.x,
@@ -81,8 +246,10 @@ void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec
 
 
 }
-void DrawCube(cube c, glm::vec4 color = glm::vec4(1.0f),glm::vec3 rotation=glm::vec3(0.0f))
+void DrawCube(cube c, glm::vec4 color = glm::vec4(1.0f),glm::vec3 rotation=glm::vec3(0.0f), bool Lighted = false, unsigned int NormalMap = NULL)
 {
+	if (Lighted)
+		NormalMapDraw(c.position, {c.width,c.height},CubeNormalMapTexture);
 	glm::vec2 position = c.position;
 	position -= CameraPosition;
 	glm::vec2 scale = glm::vec2(c.width, c.height);
@@ -116,8 +283,11 @@ void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = 
 	DrawCube(midpos, glm::vec2(length  , width), glm::vec3(0.0f, 0.0f, rotation), color);
 }
 
-void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
+void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),bool Lighted = false, unsigned int NormalMap=NULL)
 {
+	if(Lighted)
+		NormalMapDraw(b.position, { b.r,b.r });
+
 	glm::vec2 univec;
 	univec.x = cos(b.rotation * 5) - sin(b.rotation * 5);
 	univec.y = sin(b.rotation * 5) + cos(b.rotation * 5);
@@ -258,7 +428,101 @@ void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq =
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND)
+{
 
+	glDeleteTextures(1, texture1);
+	unsigned int framebuffer, texture2;
+
+	glGenFramebuffers(1, &framebuffer);
+	glGenTextures(1, &texture2);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+
+
+	glDisable(GL_DEPTH_TEST);
+	glViewport(0, 0, Size, Size);
+
+	GenNormalMapShader->Use();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	int i = 0;
+	if (shape == ROUND)
+		i = 0;
+	else if (shape == SQUERE)
+		i = 1;
+	else if (shape == SMOOTH_EDGE)
+		i = 2;
+	glUniform1i(glGetUniformLocation(GenNormalMapShader->Program, "Type"), i);
+
+	glBindVertexArray(ScreenVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+
+	
+	glDeleteFramebuffers(1, &framebuffer);
+
+	*texture1 = texture2;
+
+	glViewport(0, 0, WIDTH, HEIGHT);
+
+	if (HDR)
+		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	else
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+void GenLightSphereTexture(unsigned int* texture1, int Size)
+{
+
+	glDeleteTextures(1, texture1);
+	unsigned int framebuffer, texture2;
+
+	glGenFramebuffers(1, &framebuffer);
+	glGenTextures(1, &texture2);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+
+
+	glDisable(GL_DEPTH_TEST);
+	glViewport(0, 0, Size, Size);
+
+	GenLightSphereShader->Use();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	glBindVertexArray(ScreenVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+
+
+	glDeleteFramebuffers(1, &framebuffer);
+
+	*texture1 = texture2;
+
+	glViewport(0, 0, WIDTH, HEIGHT);
+
+	if (HDR)
+		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	else
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 class Texture
 {
 public:
@@ -355,8 +619,9 @@ void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(
 
 void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = glm::vec4(1.0f))
 {
-	FilShader->Use();
+
 	glBindVertexArray(TriangleVAO);
+	FilShader->Use();
 	float aspx = 1.0f * ScreenDivisorX * CameraScale.x;
 	float aspy = 1.0f * ScreenDivisorY * CameraScale.y;
 	p1.x = (p1.x - CameraPosition.x) * aspx;
@@ -387,6 +652,7 @@ void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = gl
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
 
 
 
@@ -402,10 +668,11 @@ void DrawTexturedTriangle(
 	glm::vec2 texcoord3 = glm::vec2(1.0f, 1.0f)
 	)
 {
+
 	TexturedTriangleShader->Use();
 	glBindVertexArray(TexturedTriangleVAO);
-	float aspx = 1.0f * ScreenDivisorX * CameraScale.x;
-	float aspy = 1.0f * ScreenDivisorY * CameraScale.y;
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
 
 	p1.x = (p1.x - CameraPosition.x) * aspx;
 	p1.y = (p1.y - CameraPosition.y) * aspy;
@@ -437,6 +704,7 @@ void DrawTexturedTriangle(
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
 
 
 }

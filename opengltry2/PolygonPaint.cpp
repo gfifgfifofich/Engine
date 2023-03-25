@@ -46,7 +46,7 @@ public:
 	}
 	void On_Update() override
 	{
-		poly.Texture = Container;
+		//poly.Texture = NULL;
 
 		b.Process(delta);
 		float velocity = 10.0f;
@@ -128,7 +128,7 @@ public:
 
 			if (justpressedLMB) 
 			{
-				poly.add_Point(MousePosition,false);
+				poly.add_Point(MousePosition,true);
 				Just_ctrl_z = false;
 			}
 		}

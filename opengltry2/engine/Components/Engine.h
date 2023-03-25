@@ -73,7 +73,6 @@ int main()
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-
 // GLFW
 #include <GLFW/glfw3.h>
 
@@ -102,15 +101,15 @@ GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 
 
-glm::vec4 BackgroundColor = glm::vec4(0.01f, 0.01f, 0.01f, 1.0f);
+glm::vec4 BackgroundColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 glm::vec2 MousePosition;
 glm::vec2 scrpos = glm::vec2(0, 0);
 bool keys[1024];
 bool buttons[64];
-bool SettingsWindow = false;
+bool SettingsWindow = true;
 
-bool DrawingOrder = true; // 1 - cubes, 0- ballllz
+bool DrawingOrder = false; // 1 - cubes, 0- ballllz
 
 int framecount = 0;
 float delta = 0.0f;
@@ -118,7 +117,6 @@ float timer = 0.0f, lt = 0.0f;
 GLFWwindow* window;
 
 float SceneExposure = 0.7f;
-
 
 
 float dt_of_sim = 0.017f;
@@ -130,10 +128,19 @@ bool DrawCubicColiders = false;
 
 
 bool HDR = true;
-
-
-//Bloom
 bool bloom = true;
+bool Lighting = true;
+
+//DrameBufferShowing
+bool NormalMap = false;
+bool RegularMap = false;
+bool LightingMap = false;
+
+
+//Lighting
+float AmbientLight = 1.0f;
+float DirectionalLight = 1.0f;
+//Bloom
 float bloomIntensity = 0.3f;
 float bloomLevelDivisor = 5.0f;
 //Chromatic abberation
@@ -157,7 +164,10 @@ std::vector <ball*> ballsptr;
 
 std::vector <cube*> cubes;
 
-unsigned int FrameBuffer, ColorBuffer;
+
+glm::vec4 AmbientColor = glm::vec4(1.0f);
+
+
 #include "engine/Components/Drawing.h"
 
 #include "engine/Components/Collisions/CircleToQuad.h";
@@ -190,7 +200,10 @@ std::vector <ParticleEmiter*> ParticleEmiters;
 
 #include "engine/Components/Classes.h"
 
-#include "engine/Components/sounds.h"
+
+//Requeres DLL, + wirks funky
+//#include "engine/Components/sounds.h"
+
 
 
 
@@ -240,7 +253,7 @@ class Engine
 		ScreenDivisorY = 1.0f / ScreenDivisorY;
 
 		ScaleMultiplyer = 1.0f / HEIGHT * 2.0f;
-		AL_init();
+		//AL_init();
 		// Init GLFW
 		glfwInit();
 		// Set all the required options for GLFW
@@ -276,7 +289,6 @@ class Engine
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-
 		//ScreenShaderStuff for HDR and postprocessing
 
 		Shader shaderBlur("engine/Shaders/blur.vert", "engine/Shaders/blur.frag");
@@ -290,6 +302,9 @@ class Engine
 		//Other Shaders
 		Shader FillShader("engine/Shaders/default.vert", "engine/Shaders/Quad.frag");
 
+
+
+
 		Shader TriShader("engine/Shaders/Fill.vert", "engine/Shaders/Fill.frag");
 		FilShader = &TriShader;
 
@@ -298,6 +313,7 @@ class Engine
 
 		Shader CircleShader("engine/Shaders/Circle.vert", "engine/Shaders/Circle.frag");
 		Shader InctanceQuadShader("engine/Shaders/instance.vert", "engine/Shaders/Quad.frag");
+		Shader InstanceNormalMapShader("engine/Shaders/NormalMap/InstancedNMDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
 
 		Shader TexturedQuad("engine/Shaders/TexturedQuad.vert", "engine/Shaders/TexturedQuad.frag");
 		TexturedQuadShader = &TexturedQuad;
@@ -316,7 +332,24 @@ class Engine
 
 		Shader RoundShader("engine/Shaders/Round/Round.vert", "engine/Shaders/Round/Round.frag");
 		RoundShaderptr = &RoundShader;
+
+		Shader AddTextures("engine/Shaders/Screen.vert", "engine/Shaders/AddTextures.frag");
+		AddTexturesShader = &AddTextures;
 		
+
+		//Lighteing Shaders:
+		Shader NormMapDraw("engine/Shaders/TexturedQuad.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
+		NormalMapDrawShader = &NormMapDraw;
+
+		Shader GenNormMapDraw("engine/Shaders/Screen.vert", "engine/Shaders/NormalMap/GenNormalMap.frag");
+		GenNormalMapShader = &GenNormMapDraw;
+
+		Shader GenLS("engine/Shaders/Screen.vert", "engine/Shaders/Light/GenLightSphere.frag");
+		GenLightSphereShader = &GenLS;
+
+		Shader LSDraw("engine/Shaders/Light/Light.vert", "engine/Shaders/Light/LightProcess.frag");
+		LightShader = &LSDraw;
+
 		float ScreenVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 			// positions   // texCoords
 			-1.0f,  1.0f,  0.0f, 1.0f,
@@ -350,6 +383,8 @@ class Engine
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorBuffer, 0);
@@ -399,6 +434,32 @@ class Engine
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
+		glGenFramebuffers(1, &NormalMapFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+		glGenTextures(1, &NormalMapColorBuffer);
+		glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, NormalMapColorBuffer, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glGenFramebuffers(1, &LightColorFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
+		glGenTextures(1, &LightColorBuffer);
+		glBindTexture(GL_TEXTURE_2D, LightColorBuffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, LightColorBuffer, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 		//HDR
 			unsigned int hdrFBO;
@@ -412,11 +473,11 @@ class Engine
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 				// attach texture to framebuffer
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer2, 0);
-			
+
 
 			// create and attach depth buffer (renderbuffer)
 			unsigned int rboDepth;
@@ -542,7 +603,14 @@ class Engine
 
 		
 
+		GenNormalMapTexture(&BallNormalMapTexture, 1000, 2);
+		GenNormalMapTexture(&CubeNormalMapTexture, 1000, 0);
+		GenLightSphereTexture(&LightSphereTexture, 100);
+		
+
 		unsigned int instanceCircleVBO;
+		unsigned int instanceNormalMapCircleVBO;
+		unsigned int instanceNormalMapCubeVBO;
 		unsigned int instanceVBO;
 		
 
@@ -563,6 +631,13 @@ class Engine
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
+			glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+			glClearColor(0.0f,0.0f,0.0f,1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			if (HDR)
 				glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
@@ -589,6 +664,11 @@ class Engine
 			// update Scene
 			On_Update();
 
+
+
+			//Particle Processing LineParticles
+			for (int i = 0; i < ParticleEmiters.size(); i++)
+				ParticleEmiters[i]->Process(dt_of_sim);
 
 			// Collision processing
 				for (int i = 0; i < ballsptr.size(); i++)
@@ -630,10 +710,6 @@ class Engine
 
 
 
-
-			//Particle Processing LineParticles
-			for (int i = 0; i < ParticleEmiters.size(); i++)
-				ParticleEmiters[i]->Process(dt_of_sim);
 
 			// instancing
 			{
@@ -720,19 +796,10 @@ class Engine
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			}
-
-
-			
-			
-
-
-			
-
-
 			if (DrawingOrder)
 			{
 				InctanceQuadShader.Use();
-				glUniform2f(glGetUniformLocation(InctanceQuadShader.Program, "scr"),WIDTH,HEIGHT);
+				glUniform2f(glGetUniformLocation(InctanceQuadShader.Program, "scr"), WIDTH, HEIGHT);
 				glBindVertexArray(quadVAO);
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, Quadcolors.size());
 				glBindVertexArray(0);
@@ -753,7 +820,7 @@ class Engine
 				Circletranslations.clear();
 			}
 			else {
-				
+
 				CircleShader.Use();
 				glUniform2f(glGetUniformLocation(CircleShader.Program, "scr"), WIDTH, HEIGHT);
 				glBindVertexArray(CircleVAO);
@@ -776,6 +843,187 @@ class Engine
 				Circletranslations.clear();
 			}
 
+			// NormalMaps
+			if (Lighting) {
+				glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+
+				InstanceNormalMapShader.Use();
+
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, CubeNormalMapTexture);
+				glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+
+				glUniform2f(glGetUniformLocation(InstanceNormalMapShader.Program, "scr"), WIDTH, HEIGHT);
+
+				/*if (DrawingOrder)
+				{*/
+				glGenBuffers(1, &instanceNormalMapCubeVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
+				glBindVertexArray(quadVAO);
+
+				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * NormalMapCubeMatrixes.size(), &NormalMapCubeMatrixes[0], GL_STATIC_DRAW);
+
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+
+				glEnableVertexAttribArray(4);
+				glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+				glVertexAttribDivisor(1, 1);
+				glVertexAttribDivisor(2, 1);
+				glVertexAttribDivisor(3, 1);
+				glVertexAttribDivisor(4, 1);
+
+				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, NormalMapCubeMatrixes.size());
+				glDeleteBuffers(7, &instanceNormalMapCubeVBO);
+
+				glBindVertexArray(0);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, BallNormalMapTexture);
+				glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+
+
+
+				glGenBuffers(1, &instanceNormalMapCircleVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
+				glBindVertexArray(quadVAO);
+
+				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * NormalMapCircleMatrixes.size(), &NormalMapCircleMatrixes[0], GL_STATIC_DRAW);
+
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+
+				glEnableVertexAttribArray(4);
+				glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+				glVertexAttribDivisor(1, 1);
+				glVertexAttribDivisor(2, 1);
+				glVertexAttribDivisor(3, 1);
+				glVertexAttribDivisor(4, 1);
+				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, NormalMapCircleMatrixes.size());
+				glDeleteBuffers(7, &instanceNormalMapCircleVBO);
+
+				glBindVertexArray(0);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				NormalMapCircleMatrixes.clear();
+				NormalMapCubeMatrixes.clear();
+
+
+				if (HDR)
+					glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+				else
+					glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			}
+
+
+			
+
+
+			
+
+
+
+			if (Lighting) {
+
+				glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
+
+				LightShader->Use();
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
+				glUniform1i(glGetUniformLocation(LightShader->Program, "NormalMap"), 0);
+
+				glActiveTexture(GL_TEXTURE2);
+				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
+				glUniform1i(glGetUniformLocation(LightShader->Program, "BaseColor"), 2);
+
+				
+				for (int i = 0; i < LightSources.size(); i++)
+				{
+
+
+
+
+					glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
+						(LightSources[i].position.x - CameraPosition.x) * ScreenDivisorX * CameraScale.x,
+						(LightSources[i].position.y - CameraPosition.y) * ScreenDivisorY * CameraScale.y,
+						0.0f));
+
+
+
+					trans = glm::scale(trans, glm::vec3(LightSources[i].scale.x * CameraScale.x * ScaleMultiplyer, LightSources[i].scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+
+
+
+					float ahigh = 1.0 / HEIGHT;
+
+					LightSources[i].position -= CameraPosition;
+					LightSources[i].position.x *= CameraScale.x / WIDTH;
+					LightSources[i].position.y *= CameraScale.y * ahigh;
+
+					glActiveTexture(GL_TEXTURE1);
+					glBindTexture(GL_TEXTURE_2D, LightSources[i].texture);
+					glUniform1i(glGetUniformLocation(LightShader->Program, "Texture"), 1);
+
+					glUniform4f(glGetUniformLocation(LightShader->Program, "color"), LightSources[i].color.r, LightSources[i].color.g, LightSources[i].color.b, LightSources[i].color.a);
+					glUniform2f(glGetUniformLocation(LightShader->Program, "position"), LightSources[i].position.x, LightSources[i].position.y);
+					glUniform2f(glGetUniformLocation(LightShader->Program, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
+					glUniform1f(glGetUniformLocation(LightShader->Program, "volume"), LightSources[i].volume);
+
+
+					glUniform3f(glGetUniformLocation(LightShader->Program, "scr"), WIDTH, HEIGHT, WIDTH * ahigh);
+					glUniformMatrix4fv(glGetUniformLocation(LightShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+
+
+
+					glBindVertexArray(quadVAO);
+					glDrawArrays(GL_TRIANGLES, 0, 6);
+					glBindVertexArray(0);
+
+
+				}
+
+				if (HDR)
+					glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+				else
+					glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				LightSources.clear();
+
+				glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+
+				AddTexturesShader->Use();
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, LightColorBuffer);
+				glUniform1i(glGetUniformLocation(AddTexturesShader->Program, "Texture1"), 0);
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
+				glUniform1i(glGetUniformLocation(AddTexturesShader->Program, "Texture2"), 1);
+				glUniform2f(glGetUniformLocation(AddTexturesShader->Program, "proportions"), DirectionalLight, AmbientLight);
+
+				glBindVertexArray(ScreenVAO);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+				glBindVertexArray(0);
+				glActiveTexture(GL_TEXTURE0);
+
+			}
 
 			//Text that marked ato Draw Above Everything else
 			for (int i = 0; i < TextLines.size(); i++)
@@ -783,7 +1031,7 @@ class Engine
 			TextLines.clear();
 
 
-
+			int fb = 0;
 			if (SettingsWindow)
 			{
 				ImGui::Begin("Settings");
@@ -791,6 +1039,9 @@ class Engine
 				
 				if (ImGui::Button("HDR"))
 					HDR = !HDR;
+				if (ImGui::Button("Lighting"))
+					Lighting = !Lighting;
+
 				if (HDR)
 					ImGui::SliderFloat("SceneExposure", &SceneExposure, 0.0f, 2.0f);
 				
@@ -809,6 +1060,37 @@ class Engine
 					ImGui::Text("rects first");
 				else
 					ImGui::Text("circles first");
+
+				ImGui::SliderFloat("AmbientLight", &AmbientLight, 0.0f, 1.0f);
+				ImGui::SliderFloat("DirectionalLight", &DirectionalLight, 0.0f, 1.0f);
+
+
+				ImGui::SliderFloat("bloomIntensity", &bloomIntensity, 0.0f, 10.0f);
+				ImGui::SliderFloat("bloomLevelDivisor", &bloomLevelDivisor, 1.0f, 10.0f);
+
+				ImGui::SliderFloat("strength", &ChromaticStrength, 0.0f, 1.0f);
+
+				if (ImGui::Button("Show NormalMaps"))
+				{
+					NormalMap = true;
+					RegularMap = false;
+					LightingMap = false;
+				}
+				if (ImGui::Button("Show RegularMap"))
+				{
+					NormalMap = false;
+					RegularMap = true;
+					LightingMap = false;
+				}
+				if (ImGui::Button("Show LightingMap"))
+				{
+					NormalMap = false;
+					RegularMap = false;
+					LightingMap = true;
+				}
+				if (NormalMap)fb = 8;
+				if (RegularMap)fb = 0;
+				if (LightingMap)fb = 9;
 
 				ImGui::End();
 			}
@@ -850,10 +1132,6 @@ class Engine
 				//}
 			}
 			*/
-			ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
-
-			ImGui::SliderFloat("bloomIntensity", &bloomIntensity, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
 
 
 
@@ -872,11 +1150,10 @@ class Engine
 					glDisable(GL_DEPTH_TEST);
 					glClear(GL_COLOR_BUFFER_BIT);
 
-
 					//threshholding the main image
 					shaderBloom.Use();
 					glActiveTexture(GL_TEXTURE1);
-					glBindTexture(GL_TEXTURE_2D,  ColorBuffer );
+					glBindTexture(GL_TEXTURE_2D, ColorBuffer);
 					glUniform1i(glGetUniformLocation(shaderBloom.Program, "screenTexture"), 1);
 					glDrawArrays(GL_TRIANGLES, 0, 6);
 					glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -906,7 +1183,6 @@ class Engine
 					glBindVertexArray(ScreenVAO);
 					UpsampleBlur.Use();
 					glUniform1f(glGetUniformLocation(UpsampleBlur.Program, "filterRadius"), 10.0f);
-					ImGui::SliderFloat("bloomLevelDivisor", &bloomLevelDivisor, 1.0f, 10.0f);
 					for (int i = 5; i > 0; i--)
 					{ 
 						glViewport(0, 0, WIDTH / (pow(2.0f, i )), HEIGHT / (pow(2.0f, i )));
@@ -951,16 +1227,20 @@ class Engine
 
 
 					glDrawArrays(GL_TRIANGLES, 0, 6); 
-					
-					
+					unsigned int fm = blurColorbuffers[0];
+
+					if(fb ==0)
+						fm = blurColorbuffers[0];
+					else 
+						fm = fb;
+
 					Chromatic.Use();
 					glBindFramebuffer(GL_FRAMEBUFFER,0);
-					glBindTexture(GL_TEXTURE_2D, blurColorbuffers[0]);
+					glBindTexture(GL_TEXTURE_2D, fm);
 					
 					ChromaticPoint = glm::vec2(0.5f,0.5f);
 					glUniform2f(glGetUniformLocation(Chromatic.Program, "point"), ChromaticPoint.x, ChromaticPoint.y);
 					
-					ImGui::SliderFloat("strength", &ChromaticStrength, 0.0f, 1.0f);
 					
 					glUniform1f(glGetUniformLocation(Chromatic.Program, "strength"), ChromaticStrength);
 
@@ -971,7 +1251,6 @@ class Engine
 					glBindVertexArray(0);
 
 
-					ImGui::End();
 				}
 				else
 				{
@@ -1006,7 +1285,7 @@ class Engine
 			glfwSwapBuffers(window);
 		}
 		glfwTerminate();
-		AL_Destroy();
+		//AL_Destroy();
 	}
 };
 

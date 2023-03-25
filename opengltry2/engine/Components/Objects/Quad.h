@@ -17,4 +17,5 @@ struct cube
 	glm::vec2 velocity = glm::vec2(0.0f);
 
 	glm::vec4 color = glm::vec4(1.0f);
+	bool lighted = false;
 };

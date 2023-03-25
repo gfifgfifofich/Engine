@@ -114,6 +114,7 @@ public:
 class polygon
 {
 public:
+	bool lighted = false;
 	int Textureid = -1;
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
@@ -339,6 +340,7 @@ public:
 		}
 		else
 		{
+
 			if (colors.size() == indexes.size())
 				for (int i = 0; i < indexes.size(); i++)
 				{

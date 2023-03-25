@@ -96,7 +96,7 @@
     <ClCompile Include="engine\Libraries\include\AL\alhelpers.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="NotHillClimbRacing.cpp">
+    <ClCompile Include="MapTest.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1958,9 +1958,6 @@
     <ClInclude Include="engine\Libraries\include\stb\stb_image.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Libraries\include\ft2build.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="engine\Libraries\include\freetype\freetype.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -2154,6 +2151,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="engine\Components\sounds.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Libraries\include\ft2build.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Objects\Scene.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3010,5 +3013,12 @@
     <None Include="engine\Shaders\Round\Round.frag" />
     <None Include="engine\Shaders\TexturedTriangle\TexturedTriangle.vert" />
     <None Include="engine\Shaders\TexturedTriangle\TexturedTriangle.frag" />
+    <None Include="engine\Shaders\NormalMap\NormalMapDraw.frag" />
+    <None Include="engine\Shaders\NormalMap\GenNormalMap.frag" />
+    <None Include="engine\Shaders\Light\GenLightSphere.frag" />
+    <None Include="engine\Shaders\Light\LightProcess.frag" />
+    <None Include="engine\Shaders\Light\Light.vert" />
+    <None Include="engine\Shaders\AddTextures.frag" />
+    <None Include="engine\Shaders\NormalMap\InstancedNMDraw.vert" />
   </ItemGroup>
 </Project>

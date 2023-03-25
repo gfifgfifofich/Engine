@@ -28,7 +28,7 @@
     <ClCompile Include="engine\Libraries\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="engine\Libraries\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="engine\Libraries\include\glm\detail\glm.cpp" />
-    <ClCompile Include="NotHillClimbRacing.cpp" />
+    <ClCompile Include="MapTest.cpp" />
     <ClCompile Include="Projects\engine\Libraries\include\glm\detail\glm.cpp" />
     <ClCompile Include="Projects\engine\Libraries\include\imgui\imgui.cpp" />
     <ClCompile Include="Projects\engine\Libraries\include\imgui\imgui_demo.cpp" />
@@ -56,6 +56,7 @@
     <ClInclude Include="engine\Components\Objects\Particle.h" />
     <ClInclude Include="engine\Components\Objects\Polygon.h" />
     <ClInclude Include="engine\Components\Objects\Quad.h" />
+    <ClInclude Include="engine\Components\Objects\Scene.h" />
     <ClInclude Include="engine\Components\Objects\VerletObject.h" />
     <ClInclude Include="engine\Components\Objects\SoftBody.h" />
     <ClInclude Include="engine\Components\Physics\Spring.h" />
@@ -862,6 +863,7 @@
     <None Include="engine\Libraries\include\glm\gtx\vector_angle.inl" />
     <None Include="engine\Libraries\include\glm\gtx\vector_query.inl" />
     <None Include="engine\Libraries\include\glm\gtx\wrap.inl" />
+    <None Include="engine\Shaders\AddTextures.frag" />
     <None Include="engine\Shaders\bloom.frag" />
     <None Include="engine\Shaders\bloom.vert" />
     <None Include="engine\Shaders\blur.frag" />
@@ -874,8 +876,14 @@
     <None Include="engine\Shaders\Fill.frag" />
     <None Include="engine\Shaders\Fill.vert" />
     <None Include="engine\Shaders\instance.vert" />
+    <None Include="engine\Shaders\Light\GenLightSphere.frag" />
+    <None Include="engine\Shaders\Light\LightProcess.frag" />
+    <None Include="engine\Shaders\Light\Light.vert" />
     <None Include="engine\Shaders\NoizeGen\NoizeGen.frag" />
     <None Include="engine\Shaders\NoizeGen\NoizeGen.vert" />
+    <None Include="engine\Shaders\NormalMap\GenNormalMap.frag" />
+    <None Include="engine\Shaders\NormalMap\InstancedNMDraw.vert" />
+    <None Include="engine\Shaders\NormalMap\NormalMapDraw.frag" />
     <None Include="engine\Shaders\Quad.frag" />
     <None Include="engine\Shaders\Round\Round.frag" />
     <None Include="engine\Shaders\Round\Round.vert" />
@@ -1163,7 +1171,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;glew32s.lib;freetype.lib;OpenAL32.lib;sndfile.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;freetype.lib;OpenAL32.lib;sndfile.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
