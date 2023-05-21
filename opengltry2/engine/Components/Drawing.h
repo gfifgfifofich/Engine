@@ -32,8 +32,80 @@ CircleVAO, CircleVBO,
 TriangleVAO, TriangleVBO,
 TexturedTriangleVAO, TexturedTriangleVBO
 ;
-std::vector <glm::mat4> Circletranslations;
-std::vector <glm::vec4> Circlecolors;
+
+
+struct TexturedQuadArray
+{
+	unsigned int Texture;
+	std::vector <glm::vec4> QuadPosScale;
+	std::vector <float> QuadRotations;
+	std::vector <glm::vec4> Quadcolors;
+};
+
+struct SceneLayer
+{
+	int Z_Index = 0;
+
+	std::vector <glm::vec4> CirclePosScale;
+	std::vector <float> CircleRotations;
+	std::vector <glm::vec4> Circlecolors;
+
+	std::vector <glm::vec4> QuadPosScale;
+	std::vector <float> QuadRotations;
+	std::vector <glm::vec4> Quadcolors;
+
+	std::vector <TexturedQuadArray> TexturedQuads;
+
+	std::vector <TexturedQuadArray> NormalMaps;
+
+	std::vector <glm::vec4> NormalMapCirclePosScale;
+	std::vector <float> NormalMapCircleRotations;
+
+	std::vector <glm::vec4> NormalMapCubePosScale;
+	std::vector <float> NormalMapCubeRotations;
+
+};
+
+std::vector <SceneLayer> SceneLayers;
+void SortSceneLayers()
+{
+	if (SceneLayers.size() > 2)
+	{
+		int i = 1;
+		int a = 2;
+
+		while (i < SceneLayers.size())
+		{
+			if (SceneLayers[i - 1].Z_Index < SceneLayers[i].Z_Index)
+			{
+				i = a;
+				a++;
+			}
+			else
+			{
+				SceneLayer tmp = SceneLayers[i - 1];
+				SceneLayers[i - 1] = SceneLayers[i];
+				SceneLayers[i] = tmp;
+				i--;
+				if (i == 0)
+				{
+					i = a;
+					a++;
+				}
+			}
+		}
+	}
+	else if (SceneLayers.size() == 2)
+	{
+		if (SceneLayers[0].Z_Index > SceneLayers[1].Z_Index)
+		{
+			SceneLayer tmp = SceneLayers[0];
+			SceneLayers[0] = SceneLayers[1];
+			SceneLayers[1] = tmp;
+		}
+	}
+}
+
 
 float ScaleMultiplyer = 0.043545f*0.05f;
 
@@ -49,85 +121,113 @@ struct LightSource
 	float volume = 0.0f;
 	glm::vec2 position = glm::vec2(0.0f);
 	glm::vec2 scale = glm::vec2(0.0f);
+	float rotation = 0.0f;
 	glm::vec4 color = glm::vec4(0.0f);
 	unsigned int texture = LightSphereTexture;
 	int TextureId = 0;
 	std::string name = "LightSource";
 };
 std::vector <LightSource> LightSources;
-void DrawLight(glm::vec2 position, glm::vec2 scale,glm::vec4 color, float volume = 0.0f,unsigned int texture = LightSphereTexture)
+void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture)
 {
 	LightSource ls;
 	ls.volume =volume;
 	ls.position = position;
 	ls.scale = scale;
+	ls.rotation = rotation;
 	ls.color = color;
 	ls.texture = texture;
 	LightSources.push_back(ls);
 }
-
-std::vector <glm::mat4> NormalMapCircleMatrixes;
-std::vector <glm::mat4> NormalMapCubeMatrixes;
-
-void NormalMapDraw(glm::vec2 position,glm::vec2 scale,unsigned int NormalMap= BallNormalMapTexture)
+void NormalMapDraw(glm::vec2 position,glm::vec2 scale,unsigned int NormalMap= BallNormalMapTexture, float rotation = 0.0f, int Z_Index = 0)
 {
 	if (NormalMap != BallNormalMapTexture && NormalMap != CubeNormalMapTexture) 
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+
+		int SLI = -1;
+
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+		if (SLI == -1)
+		{
+			SceneLayer sl;
+			sl.Z_Index = Z_Index;
+			SceneLayers.push_back(sl);
+			SortSceneLayers();
+			for (int i = 0; i < SceneLayers.size(); i++)
+				if (SceneLayers[i].Z_Index == Z_Index)
+					SLI = i;
+		}
+
+		float aspx = ScreenDivisorX * CameraScale.x;
+		float aspy = ScreenDivisorY * CameraScale.y;
 
 		position -= CameraPosition;
-		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-			(position.x) * ScreenDivisorX * CameraScale.x,
-			(position.y) * ScreenDivisorY * CameraScale.y,
-			0.0f));
+		position *= glm::vec2(aspx, aspy);
+		scale *= glm::vec2(aspx, aspy);
 
-		trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+		
+		int TQA = -1;
 
-		NormalMapDrawShader->Use();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, NormalMap);
-		glUniform1i(glGetUniformLocation(NormalMapDrawShader->Program, "Texture"), 0);
+		for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
+			if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap)
+				TQA = i;
+		if (TQA == -1)
+		{
+			TexturedQuadArray NewTQA;
+			NewTQA.Texture = NormalMap;
+			SceneLayers[SLI].NormalMaps.push_back(NewTQA);
+			for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
+				if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap)
+					TQA = i;
+		}
 
+		SceneLayers[SLI].NormalMaps[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+		SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
 
-		glUniform2f(glGetUniformLocation(NormalMapDrawShader->Program, "scr"), WIDTH, HEIGHT);
-		glUniformMatrix4fv(glGetUniformLocation(NormalMapDrawShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+		SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
 
-		glBindVertexArray(quadVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
-
-		if (HDR)
-			glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-		else
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	else 
 	{
+		float aspx = ScreenDivisorX * CameraScale.x;
+		float aspy = ScreenDivisorY * CameraScale.y;
+
 		position -= CameraPosition;
-		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-			(position.x) * ScreenDivisorX * CameraScale.x,
-			(position.y) * ScreenDivisorY * CameraScale.y,
-			0.0f));
+		position *= glm::vec2(aspx, aspy);
+		scale *= glm::vec2(aspx, aspy);
 
-		trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+
+		int SLI = -1;
+
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+		if (SLI == -1)
+		{
+			SceneLayer sl;
+			sl.Z_Index = Z_Index;
+			SceneLayers.push_back(sl);
+			SortSceneLayers();
+			for (int i = 0; i < SceneLayers.size(); i++)
+				if (SceneLayers[i].Z_Index == Z_Index)
+					SLI = i;
+		}
+
 		if (NormalMap == BallNormalMapTexture)
-			NormalMapCircleMatrixes.push_back(trans);
+		{
+			SceneLayers[SLI].NormalMapCircleRotations.push_back(rotation);
+			SceneLayers[SLI].NormalMapCirclePosScale.push_back(glm::vec4(position,scale));
+		}
 		else
-			NormalMapCubeMatrixes.push_back(trans);
-		//NormalMapDrawShader->Use();
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, NormalMap);
-		//glUniform1i(glGetUniformLocation(NormalMapDrawShader->Program, "Texture"), 0);
-
-
-		//glUniform2f(glGetUniformLocation(NormalMapDrawShader->Program, "scr"), WIDTH, HEIGHT);
-		//glUniformMatrix4fv(glGetUniformLocation(NormalMapDrawShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
-
-		//glBindVertexArray(quadVAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glBindVertexArray(0);
+		{
+			SceneLayers[SLI].NormalMapCubeRotations.push_back(rotation);
+			SceneLayers[SLI].NormalMapCubePosScale.push_back(glm::vec4(position, scale));
+		}
 	}
 }
+
 void NormalMapDrawTriangle(
 	glm::vec2 p1,
 	glm::vec2 p2,
@@ -185,115 +285,175 @@ void NormalMapDrawTriangle(
 }
 
 
-void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = NULL)
+void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = BallNormalMapTexture, int Z_Index = 0)
 {
+	glm::vec2 scale = glm::vec2(r, r);
+
 	if (Lighted)
-		NormalMapDraw(position, { r,r });
+		NormalMapDraw(position, scale, NormalMap, 0.0f, Z_Index);
+
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
 
 	position -= CameraPosition;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-		(position.x ) * ScreenDivisorX * CameraScale.x,
-		(position.y ) * ScreenDivisorY *CameraScale.y,
-		0.0f));
-
-	trans = glm::scale(trans, glm::vec3(r  * ScaleMultiplyer * CameraScale.x, r * ScaleMultiplyer * CameraScale.y, 0.0f));
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
 
 
-	Circletranslations.push_back(trans);
-	Circlecolors.push_back(color);
+	int SLI = -1;
+
+	for (int i = 0; i < SceneLayers.size(); i++)
+		if (SceneLayers[i].Z_Index == Z_Index)
+			SLI = i;
+	if (SLI == -1)
+	{
+		SceneLayer sl;
+		sl.Z_Index = Z_Index;
+		SceneLayers.push_back(sl);
+		SortSceneLayers();
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+	}
+
+	SceneLayers[SLI].CirclePosScale.push_back(glm::vec4(position,scale));
+	SceneLayers[SLI].CircleRotations.push_back(0.0f);
+	SceneLayers[SLI].Circlecolors.push_back(color);
 }
-void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = NULL)
+void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = BallNormalMapTexture, int Z_Index = 0)
 {
-	if (Lighted)
-		NormalMapDraw(b.position, { b.r,b.r });
 
 	glm::vec2 position = b.position;
 	float r = b.r;
-	position -= CameraPosition;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
-
-	trans = glm::scale(trans, glm::vec3(r * ScaleMultiplyer * CameraScale.x, r * ScaleMultiplyer * CameraScale.y, 0.0f));
-
-
-	Circletranslations.push_back(trans);
-	Circlecolors.push_back(color);
-}
-
-std::vector <glm::mat4> Quadtranslations;
-std::vector <glm::vec4> Quadcolors;
-void DrawCube(glm::vec2 position, glm::vec2 scale, glm::vec3 rotation = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = NULL)
-{
+	glm::vec2 scale = glm::vec2(r, r);
 	if (Lighted)
-		NormalMapDraw(position, scale, CubeNormalMapTexture);
+		NormalMapDraw(position, scale, NormalMap, 0.0f, Z_Index);
+
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
 	position -= CameraPosition;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f),glm::vec3(
-		(position.x) * ScreenDivisorX * CameraScale.x,
-		(position.y) * ScreenDivisorY * CameraScale.y,
-		0.0f));
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
+	
+	int SLI = -1;
+
+	for (int i = 0; i < SceneLayers.size(); i++)
+		if (SceneLayers[i].Z_Index == Z_Index)
+			SLI = i;
+	if (SLI == -1)
+	{
+		SceneLayer sl;
+		sl.Z_Index = Z_Index;
+		SceneLayers.push_back(sl);
+		SortSceneLayers();
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+	}
 
 
-	if (rotation.z != 0)
-		trans = glm::rotate(trans, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	if (rotation.y != 0)
-		trans = glm::rotate(trans, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (rotation.x != 0)
-		trans = glm::rotate(trans, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	trans = glm::scale(trans, glm::vec3(scale.x* CameraScale.x * ScaleMultiplyer, scale.y* CameraScale.y * ScaleMultiplyer, 0.0f));
-
-
-	Quadtranslations.push_back(trans);
-	Quadcolors.push_back(color);
-
-
+	SceneLayers[SLI].CirclePosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].CircleRotations.push_back(0.0f);
+	SceneLayers[SLI].Circlecolors.push_back(color);
 }
-void DrawCube(cube c, glm::vec4 color = glm::vec4(1.0f),glm::vec3 rotation=glm::vec3(0.0f), bool Lighted = false, unsigned int NormalMap = NULL)
+
+void DrawCube(glm::vec2 position, glm::vec2 scale, float rotation = 0.0f, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = CubeNormalMapTexture, int Z_Index = 0)
 {
+
+
 	if (Lighted)
-		NormalMapDraw(c.position, {c.width,c.height},CubeNormalMapTexture);
-	glm::vec2 position = c.position;
+		NormalMapDraw(position,scale, NormalMap, rotation, Z_Index);
+
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
 	position -= CameraPosition;
-	glm::vec2 scale = glm::vec2(c.width, c.height);
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
 
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-		(position.x) * ScreenDivisorX * CameraScale.x,
-		(position.y) * ScreenDivisorY * CameraScale.y,
-		0.0f));
+	
 
 
-	if (rotation.z != 0)
-		trans = glm::rotate(trans, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	if (rotation.y != 0)
-		trans = glm::rotate(trans, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (rotation.x != 0)
-		trans = glm::rotate(trans, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+	int SLI = -1;
 
-		
-	Quadtranslations.push_back(trans);
-	Quadcolors.push_back(color);
+	for (int i = 0; i < SceneLayers.size(); i++)
+		if (SceneLayers[i].Z_Index == Z_Index)
+			SLI = i;
+	if (SLI == -1)
+	{
+		SceneLayer sl;
+		sl.Z_Index = Z_Index;
+		SceneLayers.push_back(sl);
+		SortSceneLayers();
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+	}
+
+	SceneLayers[SLI].QuadPosScale.push_back(glm::vec4(position,scale));
+	SceneLayers[SLI].QuadRotations.push_back(rotation);
+
+	SceneLayers[SLI].Quadcolors.push_back(color);
+
+
+}
+void DrawCube(cube c, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f, bool Lighted = false, unsigned int NormalMap = NULL, int Z_Index = 0)
+{
+
+
+	if (Lighted)
+		NormalMapDraw(c.position, glm::vec2(c.width, c.height), NormalMap, rotation, Z_Index);
+
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
+	glm::vec2 position = c.position - CameraPosition;
+	position *= glm::vec2(aspx, aspy);
+	glm::vec2 scale = glm::vec2(c.width, c.height) *  glm::vec2(aspx, aspy);
+
+	
+	int SLI = -1;
+
+	for (int i = 0; i < SceneLayers.size(); i++)
+		if (SceneLayers[i].Z_Index == Z_Index)
+			SLI = i;
+	if (SLI == -1)
+	{
+		SceneLayer sl;
+		sl.Z_Index = Z_Index;
+		SceneLayers.push_back(sl);
+		SortSceneLayers();
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+	}
+
+	SceneLayers[SLI].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].QuadRotations.push_back(rotation);
+
+	SceneLayers[SLI].Quadcolors.push_back(color);
 }
 
 
-void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = glm::vec4(1.0f))
+void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = CubeNormalMapTexture, int Z_Index = 0)
 {
 	glm::vec2 midpos = (p2 + p1) / 2.0f;
 	float rotation = get_angle_between_points(p1, p2);
 	glm::vec2 dif = p1 - p2;
 	float length = sqrt(dif.x * dif.x + dif.y * dif.y)*0.5f;
-	DrawCube(midpos, glm::vec2(length  , width), glm::vec3(0.0f, 0.0f, rotation), color);
+	DrawCube(midpos, glm::vec2(width  , length), rotation, color, Lighted, NormalMap, Z_Index);
 }
 
-void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),bool Lighted = false, unsigned int NormalMap=NULL)
+void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),bool Lighted = false, unsigned int NormalMap=NULL, int Z_Index = 0)
 {
-	if(Lighted)
-		NormalMapDraw(b.position, { b.r,b.r });
 
 	glm::vec2 univec;
 	univec.x = cos(b.rotation * 5) - sin(b.rotation * 5);
 	univec.y = sin(b.rotation * 5) + cos(b.rotation * 5);
-	DrawLine(b.position - univec * b.r * 0.7f, b.position + univec * b.r * 0.7f, 3.0f, Color2);
-	DrawLine(b.position + glm::vec2(-univec.y * b.r * 0.7f, univec.x * b.r * 0.7f), b.position + glm::vec2(univec.y * b.r * 0.7f, -univec.x * b.r * 0.7f), 3.0f, Color2);
-	DrawCircle(b, Color1);
+	DrawLine(b.position - univec * b.r * 0.7f, b.position + univec * b.r * 0.7f, 3.0f, Color2, Lighted,CubeNormalMapTexture, Z_Index);
+	DrawLine(b.position + glm::vec2(-univec.y * b.r * 0.7f, univec.x * b.r * 0.7f), b.position + glm::vec2(univec.y * b.r * 0.7f, -univec.x * b.r * 0.7f), 3.0f, Color2, Lighted, CubeNormalMapTexture, Z_Index);
+	DrawCircle(b, Color1, Lighted, NormalMap, Z_Index-1);
 }
 
 
@@ -549,71 +709,110 @@ public:
 
 
 
-void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, glm::vec3 rotation = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f))
+void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation = 0.0f, glm::vec4 color = glm::vec4(1.0f), int Z_Index = 0,unsigned int NormalMap = NULL)
 {
+
+	if (NormalMap != NULL)
+		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index);
+
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
 	position -= CameraPosition;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-		(position.x) * ScreenDivisorX * CameraScale.x,
-		(position.y) * ScreenDivisorY * CameraScale.y,
-		0.0f));
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
 
-
-	if (rotation.z != 0)
-		trans = glm::rotate(trans, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	if (rotation.y != 0)
-		trans = glm::rotate(trans, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (rotation.x != 0)
-		trans = glm::rotate(trans, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
-
-	TexturedQuadShader->Use();
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(glGetUniformLocation(TexturedQuadShader->Program, "Texture"), 0);
-
-
-	glUniform4f(glGetUniformLocation(TexturedQuadShader->Program, "color"), color.x, color.y, color.z, color.w);
-	glUniform2f(glGetUniformLocation(TexturedQuadShader->Program, "scr"), WIDTH, HEIGHT);
-	glUniformMatrix4fv(glGetUniformLocation(TexturedQuadShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 	
-	
-	glBindVertexArray(quadVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	int SLI = -1;
+
+	for (int i = 0; i < SceneLayers.size(); i++)
+		if (SceneLayers[i].Z_Index == Z_Index)
+			SLI = i;
+	if (SLI == -1)
+	{
+		SceneLayer sl;
+		sl.Z_Index = Z_Index;
+		SceneLayers.push_back(sl);
+		SortSceneLayers();
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+	}
+
+	int TQA = -1;
+
+	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+		if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+			TQA = i;
+	if (TQA == -1)
+	{
+		TexturedQuadArray NewTQA;
+		NewTQA.Texture = texture;
+		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+			if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+				TQA = i;
+	}
+	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position,scale));
+	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+
 }
 
 
-void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(1.0f), glm::vec3 rotation = glm::vec3(0.0f))
+void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f,int Z_Index =0,unsigned int NormalMap = NULL)
 {
+
+
 	glm::vec2 position = c.position;
 	glm::vec2 scale = glm::vec2(c.width, c.height);
+
+	if (NormalMap != NULL)
+		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index);
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
 	position -= CameraPosition;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-		(position.x) * ScreenDivisorX * CameraScale.x,
-		(position.y) * ScreenDivisorY * CameraScale.y,
-		0.0f));
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
 
 
-	if (rotation.z != 0)
-		trans = glm::rotate(trans, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	if (rotation.y != 0)
-		trans = glm::rotate(trans, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	if (rotation.x != 0)
-		trans = glm::rotate(trans, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	trans = glm::scale(trans, glm::vec3(scale.x * CameraScale.x * ScaleMultiplyer, scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
+	int SLI = -1;
 
-	TexturedQuadShader->Use();
+	for (int i = 0; i < SceneLayers.size(); i++)
+		if (SceneLayers[i].Z_Index == Z_Index)
+			SLI = i;
+	if (SLI == -1)
+	{
+		SceneLayer sl;
+		sl.Z_Index = Z_Index;
+		SceneLayers.push_back(sl);
+		SortSceneLayers();
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+	}
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	int TQA = -1;
 
-	glUniform4f(glGetUniformLocation(TexturedQuadShader->Program, "color"), color.x, color.y, color.z, color.w);
-	glUniform2f(glGetUniformLocation(TexturedQuadShader->Program, "scr"), WIDTH, HEIGHT);
-	glUniformMatrix4fv(glGetUniformLocation(TexturedQuadShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+		if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+			TQA = i;
+	if (TQA == -1)
+	{
+		TexturedQuadArray NewTQA;
+		NewTQA.Texture = texture;
+		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+			if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+				TQA = i;
+	}
+	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
 
-	
-	glBindVertexArray(quadVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+
+
 }
 
 

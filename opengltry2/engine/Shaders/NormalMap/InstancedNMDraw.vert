@@ -1,18 +1,29 @@
 #version 330 core
 layout (location = 0) in vec4 aPos;
-layout (location = 1) in mat4 aMat;
+layout (location = 1) in float angle;
+layout (location = 2) in vec4 aPosScale;
 
 
-out vec2 TexCoords;
+out vec3 TexCoords;
 
-uniform vec2 scr;
+uniform float aspect;
 uniform bool flipY = false;
 void main()
 {
-	vec4 pos = aMat*vec4(aPos.xy,0.0f,1.0f);
-	pos.x /=scr.x;
-	pos.x *=scr.y;
+	vec4 pos = vec4(aPos.xy,0.0f,1.0f);
+
+    pos.xy = pos.xy * aPosScale.zw;
+
+
+    float Sin = sin(angle);
+    float Cos = cos(angle);
+    pos.xy = vec2(Cos * pos.x - Sin * pos.y, Sin * pos.x + Cos * pos.y);
+
+    pos.xy += aPosScale.xy;
+
+    pos.x *=aspect;
 	gl_Position =  pos;
+	TexCoords.z = angle;
 	if(!flipY)
 	{
 		TexCoords.x = aPos.z;

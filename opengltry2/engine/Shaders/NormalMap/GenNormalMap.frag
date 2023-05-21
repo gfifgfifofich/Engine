@@ -12,11 +12,14 @@ void main()
 	if(Type==0)
 	{
 		float dist = TC.x*TC.x+TC.y*TC.y;
-		if(dist<1.0f)
-			{
-				vec4 NM = vec4(TC,2.0f,1.0f);
-				FragColor = NM;
-			}
+
+
+		if(dist<=1.0f)
+		{
+			vec2 NTC = TC/sqrt(dist);
+			vec4 NM = vec4(NTC*dist,2.0f,1.0f);
+			FragColor = NM;
+		}
 		else discard;
 	}
 	if(Type==1)

@@ -33,7 +33,7 @@ public:
 		if (type == CIRCLE)
 			DrawCircle(body.b.position, body.b.r, Color);
 		else if (type == QUAD)
-			DrawCube(body.c.position, glm::vec2(body.c.width, body.c.height),glm::vec3(0.0f), Color);
+			DrawCube(body.c.position, glm::vec2(body.c.width, body.c.height),0.0f, Color);
 	}
 	void PreProcess(float dt)
 	{

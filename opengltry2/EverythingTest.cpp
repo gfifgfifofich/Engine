@@ -6,9 +6,7 @@ const int amount = 100;
 ball balls[amount];
 Triangle tri(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f));
 
-Particle Spark;
-
-
+int substeps = 4;
 class application : public Engine
 {
 public:
@@ -51,7 +49,7 @@ public:
 		Sparker.RotationRandomness = 10.0f;
 		Sparker.RotationAcceleration = 0.01f;
 
-		Sparker.Type = "LINE";
+		Sparker.Type = "QUAD";
 		ParticleEmiters.push_back(&Sparker);
 
 
@@ -102,7 +100,6 @@ public:
 		}
 		b.init(glm::vec2(500, 500), 50);
 		b.body.roughness = 0.0f;
-		DrawingOrder = false;
 		substeps = 4;
 		b.Color= glm::vec4(2.0f, 0.2f, 0.04f, 0.1f) * 10.0f;
 	}
@@ -227,11 +224,10 @@ public:
 		posi.y = b.body.position.y ;
 
 
-		RenderText("This is sample text", 25.0f , 25.0f , 10.0f, glm::vec4(0.5, 0.8f, 0.2f, 1.0f),true);
+		RenderText("This is sample text", 25.0f , 25.0f , 1.0f, glm::vec4(0.5, 0.8f, 0.2f, 1.0f),true);
 		
 		
-		DrawNumber(1000.0f / ImGui::GetIO().Framerate, CameraPosition - glm::vec2(WIDTH * 0.20f, HEIGHT * -0.25f), 10, 7.5f, 3, glm::vec4(10.0f, 2.0f, 0.4f, 1.0f), 3);
-
+		
 	}
 };
 

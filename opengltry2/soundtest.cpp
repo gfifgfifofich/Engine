@@ -1,97 +1,148 @@
 #include "engine/Components/Engine.h";
+#include "engine/Components/sounds.h";
 
+unsigned int Sine;
 
-// AL stuff
-ALint state = AL_PLAYING;
-ALuint source;
-ALuint sound;
+const int amount = 9;
 
-ALCdevice* Device = alcOpenDevice(NULL);
-ALCcontext* Context;
-ALCboolean contextMadeCurrent;
+unsigned int Source[amount];
 
-ALfloat listenerPos[] = { 0.0,0.0,0.0 };
-ALfloat listenerVel[] = { 0.0,0.0,0.0 };
-ALfloat listenerOri[] = { 0.0,0.0,1.0, 0.0,1.0,0.0 };
+float stages[amount];
+float sustain[amount];
+float pitch[amount];
+float vibrato[amount];
+float vibratospeed[amount];
+float kick[amount];
 
-void AL_init()
+float mainKick = 2.0f;
+float mainvibrato = 0.0f;
+float mainvibratospeed = 2.0f;
+float mainpitch = 1.0f;
+float mainsustain = 2.0f;
+
+float keysoffset =  1.0f;
+float keySize =  25.0f;
+
+float FrameTime = 0.0f;
+float dt = 0.0f , lasttime = 0.0f;
+
+class application : public Engine
 {
+public:
+	void On_Create() override
+	{
+		AL_init();
+		Sine = LoadSound("Sounds/Sine.wav");
 
-	alListenerfv(AL_POSITION, listenerPos);
-	alListenerfv(AL_VELOCITY, listenerVel);
-	alListenerfv(AL_ORIENTATION, listenerOri);
-	if (Device) {
-		Context = alcCreateContext(Device, NULL);
-		alcMakeContextCurrent(Context);
+		for (int i = 0; i < amount; i++)
+		{
+			GenSource(&Source[i]);
+			SetSourceSound(&Source[i], &Sine);
+			SetSourceLooping(&Source[i], true);
+			stages[i] = 0.0f;
+			SetSourceGain(&Source[i], stages[i]);
+			sustain[i] = 1.125f;
+			pitch[i] = (i+4)/6.0f;
+			vibrato[i] = 0.00f;
+			vibratospeed[i] = 6.0f;
+			kick[i] = 2.0f;
+
+
+			PlaySource(&Source[i]);
+		}
+
+	}
+	void On_Update() override
+	{
+		ImGui::Begin("stuff");
+
+		ImGui::SliderFloat("Sustain",&mainsustain,0.1f,3.0f);
+		ImGui::SliderFloat("Kick speed",&mainKick,0.0f,100.0f);
+		ImGui::SliderFloat("Pitch",&mainpitch,0.01f,3.0f);
+		ImGui::SliderFloat("Vibrato power",&mainvibrato,0.0f,1.0f);
+		ImGui::SliderFloat("Vibrato speed",&mainvibratospeed,0.01f,100.0f);
+
+
+		ImGui::End();
+		while (FrameTime < 0.017f)
+		{
+			dt *= 0.0003f;
+			for (int i = 0; i < 3000; i++)
+			{
+
+				for (int i = 0; i < amount; i++)
+				{
+					sustain[i] = mainsustain;
+					vibrato[i] = mainvibrato;
+					vibratospeed[i] = mainvibratospeed;
+					kick[i] = 1 + mainKick;
+				}
+
+				for (int i = 0; i < amount; i++)
+					if (i % 2 == 0)
+					{//white key
+						float it = i / 2.0f;
+						DrawCube(glm::vec2(it * keySize * 2.1f - keysoffset, -100.0f), glm::vec2(keySize, 100.0f), glm::vec3(0.0f), glm::vec4(1.0f, 1.0f - stages[i], 1.0f - stages[i], 1.0f));
+					}
+				for (int i = 0; i < amount; i++)
+					if (i % 2 != 0)
+					{//black key
+						float it = i / 2.0f;
+						DrawCube(glm::vec2(it * keySize * 2.1f - keysoffset, -75.0f), glm::vec2(keySize * 0.5f, 75.0f), glm::vec3(0.0f), glm::vec4(stages[i], 0.0f, 0.0f, 1.0f));
+
+					}
+
+
+				if (keys[GLFW_KEY_1]) stages[0] += dt * kick[0];
+				if (keys[GLFW_KEY_2]) stages[1] += dt * kick[1];
+				if (keys[GLFW_KEY_3]) stages[2] += dt * kick[2];
+				if (keys[GLFW_KEY_4]) stages[3] += dt * kick[3];
+				if (keys[GLFW_KEY_5]) stages[4] += dt * kick[4];
+				if (keys[GLFW_KEY_6]) stages[5] += dt * kick[5];
+				if (keys[GLFW_KEY_7]) stages[6] += dt * kick[6];
+				if (keys[GLFW_KEY_8]) stages[7] += dt * kick[7];
+				if (keys[GLFW_KEY_9]) stages[8] += dt * kick[8];
+
+				for (int i = 0; i < amount; i++)
+				{
+					if (stages[i] >= 1.0f)
+					{
+						stages[i] = 1.0f;
+					}
+					SetSourceGain(&Source[i], stages[i]);
+					SetSourcePitch(&Source[i], pitch[i] * mainpitch + sin(clock() * 0.001f * vibratospeed[i]) * pitch[i] * vibrato[i]);
+
+
+					stages[i] -= dt / sustain[i];
+					if (stages[i] <= 0)
+					{
+						stages[i] = 0;
+						StopSource(&Source[i]);
+					}
+					else if (!SourcePlaying(&Source[i]))
+					{
+						PlaySource(&Source[i]);
+						std::cout << "playing " << i << "\n";
+					}
+				}
+			}
+
+			dt = (clock() - lasttime) * 0.001f;
+			lasttime = clock();
+			FrameTime += dt;
+		}
+		FrameTime = 0.0f;
 	}
 
-	contextMadeCurrent = alcMakeContextCurrent(Context);
-	if (!contextMadeCurrent)
-		std::cerr << "ERROR: Could not make audio context current" << "\n";
 
-
-	alGenSources(1, &source);
-	sound = LoadSound("carenginesound.wav");
-	alSourcei(source, AL_BUFFER, sound);
-	alSourcef(source, AL_GAIN, 1.0f);
-	alSourcef(source, AL_PITCH, 1.0f);
-	alSource3f(source, AL_POSITION, 1.0f, 0.0f, 2.0f);
-	alSource3f(source, AL_VELOCITY, -1.0, 0, 0);
-	alSourcei(source, AL_LOOPING, AL_TRUE);
-}
-
-
-
+	~application()
+	{
+		AL_Destroy();
+	}
+};
 int main()
 {
-	
-
-	
-
-
-	
-
-	/*
-	
-	
-// Position ...
-alListenerfv(AL_POSITION,listenerPos);
-if ((error = alGetError()) != AL_NO_ERROR)
-{
-DisplayALError("alListenerfv POSITION : ", error);
-return;
-}
-// Velocity ...
-alListenerfv(AL_VELOCITY,listenerVel);
-if ((error = alGetError()) != AL_NO_ERROR)
-{
-DisplayALError("alListenerfv VELOCITY : ", error);
-return;
-}
-// Orientation ...
-alListenerfv(AL_ORIENTATION,listenerOri);
-if ((error = alGetError()) != AL_NO_ERROR)
-{
-DisplayALError("alListenerfv ORIENTATION : ", error);
-return;
-}
-	
-	*/
-	
-
-
-
-	alSourcePlay(source);
-	float rpm = 1.0f;
-	while (state == AL_PLAYING)
-	{
-		alGetSourcei(sound, AL_SOURCE_STATE, &state);
-		alSourcef(source, AL_PITCH, rpm);
-		rpm += 0.0000001f;
-	}
-
-	alcCloseDevice(Device);
-	alcMakeContextCurrent(nullptr);
-	alcDestroyContext(Context);
+	application app;
+	app.init();
 	return 0;
 }

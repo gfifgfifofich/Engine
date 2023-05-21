@@ -116,6 +116,9 @@ class polygon
 public:
 	bool lighted = false;
 	int Textureid = -1;
+	int NormalMapId = -1;
+	int id = -1;
+	int Z_Index = 0;
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels
@@ -131,6 +134,8 @@ public:
 	std::vector <glm::vec2> TexturePoints;
 	std::vector <glm::ivec3> indexes;
 
+	glm::vec2 position = glm::vec2(0.0f);
+
 	unsigned int Texture;
 
 	std::vector <glm::vec4> MiscPoints;
@@ -138,6 +143,29 @@ public:
 
 
 	int state = 0;
+
+	void Move(glm::vec2 position)
+	{
+		this->position += position;
+
+		for (int i = 0; i < triangles.size(); i++)
+		{
+			triangles[i].points[0] += position;
+			triangles[i].points[1] += position;
+			triangles[i].points[2] += position;
+			triangles[i].lines[0].P1 += position;
+			triangles[i].lines[0].P2 += position;
+			triangles[i].lines[1].P1 += position;
+			triangles[i].lines[1].P2 += position;
+			triangles[i].lines[2].P1 += position;
+			triangles[i].lines[2].P2 += position;
+		}
+		for (int i = 0; i < points.size(); i++)
+			points[i] += position;
+	}
+
+
+
 	void add_Point(glm::vec2 point, bool addindex = false)
 	{
 		points.push_back(point);

@@ -106,10 +106,15 @@ glm::vec4 BackgroundColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 glm::vec2 MousePosition;
 glm::vec2 scrpos = glm::vec2(0, 0);
 bool keys[1024];
+bool JustPressedkey[1024];
+bool JustReleasedkey[1024];
+bool Holdingkey[1024];
 bool buttons[64];
+bool JustPressedbutton[64];
+bool JustReleasedbutton[64];
+bool Holdingbutton[64];
 bool SettingsWindow = true;
 
-bool DrawingOrder = false; // 1 - cubes, 0- ballllz
 
 int framecount = 0;
 float delta = 0.0f;
@@ -179,6 +184,10 @@ glm::vec4 AmbientColor = glm::vec4(1.0f);
 
 #include "engine/Components/Objects/Polygon.h";
 #include "engine/Components/Collisions/Ball to Polygon.h";
+
+
+#include "engine/Components/Objects/Ray.h";
+#include "engine/Components/Collisions/RayCastToShapes.h";
 
 #include "Physics/Spring.h";
 #include "Physics/Strut.h";
@@ -291,41 +300,47 @@ class Engine
 
 		//ScreenShaderStuff for HDR and postprocessing
 
-		Shader shaderBlur("engine/Shaders/blur.vert", "engine/Shaders/blur.frag");
+		Shader shaderBlur("engine/Shaders/blur/blur.vert", "engine/Shaders/blur/blur.frag");
 		BlurShaderPtr = &shaderBlur;
 
-		Shader shaderBloom("engine/Shaders/Screen.vert", "engine/Shaders/bloom.frag");
+		Shader shaderBloom("engine/Shaders/Screen.vert", "engine/Shaders/Bloom/bloom.frag");
 
 		Shader ScrShade("engine/Shaders/Screen.vert", "engine/Shaders/Screen.frag");
-		Shader Chromatic("engine/Shaders/Screen.vert", "engine/Shaders/Chromatic.frag");
+		Shader Chromatic("engine/Shaders/Screen.vert", "engine/Shaders/Chromatic/Chromatic.frag");
 
 		//Other Shaders
-		Shader FillShader("engine/Shaders/default.vert", "engine/Shaders/Quad.frag");
+		Shader FillShader("engine/Shaders/Quad/default.vert", "engine/Shaders/Quad/Quad.frag");
 
 
 
 
-		Shader TriShader("engine/Shaders/Fill.vert", "engine/Shaders/Fill.frag");
+		Shader TriShader("engine/Shaders/Triangle/Fill.vert", "engine/Shaders/Triangle/Fill.frag");
 		FilShader = &TriShader;
 
-		Shader TexturedTriShader("engine/Shaders/TexturedTriangle/TexturedTriangle.vert", "engine/Shaders/TexturedTriangle/TexturedTriangle.frag");
+		Shader TexturedTriShader("engine/Shaders/Triangle/TexturedTriangle.vert", "engine/Shaders/Triangle/TexturedTriangle.frag");
 		TexturedTriangleShader= &TexturedTriShader;
 
-		Shader CircleShader("engine/Shaders/Circle.vert", "engine/Shaders/Circle.frag");
-		Shader InctanceQuadShader("engine/Shaders/instance.vert", "engine/Shaders/Quad.frag");
+		Shader CircleShader("engine/Shaders/Circle/Circle.vert", "engine/Shaders/Circle/Circle.frag");
+		Shader InctanceQuadShader("engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
+
 		Shader InstanceNormalMapShader("engine/Shaders/NormalMap/InstancedNMDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
 
-		Shader TexturedQuad("engine/Shaders/TexturedQuad.vert", "engine/Shaders/TexturedQuad.frag");
+		Shader InstanceTexturedQuadShader("engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.frag");
+		
+		Shader InstancedNormalMapShader("engine/Shaders/InstancedNormalMap/InstancedNMDraw.vert", "engine/Shaders/InstancedNormalMap/NormalMapDraw.frag");
+
+
+		Shader TexturedQuad("engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
 		TexturedQuadShader = &TexturedQuad;
 
 
 
 
-		Shader TextSh("engine/Shaders/TexturedQuad.vert", "engine/Shaders/Text.frag");
+		Shader TextSh("engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Text.frag");
 		TextShader = &TextSh;
 		
-		Shader DownsampleBlur("engine/Shaders/Screen.vert", "engine/Shaders/DownscaleBlur.frag");
-		Shader UpsampleBlur("engine/Shaders/Screen.vert", "engine/Shaders/UpsampleBlur.frag");
+		Shader DownsampleBlur("engine/Shaders/Screen.vert", "engine/Shaders/blur/DownscaleBlur.frag");
+		Shader UpsampleBlur("engine/Shaders/Screen.vert", "engine/Shaders/blur/UpsampleBlur.frag");
 
 		Shader NoizeGenShader("engine/Shaders/NoizeGen/NoizeGen.vert", "engine/Shaders/NoizeGen/NoizeGen.frag");
 		NoizeGenShaderptr = &NoizeGenShader;
@@ -333,12 +348,12 @@ class Engine
 		Shader RoundShader("engine/Shaders/Round/Round.vert", "engine/Shaders/Round/Round.frag");
 		RoundShaderptr = &RoundShader;
 
-		Shader AddTextures("engine/Shaders/Screen.vert", "engine/Shaders/AddTextures.frag");
+		Shader AddTextures("engine/Shaders/Screen.vert", "engine/Shaders/Textures/AddTextures.frag");
 		AddTexturesShader = &AddTextures;
 		
 
 		//Lighteing Shaders:
-		Shader NormMapDraw("engine/Shaders/TexturedQuad.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
+		Shader NormMapDraw("engine/Shaders/NormalMap/NormalMapDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
 		NormalMapDrawShader = &NormMapDraw;
 
 		Shader GenNormMapDraw("engine/Shaders/Screen.vert", "engine/Shaders/NormalMap/GenNormalMap.frag");
@@ -611,6 +626,8 @@ class Engine
 		unsigned int instanceCircleVBO;
 		unsigned int instanceNormalMapCircleVBO;
 		unsigned int instanceNormalMapCubeVBO;
+		unsigned int instanceNormalMapTextureVBO;
+		unsigned int instanceTexturedQuadVBO;
 		unsigned int instanceVBO;
 		
 
@@ -650,6 +667,28 @@ class Engine
 			MousePosition.x = (lastX - WIDTH * 0.5f) / CameraScale.x + CameraPosition.x;
 			MousePosition.y = (-lastY + HEIGHT * 0.5f) / CameraScale.y + CameraPosition.y;
 
+			for (int i = 0; i < 1024; i++)
+			{
+				if (!Holdingkey[i] && keys[i]) JustPressedkey[i] = true;
+				else JustPressedkey[i] = false;
+
+				if (Holdingkey[i] && !keys[i]) JustReleasedkey[i] = true;
+				else JustReleasedkey[i] = false;
+
+				if (keys[i]) Holdingkey[i] = true;
+				else Holdingkey[i] = false;
+			}
+			for (int i = 0; i < 64; i++)
+			{
+				if (!Holdingbutton[i] && buttons[i]) JustPressedbutton[i] = true;
+				else JustPressedbutton[i] = false;
+
+				if (Holdingbutton[i] && !buttons[i]) JustReleasedbutton[i] = true;
+				else JustReleasedbutton[i] = false;
+
+				if (buttons[i]) Holdingbutton[i] = true;
+				else Holdingbutton[i] = false;
+			}
 
 			if (!HoldingLMB && buttons[GLFW_MOUSE_BUTTON_1]) JustPressedLMB = true;
 			else JustPressedLMB = false;
@@ -699,8 +738,8 @@ class Engine
 								QuadToQuadCollision(cubes[i], cubes[a]);
 								if (DrawCubicColiders)
 								{
-									DrawCube(cubes[i]->position, glm::vec2(cubes[i]->width, cubes[i]->height), glm::vec3(0.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-									DrawCube(cubes[a]->position, glm::vec2(cubes[a]->width, cubes[a]->height), glm::vec3(0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+									DrawCube(cubes[i]->position, glm::vec2(cubes[i]->width, cubes[i]->height), 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+									DrawCube(cubes[a]->position, glm::vec2(cubes[a]->width, cubes[a]->height), 0.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 								}
 							}
 				}
@@ -709,229 +748,316 @@ class Engine
 
 
 
+				float aspect = (float)HEIGHT / WIDTH;
 
+				for (int i = 0; i < SceneLayers.size(); i++)
+				{
+					// instancing
+					{
+						glGenBuffers(1, &instanceCircleVBO);
+						glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
+						glBindVertexArray(CircleVAO);
 
-			// instancing
-			{
-				glGenBuffers(1, &instanceCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
-				glBindVertexArray(CircleVAO);
 
+						glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].Circlecolors.size(), &SceneLayers[i].Circlecolors[0], GL_STATIC_DRAW);
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * Circlecolors.size(), &Circlecolors[0], GL_STATIC_DRAW);
+						glEnableVertexAttribArray(1);
+						glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+						glVertexAttribDivisor(1, 1);
 
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+						glGenBuffers(1, &instanceCircleVBO);
+						glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
+						glBindVertexArray(CircleVAO);
 
-				glVertexAttribDivisor(1, 1);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].CirclePosScale.size(), &SceneLayers[i].CirclePosScale[0], GL_STATIC_DRAW);
 
-				glGenBuffers(1, &instanceCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
-				glBindVertexArray(CircleVAO);
+						glEnableVertexAttribArray(2);
+						glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * Circletranslations.size(), &Circletranslations[0], GL_STATIC_DRAW);
 
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+						glVertexAttribDivisor(2, 1);
 
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
 
-				glEnableVertexAttribArray(4);
-				glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
 
-				glEnableVertexAttribArray(5);
-				glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+						glGenBuffers(1, &instanceCircleVBO);
+						glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
+						glBindVertexArray(CircleVAO);
 
-				glVertexAttribDivisor(2, 1);
-				glVertexAttribDivisor(3, 1);
-				glVertexAttribDivisor(4, 1);
-				glVertexAttribDivisor(5, 1);
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-			}
-			//quads
-			{
-				glGenBuffers(1, &instanceVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(float)* SceneLayers[i].CircleRotations.size(), &SceneLayers[i].CircleRotations[0], GL_STATIC_DRAW);
 
-				glBindVertexArray(quadVAO);
+						glEnableVertexAttribArray(3);
+						glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * Quadcolors.size(), &Quadcolors[0], GL_STATIC_DRAW);
+						glBindVertexArray(0);
+						glBindBuffer(GL_ARRAY_BUFFER, 0);
+					}
+					//quads
+					{
+						glGenBuffers(1, &instanceVBO);
+						glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+						glBindVertexArray(quadVAO);
 
-				glVertexAttribDivisor(2, 1);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].Quadcolors.size(), &SceneLayers[i].Quadcolors[0], GL_STATIC_DRAW);
 
+						glEnableVertexAttribArray(2);
+						glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 
+						glVertexAttribDivisor(2, 1);
 
-				glGenBuffers(1, &instanceVBO);
 
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * Quadtranslations.size(), &Quadtranslations[0], GL_STATIC_DRAW);
+						glGenBuffers(1, &instanceVBO);
 
+						glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].QuadPosScale.size(), &SceneLayers[i].QuadPosScale[0], GL_STATIC_DRAW);
 
-				glEnableVertexAttribArray(4);
-				glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
 
-				glEnableVertexAttribArray(5);
-				glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+						glEnableVertexAttribArray(3);
+						glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 
-				glEnableVertexAttribArray(6);
-				glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
 
-				glVertexAttribDivisor(3, 1);
-				glVertexAttribDivisor(4, 1);
-				glVertexAttribDivisor(5, 1);
-				glVertexAttribDivisor(6, 1);
+						glVertexAttribDivisor(3, 1);
 
+						glGenBuffers(1, &instanceVBO);
 
+						glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(float)* SceneLayers[i].QuadRotations.size(), &SceneLayers[i].QuadRotations[0], GL_STATIC_DRAW);
 
-			}
-			if (DrawingOrder)
-			{
-				InctanceQuadShader.Use();
-				glUniform2f(glGetUniformLocation(InctanceQuadShader.Program, "scr"), WIDTH, HEIGHT);
-				glBindVertexArray(quadVAO);
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, Quadcolors.size());
-				glBindVertexArray(0);
 
-				glDeleteBuffers(7, &instanceVBO);
+						glEnableVertexAttribArray(4);
+						glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
 
-				CircleShader.Use();
-				glUniform2f(glGetUniformLocation(CircleShader.Program, "scr"), WIDTH, HEIGHT);
-				glBindVertexArray(CircleVAO);
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, Circlecolors.size());
-				glBindVertexArray(0);
 
-				glDeleteBuffers(7, &instanceCircleVBO);
+						glVertexAttribDivisor(4, 1);
 
-				Quadcolors.clear();
-				Quadtranslations.clear();
-				Circlecolors.clear();
-				Circletranslations.clear();
-			}
-			else {
 
-				CircleShader.Use();
-				glUniform2f(glGetUniformLocation(CircleShader.Program, "scr"), WIDTH, HEIGHT);
-				glBindVertexArray(CircleVAO);
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, Circlecolors.size());
-				glBindVertexArray(0);
+						glBindVertexArray(0);
+						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-				glDeleteBuffers(7, &instanceCircleVBO);
+					}
 
-				InctanceQuadShader.Use();
-				glUniform2f(glGetUniformLocation(InctanceQuadShader.Program, "scr"), WIDTH, HEIGHT);
-				glBindVertexArray(quadVAO);
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, Quadcolors.size());
-				glBindVertexArray(0);
+					InctanceQuadShader.Use();
+					glUniform1f(glGetUniformLocation(InctanceQuadShader.Program, "aspect"), aspect);
+					glBindVertexArray(quadVAO);
+					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Quadcolors.size());
+					glBindVertexArray(0);
 
-				glDeleteBuffers(7, &instanceVBO);
+					glDeleteBuffers(7, &instanceVBO);
 
-				Quadcolors.clear();
-				Quadtranslations.clear();
-				Circlecolors.clear();
-				Circletranslations.clear();
-			}
+					CircleShader.Use();
+					glUniform1f(glGetUniformLocation(CircleShader.Program, "aspect"), aspect);
+					glBindVertexArray(CircleVAO);
+					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Circlecolors.size());
+					glBindVertexArray(0);
 
-			// NormalMaps
-			if (Lighting) {
-				glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+					glDeleteBuffers(7, &instanceCircleVBO);
 
-				InstanceNormalMapShader.Use();
+					SceneLayers[i].Quadcolors.clear();
+					SceneLayers[i].QuadPosScale.clear();
+					SceneLayers[i].QuadRotations.clear();
 
+					SceneLayers[i].Circlecolors.clear();
+					SceneLayers[i].CirclePosScale.clear();
+					SceneLayers[i].CircleRotations.clear();
 
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, CubeNormalMapTexture);
-				glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
 
-				glUniform2f(glGetUniformLocation(InstanceNormalMapShader.Program, "scr"), WIDTH, HEIGHT);
+					for (int TQA = 0; TQA < SceneLayers[i].TexturedQuads.size(); TQA++)
+					{
+						InstanceTexturedQuadShader.Use();
 
-				/*if (DrawingOrder)
-				{*/
-				glGenBuffers(1, &instanceNormalMapCubeVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
-				glBindVertexArray(quadVAO);
+						glUniform1f(glGetUniformLocation(InstanceTexturedQuadShader.Program, "aspect"), aspect);
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * NormalMapCubeMatrixes.size(), &NormalMapCubeMatrixes[0], GL_STATIC_DRAW);
 
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+						glActiveTexture(GL_TEXTURE0);
+						glBindTexture(GL_TEXTURE_2D, SceneLayers[i].TexturedQuads[TQA].Texture);
+						glUniform1i(glGetUniformLocation(InstanceTexturedQuadShader.Program, "Texture"), 0);
 
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+						glGenBuffers(1, &instanceTexturedQuadVBO);
+						glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
+						glBindVertexArray(quadVAO);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4)* SceneLayers[i].TexturedQuads[TQA].Quadcolors.size(), &SceneLayers[i].TexturedQuads[TQA].Quadcolors[0], GL_STATIC_DRAW);
 
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+						glEnableVertexAttribArray(1);
+						glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 
-				glEnableVertexAttribArray(4);
-				glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+						glVertexAttribDivisor(1, 1);
 
-				glVertexAttribDivisor(1, 1);
-				glVertexAttribDivisor(2, 1);
-				glVertexAttribDivisor(3, 1);
-				glVertexAttribDivisor(4, 1);
 
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, NormalMapCubeMatrixes.size());
-				glDeleteBuffers(7, &instanceNormalMapCubeVBO);
+						glGenBuffers(1, &instanceTexturedQuadVBO);
+						glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
+						glBindVertexArray(quadVAO);
 
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4)* SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size(), &SceneLayers[i].TexturedQuads[TQA].QuadPosScale[0], GL_STATIC_DRAW);
 
+						glEnableVertexAttribArray(2);
+						glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, BallNormalMapTexture);
-				glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+						glVertexAttribDivisor(2, 1);
 
+						glGenBuffers(1, &instanceTexturedQuadVBO);
 
+						glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
 
-				glGenBuffers(1, &instanceNormalMapCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
-				glBindVertexArray(quadVAO);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(float)* SceneLayers[i].TexturedQuads[TQA].QuadRotations.size(), &SceneLayers[i].TexturedQuads[TQA].QuadRotations[0], GL_STATIC_DRAW);
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * NormalMapCircleMatrixes.size(), &NormalMapCircleMatrixes[0], GL_STATIC_DRAW);
 
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+						glEnableVertexAttribArray(3);
+						glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
 
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
 
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+						glVertexAttribDivisor(3, 1);
 
-				glEnableVertexAttribArray(4);
-				glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+						glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size());
+						glDeleteBuffers(7, &instanceTexturedQuadVBO);
 
-				glVertexAttribDivisor(1, 1);
-				glVertexAttribDivisor(2, 1);
-				glVertexAttribDivisor(3, 1);
-				glVertexAttribDivisor(4, 1);
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, NormalMapCircleMatrixes.size());
-				glDeleteBuffers(7, &instanceNormalMapCircleVBO);
+						glBindVertexArray(0);
+						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+						SceneLayers[i].TexturedQuads[TQA].Quadcolors.clear();
+						SceneLayers[i].TexturedQuads[TQA].QuadPosScale.clear();
+						SceneLayers[i].TexturedQuads[TQA].QuadRotations.clear();
+					}
 
-				NormalMapCircleMatrixes.clear();
-				NormalMapCubeMatrixes.clear();
 
+					// NormalMaps
+						if (Lighting)
+						{
+							glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
 
-				if (HDR)
-					glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-				else
-					glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			}
+							InstanceNormalMapShader.Use();
 
+
+
+							glUniform1f(glGetUniformLocation(InstanceNormalMapShader.Program, "aspect"), aspect);
+
+
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, CubeNormalMapTexture);
+							glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+
+							glGenBuffers(1, &instanceNormalMapCubeVBO);
+							glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
+							glBindVertexArray(quadVAO);
+							glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCubeRotations.size(), &SceneLayers[i].NormalMapCubeRotations[0], GL_STATIC_DRAW);
+
+							glEnableVertexAttribArray(1);
+							glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+							glVertexAttribDivisor(1, 1);
+
+
+							glGenBuffers(1, &instanceNormalMapCubeVBO);
+							glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
+							glBindVertexArray(quadVAO);
+
+							glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCubePosScale.size(), &SceneLayers[i].NormalMapCubePosScale[0], GL_STATIC_DRAW);
+
+							glEnableVertexAttribArray(2);
+							glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+
+							glVertexAttribDivisor(2, 1);
+
+							glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCubePosScale.size());
+							glDeleteBuffers(7, &instanceNormalMapCubeVBO);
+
+							glBindVertexArray(0);
+							glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, BallNormalMapTexture);
+							glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+
+							glGenBuffers(1, &instanceNormalMapCircleVBO);
+							glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
+							glBindVertexArray(quadVAO);
+							glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCircleRotations.size(), &SceneLayers[i].NormalMapCircleRotations[0], GL_STATIC_DRAW);
+
+							glEnableVertexAttribArray(1);
+							glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+							glVertexAttribDivisor(1, 1);
+
+							glGenBuffers(1, &instanceNormalMapCircleVBO);
+							glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
+							glBindVertexArray(quadVAO);
+
+							glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCirclePosScale.size(), &SceneLayers[i].NormalMapCirclePosScale[0], GL_STATIC_DRAW);
+
+							glEnableVertexAttribArray(2);
+							glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+							glVertexAttribDivisor(2, 1);
+							glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCirclePosScale.size());
+							glDeleteBuffers(7, &instanceNormalMapCircleVBO);
+
+							glBindVertexArray(0);
+							glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+							SceneLayers[i].NormalMapCirclePosScale.clear();
+							SceneLayers[i].NormalMapCubePosScale.clear();
+							SceneLayers[i].NormalMapCircleRotations.clear();
+							SceneLayers[i].NormalMapCubeRotations.clear();
+
+
+							for (int NQA = 0; NQA < SceneLayers[i].NormalMaps.size(); NQA++)
+							{
+								InstancedNormalMapShader.Use();
+
+								glUniform1f(glGetUniformLocation(InstancedNormalMapShader.Program, "aspect"), aspect);
+
+
+								glActiveTexture(GL_TEXTURE0);
+								glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture);
+								glUniform1i(glGetUniformLocation(InstancedNormalMapShader.Program, "Texture"), 0);
+
+								glGenBuffers(1, &instanceNormalMapTextureVBO);
+								glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO);
+								glBindVertexArray(quadVAO);
+								glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMaps[NQA].QuadRotations.size(), &SceneLayers[i].NormalMaps[NQA].QuadRotations[0], GL_STATIC_DRAW);
+
+								glEnableVertexAttribArray(1);
+								glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+								glVertexAttribDivisor(1, 1);
+
+
+								glGenBuffers(1, &instanceNormalMapTextureVBO);
+								glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO);
+								glBindVertexArray(quadVAO);
+
+								glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMaps[NQA].QuadPosScale.size(), &SceneLayers[i].NormalMaps[NQA].QuadPosScale[0], GL_STATIC_DRAW);
+
+								glEnableVertexAttribArray(2);
+								glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+								glVertexAttribDivisor(2, 1);
+
+								glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMaps[NQA].QuadPosScale.size());
+								glDeleteBuffers(6, &instanceNormalMapTextureVBO);
+
+								glBindVertexArray(0);
+								glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+								SceneLayers[i].NormalMaps[NQA].Quadcolors.clear();
+								SceneLayers[i].NormalMaps[NQA].QuadPosScale.clear();
+								SceneLayers[i].NormalMaps[NQA].QuadRotations.clear();
+							}
+
+
+							if (HDR)
+								glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+							else
+								glBindFramebuffer(GL_FRAMEBUFFER, 0);
+						}
+				}
 
 			
 
@@ -967,6 +1093,8 @@ class Engine
 						0.0f));
 
 
+					if (LightSources[i].rotation != 0)
+						trans = glm::rotate(trans, LightSources[i].rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 
 					trans = glm::scale(trans, glm::vec3(LightSources[i].scale.x * CameraScale.x * ScaleMultiplyer, LightSources[i].scale.y * CameraScale.y * ScaleMultiplyer, 0.0f));
 
@@ -1037,8 +1165,6 @@ class Engine
 				ImGui::Begin("Settings");
 				
 				
-				if (ImGui::Button("HDR"))
-					HDR = !HDR;
 				if (ImGui::Button("Lighting"))
 					Lighting = !Lighting;
 
@@ -1053,13 +1179,6 @@ class Engine
 					ImGui::Text("on");
 				else
 					ImGui::Text("off");
-				if (ImGui::Button("Drawing order"))
-					DrawingOrder = !DrawingOrder;
-				ImGui::SameLine();
-				if (DrawingOrder)
-					ImGui::Text("rects first");
-				else
-					ImGui::Text("circles first");
 
 				ImGui::SliderFloat("AmbientLight", &AmbientLight, 0.0f, 1.0f);
 				ImGui::SliderFloat("DirectionalLight", &DirectionalLight, 0.0f, 1.0f);
@@ -1069,6 +1188,10 @@ class Engine
 				ImGui::SliderFloat("bloomLevelDivisor", &bloomLevelDivisor, 1.0f, 10.0f);
 
 				ImGui::SliderFloat("strength", &ChromaticStrength, 0.0f, 1.0f);
+
+				float col[4] = { BackgroundColor.r ,BackgroundColor.g,BackgroundColor.b,BackgroundColor.a };
+				ImGui::ColorEdit4("BackgroundColor", col);
+				BackgroundColor = { col[0],col[1],col[2],col[3] };
 
 				if (ImGui::Button("Show NormalMaps"))
 				{

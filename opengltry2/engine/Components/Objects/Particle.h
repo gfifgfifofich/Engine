@@ -1,6 +1,10 @@
 // MEMORY LEACK in ParticleEmiter.Particles (only if initialized in class)
 #pragma once
+#include <thread>
+
+#include <algorithm>
 #include <execution>
+
 // Contains and Process data for particles. Pushback ptr to ParticleEmiters array, or Process() somewhere else 
 class ParticleEmiter
 {
@@ -106,10 +110,13 @@ public:
 	std::vector <Particle> Particles;
 
 	std::string Type = "QUAD";// QUAD, LINE, CIRCLE, TEXTURED ( for QUAD & TEXTURED - Size(width,height), Line - Size(length,width), Circle - Size(r,nothing))
-	std::string Name = "Particles yay";
 
 	std::vector<unsigned int> textures;
+
+	unsigned int NormalMap = CubeNormalMapTexture;
+
 	std::vector<int> Textureids;
+	int NormalMapid = -1;
 	bool influenced = false;
 	std::vector<influenceSphere> SpheresOfInfluence;
 	std::vector<influenceCube> CubesOfInfluence;
@@ -122,7 +129,8 @@ public:
 	std::vector<LightSphere> LightSpheres;
 	std::vector<LightCube> LightCubes;
 
-
+	std::string Name = "Particles yay";
+	int id = 0;
 
 	
 	int AddSpheresOfInfluence(glm::vec2 position, float r, glm::vec2 velocity, bool Attractive = false, float AttractionStrength = 1.0f)//returns index of created sphere
@@ -204,17 +212,24 @@ public:
 		return LightCubes.size() - 1;
 	}
 
+	int Z_Index = 0;
+	bool DrawToNormalMap = false;
+
 	bool ShowWindow = false;
 
 	int start = 0;
+	int Normastart = 0;
 	int threadcount = std::thread::hardware_concurrency();
 	float delta = 0.017f;
+
+	int SceneLayerIndex = -1;
+	int NormalMapIndex = -1;
+	int TextureIndex = -1;
 	void Process(float dt = 0.017f)
 	{
-
-		
-
 		delta = dt;
+
+
 		if (ShowWindow)
 		{
 
@@ -245,11 +260,11 @@ public:
 			VelocityRandomness.z = vec[0];
 			VelocityRandomness.w = vec[1];
 
-			ImGui::SliderFloat("VelocityDamper", &VelocityDamper,0,1.0f);
+			ImGui::SliderFloat("VelocityDamper", &VelocityDamper, 0, 1.0f);
 
 			vec[0] = StartSize.x;
 			vec[1] = StartSize.y;
-			ImGui::DragFloat2("StartSize", vec,0.1f);
+			ImGui::DragFloat2("StartSize", vec, 0.1f);
 			StartSize.x = vec[0];
 			StartSize.y = vec[1];
 
@@ -290,14 +305,14 @@ public:
 			ImGui::DragFloat("OrbitalVelocityRandomness", &OrbitalVelocityRandomness, 0.01f);
 
 			ImGui::DragFloat("lifetime", &lifetime, 0.1f);
-			ImGui::SliderFloat("lifetimeRandomness", &lifetimeRandomness,0,1);
+			ImGui::SliderFloat("lifetimeRandomness", &lifetimeRandomness, 0, 1);
 			ImGui::Checkbox("Influenced", &influenced);
 			ImGui::Checkbox("Lighted", &lighted);
+			ImGui::Checkbox("DrawToNormalMap", &DrawToNormalMap);
 
 
 			ImGui::End();
 		}
-		
 		for (int i = 0; i < EmitionPoints.size(); i++)
 		{
 			EmitionPoints[i].t += dt;
@@ -348,19 +363,115 @@ public:
 		for (int i = 0; i < threadcount; i++)
 			iter[i] = i;
 
+
+		int SLI = -1;
+		for (int i = 0; i < SceneLayers.size(); i++)
+			if (SceneLayers[i].Z_Index == Z_Index)
+				SLI = i;
+		if (SLI == -1)
+		{
+			SceneLayer sl;
+			sl.Z_Index = Z_Index;
+			SceneLayers.push_back(sl);
+			SortSceneLayers();
+			for (int i = 0; i < SceneLayers.size(); i++)
+				if (SceneLayers[i].Z_Index == Z_Index)
+					SLI = i;
+		}
+		SceneLayerIndex = SLI;
+
+		//std::cout << "Particle SLI = " << SLI << " Z_Index = " << SceneLayers[SLI].Z_Index<<" Name = "<<Name<<"\n";
+
 		if (Type == "CIRCLE")
 		{
-			start = Circletranslations.size();
-			Circletranslations.resize(Circletranslations.size() + Particles.size());
-			Circlecolors.resize(Circletranslations.size() + Particles.size());
+			start = SceneLayers[SceneLayerIndex].CirclePosScale.size();
+			SceneLayers[SceneLayerIndex].CirclePosScale.resize(SceneLayers[SceneLayerIndex].CirclePosScale.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].Circlecolors.resize(SceneLayers[SceneLayerIndex].Circlecolors.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].CircleRotations.resize(SceneLayers[SceneLayerIndex].CircleRotations.size() + Particles.size());
+			if (DrawToNormalMap)
+			{
+				Normastart = SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size();
+				SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].NormalMapCircleRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCircleRotations.size() + Particles.size());
+			}
 		}
 		else if (Type == "QUAD" || Type == "LINE")
 		{
-			start = Quadcolors.size();
-			Quadcolors.resize(Quadcolors.size() + Particles.size());
-			Quadtranslations.resize(Quadtranslations.size() + Particles.size());
+			start = SceneLayers[SceneLayerIndex].Quadcolors.size();
+			SceneLayers[SceneLayerIndex].Quadcolors.resize(SceneLayers[SceneLayerIndex].Quadcolors.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].QuadPosScale.resize(SceneLayers[SceneLayerIndex].QuadPosScale.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].QuadRotations.resize(SceneLayers[SceneLayerIndex].QuadRotations.size() + Particles.size());
+			if (DrawToNormalMap)
+			{
+				Normastart = SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size();
+				SceneLayers[SceneLayerIndex].NormalMapCubePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].NormalMapCubeRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCubeRotations.size() + Particles.size());
+			}
 		}
-		if (Particles.size() > 30000 && Type != "TEXTURED")
+		else if (Type == "TEXTURED" && textures.size() > 0)
+		{
+			int TQA = -1;
+			unsigned int texture = textures[0];
+
+			for (int i = 0; i < SceneLayers[SceneLayerIndex].TexturedQuads.size(); i++)
+				if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
+					TQA = i;
+			if (TQA == -1)
+			{
+				TexturedQuadArray NewTQA;
+				NewTQA.Texture = texture;
+				SceneLayers[SceneLayerIndex].TexturedQuads.push_back(NewTQA);
+				for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+					if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
+						TQA = i;
+			}
+			TextureIndex = TQA;
+			start = SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size();
+			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.size() + Particles.size());
+
+
+		}
+		if (DrawToNormalMap)
+		{
+			if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+			{
+				int TQA = -1;
+
+				for (int i = 0; i < SceneLayers[SceneLayerIndex].NormalMaps.size(); i++)
+					if (SceneLayers[SceneLayerIndex].NormalMaps[i].Texture == NormalMap)
+						TQA = i;
+				if (TQA == -1)
+				{
+					TexturedQuadArray NewTQA;
+					NewTQA.Texture = NormalMap;
+					SceneLayers[SceneLayerIndex].NormalMaps.push_back(NewTQA);
+					for (int i = 0; i < SceneLayers[SceneLayerIndex].NormalMaps.size(); i++)
+						if (SceneLayers[SceneLayerIndex].NormalMaps[i].Texture == NormalMap)
+							TQA = i;
+				}
+				NormalMapIndex = TQA;
+
+				Normastart = SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size();
+				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
+			}
+			else if (NormalMap == CubeNormalMapTexture)
+			{
+				Normastart = SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size();
+				SceneLayers[SceneLayerIndex].NormalMapCubePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].NormalMapCubeRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCubeRotations.size() + Particles.size());
+			}
+			else
+			{
+				Normastart = SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size();
+				SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].NormalMapCircleRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCircleRotations.size() + Particles.size());
+			}
+
+		}
+		if (Particles.size() > 30000)
 		{
 			std::for_each(std::execution::par, iter.begin(), iter.end(), [this](int thr)
 				{
@@ -368,125 +479,246 @@ public:
 					for (int i = thr * step; i < (thr + 1) * step; i++)
 						if (i < Particles.size())
 						{
-							float stage = Particles[i].time / lifetime;
-
-							glm::vec2 SizeDif = StartSize - EndSize;
-							glm::vec4 ColorDif = StartColor - EndColor;
-
-							glm::vec2 Size = EndSize + (SizeDif * stage);
-							glm::vec4 color = EndColor + (ColorDif * stage);
-
-
-							Particles[i].position += Particles[i].velocity * delta;
-							Particles[i].velocity += acceleration * delta;
-							Particles[i].velocity += glm::vec2(-Particles[i].velocity.y, Particles[i].velocity.x) * Particles[i].OrbitalVelocity * delta;
-							Particles[i].velocity -= Particles[i].velocity * VelocityDamper * delta;
 							Particles[i].time -= delta;
-
-							Particles[i].Rotation += Particles[i].RotationVelocity;
-							Particles[i].RotationVelocity += RotationAcceleration;
-							Particles[i].RotationVelocity -= Particles[i].RotationVelocity * RotationDamper;
-							if (influenced)
+							if (Particles[i].time > 0.0f)
 							{
-								for (int s = 0; s < SpheresOfInfluence.size(); s++)
+								float stage = Particles[i].time / lifetime;
+
+								glm::vec2 SizeDif = StartSize - EndSize;
+								glm::vec4 ColorDif = StartColor - EndColor;
+
+								glm::vec2 Size = EndSize + (SizeDif * stage);
+								glm::vec4 color = EndColor + (ColorDif * stage);
+
+
+								Particles[i].position += Particles[i].velocity * delta;
+								Particles[i].velocity += acceleration * delta;
+								Particles[i].velocity += glm::vec2(-Particles[i].velocity.y, Particles[i].velocity.x) * Particles[i].OrbitalVelocity * delta;
+								Particles[i].velocity -= Particles[i].velocity * VelocityDamper * delta;
+
+								Particles[i].Rotation += Particles[i].RotationVelocity * delta;
+								Particles[i].RotationVelocity += RotationAcceleration * delta;
+								Particles[i].RotationVelocity -= Particles[i].RotationVelocity * RotationDamper * delta;
+								if (influenced)
 								{
-									float dist = sqrlength(Particles[i].position - SpheresOfInfluence[s].position);
-									if (dist < SpheresOfInfluence[s].r * SpheresOfInfluence[s].r)
+									for (int s = 0; s < SpheresOfInfluence.size(); s++)
 									{
-										Particles[i].velocity += SpheresOfInfluence[s].velocity * delta;
-										if (SpheresOfInfluence[s].attractive)
-											Particles[i].velocity += (SpheresOfInfluence[s].position - Particles[i].position) * SpheresOfInfluence[s].attractionStrength * delta;
+										float dist = sqrlength(Particles[i].position - SpheresOfInfluence[s].position);
+										if (dist < SpheresOfInfluence[s].r * SpheresOfInfluence[s].r)
+										{
+											Particles[i].velocity += SpheresOfInfluence[s].velocity * delta;
+											if (SpheresOfInfluence[s].attractive)
+												Particles[i].velocity += (SpheresOfInfluence[s].position - Particles[i].position) * SpheresOfInfluence[s].attractionStrength * delta;
+										}
+									}
+									for (int s = 0; s < CubesOfInfluence.size(); s++)
+									{
+										if (CubesOfInfluence[s].position.x + CubesOfInfluence[s].scale.x >= Particles[i].position.x &&
+											CubesOfInfluence[s].position.x - CubesOfInfluence[s].scale.x <= Particles[i].position.x &&
+											CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
+											CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
+										{
+
+											Particles[i].velocity += CubesOfInfluence[s].velocity * delta;
+											if (CubesOfInfluence[s].attractive)
+												Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * delta;
+										}
 									}
 								}
-								for (int s = 0; s < CubesOfInfluence.size(); s++)
-								{
-									if (CubesOfInfluence[s].position.x + CubesOfInfluence[s].scale.x >= Particles[i].position.x &&
-										CubesOfInfluence[s].position.x - CubesOfInfluence[s].scale.x <= Particles[i].position.x &&
-										CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
-										CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
-									{
 
-										Particles[i].velocity += CubesOfInfluence[s].velocity * delta;
-										if (CubesOfInfluence[s].attractive)
-											Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * delta;
+								if (lighted)
+								{
+									for (int s = 0; s < LightSpheres.size(); s++)
+									{
+										float dist = sqrlength(Particles[i].position - LightSpheres[s].position);
+										float rr = LightSpheres[s].r * LightSpheres[s].r;
+										if (dist < rr)
+										{
+											dist /= rr;
+											color.r += LightSpheres[s].Color.r * LightSpheres[s].Color.a * (1.0f - dist);
+											color.g += LightSpheres[s].Color.g * LightSpheres[s].Color.a * (1.0f - dist);
+											color.b += LightSpheres[s].Color.b * LightSpheres[s].Color.a * (1.0f - dist);
+										}
+									}
+									for (int s = 0; s < LightCubes.size(); s++)
+									{
+										if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x &&
+											Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x &&
+											Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y &&
+											Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y)
+										{
+
+											float stage = (abs(Particles[i].position.x - LightCubes[s].position.x) + abs(Particles[i].position.y - LightCubes[s].position.y)) / (LightCubes[s].scale.x * 0.5f + LightCubes[s].scale.y * 0.5f);
+											if (stage > 1.0f)
+												stage = 1.0f;
+											color.r += LightCubes[s].Color.r * LightCubes[s].Color.a * (1.0f - stage);
+											color.g += LightCubes[s].Color.g * LightCubes[s].Color.a * (1.0f - stage);
+											color.b += LightCubes[s].Color.b * LightCubes[s].Color.a * (1.0f - stage);
+										}
 									}
 								}
-							}
 
-							if (lighted)
-							{
-								for (int s = 0; s < LightSpheres.size(); s++)
-								{
-									float dist = sqrlength(Particles[i].position - LightSpheres[s].position);
-									float rr = LightSpheres[s].r * LightSpheres[s].r;
-									if (dist < rr)
+
+								if (Type == "CIRCLE") {
+
+									float aspx = ScreenDivisorX * CameraScale.x;
+									float aspy = ScreenDivisorY * CameraScale.y;
+
+									glm::vec2 position = Particles[i].position - CameraPosition;
+									position *= glm::vec2(aspx, aspy);
+
+
+									SceneLayers[SceneLayerIndex].CirclePosScale[start + i] = glm::vec4(position,Size * glm::vec2(aspx, aspy));
+									SceneLayers[SceneLayerIndex].Circlecolors[start + i] = color;
+									if (DrawToNormalMap)
 									{
-										dist /= rr;
-										color.r += LightSpheres[s].Color.r * LightSpheres[s].Color.a * (1.0f - dist);
-										color.g += LightSpheres[s].Color.g * LightSpheres[s].Color.a * (1.0f - dist);
-										color.b += LightSpheres[s].Color.b * LightSpheres[s].Color.a * (1.0f - dist);
+										if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+										}
+										else if (NormalMap == CubeNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
+										}
+										else
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
+										}
 									}
 								}
-								for (int s = 0; s < LightCubes.size(); s++)
+								else if (Type == "QUAD")
 								{
-									if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x  &&
-										Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x  &&
-										Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y  &&
-										Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y )
-									{
+									float aspx = ScreenDivisorX * CameraScale.x;
+									float aspy = ScreenDivisorY * CameraScale.y;
 
-										float stage = (abs(Particles[i].position.x - LightCubes[s].position.x) + abs(Particles[i].position.y - LightCubes[s].position.y)) / (LightCubes[s].scale.x * 0.5f + LightCubes[s].scale.y * 0.5f);
-										if (stage > 1.0f)
-											stage = 1.0f;
-										color.r += LightCubes[s].Color.r * LightCubes[s].Color.a * (1.0f - stage);
-										color.g += LightCubes[s].Color.g * LightCubes[s].Color.a * (1.0f - stage);
-										color.b += LightCubes[s].Color.b * LightCubes[s].Color.a * (1.0f - stage);
+									glm::vec2 position = Particles[i].position - CameraPosition;
+									position *= glm::vec2(aspx, aspy);
+
+									
+
+
+									SceneLayers[SceneLayerIndex].QuadPosScale[start + i] = glm::vec4(position,Size* glm::vec2(aspx, aspy));
+									SceneLayers[SceneLayerIndex].QuadRotations[start + i] = Particles[i].Rotation;
+									SceneLayers[SceneLayerIndex].Quadcolors[start + i] = color;
+									if (DrawToNormalMap)
+									{
+										if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+										}
+										else if (NormalMap == CubeNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
+										}
+										else
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
+										}
+									}
+
+								}
+								else if (Type == "LINE")
+								{
+
+									glm::vec2 p1 = Particles[i].position;
+									glm::vec2 p2 = Particles[i].position + Particles[i].velocity * Size.x * delta;
+									glm::vec2 midpos = (p2 + p1) / 2.0f;
+									float rotation = get_angle_between_points(p1, p2);
+									glm::vec2 dif = p1 - p2;
+									float length = sqrt(dif.x * dif.x + dif.y * dif.y) * 0.5f;
+
+									float aspx = ScreenDivisorX * CameraScale.x;
+									float aspy = ScreenDivisorY * CameraScale.y;
+								
+									glm::vec2 position = midpos - CameraPosition;
+									position *= glm::vec2(aspx, aspy);
+
+
+									//DrawCube(midpos, glm::vec2(length * 5.125f * 25, width), glm::vec3(0.0f, 0.0f, rotation), color);
+
+									SceneLayers[SceneLayerIndex].QuadPosScale[start + i] = glm::vec4(position, glm::vec2(Size.x , Size.y * length) * glm::vec2(aspx, aspy));
+									SceneLayers[SceneLayerIndex].QuadRotations[start + i] = rotation;
+									SceneLayers[SceneLayerIndex].Quadcolors[start + i] = color;
+									if (DrawToNormalMap)
+									{
+										if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = rotation;
+										}
+										else if (NormalMap == CubeNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = rotation;
+										}
+										else
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = rotation;
+										}
 									}
 								}
-							}
+								else if (Type == "TEXTURED" && textures.size() > 0)
+								{
+									float aspx = ScreenDivisorX * CameraScale.x;
+									float aspy = ScreenDivisorY * CameraScale.y;
+
+									glm::vec2 position = Particles[i].position - CameraPosition;
+									position *= glm::vec2(aspx, aspy);
 
 
-							if (Type == "CIRCLE") {
-								glm::vec2 position = Particles[i].position - CameraPosition;
-								glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
 
-								trans = glm::scale(trans, glm::vec3(Size.x * ScaleMultiplyer * CameraScale.x, Size.x * ScaleMultiplyer * CameraScale.y, 0.0f));
-								Circletranslations[start + i] = trans;
-								Circlecolors[start + i] = color;
-							}
-							else if (Type == "QUAD")
-							{
-								glm::vec2 position = Particles[i].position - CameraPosition;
-								glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
+									int SLI = -1;
 
-								if (Particles[i].Rotation != 0)
-									trans = glm::rotate(trans, Particles[i].Rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-								trans = glm::scale(trans, glm::vec3(Size.x * CameraScale.x * ScaleMultiplyer, Size.y * CameraScale.y * ScaleMultiplyer, 0.0f));
-								Quadtranslations[start + i] = trans;
-								Quadcolors[start + i] = color;
-							}
-							else if (Type == "LINE")
-							{
+									for (int i = 0; i < SceneLayers.size(); i++)
+										if (SceneLayers[i].Z_Index == Z_Index)
+											SLI = i;
+									if (SLI == -1)
+									{
+										SceneLayer sl;
+										sl.Z_Index = Z_Index;
+										SceneLayers.push_back(sl);
+										SortSceneLayers();
+										for (int i = 0; i < SceneLayers.size(); i++)
+											if (SceneLayers[i].Z_Index == Z_Index)
+												SLI = i;
+									}
 
-								glm::vec2 p1 = Particles[i].position;
-								glm::vec2 p2 = Particles[i].position + Particles[i].velocity * Size.x * delta;
-								glm::vec2 midpos = (p2 + p1) / 2.0f;
-								float rotation = get_angle_between_points(p1, p2);
-								glm::vec2 dif = p1 - p2;
-								float length = sqrt(dif.x * dif.x + dif.y * dif.y) / (0.20 * 1280);
+									int TQA = -1;
+									unsigned int texture = textures[Particles[i].id % textures.size()];
 
-								glm::vec2 position = midpos - CameraPosition;
-								glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
-
-								if (rotation != 0)
-									trans = glm::rotate(trans, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-								trans = glm::scale(trans, glm::vec3(length * 5.125f * 25 * CameraScale.x * ScaleMultiplyer, Size.y * CameraScale.x * ScaleMultiplyer, 0.0f));
-
-
-								//DrawCube(midpos, glm::vec2(length * 5.125f * 25, width), glm::vec3(0.0f, 0.0f, rotation), color);
-
-								Quadtranslations[start + i] = trans;
-								Quadcolors[start + i] = color;
+									for (int i = 0; i < SceneLayers[SceneLayerIndex].TexturedQuads.size(); i++)
+										if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
+											TQA = i;
+									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[start + i] = color;
+									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[start + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[start + i] = Particles[i].Rotation;
+									
+									if (DrawToNormalMap)
+									{
+										if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+										}
+										else if (NormalMap == CubeNormalMapTexture)
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
+										}
+										else
+										{
+											SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+											SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
+										}
+									}
+								}
 							}
 							/*if (Type == "QUAD")DrawCube(Particles[i].position, Sizes[i], glm::vec3(0.0f, 0.0f, Particles[i].Rotation), colors[i]);
 							if (Type == "LINE")DrawLine(Particles[i].position, Particles[i].position - Particles[i].velocity * Sizes[i].x * delta, Sizes[i].y, colors[i]);
@@ -497,147 +729,272 @@ public:
 		else
 			for (int i = 0; i < Particles.size(); i++)
 			{
-				float stage = Particles[i].time / lifetime;
-
-				glm::vec2 SizeDif = StartSize - EndSize;
-				glm::vec4 ColorDif = StartColor - EndColor;
-
-				glm::vec2 Size = EndSize + (SizeDif * stage);
-				glm::vec4 color = EndColor + (ColorDif * stage);
-
-
-				Particles[i].position += Particles[i].velocity * delta;
-				Particles[i].velocity += acceleration * delta;
-				Particles[i].velocity += glm::vec2(-Particles[i].velocity.y, Particles[i].velocity.x) * Particles[i].OrbitalVelocity * delta;
-				Particles[i].velocity -= Particles[i].velocity * VelocityDamper * delta;
 				Particles[i].time -= delta;
-
-				Particles[i].Rotation += Particles[i].RotationVelocity;
-				Particles[i].RotationVelocity += RotationAcceleration;
-				Particles[i].RotationVelocity -= Particles[i].RotationVelocity * RotationDamper;
-
-				if (influenced)
+				if (Particles[i].time > 0.0f)
 				{
-					for (int s = 0; s < SpheresOfInfluence.size(); s++)
+					float stage = Particles[i].time / lifetime;
+
+					glm::vec2 SizeDif = StartSize - EndSize;
+					glm::vec4 ColorDif = StartColor - EndColor;
+
+					glm::vec2 Size = EndSize + (SizeDif * stage);
+					glm::vec4 color = EndColor + (ColorDif * stage);
+
+
+
+					Particles[i].position += Particles[i].velocity * delta;
+					Particles[i].velocity += acceleration * delta;
+					Particles[i].velocity += glm::vec2(-Particles[i].velocity.y, Particles[i].velocity.x) * Particles[i].OrbitalVelocity * delta;
+					Particles[i].velocity -= Particles[i].velocity * VelocityDamper * delta;
+
+					Particles[i].Rotation += Particles[i].RotationVelocity * delta;
+					Particles[i].RotationVelocity += RotationAcceleration * delta;
+					Particles[i].RotationVelocity -= Particles[i].RotationVelocity * RotationDamper * delta;
+
+					if (influenced)
 					{
-						float dist = sqrlength(Particles[i].position - SpheresOfInfluence[s].position);
-						if (dist < SpheresOfInfluence[s].r * SpheresOfInfluence[s].r)
+						for (int s = 0; s < SpheresOfInfluence.size(); s++)
 						{
-							Particles[i].velocity += SpheresOfInfluence[s].velocity * dt;
-							if (SpheresOfInfluence[s].attractive)
-								Particles[i].velocity +=  (SpheresOfInfluence[s].position - Particles[i].position)* SpheresOfInfluence[s].attractionStrength* dt;
+							float dist = sqrlength(Particles[i].position - SpheresOfInfluence[s].position);
+							if (dist < SpheresOfInfluence[s].r * SpheresOfInfluence[s].r)
+							{
+								Particles[i].velocity += SpheresOfInfluence[s].velocity * dt;
+								if (SpheresOfInfluence[s].attractive)
+									Particles[i].velocity += (SpheresOfInfluence[s].position - Particles[i].position) * SpheresOfInfluence[s].attractionStrength * dt;
+							}
+						}
+						for (int s = 0; s < CubesOfInfluence.size(); s++)
+						{
+
+
+							if (CubesOfInfluence[s].position.x + CubesOfInfluence[s].scale.x >= Particles[i].position.x &&
+								CubesOfInfluence[s].position.x - CubesOfInfluence[s].scale.x <= Particles[i].position.x &&
+								CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
+								CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
+							{
+
+								Particles[i].velocity += CubesOfInfluence[s].velocity * dt;
+								if (CubesOfInfluence[s].attractive)
+									Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * dt;
+							}
 						}
 					}
-					for (int s = 0; s < CubesOfInfluence.size(); s++)
+					if (lighted)
 					{
+						for (int s = 0; s < LightSpheres.size(); s++)
+						{
+							float dist = sqrlength(Particles[i].position - LightSpheres[s].position);
+							float rr = LightSpheres[s].r * LightSpheres[s].r;
+							if (dist < rr)
+							{
+								dist /= rr;
+								color.r += LightSpheres[s].Color.r * LightSpheres[s].Color.a * (1.0f - dist);
+								color.g += LightSpheres[s].Color.g * LightSpheres[s].Color.a * (1.0f - dist);
+								color.b += LightSpheres[s].Color.b * LightSpheres[s].Color.a * (1.0f - dist);
+							}
+						}
+						for (int s = 0; s < LightCubes.size(); s++)
+						{
+							if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x &&
+								Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x &&
+								Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y &&
+								Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y)
+							{
+
+								float stage = (abs(Particles[i].position.x - LightCubes[s].position.x) + abs(Particles[i].position.y - LightCubes[s].position.y)) / (LightCubes[s].scale.x * 0.5f + LightCubes[s].scale.y * 0.5f);
+								if (stage > 1.0f)
+									stage = 1.0f;
+								color.r += LightCubes[s].Color.r * LightCubes[s].Color.a * (1.0f - stage);
+								color.g += LightCubes[s].Color.g * LightCubes[s].Color.a * (1.0f - stage);
+								color.b += LightCubes[s].Color.b * LightCubes[s].Color.a * (1.0f - stage);
+							}
+						}
+					}
+					if (Type == "CIRCLE") {
+						float aspx = ScreenDivisorX * CameraScale.x;
+						float aspy = ScreenDivisorY * CameraScale.y;
+
+						glm::vec2 position = Particles[i].position - CameraPosition;
+						position *= glm::vec2(aspx, aspy);
+						SceneLayers[SceneLayerIndex].CirclePosScale[start + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+						SceneLayers[SceneLayerIndex].Circlecolors[start + i] = color;
+						if (DrawToNormalMap)
+						{
+							if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+							}
+							else if (NormalMap == CubeNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
+							}
+							else
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
+							}
+						}
+					}
+					else if (Type == "QUAD")
+					{
+
+						float aspx = ScreenDivisorX * CameraScale.x;
+						float aspy = ScreenDivisorY * CameraScale.y;
 						
+						glm::vec2 position = Particles[i].position - CameraPosition;
+						position *= glm::vec2(aspx, aspy);
+
+
 						
-						if (CubesOfInfluence[s].position.x + CubesOfInfluence[s].scale.x >= Particles[i].position.x &&
-							CubesOfInfluence[s].position.x - CubesOfInfluence[s].scale.x <= Particles[i].position.x &&
-							CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
-							CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
-						{
+						SceneLayers[SceneLayerIndex].QuadPosScale[start + i] = glm::vec4(position, Size* glm::vec2(aspx, aspy));
+						SceneLayers[SceneLayerIndex].QuadRotations[start + i] = Particles[i].Rotation;
 
-							Particles[i].velocity += CubesOfInfluence[s].velocity * dt;
-							if (CubesOfInfluence[s].attractive)
-								Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * dt;
+						SceneLayers[SceneLayerIndex].Quadcolors[start + i] = color;
+						if (DrawToNormalMap)
+						{
+							if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+							}
+							else if (NormalMap == CubeNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
+							}
+							else
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
+							}
 						}
+
 					}
-				}
-				if (lighted)
-				{
-					for (int s = 0; s < LightSpheres.size(); s++)
+					else if (Type == "LINE")
 					{
-						float dist = sqrlength(Particles[i].position - LightSpheres[s].position);
-						float rr = LightSpheres[s].r * LightSpheres[s].r;
-						if (dist < rr)
+
+						glm::vec2 p1 = Particles[i].position;
+						glm::vec2 p2 = Particles[i].position + Particles[i].velocity * Size.x * delta;
+						glm::vec2 midpos = (p2 + p1) / 2.0f;
+						float rotation = get_angle_between_points(p1, p2);
+						glm::vec2 dif = p1 - p2;
+						float length = sqrt(dif.x * dif.x + dif.y * dif.y) * 0.5f;
+
+
+						float aspx = ScreenDivisorX * CameraScale.x;
+						float aspy = ScreenDivisorY * CameraScale.y;
+						glm::vec2 position = midpos - CameraPosition;
+						position *= glm::vec2(aspx, aspy);
+						//DrawCube(midpos, glm::vec2(length * 5.125f * 25, width), glm::vec3(0.0f, 0.0f, rotation), color);
+
+						SceneLayers[SceneLayerIndex].QuadPosScale[start + i] = glm::vec4(position, glm::vec2(Size.x, Size.y * length) * glm::vec2(aspx, aspy));
+						SceneLayers[SceneLayerIndex].QuadRotations[start + i] = rotation;
+						SceneLayers[SceneLayerIndex].Quadcolors[start + i] = color;
+						if (DrawToNormalMap)
 						{
-							dist /= rr;
-							color.r += LightSpheres[s].Color.r * LightSpheres[s].Color.a * (1.0f-dist) ;
-							color.g += LightSpheres[s].Color.g * LightSpheres[s].Color.a * (1.0f-dist) ;
-							color.b += LightSpheres[s].Color.b * LightSpheres[s].Color.a * (1.0f-dist) ;
+							if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = rotation;
+							}
+							else if (NormalMap == CubeNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = rotation;
+							}
+							else
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = rotation;
+							}
 						}
 					}
-					for (int s = 0; s < LightCubes.size(); s++)
+					else if (Type == "TEXTURED" && textures.size() > 0)
 					{
-						if (Particles[i].position.x < LightCubes[s].position.x + LightCubes[s].scale.x&&
-							Particles[i].position.x > LightCubes[s].position.x - LightCubes[s].scale.x&&
-							Particles[i].position.y < LightCubes[s].position.y + LightCubes[s].scale.y&&
-							Particles[i].position.y > LightCubes[s].position.y - LightCubes[s].scale.y)
+					float aspx = ScreenDivisorX * CameraScale.x;
+					float aspy = ScreenDivisorY * CameraScale.y;
+
+					glm::vec2 position = Particles[i].position - CameraPosition;
+					position *= glm::vec2(aspx, aspy);
+						int TQA = -1;
+						unsigned int texture = textures[Particles[i].id % textures.size()];
+
+						for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+							if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+								TQA = i;
+						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[start + i] = color;
+						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[start + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[start + i] = Particles[i].Rotation;
+
+						if (DrawToNormalMap)
 						{
-
-							float stage = (abs(Particles[i].position.x - LightCubes[s].position.x) + abs(Particles[i].position.y-LightCubes[s].position.y))/(LightCubes[s].scale.x*0.5f+ LightCubes[s].scale.y * 0.5f);
-							if (stage > 1.0f)
-								stage = 1.0f;
-							color.r += LightCubes[s].Color.r * LightCubes[s].Color.a * (1.0f - stage);
-							color.g += LightCubes[s].Color.g * LightCubes[s].Color.a * (1.0f - stage);
-							color.b += LightCubes[s].Color.b * LightCubes[s].Color.a * (1.0f - stage);
+							if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+							}
+							else if (NormalMap == CubeNormalMapTexture)
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
+							}
+							else
+							{
+								SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+								SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
+							}
 						}
+
 					}
-				}
-				if (Type == "CIRCLE") {
-					glm::vec2 position = Particles[i].position - CameraPosition;
-					glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
-
-					trans = glm::scale(trans, glm::vec3(Size.x * ScaleMultiplyer * CameraScale.x, Size.x * ScaleMultiplyer * CameraScale.y, 0.0f));
-					Circletranslations[start + i] = trans;
-					Circlecolors[start + i] = color;
-				}
-				else if (Type == "QUAD")
-				{
-					glm::vec2 position = Particles[i].position - CameraPosition;
-					glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
-
-					if (Particles[i].Rotation != 0)
-						trans = glm::rotate(trans, Particles[i].Rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-					trans = glm::scale(trans, glm::vec3(Size.x * CameraScale.x * ScaleMultiplyer, Size.y * CameraScale.y * ScaleMultiplyer, 0.0f));
-					Quadtranslations[start + i] = trans;
-					Quadcolors[start + i] = color;
-				}
-				else if (Type == "LINE")
-				{
-
-					glm::vec2 p1 = Particles[i].position;
-					glm::vec2 p2 = Particles[i].position + Particles[i].velocity * Size.x * delta;
-					glm::vec2 midpos = (p2 + p1) / 2.0f;
-					float rotation = get_angle_between_points(p1, p2);
-					glm::vec2 dif = p1 - p2;
-					float length = sqrt(dif.x * dif.x + dif.y * dif.y) / (0.20 * 1280);
-
-					glm::vec2 position = midpos - CameraPosition;
-					glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3((position.x) * ScreenDivisorX * CameraScale.x, (position.y) * ScreenDivisorY * CameraScale.y, 0.0f));
-
-					if (rotation != 0)
-						trans = glm::rotate(trans, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-					trans = glm::scale(trans, glm::vec3(length * 5.125f * 25 * CameraScale.x * ScaleMultiplyer, Size.y * CameraScale.x * ScaleMultiplyer, 0.0f));
-
-
-					//DrawCube(midpos, glm::vec2(length * 5.125f * 25, width), glm::vec3(0.0f, 0.0f, rotation), color);
-
-					Quadtranslations[start + i] = trans;
-					Quadcolors[start + i] = color;
-				}
-				else if (Type == "TEXTURED" && textures.size()>0)
-				{
-					DrawTexturedQuad(Particles[i].position, Size, textures[Particles[i].id % textures.size()], glm::vec3(0.0f, 0.0f, Particles[i].Rotation), color);
 				}
 				/*if (Type == "QUAD")DrawCube(Particles[i].position, Sizes[i], glm::vec3(0.0f, 0.0f, Particles[i].Rotation), colors[i]);
 				if (Type == "LINE")DrawLine(Particles[i].position, Particles[i].position - Particles[i].velocity * Sizes[i].x * delta, Sizes[i].y, colors[i]);
 				if (Type == "CIRCLE")DrawCircle(Particles[i].position, Sizes[i].x, colors[i]);*/
 			}
-				
-		for (int i = 0; i < Particles.size(); i++)
-		{
-			
-			if (Particles[i].time <= 0.0f)
-			{
-				Particles[i] = Particles[Particles.size() - 1];
-				Particles.pop_back();
 
+
+		if(Particles.size()>100000)
+			for (int i = 0; i < Particles.size(); i++)
+			{
+				if (i < Particles.size() && Particles[i].time<=0.0f)
+				{
+					Particles[i] = Particles[Particles.size() - 1];
+					Particles.pop_back();
+				}
 			}
-			
+		else if (Particles.size() > 1)
+		{
+			int counter = 0;
+			int i = Particles.size() - 1;
+			int LastNonZero = Particles.size() - 1;
+
+			while (i >= 0)
+			{
+				if (Particles[i].time <= 0.0f)
+				{
+					counter++;
+
+					Particles[i] = Particles[LastNonZero];
+
+					LastNonZero--;
+				}
+				i--;
+			}
+			if (counter == Particles.size())
+				Particles.clear();
+			else
+				for (int i = 0; i < counter; i++)
+					if(Particles.size()>0)
+						Particles.pop_back();
+		}
+		else if (Particles.size() == 1)
+		{
+			if (Particles[0].time <= 0.0f) Particles.clear();
 		}
 	}
+
 	void Spawn(glm::vec2 position,int amount = 1)
 	{
 		Particle p;
@@ -682,5 +1039,40 @@ public:
 			Particles.push_back(p);
 		}
 	}
+	void SpawnInCube(glm::vec2 position, glm::vec2 scale,int amount)
+	{
+		for (int a = 0; a <amount; a++)
+		{
+			glm::vec2 pos = position;
+			pos.x += rand() % (int)scale.x * 2.0f - scale.x;
+			pos.y += rand() % (int)scale.y * 2.0f - scale.y;
+			Spawn(pos, 1);
+		}
+	}
+	void SpawnInCircle(glm::vec2 position,float r, int amount)
+	{
+		for (int a = 0; a < amount; a++)
+		{
+			glm::vec2 pos =position;
+			float Radius = rand() % (int)r;
+			float angle = rand();
+			pos += glm::vec2((cos(angle) - sin(angle)) * Radius, (cos(angle) + sin(angle)) * Radius);
 
+			Spawn(pos,1);
+		}
+		
+	}
+	void SpawnInCircle(glm::vec2 position, float r, int amount,glm::vec2 velocity)
+	{
+		for (int a = 0; a < amount; a++)
+		{
+			glm::vec2 pos = position;
+			float Radius = rand() % (int)r*0.5f;
+			float angle = rand();
+			pos += glm::vec2((cos(angle) - sin(angle)) * Radius, (cos(angle) + sin(angle)) * Radius);
+
+			Spawn(pos,velocity, 1);
+		}
+
+	}
 };

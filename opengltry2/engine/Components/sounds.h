@@ -71,6 +71,16 @@ void SetSourceGain(unsigned int* source, float gain)// stock = 1.0f;
 {
 	alSourcef(*source, AL_GAIN, gain);
 }
+
+void SetSourceRefDist(unsigned int* source, float Distance)// stock = 1.0f;
+{
+	alSourcef(*source, AL_REFERENCE_DISTANCE, Distance);
+}
+void SetSourceMaxDistance(unsigned int* source, float Distance)// stock = 1.0f;
+{
+	alSourcef(*source, AL_MAX_DISTANCE, Distance);
+}
+
 void SetSourcePosition(unsigned int* source, glm::vec3 position)// stock = 0.0f,0.0f,0.0f;
 {
 	glm::vec3 pos;
@@ -88,10 +98,13 @@ void SetSourceLooping(unsigned int* source, bool looping)// stock = false;
 	alSourcei(*source, AL_LOOPING, looping);
 }
 
+
 void SetSourceSound(unsigned int* source, unsigned int* sound)
 {
 	alSourcei(*source, AL_BUFFER, *sound);
 }
+
+
 
 // helpfull when source is running on loop
 void SwapSourceSound(unsigned int* source, unsigned int* sound)
@@ -107,6 +120,13 @@ void PlaySource(unsigned int* source)
 void StopSource(unsigned int* source)
 {
 	alSourceStop(*source);
+}
+
+bool SourcePlaying(unsigned int* source)
+{
+	int playing;
+	alGetSourcei(*source, AL_SOURCE_STATE,&playing);
+	return playing == AL_PLAYING;
 }
 
 void DeleteSource(unsigned int* source)

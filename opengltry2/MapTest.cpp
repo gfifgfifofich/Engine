@@ -1,5 +1,9 @@
 #include "engine/Components/Engine.h"
 
+
+char MapFileNameChars[128];
+std::string MapFileName = "Maps/mappa.sav";
+
 Scene Map;
 Texture tex;
 
@@ -17,6 +21,14 @@ int grabbedType = -1;// 0-ball, 1-cube, 2-polygonpoint, 3-point;
 ball* grabbedBall;
 cube* grabbedCube;
 polygon* grabbedPolygon;
+miscPoint* grabbedPoint;
+
+int grabbedpoint = -1;
+
+glm::ivec3 tmpIndex = glm::ivec3(-1);
+int indexCreationState = 0;
+
+bool ShowPolygonTools = false;
 
 
 bool ShowPolygonPositions = false;
@@ -35,6 +47,7 @@ int CurrentRedactorObject = -1;
 ball* SelectedBall = NULL;
 cube* SelectedCube = NULL;
 polygon* SelectedPolygon = NULL;
+miscPoint* SelectedPoint;
 ParticleEmiter* CurrentParticleEmiter = NULL;
 LightSource* CurrentLightSource = NULL;
 
@@ -55,6 +68,7 @@ float size[2] = { 10.0f,10.0f };
 float radius = 10.0f;
 float tick = 0.017f;
 int amount = 1;
+int Id = 0;
 float AttractionForce = 10.0f;
 bool attracticve = false;
 float LightColor[4] = { 1.0f, 1.0f,1.0f,1.0f };
@@ -65,6 +79,7 @@ int noizeiterator = 0;
 bool ShowParticlesWindow = false;
 bool ShowLightSourcesWindow = false;
 bool ShowTexturesWindow = false;
+bool ShowNormalMapsWindow = false;
 
 float LightVolume = 0.005f;
 
@@ -199,7 +214,6 @@ void ShowParticleObjectRedactorWindow(ParticleEmiter* PE,int type,int i)
 	}
 	ImGui::End();
 }
-
 void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 {
 	ImGui::Begin(CurrentParticleEmiter->Name.c_str());
@@ -223,7 +237,7 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	if (ImGui::Button("Redact"))
 	{
 		RedactingParticlesEmiter = !RedactingParticlesEmiter;
-		GrabSelectTool = !RedactingParticlesEmiter;
+		GrabSelectTool = false;
 		RedactingScene = false;
 		RedactingPolygon = false;
 	}
@@ -443,13 +457,13 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 			DrawCircle(CurrentParticleEmiter->LightSpheres[i].position, CurrentParticleEmiter->LightSpheres[i].r, glm::vec4(1.0f, 1.0f,0.0f, 0.2f));
 
 		for (int i = 0; i < CurrentParticleEmiter->CubesOfInfluence.size(); i++)
-			DrawCube(CurrentParticleEmiter->CubesOfInfluence[i].position, CurrentParticleEmiter->CubesOfInfluence[i].scale, glm::vec3(0.0f), glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
+			DrawCube(CurrentParticleEmiter->CubesOfInfluence[i].position, CurrentParticleEmiter->CubesOfInfluence[i].scale, 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
 
 		for (int i = 0; i < CurrentParticleEmiter->EmitionCubes.size(); i++)
-			DrawCube(CurrentParticleEmiter->EmitionCubes[i].position, CurrentParticleEmiter->EmitionCubes[i].scale, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
+			DrawCube(CurrentParticleEmiter->EmitionCubes[i].position, CurrentParticleEmiter->EmitionCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
 
 		for (int i = 0; i < CurrentParticleEmiter->LightCubes.size(); i++)
-			DrawCube(CurrentParticleEmiter->LightCubes[i].position, CurrentParticleEmiter->LightCubes[i].scale, glm::vec3(0.0f), glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
+			DrawCube(CurrentParticleEmiter->LightCubes[i].position, CurrentParticleEmiter->LightCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
 
 		for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
 			DrawCircle(CurrentParticleEmiter->EmitionPoints[i].position,10, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -458,9 +472,12 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	}
 	else
 	{
+		ImGui::DragInt("id", &CurrentParticleEmiter->id, 0.1f);
+		ImGui::DragInt("Z_Index", &CurrentParticleEmiter->Z_Index, 0.1f);
 		ImGui::SliderInt("TextureId", &selectedTexture, 0, Map.Textures.size() - 1);
 		if (selectedTexture >= 0 && selectedTexture < Map.Textures.size())
 			ImGui::Text(Map.Textures[selectedTexture].FileName.c_str());
+		ImGui::SliderInt("NormalMap", &CurrentParticleEmiter->NormalMapid, -1, Map.NormalMaps.size() - 1);
 		if (ImGui::Button("Add"))
 		{
 			CurrentParticleEmiter->Textureids.push_back(selectedTexture);
@@ -493,6 +510,7 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	}
 	ImGui::End();
 }
+
 void ShowRedactorWindow(LightSource* ls)
 {
 	ImGui::Begin(CurrentLightSource->name.c_str());
@@ -522,10 +540,14 @@ void ShowRedactorWindow(LightSource* ls)
 		CurrentLightSource = NULL;
 	ImGui::End;
 }
+
 void ShowRedactorWindow(ball* Ball)
 {
 	ImGui::Begin("Ball");
 
+
+	ImGui::DragInt("id", &SelectedBall->id, 0.1f);
+	ImGui::DragInt("Z_Index", &SelectedBall->Z_Index, 0.1f);
 
 	ImGui::DragFloat("Radius", &SelectedBall->r);
 
@@ -542,7 +564,8 @@ void ShowRedactorWindow(ball* Ball)
 		ImGui::Text(Map.Textures[SelectedBall->Textureid].FileName.c_str());
 	else 
 		ImGui::Text("Clear Color");
-	ImGui::DragInt("Texture", &SelectedBall->Textureid, 0.01f, -1, Map.Textures.size() - 1);
+	ImGui::SliderInt("Texture", &SelectedBall->Textureid, -1, Map.Textures.size() - 1);
+	ImGui::SliderInt("NormalMap", &SelectedBall->NormalMapId, -1, Map.NormalMaps.size() - 1);
 	ImGui::Checkbox("Lighted", &SelectedBall->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedBall->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedBall->Collision_Mask, 0.01f);
@@ -555,6 +578,9 @@ void ShowRedactorWindow(ball* Ball)
 void ShowRedactorWindow(cube* Cube)
 {
 	ImGui::Begin("Cube");
+
+	ImGui::DragInt("id", &SelectedCube->id, 0.1f);
+	ImGui::DragInt("Z_Index", &SelectedCube->Z_Index, 0.1f);
 
 	ImGui::DragFloat("width", &SelectedCube->width);
 	ImGui::DragFloat("height", &SelectedCube->height);
@@ -572,7 +598,8 @@ void ShowRedactorWindow(cube* Cube)
 		ImGui::Text(Map.Textures[SelectedCube->Textureid].FileName.c_str());
 	else
 		ImGui::Text("Clear Color");
-	ImGui::DragInt("Texture", &SelectedCube->Textureid, 0.01f, -1, Map.Textures.size() - 1);
+	ImGui::SliderInt("Texture", &SelectedCube->Textureid,  -1, Map.Textures.size() - 1);
+	ImGui::SliderInt("NormalMap", &SelectedCube->NormalMapId,  -1, Map.NormalMaps.size() - 1);
 	ImGui::Checkbox("Lighted", &SelectedCube->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedCube->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedCube->Collision_Mask, 0.01f);
@@ -581,10 +608,163 @@ void ShowRedactorWindow(cube* Cube)
 		SelectedCube = NULL;
 	ImGui::End;
 }
+
+void ShowRedactorWindow(miscPoint* point)
+{
+	ImGui::Begin("Point");
+
+	ImGui::DragInt("Id", &SelectedPoint->id,0.1f);
+
+	float pos[2] = { SelectedPoint->position.x ,SelectedPoint->position.y };
+	ImGui::DragFloat2("Position", pos);
+	SelectedPoint->position = { pos[0],pos[1] };
+
+
+	if (ImGui::Button("Close window"))
+		SelectedPoint = NULL;
+	ImGui::End;
+}
+
+void PolygonTools(polygon* poly)
+{
+
+
+	ImGui::Begin("Polygon Tools");
+	if (ImGui::Button("Save as polygon.pol"))
+	{
+		poly->SaveAs("polygon.pol");
+	}
+	if (ImGui::Button("load polygon.pol"))
+	{
+		poly->Load("polygon.pol");
+		poly->Update_Shape();
+	}
+
+	if (ImGui::Button("Pushback color"))
+	{
+		poly->colors.push_back(glm::vec4((rand() % 100 / 50.0f), (rand() % 100 / 50.0f), (rand() % 100 / 50.0f), 1.0f));
+	}
+	if (ImGui::Button("Clear"))
+	{
+		poly->triangles.clear();
+		poly->indexes.clear();
+		poly->points.clear();
+		poly->colors.clear();
+		poly->TexturePoints.clear();
+		poly->state = 0;
+	}
+
+	ImGui::Text("hold ctrl to interact with points");
+	ImGui::Text("hold shift, to add new triangles between existing points");
+
+
+
+
+
+	if (keys[GLFW_KEY_LEFT_ALT])
+	{
+
+		for (int i = 0; i < poly->points.size(); i++)
+			DrawCircle(poly->points[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+
+
+		if (JustPressedLMB)
+		{
+			poly->add_Point(MousePosition, false);
+		}
+	}
+	//creation
+	if (keys[GLFW_KEY_LEFT_CONTROL] && !keys[GLFW_KEY_LEFT_SHIFT])
+	{
+		if (JustPressedLMB)
+		{
+			bool gr = false;
+
+			for (int i = 0; i < poly->points.size(); i++)
+			{
+				if (!gr)
+				{
+					float distance = sqrlength(poly->points[i] - MousePosition);
+
+					if (distance < 100)
+					{
+						grabbedpoint = i;
+						gr = true;
+					}
+				}
+			}
+		}
+
+		if (grabbedpoint >= 0 && grabbedpoint < poly->points.size())
+			poly->points[grabbedpoint] = MousePosition;
+
+		if (ReleasedLMB)grabbedpoint = -1;
+
+
+		for (int i = 0; i < poly->points.size(); i++)
+			DrawCircle(poly->points[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+		poly->Update_Shape();
+	}
+	// connection
+	if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly->points.size() > 0)
+	{
+
+		if (JustPressedLMB)
+		{
+			int copycheck = indexCreationState;
+			for (int i = 0; i < poly->points.size(); i++)
+			{
+
+				float distance = sqrlength(poly->points[i] - MousePosition);
+
+				if (distance < 100 && indexCreationState == copycheck)
+				{
+					if (indexCreationState == 0)
+					{
+						tmpIndex.x = i;
+						indexCreationState++;
+					}
+					else if (indexCreationState == 1)
+					{
+						tmpIndex.y = i;
+						indexCreationState++;
+					}
+					else  if (indexCreationState == 2)
+					{
+						tmpIndex.z = i;
+						indexCreationState = 0;
+
+						if (tmpIndex.x != -1 && tmpIndex.z != -1 && tmpIndex.y != -1)
+							poly->indexes.push_back(tmpIndex);
+						else std::cout << "failed to add index";
+						tmpIndex.x = -1;
+						tmpIndex.y = -1;
+						tmpIndex.z = -1;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < poly->points.size(); i++)
+		{
+
+			DrawCircle(poly->points[i], 10, glm::vec4(
+				i == tmpIndex.x ? 1.0f : 0.0f,
+				i == tmpIndex.y ? 1.0f : 0.0f,
+				i == tmpIndex.z ? 1.0f : 0.0f,
+				1.0f));
+		}
+		poly->Update_Shape();
+	}
+}
 void ShowRedactorWindow(polygon* Polygon)
 {
 
 	ImGui::Begin("Polygon");
+
+	ImGui::DragInt("id", &SelectedPolygon->id, 0.1f);
+	ImGui::DragInt("Z_Index", &SelectedPolygon->Z_Index, 0.1f);
+
 	float col[4] = { SelectedPolygon->colors[0].r ,SelectedPolygon->colors[0].g,SelectedPolygon->colors[0].b,SelectedPolygon->colors[0].a };
 	ImGui::ColorEdit4("Color", col);
 	SelectedPolygon->colors[0] = { col[0],col[1],col[2],col[3] };
@@ -592,10 +772,15 @@ void ShowRedactorWindow(polygon* Polygon)
 		ImGui::Text(Map.Textures[SelectedPolygon->Textureid].FileName.c_str());
 	else
 		ImGui::Text("Clear Color");
-	ImGui::DragInt("Texture", &SelectedPolygon->Textureid, 0.01f, -1, Map.Textures.size() - 1);
+	ImGui::SliderInt("Texture", &SelectedPolygon->Textureid, -1, Map.Textures.size() - 1);
+	ImGui::SliderInt("NormalMap", &SelectedPolygon->NormalMapId,  -1, Map.NormalMaps.size() - 1);
 	ImGui::Checkbox("Lighted", &SelectedPolygon->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedPolygon->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedPolygon->Collision_Mask, 0.01f);
+
+	if (ImGui::Button("ShowPolygonTools"))
+		ShowPolygonTools = !ShowPolygonTools;
+
 
 	if (ImGui::Button("TexturePositions"))
 		ShowPolygonTexturePositions = !ShowPolygonTexturePositions;
@@ -627,6 +812,9 @@ void ShowRedactorWindow(polygon* Polygon)
 	if (ImGui::Button("Close window"))
 		SelectedPolygon = NULL;
 	ImGui::End;
+
+	if (ShowPolygonTools && SelectedPolygon != NULL)
+		PolygonTools(SelectedPolygon);
 }
 
 void ShowRedactorWindow(Texture* Texture)
@@ -640,14 +828,20 @@ void ShowRedactorWindow(Texture* Texture)
 
 
 
-
 class application : public Engine
 {
 	
-
 	void On_Create() override
 	{
-		Map.LoadFrom("Maps/mappa.sav");
+		Map.LoadFrom(MapFileName);
+
+		for (int i = 0; i < MapFileName.size(); i++)
+			MapFileNameChars[i] = MapFileName[i];
+
+
+
+
+
 	}
 	void On_Update() override
 	{
@@ -659,12 +853,37 @@ class application : public Engine
 		if (keys[GLFW_KEY_Q]) CameraScale *= 1.01f;
 		if (keys[GLFW_KEY_E]) CameraScale *= 0.99f;
 
+
 		ImGui::Begin("Tools");
-		if (ImGui::Button("Save"))
-			Map.SaveAs("Maps/mappa.sav");
-		if (ImGui::Button("Load"))
-			Map.LoadFrom("Maps/mappa.sav");
-	
+
+		ImGui::Text("CameraPosition X = %.1f, Y = %.1f", CameraPosition.x, CameraPosition.y);
+		ImGui::Text("CameraScale X = %.3f, Y = %.3f", CameraScale.x, CameraScale.y);
+		if (ImGui::Button("Reset Camera"))
+		{
+			CameraPosition = { 0.0f,0.0f };
+			CameraScale = { 1.0f,1.0f };
+		}
+
+		ImGui::InputText("Save file:", MapFileNameChars, 128);
+		if (ImGui::Button("Save") || keys[GLFW_KEY_LEFT_CONTROL]&& keys[GLFW_KEY_S])
+		{
+			MapFileName = "";
+			for (int i = 0; i < 128; i++)
+			{
+				if (MapFileNameChars[i] != ' ')
+					MapFileName += MapFileNameChars[i];
+			}
+			Map.SaveAs(MapFileName);
+		}if (ImGui::Button("Load"))
+		{
+			MapFileName = "";
+			for (int i = 0; i < 128; i++)
+			{
+				if (MapFileNameChars[i] != ' ')
+					MapFileName += MapFileNameChars[i];
+			}
+			Map.LoadFrom(MapFileName);
+		}
 
 		if (RedactingParticlesEmiter)ImGui::Text("RedactingParticlesEmiter");
 		else if (RedactingPolygon)ImGui::Text("RedactingPolygon");
@@ -693,7 +912,8 @@ class application : public Engine
 			if (RedactorObject == 0)str = "Circle";
 			if (RedactorObject == 1)str = "Quad";
 			if (RedactorObject == 2)str = "Polygon";
-			ImGui::SliderInt(str, &RedactorObject, 0, 2);
+			if (RedactorObject == 3)str = "Point";
+			ImGui::SliderInt(str, &RedactorObject, 0, 3);
 
 			if (RedactorObject == 0)
 			{
@@ -708,6 +928,10 @@ class application : public Engine
 			if (RedactorObject == 2)
 			{
 				ImGui::DragFloat("Radius ish", &radius, 0.1f, 0);
+			}
+			if (RedactorObject == 3)
+			{
+				ImGui::DragInt("Id", &Id, 0.1f, 0);
 			}
 			ImGui::Checkbox("Lighted", &Lighted);
 
@@ -745,6 +969,14 @@ class application : public Engine
 					Map.polygons.push_back(p);
 					CurrentRedactorObject = Map.polygons.size() - 1;
 				}
+				if (RedactorObject == 3)
+				{
+					miscPoint p;
+					p.id = Id;
+					p.position = MousePosition;
+					Map.points.push_back(p);
+					CurrentRedactorObject = Map.polygons.size() - 1;
+				}
 			}
 			else if (buttons[GLFW_MOUSE_BUTTON_1] && keys[GLFW_KEY_LEFT_SHIFT] && PrevMousePosition != MousePosition)
 			{
@@ -775,7 +1007,8 @@ class application : public Engine
 
 
 		//GrabTool
-		if (!RedactingParticlesEmiter && !RedactingScene && GrabSelectTool && !RedactingPolygon)
+
+		if (!RedactingParticlesEmiter && !RedactingScene && GrabSelectTool && !RedactingPolygon )
 		{
 			if (JustPressedLMB)
 			{
@@ -783,6 +1016,7 @@ class application : public Engine
 				grabbedBall = NULL;
 				grabbedCube = NULL;
 				grabbedPolygon = NULL;
+				grabbedPoint = NULL;
 				grabbedType = -1;
 				grabbed = false;
 
@@ -814,6 +1048,15 @@ class application : public Engine
 						grabbed = true;
 					}
 				}
+				for (int i = 0; i < Map.points.size(); i++)
+				{
+					if (sqrlength(MousePosition - Map.points[i].position)<25*25)
+					{
+						grabbedPoint = &Map.points[i];
+						grabbedType = 3;
+						grabbed = true;
+					}
+				}
 			}
 			if (ReleasedLMB && PrevMousePosition == MousePosition)
 			{
@@ -826,13 +1069,17 @@ class application : public Engine
 				if (grabbedPolygon != NULL && grabbed && grabbedType == 2)
 					SelectedPolygon = grabbedPolygon;
 
+				if (grabbedPoint != NULL && grabbed && grabbedType == 3)
+					SelectedPoint = grabbedPoint;
+
 				grabbedBall = NULL;
 				grabbedCube = NULL;
 				grabbedPolygon = NULL;
+				grabbedPoint = NULL;
 				grabbedType = -1;
 				grabbed = false;
 			}
-			else if (buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition)
+			else if (buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition && keys[GLFW_KEY_LEFT_CONTROL])
 			{
 				if (grabbedBall != NULL && grabbed && grabbedType == 0)
 					grabbedBall->position = MousePosition;
@@ -840,6 +1087,8 @@ class application : public Engine
 				if (grabbedCube != NULL && grabbed && grabbedType == 1)
 					grabbedCube->position = MousePosition;
 
+				if (grabbedPoint != NULL && grabbed && grabbedType == 3)
+					grabbedPoint->position = MousePosition;
 			}
 		}
 
@@ -852,8 +1101,9 @@ class application : public Engine
 
 		if (ImGui::Button("TexturesWindow"))
 			ShowTexturesWindow = !ShowTexturesWindow;
-
-
+		if (ImGui::Button("NormalMapsWindow"))
+			ShowNormalMapsWindow = !ShowNormalMapsWindow;
+		
 		if (ImGui::Button("SceneSettingsWindow"))
 			SettingsWindow = !SettingsWindow;
 		ImGui::End();
@@ -910,7 +1160,36 @@ class application : public Engine
 			}
 			ImGui::End();
 		}
+		if (ShowNormalMapsWindow)
+		{
+			ImGui::Begin("NormalMaps:");
+			ImGui::Text("texture/path/...");
+			ImGui::InputText("Texture path:", TexturePath, 128);
 
+
+			if (ImGui::Button("LoadTexture"))
+			{
+				std::string s = "";
+				for (int i = 0; i < 128; i++)
+				{
+					if (TexturePath[i] != ' ')
+						s += TexturePath[i];
+				}
+				tex.FileName = s;
+				tex.id = Map.NormalMaps.size();
+				tex.Load();
+				if (tex.texture != NULL)
+					Map.NormalMaps.push_back(tex);
+			}
+
+			ImGui::Text("NormalMaps:");
+			for (int i = 0; i < Map.NormalMaps.size(); i++)
+			{
+				if (ImGui::Button(Map.NormalMaps[i].FileName.c_str()))
+					CurrentTexture = &Map.NormalMaps[i];
+			}
+			ImGui::End();
+		}
 		if (ShowParticlesWindow)
 		{
 			ImGui::Begin("Particles:");
@@ -925,7 +1204,7 @@ class application : public Engine
 
 				std::string nm;
 				if (EndOfName > 0)
-					for (int i = 0; i >= EndOfName; i++)
+					for (int i = 0; i <= EndOfName; i++)
 						nm += ParticleEmitterCharName[i];
 				else if (EndOfName == 0)
 					nm += ParticleEmitterCharName[0];
@@ -959,7 +1238,7 @@ class application : public Engine
 
 				std::string nm = "";
 				if (EndOfName > 0)
-					for (int i = 0; i >= EndOfName; i++)
+					for (int i = 0; i <= EndOfName; i++)
 						nm += LightSourceCharName[i];
 				else if (EndOfName == 0)
 					nm += LightSourceCharName[0];
@@ -981,33 +1260,41 @@ class application : public Engine
 			ImGui::End();
 		}
 		
+		if (!RedactingScene) 
+		{
+			if (CurrentTexture != NULL)
+				ShowRedactorWindow(CurrentTexture);
 
-		if (CurrentTexture != NULL)
-			ShowRedactorWindow(CurrentTexture);
+			if (CurrentParticleEmiter != NULL)
+				ShowRedactorWindow(CurrentParticleEmiter);
 
-		if (CurrentParticleEmiter != NULL)
-			ShowRedactorWindow(CurrentParticleEmiter);
+			if (SelectedBall != NULL)
+				ShowRedactorWindow(SelectedBall);
 
-		if (SelectedBall != NULL)
-			ShowRedactorWindow(SelectedBall);
+			if (SelectedCube != NULL)
+				ShowRedactorWindow(SelectedCube);
 
-		if (SelectedCube != NULL)
-			ShowRedactorWindow(SelectedCube);
+			if (SelectedPolygon != NULL)
+				ShowRedactorWindow(SelectedPolygon);
 
-		if (SelectedPolygon != NULL)
-			ShowRedactorWindow(SelectedPolygon);
+			if (SelectedPoint != NULL)
+				ShowRedactorWindow(SelectedPoint);
 
-		if (CurrentLightSource != NULL)
-			ShowRedactorWindow(CurrentLightSource);
-
+			if (CurrentLightSource != NULL)
+				ShowRedactorWindow(CurrentLightSource);
+		}
 		Map.Draw();
+
+		for (int i = 0; i < Map.points.size(); i++)
+			DrawCircle(Map.points[i].position, 25, glm::vec4(1.0f,0.0f,0.0f,1.0f));
 	}
 };
 int main()
 {
 	application app;
 	app.init();
-	//Map.SaveAs("Maps/mappa.sav");
+	//app.init("Redactor",1920,1080,true);
+	Map.SaveAs(MapFileName + ".back");
 	return 0;
 }
 

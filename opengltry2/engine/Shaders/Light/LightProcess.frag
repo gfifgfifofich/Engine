@@ -34,7 +34,8 @@ void main()
 
 
 	vec4 Col;
-	
+	Col = clamp(dot(rel.xy,SurfaceNormal.xy),0.0f,1.0f)*LightColor *BaseCol;
+	/*
 	if(SurfaceNormal.z==2.0f) // -> generated Normal map
 		{
 			Col = clamp(dot(rel.xy,SurfaceNormal.xy),0.0f,1.0f)*LightColor *BaseCol;
@@ -45,8 +46,10 @@ void main()
 			SurfaceNormal.y = SurfaceNormal.y*2.0f-1.0f;
 			Col = clamp(dot(rel.xy,SurfaceNormal.xy),0.0f,1.0f)*LightColor *BaseCol;
 		}
+		
 	else Col=LightColor *BaseCol;
-	
+	*/
+	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor *BaseCol;
 	FragColor =  Col + volume*LightColor;
 
 

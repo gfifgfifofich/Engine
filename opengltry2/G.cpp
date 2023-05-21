@@ -11,10 +11,13 @@ glm::vec2 prevpos = glm::vec2(0.0f);
 
 int mouseSphere;
 
+unsigned int noize;
+
 class application : public Engine
 {
 	void On_Create() override
 	{
+		GenNoizeTexture(&noize, 100);
 		// particles
 		Sparker.acceleration = glm::vec2(0.0f, 0.0f);
 		Sparker.InitialVelocity = glm::vec2(0.0f,0.0f);
@@ -24,7 +27,6 @@ class application : public Engine
 
 		Sparker.lifetime = 0.5f;
 		Sparker.lifetimeRandomness = 1.0f;
-
 
 		Sparker.StartSize = glm::vec2(5.0f, 2.0f);
 		Sparker.EndSize = glm::vec2(0.0f);
@@ -41,23 +43,34 @@ class application : public Engine
 		Sparker.lighted = true;
 		Sparker.ShowWindow = true;
 
-		Sparker.Type = "LINE";
-		ParticleEmiters.push_back(&Sparker);
+		Sparker.textures.push_back(noize);
 
-
-		DrawingOrder = 0;
+		Sparker.DrawToNormalMap = true;
+		Sparker.Type = "QUAD";
+		Sparker.Z_Index = 10;
+		 
+		//Sparker.NormalMap = BallNormalMapTexture;
 		BackgroundColor = glm::vec4(0.0f, 0.0f, 0.0f,1.0f);
+		LoadTexture("NormalMap (17).png", &Sparker.NormalMap);
 
 		mouseSphere = Sparker.AddSpheresOfInfluence({ 0.0f,0.0f }, 100.0f, { 0.0f,100.0f }, true, 10.0f);
 		//mouseSphere = Sparker.AddLightCube({ 0.0f,0.0f }, glm::vec2(300.0f,300.0f), glm::vec4(1.0f));
 		//mouseSphere = Sparker.AddLightSphere({ 0.0f,0.0f }, 200.0f, glm::vec4(10.0f,2.0f,0.4f,1.0f));
+		AmbientLight = 0.0f;
 	}
 	int test = 0;
 	int amount =0;
 
 	glm::vec2 prevpos=glm::vec2(0.0f);
 	void On_Update() override
-	{
+	{/*
+		
+		for(int i =-5;i<5;i++)
+			for(int y =-5;y<5;y++)
+				DrawTexturedQuad({ i*200.0f,y*200.0f }, { 100.0f,100.0f }, noize, glm::vec3(0.0f,0.0f,i*y*0.6f), glm::vec4(3.0f),0, Sparker.NormalMap);
+		*/
+		Sparker.Process(delta);
+		DrawLight(MousePosition, glm::vec2(1000.0f), glm::vec4(100.0f, 10.0f, 1.0f, 1.0f));
 		ImGui::Begin("s");
 		ImGui::SliderFloat("orb", &Sparker.OrbitalVelocityRandomness, -10.0f, 10.0f);
 		ImGui::SliderFloat("orb2", &Sparker.InitialOrbitalVelocity, -10.0f, 10.0f);
@@ -74,12 +87,16 @@ class application : public Engine
 		Sparker.SpheresOfInfluence[mouseSphere].velocity.x = v[0];
 		Sparker.SpheresOfInfluence[mouseSphere].velocity.y = v[1];
 
+		ImGui::Checkbox("DrawToNormalMap", &Sparker.DrawToNormalMap);
+
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 					1000.0f / ImGui::GetIO().Framerate,
 					ImGui::GetIO().Framerate);
-
+		ImGui::Text("Particles Amount %.i",
+			Sparker.Particles.size());
 		Sparker.SpheresOfInfluence[mouseSphere].position = MousePosition;
 		Sparker.SpheresOfInfluence[mouseSphere].velocity = (MousePosition - prevpos)*2.3f;
+
 
 		if (ImGui::Button("clear"))
 		{
@@ -149,6 +166,6 @@ class application : public Engine
 int main()
 {
 	application app;
-	app.init("G",1920,1080,true);
+	app.init("G");// , 1920, 1080, true);
 	return 0;
 }

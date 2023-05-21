@@ -52,10 +52,14 @@ class ball
 public:
 	bool lighted = false;
 	int Textureid = -1;
-
+	int NormalMapId = -1;
+	int id = -1;
+	int Z_Index = 0;
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels
+
+
 	float r = 10;
 	glm::vec4 color = glm::vec4(1.0f);
 	glm::vec2 GroundVector = glm::vec2(0.0f, 0.0f);// stores last collision, helpfull for springs

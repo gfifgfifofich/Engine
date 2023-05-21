@@ -1,9 +1,12 @@
 #include "engine/Components/Engine.h"
 
 
-const int Cellsx = 128*1.0f;
-const int Cellsy =98 *1.0f ;
+const float radius = 5;
 
+const int Cellsx = 192/ (5 *0.1f);
+const int Cellsy = 108 / (5 *0.1f) ;
+
+float coolingspd = 0.000001f;
 
 float CellsSizex = (float)WIDTH / (float) Cellsx;
 float CellsSizey = (float)HEIGHT / (float)Cellsy;
@@ -15,7 +18,7 @@ struct cell
 	int iter = 0;
 };
 
-const int objAmount = 2500;
+const int objAmount = 7500;
 
 cell cells[Cellsx][Cellsy];
 
@@ -23,14 +26,16 @@ int tmp[100];
 int tmpiter = 0;;
 
 ParticleEmiter pm;
+ball objects[objAmount];
+float Temperatures[objAmount];
 
 class application : public Engine
 {
 	
 
+	ball megaball;
 
 	//VerletObject objects [objAmount];
-	ball objects[objAmount];
 
 	unsigned int noizes[10];
 	unsigned int peepoo;
@@ -65,9 +70,15 @@ class application : public Engine
 			b.cpos = b.ppos;*/
 			b.position= glm::vec2(rand() % WIDTH, rand() % HEIGHT);
 			//b.velocity = glm::vec2(rand() % 100 - 100* 0.5f, rand() % 100 - 100 * 0.5f);
-			b.r = 10;
+			b.r = radius;
 			objects[i] = b;
+			Temperatures[i] = 0.0f;
 		}
+		megaball.r = 100.0f;
+		megaball.mass = 100.0f;
+		megaball.position = glm::vec2(WIDTH*0.5f,-HEIGHT*2.5f);
+		megaball.velocity = glm::vec2(250,-2500);
+
 		CameraPosition = glm::vec2(WIDTH*0.5f,HEIGHT * 0.5f);
 
 		std::cout << "x= " << Cellsx << " y= " << Cellsy<< "\n";
@@ -75,9 +86,13 @@ class application : public Engine
 		std::cout << "Scrsizex = " << CellsSizex * Cellsx << " Scrsizey = " << CellsSizey* Cellsy << "\n";
 		std::cout << "TrueScrsizex = " << WIDTH << " TrueScrsizey = " << HEIGHT << "\n";
 		BackgroundColor = glm::vec4(0.0f);
-		AmbientLight = 0.01f;
+		//AmbientLight = 0.01f;
+		bloomLevelDivisor = 3.5f;
+		bloomIntensity = 1.0f;
 	}
 	int amopunt = 3;
+	float dt = 0.0f;
+	int substeps = 16;
 	void On_Update() override
 	{
 		ImGui::Begin("data");
@@ -85,20 +100,21 @@ class application : public Engine
 			1000.0f / ImGui::GetIO().Framerate,
 			ImGui::GetIO().Framerate);
 		ImGui::Text("balls Amount %i",objAmount);
-		ImGui::SliderInt("Amount ", &amopunt,0,100);
+		ImGui::SliderInt("substeps", &substeps,1,16);
+		ImGui::SliderFloat("dt ", &dt,0.001,0.034f);
 
 
-		float subdt = 0.017f / 4;
+		float subdt = dt / 4;
 		glm::vec2 mid = glm::vec2(0.0f);
 		mid = MousePosition;
 
 		//if (JustPressedLMB)
 		//	pm.Spawn(MousePosition, amopunt);
-		DrawLight(MousePosition, { 1000.0f,1000.0f },glm::vec4(1.0f), 0.1f);
+		//DrawLight(MousePosition, { 1000.0f,1000.0f },glm::vec4(1.0f), 0.1f);
 		for (int i = 0; i < objAmount; i++) 
 		{
 			//pm.Spawn(objects[i].position, amopunt);
-			DrawCircle(objects[i].position, objects[i].r, glm::vec4(4.0f, 0.8f, 0.16f, 1.0f),true);
+			//DrawCircle(objects[i].position, objects[i].r, glm::vec4(4.0f, 0.8f, 0.16f, 0.0f),true,CubeNormalMapTexture);
 
 			if (keys[GLFW_KEY_1])
 			{
@@ -107,22 +123,48 @@ class application : public Engine
 		}/*
 		for(int i=0;i< amopunt;i++)
 			pm.Spawn(glm::vec2(rand() % WIDTH,rand()%200), 3);*/
+		megaball.Force = { 0.0f,0.0f };
+		if (keys[GLFW_KEY_W])
+			megaball.Force.y = 10000;
+		if (keys[GLFW_KEY_S])
+			megaball.Force.y = -10000;
+		if (keys[GLFW_KEY_D])
+			megaball.Force.x = 10000;
+		if (keys[GLFW_KEY_A])
+			megaball.Force.x = -10000;
+		if (keys[GLFW_KEY_LEFT_SHIFT])
+			megaball.Force *= 100.0f;
+		megaball.Force.y -= 2500.0f;
+
+
+		if (keys[GLFW_KEY_SPACE])
+		{
+			megaball.position = glm::vec2(WIDTH * 0.0f, HEIGHT * 1.0f);
+			megaball.velocity = glm::vec2(5000, -5000);
+			for (int i = 0; i < objAmount; i++)
+				Temperatures[i] = 0.1f;
+		}
+
 		for (int s = 0; s < 4; s++) 
 		{
 			//std::cout << "mod x = " << mid.x << " y = " << mid.y << "\n";
-
+			megaball.Process(subdt);
 			for (int i = 0; i < objAmount; i++)
 			{
-
-				glm::vec2 grav = (mid - objects[i].position)*0.00001f;
+				BtBCollision(&megaball, &objects[i],0.999f);
+				Temperatures[i] -= subdt * pow(Temperatures[i] ,4)* coolingspd;
+				if (Temperatures[i] < 0.1f)Temperatures[i] = 0.1f;
+				//glm::vec2 grav = (mid - objects[i].position)*0.00001f;
+				glm::vec2 grav = glm::vec2(0.0f,-250.0f);
 				
-				float l = length(grav);
+				/*float l = length(grav);
 				grav /= l;
 				if (l > 200 * 0.00001f)
 					l = 0.001f / (l * l);
 				else l = 0.0f;
 				objects[i].Force = (grav *l);
-
+				*/
+				objects[i].Force = (grav);
 			/*	objects[i].deltatime = subdt;
 				objects[i].UpdatePos();*/
 				objects[i].Process(subdt);
@@ -202,7 +244,15 @@ class application : public Engine
 
 
 							}*/
+
+							glm::vec2 vel1 = objects[tmp[i]].velocity;
+							glm::vec2 vel2 = objects[tmp[a]].velocity;
+
 							BtBCollision(&objects[tmp[i]], &objects[tmp[a]],0.999f);
+
+
+							Temperatures[tmp[i]] += length(objects[tmp[i]].velocity - vel1);
+							Temperatures[tmp[a]] += length(objects[tmp[i]].velocity - vel2);
 						}
 					tmpiter = 0;
 				}
@@ -219,13 +269,16 @@ class application : public Engine
 
 		}
 		
-
-
-		//for (int i = 0; i < objAmount; i++)
-			//DrawTexturedQuad(objects[i].position, glm::vec2(objects[i].r), peepoo);// , glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 20.0f, 1.0f));
-
-			//DrawCircle(objects[i].position, objects[i].r, glm::vec4(2.0f,0.4f,0.08f,1.0f));
-
+		DrawCircle(megaball, glm::vec4(2.0f, 0.4f, 0.08f, 1.0f));
+		DrawLine(megaball.position, megaball.position - megaball.velocity * 0.1f, megaball.r, glm::vec4(2.0f, 0.4f, 0.08f, 1.0f));
+		
+		for (int i = 0; i < objAmount; i++)
+		{//DrawTexturedQuad(objects[i].position, glm::vec2(objects[i].r), peepoo , glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 20.0f, 1.0f));
+			if (Temperatures[i] < 0.1f)Temperatures[i] = 0.1f;
+			if (Temperatures[i] > 10000.1f)Temperatures[i] = 10000.1f;
+			DrawCircle(objects[i].position, objects[i].r, glm::vec4(2.0f * Temperatures[i] * 0.002f, 0.4f * Temperatures[i] * 0.002f, 0.08f * Temperatures[i] * 0.002f, 1.0f));
+			DrawLine(objects[i].position, objects[i].position - objects[i].velocity*0.02f, objects[i].r, glm::vec4(2.0f * Temperatures[i] * 0.002f, 0.4f * Temperatures[i] * 0.002f, 0.08f* Temperatures[i] * 0.002f, 1.0f));
+		}
 		//pm.Process(delta);
 
 	}
@@ -236,6 +289,7 @@ int main()
 
 
 	application app;
-	app.init("pog",1280,980);
+	//app.init("pog",1280,980);
+	app.init("pog",1920,1080,true);
 	return 0;
 }

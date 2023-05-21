@@ -1,4 +1,5 @@
 #include "engine/Components/Engine.h"
+#include "engine/Components/sounds.h"
 #define max
 
 
@@ -190,6 +191,7 @@ public:
 
 void UpdateWorld()
 {
+
 	for (int i = 0; i < WorldSizeX; i++) BufferNoize[i][0] = Noize1[i][0];// Store last piece in buffer
 
 	//Perlin noize
@@ -276,6 +278,8 @@ public:
 
 	void On_Create() override
 	{//initialize
+		AL_init();
+
 		LoadTexture("container.jpg", &ContainerTexture,4);
 		LoadTexture("awesomeface.png", &AwesomeTexture,4);
 
@@ -384,7 +388,7 @@ public:
 
 
 		//Drawing order, (circles, then quads -> quads above circles)
-		DrawingOrder = false;
+		//DrawingOrder = false;
 	}
 	void On_Update() override
 	{
@@ -594,7 +598,7 @@ public:
 		glm::vec2 dif = (BodyPoint1.position - BodyPoint2.position);
 		DrawTexturedQuad(mid + Normalize(glm::vec2(dif.y, -dif.x))*100.0f,
 			glm::vec2(410, 110), ContainerTexture,
-			glm::vec3(0.0f, 0.0f, get_angle_between_points(BodyPoint1.position, BodyPoint2.position)) ,
+			glm::vec3(0.0f, 0.0f, get_angle_between_points(BodyPoint1.position, BodyPoint2.position)+pi*0.5f) ,
 			glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 
@@ -602,7 +606,6 @@ public:
 			DrawCircle(mid + Normalize(glm::vec2(dif.x, dif.y)) * 410.0f + Normalize(glm::vec2(dif.y, -dif.x)) * 50.0f,10.0f, glm::vec4(150.0f, 0.0f, 0.0f, 1.0f));
 
 		ImGui::Begin("Settings");
-		ImGui::Text("rotation = %.3f", get_angle_between_points(BodyPoint1.position, BodyPoint2.position));
 
 		DrawLine(Wheel1.position, (BodyPoint1.position * 0.75f + BodyPoint2.position * 0.25f), 3.0f, glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
 		DrawLine(Wheel2.position, (BodyPoint1.position * 0.25f + BodyPoint2.position * 0.75f), 3.0f, glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
@@ -648,6 +651,7 @@ int main()
 	
 
 	app.init("app",1920,1050,false);
+	AL_Destroy();
 	return 0;
 }
 

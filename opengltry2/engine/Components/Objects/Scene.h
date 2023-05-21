@@ -1,21 +1,23 @@
 #pragma once
 
+class miscPoint
+{
+public:
+	int id = 0;
+	glm::vec2 position = glm::vec2(0.0f);
+};
+
 class Scene
 {
 public:
-	class miscPoint
-	{
-	public:
-		int id = 0;
-		glm::vec2 position;
-
-	};
+	
 
 	std::vector<polygon> polygons;
 	std::vector<cube> cubes;
 	std::vector<ball> balls;
 	std::vector<miscPoint> points;
 	std::vector<Texture> Textures;
+	std::vector<Texture> NormalMaps;
 	std::vector<ParticleEmiter> ParticleEmiters;
 	std::vector<LightSource> LightSources;
 
@@ -37,6 +39,8 @@ public:
 			SaveFile << " ";
 			SaveFile << std::to_string(balls[i].Textureid);
 			SaveFile << " ";
+			SaveFile << std::to_string(balls[i].NormalMapId);
+			SaveFile << " ";
 			SaveFile << std::to_string(balls[i].Collision_Level);
 			SaveFile << " ";
 			SaveFile << std::to_string(balls[i].Collision_Mask);
@@ -50,6 +54,10 @@ public:
 			SaveFile << std::to_string(balls[i].color.a);
 			SaveFile << " ";
 			SaveFile << std::to_string(balls[i].lighted);
+			SaveFile << " ";
+			SaveFile << std::to_string(balls[i].Z_Index);
+			SaveFile << " ";
+			SaveFile << std::to_string(balls[i].id);
 			SaveFile << "\n";
 		}
 		for (int i = 0; i < cubes.size(); i++)
@@ -65,6 +73,8 @@ public:
 			SaveFile << " ";
 			SaveFile << std::to_string(cubes[i].Textureid);
 			SaveFile << " ";
+			SaveFile << std::to_string(cubes[i].NormalMapId);
+			SaveFile << " ";
 			SaveFile << std::to_string(cubes[i].Collision_Level);
 			SaveFile << " ";
 			SaveFile << std::to_string(cubes[i].Collision_Mask);
@@ -78,6 +88,10 @@ public:
 			SaveFile << std::to_string(cubes[i].color.a);
 			SaveFile << " ";
 			SaveFile << std::to_string(cubes[i].lighted);
+			SaveFile << " ";
+			SaveFile << std::to_string(cubes[i].Z_Index);
+			SaveFile << " ";
+			SaveFile << std::to_string(cubes[i].id);
 			SaveFile << "\n";
 		}
 		for (int i = 0; i < points.size(); i++)
@@ -100,10 +114,22 @@ public:
 			SaveFile << Textures[i].FileName;
 			SaveFile << "\n";
 		}
+		for (int i = 0; i < NormalMaps.size(); i++)
+		{
+			SaveFile << "N";
+			SaveFile << std::to_string(NormalMaps[i].id);
+			SaveFile << " ";
+			SaveFile << std::to_string(NormalMaps[i].Type);
+			SaveFile << " ";
+			SaveFile << NormalMaps[i].FileName;
+			SaveFile << "\n";
+		}
 		for (int i = 0; i < polygons.size(); i++)
 		{
 			SaveFile << "P";
 			SaveFile << std::to_string(polygons[i].Textureid);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].NormalMapId);
 			SaveFile << " ";
 			SaveFile << std::to_string(polygons[i].Collision_Level);
 			SaveFile << " ";
@@ -118,6 +144,10 @@ public:
 			SaveFile << std::to_string(polygons[i].colors[0].a);
 			SaveFile << " ";
 			SaveFile << std::to_string(polygons[i].lighted);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].Z_Index);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].id);
 			SaveFile << "\n";
 			for (int p = 0; p < polygons[i].points.size(); p++)
 			{
@@ -179,6 +209,12 @@ public:
 			SaveFile << ParticleEmiters[i].Type;
 			SaveFile << " ";
 			SaveFile << ParticleEmiters[i].Name;
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].Z_Index);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].id);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].NormalMapid);
 			SaveFile << "\n";
 
 
@@ -300,9 +336,9 @@ public:
 				SaveFile << " ";
 				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].r);
 				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].amount);
+				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].amount);
 				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].tick);
+				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].tick);
 				SaveFile << "\n";
 			}
 			for (int p = 0; p < ParticleEmiters[i].EmitionCubes.size(); p++)
@@ -320,9 +356,9 @@ public:
 				SaveFile << " ";
 				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].scale.y);
 				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].amount);
+				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].amount);
 				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].tick);
+				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].tick);
 				SaveFile << "\n";
 			}
 			for (int p = 0; p < ParticleEmiters[i].LightSpheres.size(); p++)
@@ -395,6 +431,24 @@ public:
 			SaveFile << " ";
 			SaveFile << "\n";
 		}
+
+
+
+
+		/*float a = 10;
+		char* b = new char[sizeof(a)];
+		memcpy(b, (const void*)&a, sizeof(a));
+
+
+		
+
+		SaveFile << "F2 ";
+		for (int i = 0; i < sizeof(a); i++)
+			SaveFile << b[i];
+		for (int i = 0; i < sizeof(a); i++)
+			SaveFile << b[i];
+		SaveFile << "\n";*/
+
 		SaveFile.close();
 	}
 
@@ -403,6 +457,7 @@ public:
 		balls.clear();
 		cubes.clear();
 		Textures.clear();
+		NormalMaps.clear();
 		points.clear();
 		polygons.clear();
 		ParticleEmiters.clear();
@@ -428,16 +483,32 @@ public:
 			f.getline(line, 256);
 			std::strstream s;
 			s << line;
+
+			/*if (line[0] == 'F' && line[1] == '1')
+			{
+				float c;
+				memcpy(&c, (const void*)&line[3], 4);
+				std::cout << c << "\n";
+			}
+			if (line[0] == 'F' && line[1] == '2')
+			{
+				float c[2];
+				memcpy(c, (const void*)&line[3], 8);
+				
+				std::cout << c[0] << "\n";
+				std::cout << c[1] << "\n";
+			}*/
+
 			if (line[0] == 'b' && !readingPoly && !readingParticle)
 			{
 				ball b;
-				s >> junk >> b.position.x >> b.position.y >> b.r >> b.rotation >> b.Textureid >> b.Collision_Level >> b.Collision_Mask >> b.color.r >> b.color.g >> b.color.b >> b.color.a>> b.lighted;
+				s >> junk >> b.position.x >> b.position.y >> b.r >> b.rotation >> b.Textureid>> b.NormalMapId >> b.Collision_Level >> b.Collision_Mask >> b.color.r >> b.color.g >> b.color.b >> b.color.a>> b.lighted>>b.Z_Index>>b.id;
 				balls.push_back(b);
 			}
 			else if (line[0] == 'c' && !readingPoly && !readingParticle)
 			{
 				cube c;
-				s >> junk >> c.position.x >> c.position.y >> c.width >> c.height >> c.Textureid >> c.Collision_Level >> c.Collision_Mask >> c.color.r >> c.color.g >> c.color.b >> c.color.a >> c.lighted;
+				s >> junk >> c.position.x >> c.position.y >> c.width >> c.height >> c.Textureid >> c.NormalMapId >> c.Collision_Level >> c.Collision_Mask >> c.color.r >> c.color.g >> c.color.b >> c.color.a >> c.lighted >> c.Z_Index >> c.id;
 				cubes.push_back(c);
 			}
 			else if (line[0] == 'p' && !readingPoly && !readingParticle)
@@ -449,11 +520,16 @@ public:
 			else if (line[0] == 't' && !readingPoly && !readingParticle)
 			{
 				Texture tex;
-				s >> junk >> tex.id>>tex.Type >> tex.FileName;
+				s >> junk >> tex.id >> tex.Type >> tex.FileName;
 				tex.Load();
 				Textures.push_back(tex);
-
-
+			}
+			else if (line[0] == 'N' && !readingPoly && !readingParticle)
+			{
+				Texture tex;
+				s >> junk >> tex.id >> tex.Type >> tex.FileName;
+				tex.Load();
+				NormalMaps.push_back(tex);
 			}
 			else if (line[0] == 'L' && line[1] == 'S' && !readingPoly && !readingParticle)
 			{
@@ -465,7 +541,7 @@ public:
 			else if (line[0] == 'P' && !readingParticle)
 			{
 				readingPoly = true;
-				s >> junk >> pol.Textureid >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> pol.lighted;
+				s >> junk >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> pol.lighted >> pol.Z_Index >> pol.id;
 			}
 
 			else if (line[0] == 'e' && !readingPoly)
@@ -474,7 +550,7 @@ public:
 				s >> junk  >>  part.InitialRotation >> part.RotationAcceleration >> part.RotationDamper >>
 					part.RotationRandomness >> part.RotationVelocity >> part.VelocityDamper >>
 					part.InitialOrbitalVelocity >> part.OrbitalVelocityRandomness >> part.lifetime >> part.lifetimeRandomness >>
-					part.lighted >> part.influenced >> part.Type >> part.Name;
+					part.lighted >> part.influenced >> part.Type >> part.Name >> part.Z_Index >> part.id>> part.NormalMapid;
 			}
 
 
@@ -628,6 +704,8 @@ public:
 				}
 			}
 		}
+
+
 		f.close();
 	}
 
@@ -638,28 +716,35 @@ public:
 
 		for (int i = 0; i < balls.size(); i++)
 		{
+			unsigned int NM = NULL;
 			if (balls[i].lighted)
-				NormalMapDraw(balls[i].position, { balls[i].r,balls[i].r },BallNormalMapTexture);
+			{
+				if (balls[i].NormalMapId > -1 && balls[i].NormalMapId < NormalMaps.size())
+					NM = NormalMaps[balls[i].NormalMapId].texture;
+				else NM = BallNormalMapTexture;
+			}
 			if (balls[i].Textureid == -1)
-				DrawCircle(balls[i], balls[i].color);
+				DrawCircle(balls[i], balls[i].color, balls[i].lighted, NM, balls[i].Z_Index);
 			else
-				DrawTexturedQuad(balls[i].position, glm::vec2(balls[i].r), Textures[balls[i].Textureid].texture, glm::vec3(0.0f, 0.0f, balls[i].rotation), balls[i].color);
+				DrawTexturedQuad(balls[i].position, glm::vec2(balls[i].r), Textures[balls[i].Textureid].texture, balls[i].rotation, balls[i].color, balls[i].Z_Index, NM);
 		}
 		for (int i = 0; i < cubes.size(); i++)
 		{
-
-			if (cubes[i].lighted)
-				NormalMapDraw(cubes[i].position, { cubes[i].width,cubes[i].height }, CubeNormalMapTexture);
+			unsigned int NM = NULL;
+			if (cubes[i].lighted) 
+			{
+				if (cubes[i].NormalMapId > -1 && cubes[i].NormalMapId < NormalMaps.size())
+					NM = NormalMaps[cubes[i].NormalMapId].texture;
+				else NM = CubeNormalMapTexture;
+			}
 			if (cubes[i].Textureid == -1)
-				DrawCube(cubes[i], cubes[i].color);
+				DrawCube(cubes[i], cubes[i].color,0.0f, cubes[i].lighted, NM, cubes[i].Z_Index);
 			else
-				DrawTexturedQuad(cubes[i], Textures[cubes[i].Textureid].texture, cubes[i].color);
+				DrawTexturedQuad(cubes[i], Textures[cubes[i].Textureid].texture, cubes[i].color,0.0f, cubes[i].Z_Index, NM);
 		}
 		for (int i = 0; i < polygons.size(); i++)
 		{
 
-			//if (polygons[i].lighted)
-				//NormalMapDrawPolygon(cubes[i].position, { cubes[i].width,cubes[i].height }, CubeNormalMapTexture);
 			if (polygons[i].Textureid == -1)
 			{
 				polygons[i].Texture = NULL;
@@ -672,8 +757,19 @@ public:
 			}
 		}
 		for (int i = 0; i < ParticleEmiters.size(); i++)
-			ParticleEmiters[i].Process();
+		{
+			unsigned int NM = NULL;
+			if (ParticleEmiters[i].DrawToNormalMap)
+			{
+				if (ParticleEmiters[i].NormalMapid > -1 && ParticleEmiters[i].NormalMapid < NormalMaps.size())
+					NM = NormalMaps[ParticleEmiters[i].NormalMapid].texture;
+				else NM = CubeNormalMapTexture;
 
+				ParticleEmiters[i].NormalMap = NM;
+			}
+
+			ParticleEmiters[i].Process(delta);
+		}
 
 
 		for (int i = 0; i < LightSources.size(); i++)

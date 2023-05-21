@@ -118,8 +118,8 @@ void RenderText( std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec
 		glm::vec2 position = glm::vec2(0.0f, 0.0f);
 		position -= CameraPosition;
 		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-			(position.x) * scale * ScreenDivisorX * CameraScale.x,
-			(position.y) * scale * ScreenDivisorY * CameraScale.y,
+			(position.x)  * ScreenDivisorX * CameraScale.x,
+			(position.y)  * ScreenDivisorY * CameraScale.y,
 			0.0f));
 
 
