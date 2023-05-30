@@ -6,13 +6,11 @@ const int clothSizeY = 50;
 point points[clothSizeX][clothSizeY];
 
 
-class application : public Engine
-{
 	float g = 1.0f;
 	float Size = 4.5f;
 	float Stiffness = 0.5f;
 
-	void On_Create() override
+	void On_Create() 
 	{
 		for (int x =0;x< clothSizeX;x++)
 			for (int y = 0; y < clothSizeY; y++)
@@ -22,7 +20,7 @@ class application : public Engine
 
 			}
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		ImGui::Begin("lul");
 		ImGui::SliderFloat("Length", &Size,1.0f,100.0f);
@@ -64,10 +62,8 @@ class application : public Engine
 
 			}
 	}
-};
 int main()
 {
-	application app;
-	app.init("app",1920,1050,false);
+	initEngine("app", 1920, 1050, false);
 	return 0;
 }

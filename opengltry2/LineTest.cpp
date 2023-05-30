@@ -1,16 +1,14 @@
 #include "engine/Components/Engine.h"
 
-class application : public Engine
-{
-public:
+
 	RigidBody b;
 	
 
-	void On_Create() override
+	void On_Create() 
 	{
 		b.init(glm::vec2(500, 500), 50);
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		b.body.velocity.y -= 10.0f;
 
@@ -50,11 +48,9 @@ public:
 
 		b.Process(delta);
 	}
-};
-
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

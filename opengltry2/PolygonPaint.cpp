@@ -6,9 +6,6 @@
 
 polygon poly;
 
-class application : public Engine
-{
-public:
 	
 
 	int grabbedpoint = -1;
@@ -19,11 +16,11 @@ public:
 
 
 
-	void On_Create() override
+	void On_Create() 
 	{
 
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 
 
@@ -215,11 +212,10 @@ public:
 
 	
 	}
-};
 
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

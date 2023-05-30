@@ -13,10 +13,7 @@ float heat[amount];
 std::vector <ball> balls;
 
 
-class application : public Engine
-{
-
-	void On_Create() override
+	void On_Create() 
 	{
 
 		
@@ -52,7 +49,7 @@ class application : public Engine
 		DrawingOrder = 0;
 	}
 
-	void On_Update() override
+	void On_Update() 
 	{
 		ImGui::Begin("SceneSettings");
 
@@ -148,11 +145,10 @@ class application : public Engine
 			DrawCube(cubes[i].position, glm::vec2(cubes[i].width, cubes[i].height));
 		}
 	}
-};
 
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

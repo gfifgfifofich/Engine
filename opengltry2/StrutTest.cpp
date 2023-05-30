@@ -3,8 +3,6 @@
 
 
 
-class application : public Engine
-{
 	cube floor;
 	cube lwall;
 	cube rwall;
@@ -12,7 +10,7 @@ class application : public Engine
 	box b;
 	box b2;
 	unsigned int texture;
-	void On_Create() override
+	void On_Create() 
 	{
 		LoadTexture("container.jpg", &texture);
 		floor.position = glm::vec2(0.0f,-500.0f);
@@ -37,7 +35,7 @@ class application : public Engine
 
 		DrawingOrder = true;
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		b.Force = glm::vec2(0.0f, -1000.0f);
 		b2.Force = glm::vec2(0.0f, -1000.0f);
@@ -67,10 +65,9 @@ class application : public Engine
 		DrawTexturedQuad(b.position, b.size,texture,glm::vec3(0.0f,0.0f, get_angle_between_points(b.position, 0.5f * (b.balls[0].position + b.balls[1].position))));
 		DrawTexturedQuad(b2.position, b2.size,texture,glm::vec3(0.0f,0.0f, get_angle_between_points(b2.position, 0.5f * (b2.balls[0].position + b2.balls[1].position))));
 	}
-};
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

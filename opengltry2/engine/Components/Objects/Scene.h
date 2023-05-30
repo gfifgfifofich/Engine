@@ -411,6 +411,8 @@ public:
 			SaveFile << " ";
 			SaveFile << std::to_string(LightSources[i].position.y);
 			SaveFile << " ";
+			SaveFile << std::to_string(LightSources[i].position.z);
+			SaveFile << " ";
 			SaveFile << std::to_string(LightSources[i].scale.x);
 			SaveFile << " ";
 			SaveFile << std::to_string(LightSources[i].scale.y);
@@ -537,7 +539,7 @@ public:
 			else if (line[0] == 'L' && line[1] == 'S' && !readingPoly && !readingParticle)
 			{
 				LightSource ls;
-				s >> junk >> junk >> ls.position.x >> ls.position.y >> ls.scale.x >> ls.scale.y >> ls.volume >> ls.color.r >> ls.color.g >> ls.color.b >> ls.color.a >> ls.TextureId >> ls.name;
+				s >> junk >> junk >> ls.position.x >> ls.position.y >> ls.position.z >> ls.scale.x >> ls.scale.y >> ls.volume >> ls.color.r >> ls.color.g >> ls.color.b >> ls.color.a >> ls.TextureId >> ls.name;
 				LightSources.push_back(ls);
 			}
 
@@ -794,7 +796,8 @@ public:
 
 		for (int i = 0; i < LightSources.size(); i++)
 		{
-			LightSources[i].position *= scale;
+			LightSources[i].position.x *= scale.x;
+			LightSources[i].position.y *= scale.y;
 			LightSources[i].scale *= scale;
 
 		}

@@ -64,13 +64,11 @@ GLuint GenLightSphereShader;
 	;
 
 
-	GLuint InctanceQuadShader;
-
-	GLuint InstanceTexturedQuadShader;
-
+	
 
 void PreLoadShaders()
 {
+
 	//Texture Generation
 	LoadShader(&GradientGenShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
 	LoadShader(&NoizeGenShader, "engine/Shaders/NoizeGen/NoizeGen.vert", "engine/Shaders/NoizeGen/NoizeGen.frag");
@@ -91,7 +89,7 @@ void PreLoadShaders()
 	//Quad
 	LoadShader(&FillShader, "engine/Shaders/Quad/default.vert", "engine/Shaders/Quad/Quad.frag");
 	LoadShader(&TexturedQuadShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
-
+	
 	//Circle	
 	LoadShader(&CircleShader, "engine/Shaders/Circle/Circle.vert", "engine/Shaders/Circle/Circle.frag");
 
@@ -224,7 +222,7 @@ float ScreenDivisorY = 1.0;
 struct LightSource
 {
 	float volume = 0.0f;
-	glm::vec2 position = glm::vec2(0.0f);
+	glm::vec3 position = glm::vec3(0.0f,0.0,-0.5f);
 	glm::vec2 scale = glm::vec2(0.0f);
 	float rotation = 0.0f;
 	glm::vec4 color = glm::vec4(0.0f);
@@ -237,6 +235,17 @@ void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volum
 {
 	LightSource ls;
 	ls.volume =volume;
+	ls.position = glm::vec3(position,-0.5f);
+	ls.scale = scale;
+	ls.rotation = rotation;
+	ls.color = color;
+	ls.texture = texture;
+	LightSources.push_back(ls);
+}
+void DrawLight(glm::vec3 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture)
+{
+	LightSource ls;
+	ls.volume = volume;
 	ls.position = position;
 	ls.scale = scale;
 	ls.rotation = rotation;
@@ -1031,6 +1040,7 @@ void DrawTexturedTriangle(
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
+	DetachShader();
 
 
 }

@@ -149,13 +149,11 @@ void CrushTile(int x, int y)
 	tiles[x][y].body.Collision_Level = -1;
 	Sparks.Spawn(tiles[x][y].body.position, 30);
 }
-class application : public Engine
-{
-public:
+
 	
 	cube quad1;
 	Player player;
-	void On_Create() override
+	void On_Create() 
 	{
 		//generate white noise
 		for (int i =1; i > 0; i--)
@@ -246,7 +244,7 @@ public:
 		AmbientLight = 1.0f;
 	}
 
-	void On_Update() override
+	void On_Update() 
 	{
 
 		ImGui::Begin("info");
@@ -398,11 +396,10 @@ public:
 		player.Process(delta);
 
 	}
-};
 
 int main()
 {
-	application app;
-	app.init("terrario",1920,1080,true);
+
+	initEngine("terrario",1920,1080,true);
 	return 0;
 }

@@ -46,12 +46,8 @@ std::vector <staticball> StaticBalls;
 
 
 
-class application : public Engine
-{
 
-	
-
-	void On_Create() override 
+	void On_Create()
 	{
 		VerletObject a;
 		a.cpos = glm::vec2(640, 540);
@@ -78,8 +74,7 @@ class application : public Engine
 	glm::vec4 testColor = glm::vec4(0.0f);
 
 	int substeps = 1;
-
-	void On_Update() override
+	void On_Update()
 	{
 		ImGui::Begin("SceneSettings");
 
@@ -251,15 +246,13 @@ class application : public Engine
 
 	}
 	
-};
 
 int main()
 {
 	
 
 
-	application app;
-	app.init();
+	initEngine();
 	
 	
 	return 0;

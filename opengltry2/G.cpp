@@ -13,9 +13,7 @@ int mouseSphere;
 
 unsigned int noize;
 
-class application : public Engine
-{
-	void On_Create() override
+	void On_Create() 
 	{
 		GenNoizeTexture(&noize, 100);
 		// particles
@@ -62,7 +60,7 @@ class application : public Engine
 	int amount =0;
 
 	glm::vec2 prevpos=glm::vec2(0.0f);
-	void On_Update() override
+	void On_Update() 
 	{/*
 		
 		for(int i =-5;i<5;i++)
@@ -165,7 +163,7 @@ class application : public Engine
 };
 int main()
 {
-	application app;
-	app.init("G");// , 1920, 1080, true);
+	initEngine("app", 1920, 1050, false);
+
 	return 0;
 }

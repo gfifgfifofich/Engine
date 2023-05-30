@@ -26,10 +26,7 @@ float keySize =  25.0f;
 float FrameTime = 0.0f;
 float dt = 0.0f , lasttime = 0.0f;
 
-class application : public Engine
-{
-public:
-	void On_Create() override
+	void On_Create() 
 	{
 		AL_init();
 		Sine = LoadSound("Sounds/Sine.wav");
@@ -52,7 +49,7 @@ public:
 		}
 
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		ImGui::Begin("stuff");
 
@@ -135,14 +132,10 @@ public:
 	}
 
 
-	~application()
-	{
-		AL_Destroy();
-	}
-};
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+	AL_Destroy();
+
 	return 0;
 }

@@ -29,9 +29,6 @@ ParticleEmiter pm;
 ball objects[objAmount];
 float Temperatures[objAmount];
 
-class application : public Engine
-{
-	
 
 	ball megaball;
 
@@ -40,7 +37,7 @@ class application : public Engine
 	unsigned int noizes[10];
 	unsigned int peepoo;
 
-	void On_Create() override
+	void On_Create()
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -93,8 +90,8 @@ class application : public Engine
 	int amopunt = 3;
 	float dt = 0.0f;
 	int substeps = 16;
-	void On_Update() override
-	{
+void On_Update()
+{
 		ImGui::Begin("data");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / ImGui::GetIO().Framerate,
@@ -281,15 +278,13 @@ class application : public Engine
 		}
 		//pm.Process(delta);
 
-	}
-};
+}
 
 int main()
 {
 
 
-	application app;
-	//app.init("pog",1280,980);
-	app.init("pog",1920,1080,true);
+	initEngine("pog",1280,980);
+	//initEngine("pog",1920,1080,true);
 	return 0;
 }

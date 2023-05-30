@@ -85,3 +85,8 @@ void UseShader(unsigned int Shader)
 {
     glUseProgram(Shader);
 }
+
+void DetachShader()
+{
+    glUseProgram(0);
+}

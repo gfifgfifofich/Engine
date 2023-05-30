@@ -1,10 +1,8 @@
 #include "engine/Components/Engine.h"
-class application : public Engine
-{
 
 	float pog[20];
 	glm::vec2 offset = glm::vec2(-500,-100.0f);
-	void On_Create() override
+	void On_Create() 
 	{
 		for (int i = 0; i < 20; i++)
 		{
@@ -12,7 +10,7 @@ class application : public Engine
 		}
 	}
 
-	void On_Update() override
+	void On_Update() 
 	{
 		int Size = 20;
 
@@ -54,13 +52,11 @@ class application : public Engine
 
 
 	}
-};
 
 int main()
 {
 
-	
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

@@ -70,11 +70,8 @@ struct rope
 
 
 rope Rope1;
-class application : public Engine
-{
 
-
-	void On_Create() override
+	void On_Create() 
 	{
 
 		Rope1.Create(5, glm::vec2(590, 240), glm::vec2(580, 640));
@@ -86,7 +83,7 @@ class application : public Engine
 
 	
 
-	void On_Update() override
+	void On_Update() 
 	{
 		ImGui::Begin("SceneSettings");
 
@@ -240,15 +237,11 @@ class application : public Engine
 
 	}
 
-};
-
 int main()
 {
 
+	initEngine();
 
-
-	application app;
-	app.init();
 
 
 	return 0;

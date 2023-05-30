@@ -346,12 +346,10 @@ void BoxToStaticQuadCollision(Box* b, cube quad)
 
 }
 
-class application : public Engine
-{
 	Box box;
 	cube c;
 	polygon pol;
-	void On_Create() override
+	void On_Create()
 	{
 		pol.add_Point(glm::vec2(1.0f,0.0f),true);
 		pol.add_Point(glm::vec2(0.0f,-1.0f),true);
@@ -364,7 +362,7 @@ class application : public Engine
 		box.Force.y = -1000;
 		pol.colors.push_back(glm::vec4(1.0f));
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		//c.position = MousePosition;
 		float size = 100.0f;
@@ -394,10 +392,9 @@ class application : public Engine
 		DrawCube(box.position, box.Scale, box.Rotation);
 		//DrawCube(c);
 	}
-};
 int main()
 {
-	application app;
-	app.init();
+
+	initEngine();
 	return 0;
 }

@@ -188,10 +188,8 @@ public:
 
 };
 
-class application : public Engine
-{
 	VoxelMap VM;
-	void On_Create() override
+	void On_Create() 
 	{
 
 		VM.Polygon.add_Point(glm::vec2( -100,-100), true);
@@ -202,7 +200,7 @@ class application : public Engine
 		VM.UpdateShape();
 
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		if (buttons[GLFW_MOUSE_BUTTON_1])
 			VM.DigSphere(MousePosition, 100);
@@ -211,10 +209,9 @@ class application : public Engine
 		VM.Polygon.DrawTrianglesOutlines(glm::vec4(1.0f,0.0f,0.0f,1.0f));
 		VM.Draw();
 	}
-};
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

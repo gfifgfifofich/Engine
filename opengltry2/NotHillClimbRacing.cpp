@@ -227,9 +227,6 @@ void UpdateWorld()
 
 }
 
-class application : public Engine
-{
-public:
 	ball Wheel1;
 	ball Wheel2;
 
@@ -276,7 +273,7 @@ public:
 
 	bool EngRunning = false;
 
-	void On_Create() override
+	void On_Create() 
 	{//initialize
 		AL_init();
 
@@ -390,7 +387,7 @@ public:
 		//Drawing order, (circles, then quads -> quads above circles)
 		//DrawingOrder = false;
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 
 
@@ -640,17 +637,13 @@ public:
 
 
 	}
-};
 int main()
 {
 	
 
-	application app;
-
-
 	
 
-	app.init("app",1920,1050,false);
+	initEngine("app",1920,1050,false);
 	AL_Destroy();
 	return 0;
 }

@@ -1,13 +1,12 @@
 #include "engine/Components/Engine.h"
-class application : public Engine
-{
+
 
 	ball a;
 	ball b;
 
 	float len = 200.0f;
 
-	void On_Create() override
+	void On_Create() 
 	{
 
 		a.position.x = 0;
@@ -20,7 +19,7 @@ class application : public Engine
 		b.r = 25;
 	}
 	float absorp = 0.0f;
-	void On_Update() override
+	void On_Update() 
 	{
 		ImGui::Begin("a");
 		ImGui::SliderFloat("abs", &absorp, 0.0f, 1.0f);
@@ -44,12 +43,10 @@ class application : public Engine
 		DrawCircle(a);
 		DrawCircle(b);
 	}
-};
-
 
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

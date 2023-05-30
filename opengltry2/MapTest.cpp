@@ -527,9 +527,9 @@ void ShowRedactorWindow(LightSource* ls)
 	CurrentLightSource->scale = { s[0],s[1] };
 
 
-	float pos[2] = { CurrentLightSource->position.x ,CurrentLightSource->position.y };
-	ImGui::DragFloat2("Position", pos);
-	CurrentLightSource->position = { pos[0],pos[1] };
+	float pos[3] = { CurrentLightSource->position.x ,CurrentLightSource->position.y,CurrentLightSource->position.z };
+	ImGui::DragFloat3("Position", pos,0.001f);
+	CurrentLightSource->position = { pos[0],pos[1],pos[2] };
 
 	float col[4] = { CurrentLightSource->color.r ,CurrentLightSource->color.g,CurrentLightSource->color.b,CurrentLightSource->color.a };
 	ImGui::ColorEdit4("Color", col);
@@ -927,11 +927,8 @@ void ShowRedactorWindow(Texture* Texture)
 
 
 
-class application : public Engine
+void On_Create() 
 {
-	
-	void On_Create() override
-	{
 		Map.LoadFrom(MapFileName);
 
 		for (int i = 0; i < MapFileName.size(); i++)
@@ -941,9 +938,9 @@ class application : public Engine
 
 
 
-	}
-	void On_Update() override
-	{
+}
+void On_Update()
+{
 
 		if (keys[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
 		if (keys[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;
@@ -1103,7 +1100,7 @@ class application : public Engine
 				}
 			}
 		}
-		pog();
+		
 
 		if (ImGui::Button("ParticlesWindow"))
 			ShowParticlesWindow = !ShowParticlesWindow;
@@ -1470,12 +1467,11 @@ class application : public Engine
 
 		for (int i = 0; i < Map.points.size(); i++)
 			DrawCircle(Map.points[i].position, 25, glm::vec4(1.0f,0.0f,0.0f,1.0f));
-	}
-};
+}
+
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
 	//app.init("Redactor",1920,1080,true);
 	Map.SaveAs(MapFileName + ".back");
 	return 0;

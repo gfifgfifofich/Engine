@@ -5,11 +5,9 @@
 const int amount = 100;
 Ray r[amount];
 
-class application : public Engine
-{
 	cube c;
 	ball b;
-	void On_Create() override
+	void On_Create() 
 	{
 		b.r = 110.0f;
 		for (int i = 0; i < amount; i++)
@@ -21,7 +19,7 @@ class application : public Engine
 		c.width = 100;
 		c.height = 100;
 	}
-	void On_Update() override
+	void On_Update() 
 	{
 		c.position = MousePosition;
 		b.position = MousePosition;
@@ -38,10 +36,9 @@ class application : public Engine
 		
 
 	}
-};
 int main()
 {
-	application app;
-	app.init();
+	initEngine();
+
 	return 0;
 }

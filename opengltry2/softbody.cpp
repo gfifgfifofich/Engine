@@ -64,9 +64,6 @@ void UpdateWorld()
 
 }
 
-class application : public Engine
-{
-public:
 	float g = 1000;
 
 	SoftBody wheel1;
@@ -77,7 +74,7 @@ public:
 	cube floor;
 	ball center;
 
-	void On_Create() override
+	void On_Create() 
 	{//initialize
 		
 		floor.position -= 4000.0f;
@@ -273,7 +270,7 @@ public:
 	float absorption = 1.0f;
 	float stiffnes = 10000.0f;
 
-	void On_Update() override
+	void On_Update() 
 	{
 
 		glm::vec2 md = glm::vec2(0.0f);
@@ -618,11 +615,10 @@ public:
 		}*/
 
 	}
-};
 int main()
 {
-	application app;
-	app.init("app", 1920, 1080, true);
+
+	initEngine("app", 1920, 1080, true);
 	return 0;
 }
 
