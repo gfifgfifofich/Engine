@@ -7,6 +7,7 @@ ALint state = AL_PLAYING;
 
 std::vector <ALuint*> sources;
 std::vector <ALuint*> sounds;
+std::vector <unsigned int> soundsArray;
 
 ALCdevice* Device = alcOpenDevice(NULL);
 ALCcontext* Context;
@@ -89,6 +90,15 @@ void SetSourcePosition(unsigned int* source, glm::vec3 position)// stock = 0.0f,
 	pos.z = position.z;
 	alSource3f(*source, AL_POSITION, pos.x, pos.y, pos.z);
 }
+void SetSourcePosition(unsigned int* source, glm::vec2 position)// stock = 0.0f,0.0f,0.0f;
+{
+	glm::vec3 pos;
+	pos.x = position.x / WIDTH;
+	pos.y = position.y / HEIGHT;
+	pos.z = 0;
+	alSource3f(*source, AL_POSITION, pos.x, pos.y, pos.z);
+}
+
 void SetSourceVelocity(unsigned int* source, glm::vec3 velocity)// stock = 0.0f,0.0f,0.0f;
 {
 	alSource3f(*source, AL_VELOCITY, velocity.x, velocity.y, velocity.z);
@@ -136,7 +146,7 @@ void DeleteSource(unsigned int* source)
 
 	int i = 0;
 	bool go = true;
-	while (go)
+	while (go && i < sources.size())
 	{
 		if (sources[i] == source)
 		{
@@ -145,13 +155,21 @@ void DeleteSource(unsigned int* source)
 			sources.pop_back();
 		}
 		i++;
-		if (i >= sources.size())
-			go = false;
 	}
 
 }
 
-
+void PlaySound(unsigned int *sound,glm::vec2 position, float pitch =1.0f, float gain = 1.0f)
+{
+	unsigned int src;
+	GenSource(&src);
+	soundsArray.push_back(src);
+	SetSourcePosition(&soundsArray[soundsArray.size() - 1], position);
+	SetSourceSound(&soundsArray[soundsArray.size() - 1], sound);
+	SetSourceGain(&soundsArray[soundsArray.size() - 1], gain);
+	SetSourcePitch(&soundsArray[soundsArray.size() - 1], pitch);
+	PlaySource(&soundsArray[soundsArray.size() - 1]);
+}
 void  AL_Destroy()
 {
 	for (int i = 0; i < sources.size(); i++)
@@ -162,4 +180,23 @@ void  AL_Destroy()
 	alcCloseDevice(Device);
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(Context);
+}
+
+void ProcessAL()
+{
+
+	for (int i = 0; i < soundsArray.size(); i++)
+	{
+		bool del = true;
+		while (del && i < soundsArray.size())
+		{
+			del = false;
+			if (!SourcePlaying(&soundsArray[i]))
+			{
+				del = true;
+				soundsArray[i] = soundsArray[soundsArray.size() - 1];
+				soundsArray.pop_back();
+			}
+		}
+	}
 }

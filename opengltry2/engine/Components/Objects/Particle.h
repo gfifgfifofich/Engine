@@ -218,6 +218,7 @@ public:
 	bool ShowWindow = false;
 
 	int start = 0;
+	std::vector <int> TextureStarts;
 	int Normastart = 0;
 	int threadcount = std::thread::hardware_concurrency();
 	float delta = 0.017f;
@@ -365,6 +366,7 @@ public:
 
 
 		int SLI = -1;
+		SortSceneLayers();
 		for (int i = 0; i < SceneLayers.size(); i++)
 			if (SceneLayers[i].Z_Index == Z_Index)
 				SLI = i;
@@ -410,27 +412,30 @@ public:
 		}
 		else if (Type == "TEXTURED" && textures.size() > 0)
 		{
-			int TQA = -1;
-			unsigned int texture = textures[0];
-
-			for (int i = 0; i < SceneLayers[SceneLayerIndex].TexturedQuads.size(); i++)
-				if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
-					TQA = i;
-			if (TQA == -1)
+			TextureStarts.resize(textures.size());
+			for (int i = 0; i < textures.size(); i++)
 			{
-				TexturedQuadArray NewTQA;
-				NewTQA.Texture = texture;
-				SceneLayers[SceneLayerIndex].TexturedQuads.push_back(NewTQA);
-				for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+				int TQA = -1;
+				unsigned int texture = textures[i];
+
+				for (int i = 0; i < SceneLayers[SceneLayerIndex].TexturedQuads.size(); i++)
 					if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
 						TQA = i;
+				if (TQA == -1)
+				{
+					TexturedQuadArray NewTQA;
+					NewTQA.Texture = texture;
+					SceneLayers[SceneLayerIndex].TexturedQuads.push_back(NewTQA);
+					for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+						if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
+							TQA = i;
+				}
+				TextureIndex = TQA;
+				TextureStarts[i] = SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size();
+				SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.size() + Particles.size());
+				SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.size() + Particles.size());
 			}
-			TextureIndex = TQA;
-			start = SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size();
-			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size() + Particles.size());
-			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.size() + Particles.size());
-			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.size() + Particles.size());
-
 
 		}
 		if (DrawToNormalMap)
@@ -691,14 +696,16 @@ public:
 									}
 
 									int TQA = -1;
-									unsigned int texture = textures[Particles[i].id % textures.size()];
 
+									int TexIter = Particles[i].id % textures.size();
+									unsigned int texture = textures[TexIter];
+									
 									for (int i = 0; i < SceneLayers[SceneLayerIndex].TexturedQuads.size(); i++)
 										if (SceneLayers[SceneLayerIndex].TexturedQuads[i].Texture == texture)
 											TQA = i;
-									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[start + i] = color;
-									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[start + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
-									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[start + i] = Particles[i].Rotation;
+									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[TextureStarts[TexIter] + i] = color;
+									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[TextureStarts[TexIter] + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+									SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[TextureStarts[TexIter] + i] = Particles[i].Rotation;
 									
 									if (DrawToNormalMap)
 									{
@@ -919,14 +926,16 @@ public:
 					glm::vec2 position = Particles[i].position - CameraPosition;
 					position *= glm::vec2(aspx, aspy);
 						int TQA = -1;
-						unsigned int texture = textures[Particles[i].id % textures.size()];
+						int TexIter = Particles[i].id % textures.size();
+						unsigned int texture = textures[TexIter];
 
 						for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
 							if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
 								TQA = i;
-						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[start + i] = color;
-						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[start + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
-						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[start + i] = Particles[i].Rotation;
+
+						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[TextureStarts[TexIter] + i] = color;
+						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[TextureStarts[TexIter] + i] = glm::vec4(position, Size * glm::vec2(aspx, aspy));
+						SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[TextureStarts[TexIter] + i] = Particles[i].Rotation;
 
 						if (DrawToNormalMap)
 						{
@@ -1017,7 +1026,7 @@ public:
 			Particles.push_back(p);
 		}
 	}
-	void Spawn(glm::vec2 position,glm::vec2 velocity, int amount = 1)
+	void Spawn(glm::vec2 position,glm::vec2 velocity, int amount = 1,float LifeTime = -1.0f)
 	{
 		Particle p;
 		for (int i = 0; i < amount; i++)
@@ -1027,7 +1036,10 @@ public:
 			p.Rotation = InitialRotation;
 			p.RotationVelocity = RotationVelocity;
 			p.velocity = velocity;
-			p.time = lifetime;
+			if (LifeTime < 0.0f)
+				p.time = lifetime;
+			else
+				p.time = LifeTime;
 			p.OrbitalVelocity = InitialOrbitalVelocity;
 
 			p.time += (lifetime * (rand() % int(1000) / 1000.0f) - lifetime * 1.0f) * lifetimeRandomness;

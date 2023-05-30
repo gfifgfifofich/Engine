@@ -454,6 +454,8 @@ public:
 
 	void LoadFrom(std::string filename)
 	{
+		DeleteTextures();
+		DeleteNormalMaps();
 		balls.clear();
 		cubes.clear();
 		Textures.clear();
@@ -521,6 +523,7 @@ public:
 			{
 				Texture tex;
 				s >> junk >> tex.id >> tex.Type >> tex.FileName;
+				tex.texture = NULL;
 				tex.Load();
 				Textures.push_back(tex);
 			}
@@ -705,10 +708,97 @@ public:
 			}
 		}
 
-
 		f.close();
 	}
 
+
+	void Rescale(glm::vec2 scale, int Z_Index  =0)
+	{
+		for (int i = 0; i < points.size(); i++)
+		{
+			points[i].position.x *= scale.x;
+			points[i].position.y *= scale.y;
+		}
+		for (int i = 0; i < balls.size(); i++)
+		{
+			balls[i].position *= scale; 
+			balls[i].r *= scale.x;
+			balls[i].Z_Index += Z_Index;
+		}
+		for (int i = 0; i < cubes.size(); i++)
+		{
+			cubes[i].position *= scale;
+			cubes[i].width *= scale.x;
+			cubes[i].height *= scale.x;
+			cubes[i].Z_Index += Z_Index;
+		}
+		for (int i = 0; i < polygons.size(); i++)
+		{
+			for (int a = 0; a < polygons[i].points.size(); a++)
+				polygons[i].points[a] *= scale;
+			polygons[i].Z_Index += Z_Index;
+
+		}
+		for (int i = 0; i < ParticleEmiters.size(); i++)
+		{/*
+			ParticleEmiters[i].StartSize *= scale;
+			ParticleEmiters[i].EndSize *= scale;
+			ParticleEmiters[i].InitialVelocity *= scale;
+			ParticleEmiters[i].VelocityRandomness.x *= scale.x;
+			ParticleEmiters[i].VelocityRandomness.y *= scale.x;
+			ParticleEmiters[i].VelocityRandomness.z *= scale.y;
+			ParticleEmiters[i].VelocityRandomness.w *= scale.y;*/
+			ParticleEmiters[i].Z_Index += Z_Index;
+
+			for (int a = 0; a < ParticleEmiters[i].CubesOfInfluence.size(); a++)
+			{
+				ParticleEmiters[i].CubesOfInfluence[a].position *= scale;
+				ParticleEmiters[i].CubesOfInfluence[a].scale *= scale;
+				ParticleEmiters[i].CubesOfInfluence[a].velocity *= scale;
+			}
+			for (int a = 0; a < ParticleEmiters[i].EmitionCircles.size(); a++)
+			{
+				ParticleEmiters[i].EmitionCircles[a].position *= scale;
+				ParticleEmiters[i].EmitionCircles[a].r *= scale.x;
+				ParticleEmiters[i].EmitionCircles[a].velocity *= scale;
+			}
+			for (int a = 0; a < ParticleEmiters[i].EmitionCubes.size(); a++)
+			{
+				ParticleEmiters[i].EmitionCubes[a].position *= scale;
+				ParticleEmiters[i].EmitionCubes[a].scale *= scale;
+				ParticleEmiters[i].EmitionCubes[a].velocity *= scale;
+			}
+			for (int a = 0; a < ParticleEmiters[i].EmitionPoints.size(); a++)
+			{
+				ParticleEmiters[i].EmitionPoints[a].position *= scale;
+				ParticleEmiters[i].EmitionPoints[a].velocity *= scale;
+			}
+			for (int a = 0; a < ParticleEmiters[i].LightCubes.size(); a++)
+			{
+				ParticleEmiters[i].LightCubes[a].position *= scale;
+				ParticleEmiters[i].LightCubes[a].scale *= scale;
+			}
+			for (int a = 0; a < ParticleEmiters[i].LightSpheres.size(); a++)
+			{
+				ParticleEmiters[i].LightSpheres[a].position *= scale;
+				ParticleEmiters[i].LightSpheres[a].r *= scale.x;
+			}
+			for (int a = 0; a < ParticleEmiters[i].SpheresOfInfluence.size(); a++)
+			{
+				ParticleEmiters[i].SpheresOfInfluence[a].position *= scale;
+				ParticleEmiters[i].SpheresOfInfluence[a].r *= scale.x;
+				ParticleEmiters[i].SpheresOfInfluence[a].velocity *= scale;
+			}
+		}
+
+
+		for (int i = 0; i < LightSources.size(); i++)
+		{
+			LightSources[i].position *= scale;
+			LightSources[i].scale *= scale;
+
+		}
+	}
 
 	void Draw()
 	{
@@ -786,8 +876,25 @@ public:
 
 		}
 	}
+	void DeleteNormalMaps()
+	{
+		for (int i = 0; i < NormalMaps.size(); i++)
+		{
+			glDeleteTextures(1, &NormalMaps[i].texture);
+			NormalMaps[i].texture = NULL;
+		}
+	}
+	void DeleteTextures()
+	{
+		for (int i = 0; i < Textures.size(); i++)
+		{
+			glDeleteTextures(1, &Textures[i].texture);
+			Textures[i].texture = NULL;
+		}
+	}
 	void ReloadTextures()
 	{
+		DeleteTextures();
 		for (int i = 0; i < Textures.size(); i++)
 		{
 			Textures[i].Load();

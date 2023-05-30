@@ -8,6 +8,6 @@ uniform vec4 color = vec4(1.0f);
 
 void main()
 {             
-	vec2 coord =  vec2(TexCoords.x,1.0f - TexCoords.y);
-	FragColor =texture(Texture, coord).rgba * color;
+	vec2 coord = vec2(TexCoords.x,1.0f - TexCoords.y);
+	FragColor = texture(Texture, coord).rgba * color;
 }

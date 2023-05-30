@@ -31,9 +31,7 @@ void BallToPointCollision(ball* b, glm::vec2 point,float roughness = 1.0f)
 	{
 		b->colided = true;
 
-		glm::vec2 dif = glm::vec2(0.0f);
-
-		dif = b->position - point;
+		glm::vec2 dif =  b->position - point;
 
 
 		float dist = length(dif);

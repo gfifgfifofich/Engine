@@ -224,7 +224,7 @@ public:
 		posi.y = b.body.position.y ;
 
 
-		RenderText("This is sample text", 25.0f , 25.0f , 1.0f, glm::vec4(0.5, 0.8f, 0.2f, 1.0f),true);
+		DrawText("This is sample text", 25.0f , 25.0f , 2.0f, glm::vec4(0.5, 0.8f, 0.2f, 1.0f),true);
 		
 		
 		

@@ -6,9 +6,6 @@
 #include <map>
 
 
-GLuint TextVAO, TextVBO;
-
-Shader* TextShader;
 
 struct TextLine
 {
@@ -39,7 +36,7 @@ void LoadFont(const char* font)
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 	FT_Face face;
-	if (FT_New_Face(ft,font, 0, &face))
+	if (FT_New_Face(ft, font, 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	FT_Set_Pixel_Sizes(face, 0, 48);
@@ -97,7 +94,7 @@ void LoadFont(const char* font)
 
 
 
-void RenderText( std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color = glm::vec4(1.0f),bool aboveEverything = false)
+void DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), bool aboveEverything = false)
 {
 	if (aboveEverything)
 	{
@@ -118,22 +115,22 @@ void RenderText( std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec
 		glm::vec2 position = glm::vec2(0.0f, 0.0f);
 		position -= CameraPosition;
 		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-			(position.x)  * ScreenDivisorX * CameraScale.x,
-			(position.y)  * ScreenDivisorY * CameraScale.y,
+			(position.x) * ScreenDivisorX * CameraScale.x,
+			(position.y) * ScreenDivisorY * CameraScale.y,
 			0.0f));
 
 
-		trans = glm::scale(trans, glm::vec3(scale * CameraScale.x * ScaleMultiplyer, scale * CameraScale.y * ScaleMultiplyer, 0.0f));
+		trans = glm::scale(trans, glm::vec3(CameraScale.x * ScaleMultiplyer, CameraScale.y * ScaleMultiplyer, 0.0f));
 
 
 
 		// Activate corresponding render state
-		TextShader->Use();
-		glUniform4f(glGetUniformLocation(TextShader->Program, "color"), color.x, color.y, color.z, color.w);
-		glUniformMatrix4fv(glGetUniformLocation(TextShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+		UseShader(TextShader);
+		glUniform4f(glGetUniformLocation(TextShader, "color"), color.x, color.y, color.z, color.w);
+		glUniformMatrix4fv(glGetUniformLocation(TextShader, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 
-		glUniform2f(glGetUniformLocation(TextShader->Program, "scr"), (float)WIDTH, (float)HEIGHT);
-		glUniform1i(glGetUniformLocation(TextShader->Program, "flipY"), true);
+		glUniform2f(glGetUniformLocation(TextShader, "scr"), (float)WIDTH, (float)HEIGHT);
+		glUniform1i(glGetUniformLocation(TextShader, "flipY"), true);
 
 
 		glActiveTexture(GL_TEXTURE0);
@@ -174,4 +171,8 @@ void RenderText( std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+}
+void DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), bool aboveEverything = false)
+{
+	DrawText(text, position.x, position.y, scale, color, aboveEverything);
 }

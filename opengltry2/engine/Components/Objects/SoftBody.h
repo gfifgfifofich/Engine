@@ -2,7 +2,7 @@
 
 
 
-void DrawSpring(glm::vec2 p1, glm::vec2 p2, float RequeredLength)
+void DrawSpring(glm::vec2 p1, glm::vec2 p2, float RequeredLength,float width=1, float Z_Index=0,bool lighted = false)
 {
 	float dif = length(p1 - p2) - RequeredLength;
 
@@ -25,7 +25,7 @@ void DrawSpring(glm::vec2 p1, glm::vec2 p2, float RequeredLength)
 		if (color.g < 0)color.g = 0;
 		if (color.r < 0)color.r = 0;
 	}
-	DrawLine(p1, p2, 1.0f, color);
+	DrawLine(p1, p2, 1.0f, color,lighted,CubeNormalMapTexture,Z_Index);
 }
 
 class SoftBody

@@ -42,7 +42,7 @@ float get_angle_between_points(glm::vec2 vec1, glm::vec2 vec2)
 	glm::vec2 vec3 = vec1 - vec2;
 	float tan = vec3.y / vec3.x;
 	float  angle = atan(tan);
-	if (vec1.x>vec2.x)
+	if (vec1.x>=vec2.x)
 	{
 		angle += pi ;
 	}

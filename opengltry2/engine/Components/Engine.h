@@ -152,7 +152,6 @@ float bloomLevelDivisor = 5.0f;
 float ChromaticStrength = 0.0f;
 glm::vec2 ChromaticPoint = glm::vec2(0.5f);
 
-Shader* CircleShaderPtr;
 
 
 
@@ -210,7 +209,7 @@ std::vector <ParticleEmiter*> ParticleEmiters;
 #include "engine/Components/Classes.h"
 
 
-//Requeres DLL, + wirks funky
+//Requeres DLL, + works funky
 //#include "engine/Components/sounds.h"
 
 
@@ -233,7 +232,7 @@ bool JustPressedLMB = false;
 class Engine
  {
  public:
-	unsigned int DownScaleBuffers[6];
+	 unsigned int DownScaleBuffers[6];
 
 	virtual void On_Create()
 	{
@@ -253,7 +252,7 @@ class Engine
 
 		ScreenAspectRatio = (float)WIDTH / HEIGHT;
 
-
+		
 
 		ScreenDivisorX = (WIDTH / (ScreenAspectRatio * 2)) - ScreenAspectRatio * 0.75f;
 		ScreenDivisorY = (HEIGHT / 2.0f) - 1.0f;
@@ -300,71 +299,53 @@ class Engine
 
 		//ScreenShaderStuff for HDR and postprocessing
 
-		Shader shaderBlur("engine/Shaders/blur/blur.vert", "engine/Shaders/blur/blur.frag");
-		BlurShaderPtr = &shaderBlur;
 
-		Shader shaderBloom("engine/Shaders/Screen.vert", "engine/Shaders/Bloom/bloom.frag");
+		GLuint InctanceQuadShader;
+		GLuint InstanceTexturedQuadShader;
 
-		Shader ScrShade("engine/Shaders/Screen.vert", "engine/Shaders/Screen.frag");
-		Shader Chromatic("engine/Shaders/Screen.vert", "engine/Shaders/Chromatic/Chromatic.frag");
-
-		//Other Shaders
-		Shader FillShader("engine/Shaders/Quad/default.vert", "engine/Shaders/Quad/Quad.frag");
-
-
-
-
-		Shader TriShader("engine/Shaders/Triangle/Fill.vert", "engine/Shaders/Triangle/Fill.frag");
-		FilShader = &TriShader;
-
-		Shader TexturedTriShader("engine/Shaders/Triangle/TexturedTriangle.vert", "engine/Shaders/Triangle/TexturedTriangle.frag");
-		TexturedTriangleShader= &TexturedTriShader;
-
-		Shader CircleShader("engine/Shaders/Circle/Circle.vert", "engine/Shaders/Circle/Circle.frag");
-		Shader InctanceQuadShader("engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
-
-		Shader InstanceNormalMapShader("engine/Shaders/NormalMap/InstancedNMDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
-
-		Shader InstanceTexturedQuadShader("engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.frag");
+		LoadShader(&InctanceQuadShader, "engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
+		LoadShader(&InstanceTexturedQuadShader, "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.frag");
 		
-		Shader InstancedNormalMapShader("engine/Shaders/InstancedNormalMap/InstancedNMDraw.vert", "engine/Shaders/InstancedNormalMap/NormalMapDraw.frag");
-
-
-		Shader TexturedQuad("engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
-		TexturedQuadShader = &TexturedQuad;
-
-
-
-
-		Shader TextSh("engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Text.frag");
-		TextShader = &TextSh;
+		//Texture Generation
+		LoadShader(&GradientGenShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
+		LoadShader(&NoizeGenShader, "engine/Shaders/NoizeGen/NoizeGen.vert", "engine/Shaders/NoizeGen/NoizeGen.frag");
+		LoadShader(&RoundShader, "engine/Shaders/Round/Round.vert", "engine/Shaders/Round/Round.frag");
+		LoadShader(&AddTexturesShader, "engine/Shaders/Default.vert", "engine/Shaders/Textures/AddTextures.frag");
+		LoadShader(&GenNormalMapShader, "engine/Shaders/Default.vert", "engine/Shaders/NormalMap/GenNormalMap.frag");
+		LoadShader(&GenLightSphereShader, "engine/Shaders/Default.vert", "engine/Shaders/Light/GenLightSphere.frag");
 		
-		Shader DownsampleBlur("engine/Shaders/Screen.vert", "engine/Shaders/blur/DownscaleBlur.frag");
-		Shader UpsampleBlur("engine/Shaders/Screen.vert", "engine/Shaders/blur/UpsampleBlur.frag");
+		//Post processing
+		LoadShader(&BlurShader, "engine/Shaders/blur/blur.vert", "engine/Shaders/blur/blur.frag");
+		LoadShader(&shaderBloom, "engine/Shaders/Default.vert", "engine/Shaders/Bloom/bloom.frag");
+		LoadShader(&ScrShade, "engine/Shaders/Default.vert", "engine/Shaders/Screen.frag");
+		LoadShader(&Chromatic, "engine/Shaders/Default.vert", "engine/Shaders/Chromatic/Chromatic.frag");
+		LoadShader(&DownsampleBlur, "engine/Shaders/Default.vert", "engine/Shaders/blur/DownscaleBlur.frag");
+		LoadShader(&UpsampleBlur, "engine/Shaders/Default.vert", "engine/Shaders/blur/UpsampleBlur.frag");
 
-		Shader NoizeGenShader("engine/Shaders/NoizeGen/NoizeGen.vert", "engine/Shaders/NoizeGen/NoizeGen.frag");
-		NoizeGenShaderptr = &NoizeGenShader;
+		//Drawing
+		//Quad
+		LoadShader(&FillShader, "engine/Shaders/Quad/default.vert", "engine/Shaders/Quad/Quad.frag");
+		LoadShader(&TexturedQuadShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
 
-		Shader RoundShader("engine/Shaders/Round/Round.vert", "engine/Shaders/Round/Round.frag");
-		RoundShaderptr = &RoundShader;
+		//Circle	
+		LoadShader(&CircleShader, "engine/Shaders/Circle/Circle.vert", "engine/Shaders/Circle/Circle.frag");
 
-		Shader AddTextures("engine/Shaders/Screen.vert", "engine/Shaders/Textures/AddTextures.frag");
-		AddTexturesShader = &AddTextures;
+		//Lighting
+		LoadShader(&InstancedNormalMapShader, "engine/Shaders/InstancedNormalMap/InstancedNMDraw.vert", "engine/Shaders/InstancedNormalMap/NormalMapDraw.frag");
+		LoadShader(&NormalMapDrawShader, "engine/Shaders/NormalMap/NormalMapDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
+
+		LoadShader(&LightShader, "engine/Shaders/Light/Light.vert", "engine/Shaders/Light/LightProcess.frag");
+
+		//Triangle	
+		LoadShader(&FillTriangleShader, "engine/Shaders/Triangle/Fill.vert", "engine/Shaders/Triangle/Fill.frag");
+		LoadShader(&TexturedTriangleShader, "engine/Shaders/Triangle/TexturedTriangle.vert", "engine/Shaders/Triangle/TexturedTriangle.frag");
+
+		//Text
+		LoadShader(&TextShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Text.frag");
+
+		PreLoadShaders();
+		PreLoadShaders();
 		
-
-		//Lighteing Shaders:
-		Shader NormMapDraw("engine/Shaders/NormalMap/NormalMapDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
-		NormalMapDrawShader = &NormMapDraw;
-
-		Shader GenNormMapDraw("engine/Shaders/Screen.vert", "engine/Shaders/NormalMap/GenNormalMap.frag");
-		GenNormalMapShader = &GenNormMapDraw;
-
-		Shader GenLS("engine/Shaders/Screen.vert", "engine/Shaders/Light/GenLightSphere.frag");
-		GenLightSphereShader = &GenLS;
-
-		Shader LSDraw("engine/Shaders/Light/Light.vert", "engine/Shaders/Light/LightProcess.frag");
-		LightShader = &LSDraw;
-
 		float ScreenVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 			// positions   // texCoords
 			-1.0f,  1.0f,  0.0f, 1.0f,
@@ -403,7 +384,6 @@ class Engine
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorBuffer, 0);
-
 
 
 
@@ -839,16 +819,16 @@ class Engine
 
 					}
 
-					InctanceQuadShader.Use();
-					glUniform1f(glGetUniformLocation(InctanceQuadShader.Program, "aspect"), aspect);
+					UseShader(InctanceQuadShader);
+					glUniform1f(glGetUniformLocation(InctanceQuadShader, "aspect"), aspect);
 					glBindVertexArray(quadVAO);
 					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Quadcolors.size());
 					glBindVertexArray(0);
 
 					glDeleteBuffers(7, &instanceVBO);
 
-					CircleShader.Use();
-					glUniform1f(glGetUniformLocation(CircleShader.Program, "aspect"), aspect);
+					UseShader(CircleShader);
+					glUniform1f(glGetUniformLocation(CircleShader, "aspect"), aspect);
 					glBindVertexArray(CircleVAO);
 					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Circlecolors.size());
 					glBindVertexArray(0);
@@ -866,14 +846,14 @@ class Engine
 
 					for (int TQA = 0; TQA < SceneLayers[i].TexturedQuads.size(); TQA++)
 					{
-						InstanceTexturedQuadShader.Use();
+						UseShader(InstanceTexturedQuadShader);
 
-						glUniform1f(glGetUniformLocation(InstanceTexturedQuadShader.Program, "aspect"), aspect);
+						glUniform1f(glGetUniformLocation(InstanceTexturedQuadShader, "aspect"), aspect);
 
 
 						glActiveTexture(GL_TEXTURE0);
 						glBindTexture(GL_TEXTURE_2D, SceneLayers[i].TexturedQuads[TQA].Texture);
-						glUniform1i(glGetUniformLocation(InstanceTexturedQuadShader.Program, "Texture"), 0);
+						glUniform1i(glGetUniformLocation(InstanceTexturedQuadShader, "Texture"), 0);
 
 						glGenBuffers(1, &instanceTexturedQuadVBO);
 						glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
@@ -927,16 +907,22 @@ class Engine
 						{
 							glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
 
-							InstanceNormalMapShader.Use();
+							UseShader(InstancedNormalMapShader);
 
 
 
-							glUniform1f(glGetUniformLocation(InstanceNormalMapShader.Program, "aspect"), aspect);
+							glUniform1f(glGetUniformLocation(InstancedNormalMapShader, "aspect"), aspect);
 
 
 							glActiveTexture(GL_TEXTURE0);
 							glBindTexture(GL_TEXTURE_2D, CubeNormalMapTexture);
-							glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
+
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
+
+
 
 							glGenBuffers(1, &instanceNormalMapCubeVBO);
 							glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
@@ -971,7 +957,11 @@ class Engine
 
 							glActiveTexture(GL_TEXTURE0);
 							glBindTexture(GL_TEXTURE_2D, BallNormalMapTexture);
-							glUniform1i(glGetUniformLocation(InstanceNormalMapShader.Program, "Texture"), 0);
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
+
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
+							glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
 
 							glGenBuffers(1, &instanceNormalMapCircleVBO);
 							glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
@@ -1009,14 +999,27 @@ class Engine
 
 							for (int NQA = 0; NQA < SceneLayers[i].NormalMaps.size(); NQA++)
 							{
-								InstancedNormalMapShader.Use();
+								UseShader(InstancedNormalMapShader);
 
-								glUniform1f(glGetUniformLocation(InstancedNormalMapShader.Program, "aspect"), aspect);
+								glUniform1f(glGetUniformLocation(InstancedNormalMapShader, "aspect"), aspect);
 
+								glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), false);
+								glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), true);
 
 								glActiveTexture(GL_TEXTURE0);
 								glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture);
-								glUniform1i(glGetUniformLocation(InstancedNormalMapShader.Program, "Texture"), 0);
+								glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
+
+
+								glActiveTexture(GL_TEXTURE1);
+								glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture2);
+								glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture2"), 1);
+
+								if (SceneLayers[i].NormalMaps[NQA].Texture2 != NULL)
+									glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), true);
+								else
+									glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
+
 
 								glGenBuffers(1, &instanceNormalMapTextureVBO);
 								glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO);
@@ -1057,6 +1060,7 @@ class Engine
 							else
 								glBindFramebuffer(GL_FRAMEBUFFER, 0);
 						}
+
 				}
 
 			
@@ -1070,15 +1074,15 @@ class Engine
 
 				glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
 
-				LightShader->Use();
+				UseShader(LightShader);
 
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
-				glUniform1i(glGetUniformLocation(LightShader->Program, "NormalMap"), 0);
+				glUniform1i(glGetUniformLocation(LightShader, "NormalMap"), 0);
 
 				glActiveTexture(GL_TEXTURE2);
 				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-				glUniform1i(glGetUniformLocation(LightShader->Program, "BaseColor"), 2);
+				glUniform1i(glGetUniformLocation(LightShader, "BaseColor"), 2);
 
 				
 				for (int i = 0; i < LightSources.size(); i++)
@@ -1108,16 +1112,16 @@ class Engine
 
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, LightSources[i].texture);
-					glUniform1i(glGetUniformLocation(LightShader->Program, "Texture"), 1);
+					glUniform1i(glGetUniformLocation(LightShader, "Texture"), 1);
 
-					glUniform4f(glGetUniformLocation(LightShader->Program, "color"), LightSources[i].color.r, LightSources[i].color.g, LightSources[i].color.b, LightSources[i].color.a);
-					glUniform2f(glGetUniformLocation(LightShader->Program, "position"), LightSources[i].position.x, LightSources[i].position.y);
-					glUniform2f(glGetUniformLocation(LightShader->Program, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
-					glUniform1f(glGetUniformLocation(LightShader->Program, "volume"), LightSources[i].volume);
+					glUniform4f(glGetUniformLocation(LightShader, "color"), LightSources[i].color.r, LightSources[i].color.g, LightSources[i].color.b, LightSources[i].color.a);
+					glUniform2f(glGetUniformLocation(LightShader, "position"), LightSources[i].position.x, LightSources[i].position.y);
+					glUniform2f(glGetUniformLocation(LightShader, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
+					glUniform1f(glGetUniformLocation(LightShader, "volume"), LightSources[i].volume);
 
 
-					glUniform3f(glGetUniformLocation(LightShader->Program, "scr"), WIDTH, HEIGHT, WIDTH * ahigh);
-					glUniformMatrix4fv(glGetUniformLocation(LightShader->Program, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+					glUniform3f(glGetUniformLocation(LightShader, "scr"), WIDTH, HEIGHT, WIDTH * ahigh);
+					glUniformMatrix4fv(glGetUniformLocation(LightShader, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 
 
 
@@ -1136,15 +1140,15 @@ class Engine
 
 				glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
 
-				AddTexturesShader->Use();
+				UseShader(AddTexturesShader);
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, LightColorBuffer);
-				glUniform1i(glGetUniformLocation(AddTexturesShader->Program, "Texture1"), 0);
+				glUniform1i(glGetUniformLocation(AddTexturesShader, "Texture1"), 0);
 
 				glActiveTexture(GL_TEXTURE1);
 				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-				glUniform1i(glGetUniformLocation(AddTexturesShader->Program, "Texture2"), 1);
-				glUniform2f(glGetUniformLocation(AddTexturesShader->Program, "proportions"), DirectionalLight, AmbientLight);
+				glUniform1i(glGetUniformLocation(AddTexturesShader, "Texture2"), 1);
+				glUniform2f(glGetUniformLocation(AddTexturesShader, "proportions"), DirectionalLight, AmbientLight);
 
 				glBindVertexArray(ScreenVAO);
 				glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1155,7 +1159,7 @@ class Engine
 
 			//Text that marked ato Draw Above Everything else
 			for (int i = 0; i < TextLines.size(); i++)
-				RenderText(TextLines[i].text, TextLines[i].x, TextLines[i].y, TextLines[i].scale, TextLines[i].color, false);
+				DrawText(TextLines[i].text, TextLines[i].x, TextLines[i].y, TextLines[i].scale, TextLines[i].color, false);
 			TextLines.clear();
 
 
@@ -1274,16 +1278,16 @@ class Engine
 					glClear(GL_COLOR_BUFFER_BIT);
 
 					//threshholding the main image
-					shaderBloom.Use();
+					UseShader(shaderBloom);
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-					glUniform1i(glGetUniformLocation(shaderBloom.Program, "screenTexture"), 1);
+					glUniform1i(glGetUniformLocation(shaderBloom, "screenTexture"), 1);
 					glDrawArrays(GL_TRIANGLES, 0, 6);
 					glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 					//Downsample and blur a few times
 					glBindVertexArray(ScreenVAO);
-					DownsampleBlur.Use();
+					UseShader(DownsampleBlur);
 					for (int i = 0; i < 6; i++)
 					{ 
 						glViewport(0, 0, WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
@@ -1292,10 +1296,10 @@ class Engine
 						//input texture
 						glActiveTexture(GL_TEXTURE0);
 						glBindTexture(GL_TEXTURE_2D, i == 0 ? blurColorbuffers[0] : DownScaleBuffers[i - 1]);
-						glUniform1i(glGetUniformLocation(DownsampleBlur.Program, "srcTexture"), 0);
+						glUniform1i(glGetUniformLocation(DownsampleBlur, "srcTexture"), 0);
 
 
-						glUniform2f(glGetUniformLocation(DownsampleBlur.Program, "srcResolution"), WIDTH/ (pow(2.0f, i + 1)), HEIGHT/ (pow(2.0f, i + 1)));
+						glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), WIDTH/ (pow(2.0f, i + 1)), HEIGHT/ (pow(2.0f, i + 1)));
 
 						glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -1304,8 +1308,8 @@ class Engine
 
 					//Upsample backwards and blur
 					glBindVertexArray(ScreenVAO);
-					UpsampleBlur.Use();
-					glUniform1f(glGetUniformLocation(UpsampleBlur.Program, "filterRadius"), 10.0f);
+					UseShader(UpsampleBlur);
+					glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
 					for (int i = 5; i > 0; i--)
 					{ 
 						glViewport(0, 0, WIDTH / (pow(2.0f, i )), HEIGHT / (pow(2.0f, i )));
@@ -1314,14 +1318,14 @@ class Engine
 						//input texture
 						glActiveTexture(GL_TEXTURE0);
 						glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i]);
-						glUniform1i(glGetUniformLocation(UpsampleBlur.Program, "srcTexture"), 0);
+						glUniform1i(glGetUniformLocation(UpsampleBlur, "srcTexture"), 0);
 
 
 						glActiveTexture(GL_TEXTURE1);
 						glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i-1]);
-						glUniform1i(glGetUniformLocation(UpsampleBlur.Program, "PrevTexture"), 1);
+						glUniform1i(glGetUniformLocation(UpsampleBlur, "PrevTexture"), 1);
 
-						glUniform1f(glGetUniformLocation(UpsampleBlur.Program, "weight"),i/ bloomLevelDivisor);
+						glUniform1f(glGetUniformLocation(UpsampleBlur, "weight"),i/ bloomLevelDivisor);
 
 						glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -1332,21 +1336,21 @@ class Engine
 
 					glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-					ScrShade.Use();
+					UseShader(ScrShade);
 
-					glUniform1f(glGetUniformLocation(ScrShade.Program, "bloom"), bloom);
-					glUniform1f(glGetUniformLocation(ScrShade.Program, "exposure"), SceneExposure);
+					glUniform1f(glGetUniformLocation(ScrShade, "bloom"), bloom);
+					glUniform1f(glGetUniformLocation(ScrShade, "exposure"), SceneExposure);
 
-					glUniform1f(glGetUniformLocation(ScrShade.Program, "BloomStrength"), bloomIntensity);
+					glUniform1f(glGetUniformLocation(ScrShade, "BloomStrength"), bloomIntensity);
 
 
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-					glUniform1i(glGetUniformLocation(ScrShade.Program, "scene"), 1);
+					glUniform1i(glGetUniformLocation(ScrShade, "scene"), 1);
 
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[0]);
-					glUniform1i(glGetUniformLocation(ScrShade.Program, "bloomBlur"), 0);
+					glUniform1i(glGetUniformLocation(ScrShade, "bloomBlur"), 0);
 
 
 					glDrawArrays(GL_TRIANGLES, 0, 6); 
@@ -1357,15 +1361,15 @@ class Engine
 					else 
 						fm = fb;
 
-					Chromatic.Use();
+					UseShader(Chromatic);
 					glBindFramebuffer(GL_FRAMEBUFFER,0);
 					glBindTexture(GL_TEXTURE_2D, fm);
 					
 					ChromaticPoint = glm::vec2(0.5f,0.5f);
-					glUniform2f(glGetUniformLocation(Chromatic.Program, "point"), ChromaticPoint.x, ChromaticPoint.y);
+					glUniform2f(glGetUniformLocation(Chromatic, "point"), ChromaticPoint.x, ChromaticPoint.y);
 					
 					
-					glUniform1f(glGetUniformLocation(Chromatic.Program, "strength"), ChromaticStrength);
+					glUniform1f(glGetUniformLocation(Chromatic, "strength"), ChromaticStrength);
 
 					glDrawArrays(GL_TRIANGLES, 0, 6);// the last drawing, directly to screen
 					
@@ -1381,12 +1385,12 @@ class Engine
 
 					glBindVertexArray(ScreenVAO);
 
-					ScrShade.Use();
+					UseShader(ScrShade);
 
 					glBindTexture(GL_TEXTURE_2D, ColorBuffer);
 
-					glUniform1f(glGetUniformLocation(ScrShade.Program, "bloom"), bloom);
-					glUniform1f(glGetUniformLocation(ScrShade.Program, "exposure"), SceneExposure);
+					glUniform1f(glGetUniformLocation(ScrShade, "bloom"), bloom);
+					glUniform1f(glGetUniformLocation(ScrShade, "exposure"), SceneExposure);
 					glDisable(GL_DEPTH_TEST);
 
 					glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1443,3 +1447,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 
 }
+
+
+

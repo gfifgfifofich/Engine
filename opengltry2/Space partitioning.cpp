@@ -18,7 +18,7 @@ struct cell
 	int iter = 0;
 };
 
-const int objAmount = 7500;
+const int objAmount = 10000;
 
 cell cells[Cellsx][Cellsy];
 
@@ -104,7 +104,7 @@ class application : public Engine
 		ImGui::SliderFloat("dt ", &dt,0.001,0.034f);
 
 
-		float subdt = dt / 4;
+		float subdt = dt / substeps;
 		glm::vec2 mid = glm::vec2(0.0f);
 		mid = MousePosition;
 
@@ -145,7 +145,7 @@ class application : public Engine
 				Temperatures[i] = 0.1f;
 		}
 
-		for (int s = 0; s < 4; s++) 
+		for (int s = 0; s < substeps; s++)
 		{
 			//std::cout << "mod x = " << mid.x << " y = " << mid.y << "\n";
 			megaball.Process(subdt);
@@ -268,7 +268,7 @@ class application : public Engine
 			
 
 		}
-		
+		DrawLight(megaball.position, glm::vec2(1000.0f), glm::vec4(1.0f), 0.0f, 0.0f);
 		DrawCircle(megaball, glm::vec4(2.0f, 0.4f, 0.08f, 1.0f));
 		DrawLine(megaball.position, megaball.position - megaball.velocity * 0.1f, megaball.r, glm::vec4(2.0f, 0.4f, 0.08f, 1.0f));
 		
@@ -276,7 +276,7 @@ class application : public Engine
 		{//DrawTexturedQuad(objects[i].position, glm::vec2(objects[i].r), peepoo , glm::vec3(0.0f), glm::vec4(0.0f, 0.0f, 20.0f, 1.0f));
 			if (Temperatures[i] < 0.1f)Temperatures[i] = 0.1f;
 			if (Temperatures[i] > 10000.1f)Temperatures[i] = 10000.1f;
-			DrawCircle(objects[i].position, objects[i].r, glm::vec4(2.0f * Temperatures[i] * 0.002f, 0.4f * Temperatures[i] * 0.002f, 0.08f * Temperatures[i] * 0.002f, 1.0f));
+			DrawCircle(objects[i].position, objects[i].r, glm::vec4(2.0f * Temperatures[i] * 0.002f, 0.4f * Temperatures[i] * 0.002f, 0.08f * Temperatures[i] * 0.002f, 1.0f),true);
 			DrawLine(objects[i].position, objects[i].position - objects[i].velocity*0.02f, objects[i].r, glm::vec4(2.0f * Temperatures[i] * 0.002f, 0.4f * Temperatures[i] * 0.002f, 0.08f* Temperatures[i] * 0.002f, 1.0f));
 		}
 		//pm.Process(delta);

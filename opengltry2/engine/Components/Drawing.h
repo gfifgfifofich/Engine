@@ -3,40 +3,145 @@
 glm::vec2 CameraPosition = glm::vec2(0.0f);
 glm::vec2 CameraScale = glm::vec2(1.0f);
 
-//QUAD
-Shader* TexturedQuadShader;
-Shader* FilShader;
-Shader* TexturedTriangleShader;
-Shader*	AddTexturesShader;
+//Texture Generation
 
-Shader* NormalMapDrawShader;
-Shader* LightShader;
-Shader* GenNormalMapShader;
-Shader* GenLightSphereShader;
+GLuint NoizeGenShader;
+GLuint GradientGenShader;
+GLuint AddTexturesShader;
+GLuint RoundShader;
+GLuint GenNormalMapShader;
+GLuint GenLightSphereShader;
 
-
-
-unsigned int BallNormalMapTexture;
-unsigned int CubeNormalMapTexture;
-unsigned int LightSphereTexture;
-
-unsigned int FrameBuffer, ColorBuffer;
-unsigned int NormalMapFBO, NormalMapColorBuffer;
-unsigned int LightColorFBO, LightColorBuffer;
+//Drawing
+//Quad
+	GLuint FillShader;
+	GLuint TexturedQuadShader;
 
 
+//Circle
+	GLuint CircleShader;
 
-unsigned int quadVAO, quadVBO,
-ScreenVAO, ScreenVBO,
-CircleVAO, CircleVBO,
-TriangleVAO, TriangleVBO,
-TexturedTriangleVAO, TexturedTriangleVBO
-;
+//Lighting
+	GLuint InstancedNormalMapShader;
+	GLuint NormalMapDrawShader;
+	GLuint LightShader;
 
+//Triangle
+	GLuint FillTriangleShader;
+	GLuint TexturedTriangleShader;
+
+
+//Post processing
+	GLuint BlurShader;
+	GLuint UpsampleBlur;
+	GLuint DownsampleBlur;
+
+	GLuint Chromatic;
+	GLuint shaderBloom;
+	GLuint ScrShade;
+
+//Textures
+	GLuint BallNormalMapTexture;
+	GLuint CubeNormalMapTexture;
+	GLuint LightSphereTexture;
+
+//Text
+	GLuint TextVAO, TextVBO;
+	GLuint TextShader;
+
+//Buffers
+	GLuint FrameBuffer, ColorBuffer;
+	GLuint NormalMapFBO, NormalMapColorBuffer;
+	GLuint LightColorFBO, LightColorBuffer;
+
+
+//VertexObjects
+	GLuint quadVAO, quadVBO,
+	ScreenVAO, ScreenVBO,
+	CircleVAO, CircleVBO,
+	TriangleVAO, TriangleVBO,
+	TexturedTriangleVAO, TexturedTriangleVBO
+	;
+
+
+	GLuint InctanceQuadShader;
+
+	GLuint InstanceTexturedQuadShader;
+
+
+void PreLoadShaders()
+{
+	//Texture Generation
+	LoadShader(&GradientGenShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
+	LoadShader(&NoizeGenShader, "engine/Shaders/NoizeGen/NoizeGen.vert", "engine/Shaders/NoizeGen/NoizeGen.frag");
+	LoadShader(&RoundShader, "engine/Shaders/Round/Round.vert", "engine/Shaders/Round/Round.frag");
+	LoadShader(&AddTexturesShader, "engine/Shaders/Default.vert", "engine/Shaders/Textures/AddTextures.frag");
+	LoadShader(&GenNormalMapShader, "engine/Shaders/Default.vert", "engine/Shaders/NormalMap/GenNormalMap.frag");
+	LoadShader(&GenLightSphereShader, "engine/Shaders/Default.vert", "engine/Shaders/Light/GenLightSphere.frag");
+
+	//Post processing
+	LoadShader(&BlurShader, "engine/Shaders/blur/blur.vert", "engine/Shaders/blur/blur.frag");
+	LoadShader(&shaderBloom, "engine/Shaders/Default.vert", "engine/Shaders/Bloom/bloom.frag");
+	LoadShader(&ScrShade, "engine/Shaders/Default.vert", "engine/Shaders/Screen.frag");
+	LoadShader(&Chromatic, "engine/Shaders/Default.vert", "engine/Shaders/Chromatic/Chromatic.frag");
+	LoadShader(&DownsampleBlur, "engine/Shaders/Default.vert", "engine/Shaders/blur/DownscaleBlur.frag");
+	LoadShader(&UpsampleBlur, "engine/Shaders/Default.vert", "engine/Shaders/blur/UpsampleBlur.frag");
+
+	//Drawing
+	//Quad
+	LoadShader(&FillShader, "engine/Shaders/Quad/default.vert", "engine/Shaders/Quad/Quad.frag");
+	LoadShader(&TexturedQuadShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
+
+	//Circle	
+	LoadShader(&CircleShader, "engine/Shaders/Circle/Circle.vert", "engine/Shaders/Circle/Circle.frag");
+
+	//Lighting
+	LoadShader(&InstancedNormalMapShader, "engine/Shaders/InstancedNormalMap/InstancedNMDraw.vert", "engine/Shaders/InstancedNormalMap/NormalMapDraw.frag");
+	LoadShader(&NormalMapDrawShader, "engine/Shaders/NormalMap/NormalMapDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
+
+	LoadShader(&LightShader, "engine/Shaders/Light/Light.vert", "engine/Shaders/Light/LightProcess.frag");
+
+	//Triangle	
+	LoadShader(&FillTriangleShader, "engine/Shaders/Triangle/Fill.vert", "engine/Shaders/Triangle/Fill.frag");
+	LoadShader(&TexturedTriangleShader, "engine/Shaders/Triangle/TexturedTriangle.vert", "engine/Shaders/Triangle/TexturedTriangle.frag");
+
+	//Text
+	LoadShader(&TextShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Text.frag");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+	
+
+	
+
+	
+
+
+
+}
 
 struct TexturedQuadArray
 {
-	unsigned int Texture;
+	GLuint Texture;
+	GLuint Texture2;
 	std::vector <glm::vec4> QuadPosScale;
 	std::vector <float> QuadRotations;
 	std::vector <glm::vec4> Quadcolors;
@@ -139,7 +244,7 @@ void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volum
 	ls.texture = texture;
 	LightSources.push_back(ls);
 }
-void NormalMapDraw(glm::vec2 position,glm::vec2 scale,unsigned int NormalMap= BallNormalMapTexture, float rotation = 0.0f, int Z_Index = 0)
+void NormalMapDraw(glm::vec2 position,glm::vec2 scale,unsigned int NormalMap= BallNormalMapTexture, float rotation = 0.0f, int Z_Index = 0, unsigned int Texture = NULL)
 {
 	if (NormalMap != BallNormalMapTexture && NormalMap != CubeNormalMapTexture) 
 	{
@@ -171,22 +276,23 @@ void NormalMapDraw(glm::vec2 position,glm::vec2 scale,unsigned int NormalMap= Ba
 		int TQA = -1;
 
 		for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-			if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap)
+			if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap && SceneLayers[SLI].NormalMaps[i].Texture2 == Texture)
 				TQA = i;
+
 		if (TQA == -1)
 		{
 			TexturedQuadArray NewTQA;
 			NewTQA.Texture = NormalMap;
+			NewTQA.Texture2 = Texture;
 			SceneLayers[SLI].NormalMaps.push_back(NewTQA);
 			for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-				if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap)
+				if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap && SceneLayers[SLI].NormalMaps[i].Texture2 == Texture)
 					TQA = i;
 		}
 
 		SceneLayers[SLI].NormalMaps[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
 		SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
 
-		SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
 
 	}
 	else 
@@ -240,7 +346,7 @@ void NormalMapDrawTriangle(
 {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
-	TexturedTriangleShader->Use();
+	UseShader(TexturedTriangleShader);
 	glBindVertexArray(TexturedTriangleVAO);
 	float aspx = ScreenDivisorX * CameraScale.x;
 	float aspy = ScreenDivisorY * CameraScale.y;
@@ -268,10 +374,10 @@ void NormalMapDrawTriangle(
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, NormalMap);
-	glUniform1i(glGetUniformLocation(TexturedTriangleShader->Program, "Texture"), 0);
+	glUniform1i(glGetUniformLocation(TexturedTriangleShader, "Texture"), 0);
 
-	glUniform4f(glGetUniformLocation(TexturedTriangleShader->Program, "color"), 1.0f,1.0f,1.0f,1.0f);
-	glUniform2f(glGetUniformLocation(TexturedTriangleShader->Program, "scr"), WIDTH, HEIGHT);
+	glUniform4f(glGetUniformLocation(TexturedTriangleShader, "color"), 1.0f,1.0f,1.0f,1.0f);
+	glUniform2f(glGetUniformLocation(TexturedTriangleShader, "scr"), WIDTH, HEIGHT);
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -319,6 +425,7 @@ void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f), 
 	SceneLayers[SLI].CirclePosScale.push_back(glm::vec4(position,scale));
 	SceneLayers[SLI].CircleRotations.push_back(0.0f);
 	SceneLayers[SLI].Circlecolors.push_back(color);
+
 }
 void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = BallNormalMapTexture, int Z_Index = 0)
 {
@@ -501,9 +608,6 @@ void LoadTexture(const char* filename,unsigned int* texture,int chanelsAmount = 
 
 }
 
-Shader* NoizeGenShaderptr;
-Shader* BlurShaderPtr;
-Shader* RoundShaderptr;
 
 enum
 {
@@ -515,32 +619,37 @@ enum
 
 void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq = 10, int shape = ROUND)
 {
-
-	glDeleteTextures(1, texture1);
-	unsigned int framebuffer[2], texture2;
+	//std::cout << "ImputTexture ID  " << *texture1;
+	if (*texture1 != NULL)
+	{
+		//std::cout << "DELETED " << *texture1 << "\n";
+		glDeleteTextures(10, texture1);
+		*texture1 = NULL;
+	}
+	unsigned int framebuffer[2], textures[2];
 
 	glGenFramebuffers(2, framebuffer);
-	glGenTextures(1, &texture2);
+	glGenTextures(2, textures);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[0]);
-	glBindTexture(GL_TEXTURE_2D, texture2);
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[1]);
-	glBindTexture(GL_TEXTURE_2D, *texture1);
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture1, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
 
 	bool even = false;
 	glDisable(GL_DEPTH_TEST);
@@ -550,37 +659,46 @@ void GenNoizeTexture(unsigned int* texture1,int Size, int Layers =3,float freq =
 	for (int i = 0; i < Layers; i++)
 	{
 		glm::vec2 rngoffset = glm::vec2(rand()%10000, rand() % 10000);
+		//std::cout<<"texture "<< *texture1 <<"  x " << rngoffset.x << "  y " << rngoffset.y<<"\n";
+		UseShader(NoizeGenShader);
 
-		NoizeGenShaderptr->Use();
-
-		float weight = 1.0f / (i + 1);
+		float weight = 1.0f ;
+		if (i == 0) weight = 1.0f;
+		else weight = 1.0f / (pow(2, i));
 		// add new layer (higher freq, less wieght)
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[even]);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, even ? *texture1 : texture2);
-		glUniform1i(glGetUniformLocation(NoizeGenShaderptr->Program, "PrevTexture"), 0);
+		glBindTexture(GL_TEXTURE_2D, even ? textures[1] : textures[0]);
+		glUniform1i(glGetUniformLocation(NoizeGenShader, "PrevTexture"), 0);
 
-		glUniform1f(glGetUniformLocation(NoizeGenShaderptr->Program, "sizex"), (i + 1) * freq);
-		glUniform1f(glGetUniformLocation(NoizeGenShaderptr->Program, "sizey"), (i + 1) * freq);
-		glUniform1f(glGetUniformLocation(NoizeGenShaderptr->Program, "weight"), weight);
+		glUniform1f(glGetUniformLocation(NoizeGenShader, "sizex"), (i + 1) * freq);
+		glUniform1f(glGetUniformLocation(NoizeGenShader, "sizey"), (i + 1) * freq);
+		glUniform1f(glGetUniformLocation(NoizeGenShader, "weight"), weight);
 
-		glUniform1i(glGetUniformLocation(NoizeGenShaderptr->Program, "shape"), shape);
+		glUniform1i(glGetUniformLocation(NoizeGenShader, "shape"), shape);
 
-		glUniform2f(glGetUniformLocation(NoizeGenShaderptr->Program, "offset"), rngoffset.x, rngoffset.y);
+		glUniform2f(glGetUniformLocation(NoizeGenShader, "offset"), rngoffset.x, rngoffset.y );
 
 		glBindVertexArray(ScreenVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
+
+		
 		even = !even;
 		
 	}
+	//unsigned int tmp = *texture1;
+	*texture1 = textures[0];
+	//texture2 = tmp;
 	glDeleteFramebuffers(2, framebuffer);
-
-	*texture1 = texture2;
+	glDeleteTextures(1, &textures[1]);
+	//std::cout << "	ExitTexture ID  " << *texture1 << "\n\n";
 
 	glViewport(0, 0, WIDTH, HEIGHT);
+
+
 
 	if (HDR)
 		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
@@ -611,7 +729,7 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND)
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 
-	GenNormalMapShader->Use();
+	UseShader(GenNormalMapShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
@@ -622,7 +740,7 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND)
 		i = 1;
 	else if (shape == SMOOTH_EDGE)
 		i = 2;
-	glUniform1i(glGetUniformLocation(GenNormalMapShader->Program, "Type"), i);
+	glUniform1i(glGetUniformLocation(GenNormalMapShader, "Type"), i);
 
 	glBindVertexArray(ScreenVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -640,6 +758,7 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND)
 	else
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
 void GenLightSphereTexture(unsigned int* texture1, int Size)
 {
 
@@ -659,18 +778,16 @@ void GenLightSphereTexture(unsigned int* texture1, int Size)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
 
-
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 
-	GenLightSphereShader->Use();
+	UseShader(GenLightSphereShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
 	glBindVertexArray(ScreenVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
-
 
 	glDeleteFramebuffers(1, &framebuffer);
 
@@ -683,6 +800,7 @@ void GenLightSphereTexture(unsigned int* texture1, int Size)
 	else
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
 class Texture
 {
 public:
@@ -690,21 +808,30 @@ public:
 	std::string FileName;
 	int Type = 0;// 0-Texture, 1-ROUNDNOIZE, 2-SQUERENOIZE, 3-SMOOTH_EDGENOIZE;
 	unsigned int texture;
+
+	float Noize_Frequency = 10;
+	int Noize_Layers = 3;
+	float Noize_Size = 100.0f;
+
 	void Load()
 	{
-
 		if (Type == 0)
 			LoadTexture(FileName.c_str(), &texture);
 		else if (Type == 1)
-			GenNoizeTexture(&texture, 100, 3, 10.0f, ROUND);
+			GenNoizeTexture(&texture, Noize_Size, Noize_Layers, Noize_Frequency, ROUND);
 		else if (Type == 2)
-			GenNoizeTexture(&texture, 100, 3, 10.0f, SQUERE);
-		else
-			GenNoizeTexture(&texture, 100, 3, 10.0f, SMOOTH_EDGE);
+			GenNoizeTexture(&texture, Noize_Size, Noize_Layers, Noize_Frequency, SQUERE);
+		else if(Type == 3)
+			GenNoizeTexture(&texture, Noize_Size, Noize_Layers, Noize_Frequency, SMOOTH_EDGE);
 		if (texture == NULL)
 			std::cout << "Failed to load texture:  " << FileName.c_str() << std::endl;
-
 	}
+	void Delete()
+	{
+		glDeleteTextures(1, &texture);
+		texture = NULL;
+	}
+
 };
 
 
@@ -713,7 +840,7 @@ void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture,
 {
 
 	if (NormalMap != NULL)
-		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index);
+		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
 
 	float aspx = ScreenDivisorX * CameraScale.x;
 	float aspy = ScreenDivisorY * CameraScale.y;
@@ -768,7 +895,7 @@ void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(
 	glm::vec2 scale = glm::vec2(c.width, c.height);
 
 	if (NormalMap != NULL)
-		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index);
+		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
 	float aspx = ScreenDivisorX * CameraScale.x;
 	float aspy = ScreenDivisorY * CameraScale.y;
 
@@ -820,7 +947,7 @@ void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = gl
 {
 
 	glBindVertexArray(TriangleVAO);
-	FilShader->Use();
+	UseShader(FillTriangleShader);
 	float aspx = 1.0f * ScreenDivisorX * CameraScale.x;
 	float aspy = 1.0f * ScreenDivisorY * CameraScale.y;
 	p1.x = (p1.x - CameraPosition.x) * aspx;
@@ -845,9 +972,9 @@ void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = gl
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glUniform4f(glGetUniformLocation(FilShader->Program, "Color"), color.x, color.y, color.z, color.w);
+	glUniform4f(glGetUniformLocation(FillTriangleShader, "Color"), color.x, color.y, color.z, color.w);
 
-	glUniform2f(glGetUniformLocation(FilShader->Program, "scr"), WIDTH, HEIGHT);
+	glUniform2f(glGetUniformLocation(FillTriangleShader, "scr"), WIDTH, HEIGHT);
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -868,7 +995,7 @@ void DrawTexturedTriangle(
 	)
 {
 
-	TexturedTriangleShader->Use();
+	UseShader(TexturedTriangleShader);
 	glBindVertexArray(TexturedTriangleVAO);
 	float aspx = ScreenDivisorX * CameraScale.x;
 	float aspy = ScreenDivisorY * CameraScale.y;
@@ -896,10 +1023,10 @@ void DrawTexturedTriangle(
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(glGetUniformLocation(TexturedTriangleShader->Program, "Texture"),0);
+	glUniform1i(glGetUniformLocation(TexturedTriangleShader, "Texture"),0);
 	
-	glUniform4f(glGetUniformLocation(TexturedTriangleShader->Program, "color"), color.x, color.y, color.z, color.w);
-	glUniform2f(glGetUniformLocation(TexturedTriangleShader->Program, "scr"), WIDTH, HEIGHT);
+	glUniform4f(glGetUniformLocation(TexturedTriangleShader, "color"), color.x, color.y, color.z, color.w);
+	glUniform2f(glGetUniformLocation(TexturedTriangleShader, "scr"), WIDTH, HEIGHT);
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
