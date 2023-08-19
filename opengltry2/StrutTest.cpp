@@ -2,69 +2,75 @@
 
 
 
+cube dafloor;
+cube lwall;
+cube rwall;
 
-	cube floor;
-	cube lwall;
-	cube rwall;
+ball b1;
+ball b2;
+
+
+
+
+DecorativeRope r;
+
+void On_Create()
+{
+	dafloor.position = glm::vec2(0.0f, -500.0f);
+	dafloor.height = 100;
+	dafloor.width = 1000;
+
+	lwall.position = glm::vec2(-650.0f, 0.0f);
+	lwall.height = 1000;
+	lwall.width = 100;
+
+	rwall.position = glm::vec2(650.0f, 0.0f);
+	rwall.height = 1000;
+	rwall.width = 100;
+	b1.mass = 1;
+	b2.mass = 1;
+	b2.position = { 100.0f,0.0f };
+
+	r.Init(&b1,&b2,200);
+	r.Force = { 0.0f,-100.0f };
+	b1.Force = { 0.0f,-250.0f };
+	b2.Force = { 0.0f,-250.0f };
+	b2.roughness = 1.0f;
+	b2.bounciness = 0.1f;
+	b1.roughness = 1.0f;
+	b1.bounciness = 0.1f;
+}
+void On_Update()
+{
+	if(buttons[GLFW_MOUSE_BUTTON_1])
+		b2.velocity += (MousePosition - b2.position);
+
+	if (buttons[GLFW_MOUSE_BUTTON_2])
+		b1.velocity += (MousePosition - b1.position);
+
+	MRope(&b1, &b2, 200);
+	b1.Process(delta);
+	b2.Process(delta);
+	r.Process(delta);
+	r.Draw();
 	
-	box b;
-	box b2;
-	unsigned int texture;
-	void On_Create() 
-	{
-		LoadTexture("container.jpg", &texture);
-		floor.position = glm::vec2(0.0f,-500.0f);
-		floor.height = 100;
-		floor.width = 1000;
+	BallToStaticQuadCollision(&b1, dafloor);
+	BallToStaticQuadCollision(&b2, dafloor);
 
-		lwall.position = glm::vec2(-650.0f, 0.0f);
-		lwall.height = 1000;
-		lwall.width = 100;
+	BallToStaticQuadCollision(&b1, lwall);
+	BallToStaticQuadCollision(&b2, lwall);
 
-		rwall.position = glm::vec2(650.0f, 0.0f);
-		rwall.height = 1000;
-		rwall.width = 100;
+	BallToStaticQuadCollision(&b1, rwall);
+	BallToStaticQuadCollision(&b2, rwall);
 
-		b.init(glm::vec2(0.0f, 300), glm::vec2(40));
-		b.roughness = 1.0f;
-		b.bounciness = 2.0f;
+	DrawCube(dafloor);
+	DrawCube(rwall);
+	DrawCube(lwall);
 
-		b2 = b;
-		b2.init(glm::vec2(0.0f, 500), glm::vec2(250));
+	DrawBall(b1);
+	DrawBall(b2);
 
-
-		DrawingOrder = true;
-	}
-	void On_Update() 
-	{
-		b.Force = glm::vec2(0.0f, -1000.0f);
-		b2.Force = glm::vec2(0.0f, -1000.0f);
-
-		if (buttons[GLFW_MOUSE_BUTTON_1])
-			b.Force += (MousePosition - b.position)*10.0f;
-		b.Process(delta);
-		b2.Process(delta);
-
-
-		BoxToBoxCollision(&b, &b2);
-		for (int i = 0; i < 4; i++)
-		{
-			BallToStaticQuadCollision(&b.balls[i], floor);
-			BallToStaticQuadCollision(&b.balls[i], rwall);
-			BallToStaticQuadCollision(&b.balls[i], lwall);
-
-			BallToStaticQuadCollision(&b2.balls[i], floor);
-			BallToStaticQuadCollision(&b2.balls[i], rwall);
-			BallToStaticQuadCollision(&b2.balls[i], lwall);
-
-		}
-		DrawCube(floor);
-		DrawCube(rwall);
-		DrawCube(lwall);
-
-		DrawTexturedQuad(b.position, b.size,texture,glm::vec3(0.0f,0.0f, get_angle_between_points(b.position, 0.5f * (b.balls[0].position + b.balls[1].position))));
-		DrawTexturedQuad(b2.position, b2.size,texture,glm::vec3(0.0f,0.0f, get_angle_between_points(b2.position, 0.5f * (b2.balls[0].position + b2.balls[1].position))));
-	}
+}
 int main()
 {
 	initEngine();

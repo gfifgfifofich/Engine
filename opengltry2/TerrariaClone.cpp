@@ -390,7 +390,7 @@ void CrushTile(int x, int y)
 					if (tiles[x][y].body.Collision_Level == 1)
 					{
 						NormalMapDraw(tiles[x][y].body.position, { 25.0f ,25.0f }, CubeNormalMapTexture);
-						DrawCube(tiles[x][y].body.position, glm::vec2(tiles[x][y].body.width, tiles[x][y].body.height), glm::vec3(0.0f), tiles[x][y].color);
+						DrawCube(tiles[x][y].body.position, glm::vec2(tiles[x][y].body.width, tiles[x][y].body.height), 0.0f, tiles[x][y].color);
 					}
 			}
 		player.Process(delta);

@@ -12,7 +12,7 @@ uniform bool flipY = false;
 void main()
 {
     vec4 pos = vec4(aPos.xy,0.0f,1.0f);
-
+	
     pos.xy = pos.xy * aPosScale.zw;
 
 
@@ -25,6 +25,7 @@ void main()
     pos.x *=aspect;
 	gl_Position =  pos;
 	Angle = angle;
+	
 	if(!flipY)
 	{
 		TexCoords.x = aPos.z;
@@ -35,4 +36,6 @@ void main()
 		TexCoords.x = aPos.z;
 		TexCoords.y = 1.0f-aPos.w;
 	}
+	
+	
 }  

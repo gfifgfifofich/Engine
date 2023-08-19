@@ -12,6 +12,7 @@ uniform bool AlphaTexture = true;
 
 void main()
 {
+
 	vec4 SurfaceNormal =  texture(Texture, TexCoords.xy);
 	
 	if(!generated)
@@ -53,5 +54,4 @@ void main()
 			discard;
 
 	}
-	
 }

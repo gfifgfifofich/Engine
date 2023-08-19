@@ -84,8 +84,7 @@ float Temperatures[objAmount];
 		std::cout << "TrueScrsizex = " << WIDTH << " TrueScrsizey = " << HEIGHT << "\n";
 		BackgroundColor = glm::vec4(0.0f);
 		//AmbientLight = 0.01f;
-		bloomLevelDivisor = 3.5f;
-		bloomIntensity = 1.0f;
+		//bloomIntensity = 1.0f;
 	}
 	int amopunt = 3;
 	float dt = 0.0f;

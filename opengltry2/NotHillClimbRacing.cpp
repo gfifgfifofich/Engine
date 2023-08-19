@@ -1,5 +1,5 @@
 #include "engine/Components/Engine.h"
-#include "engine/Components/sounds.h"
+#include "engine/Components/Include/sounds.h"
 #define max
 
 
@@ -287,7 +287,7 @@ void UpdateWorld()
 
 		int viv =8;
 		for(int pog = 0;pog<viv;pog++)
-			engine.AddCylinder(1.0f/viv*pog* pi);
+			engine.AddCylinder(4.0f/viv*pog* pi);
 
 		/*engine.AddCylinder(0.0f);
 		engine.AddCylinder(0.5f*pi);
@@ -529,7 +529,7 @@ void UpdateWorld()
 
 				line l(glm::vec2(((float)(x + (Stage - 1) * WorldSizeX) - 1.0f) * modx, BufferNoize[x - 1][0] * mod), glm::vec2((float)(x + (Stage - 1) * WorldSizeX) * modx, BufferNoize[x][0] * mod));
 
-				DrawCube(l.P1, glm::vec2(10.0f), glm::vec3(0.0f), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+				DrawCube(l.P1, glm::vec2(10.0f), 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
 				BallToGroundLineCollision(&Wheel1, l);
 				BallToGroundLineCollision(&Wheel2, l);
 
@@ -540,7 +540,7 @@ void UpdateWorld()
 				BallToGroundLineCollision(&Wheel1, l);
 				BallToGroundLineCollision(&Wheel2, l);
 
-				DrawCube(l.P1, glm::vec2(10.0f), glm::vec3(0.0f), glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+				DrawCube(l.P1, glm::vec2(10.0f), 0.0f, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
 
 			}
 
@@ -595,7 +595,7 @@ void UpdateWorld()
 		glm::vec2 dif = (BodyPoint1.position - BodyPoint2.position);
 		DrawTexturedQuad(mid + Normalize(glm::vec2(dif.y, -dif.x))*100.0f,
 			glm::vec2(410, 110), ContainerTexture,
-			glm::vec3(0.0f, 0.0f, get_angle_between_points(BodyPoint1.position, BodyPoint2.position)+pi*0.5f) ,
+			get_angle_between_points(BodyPoint1.position, BodyPoint2.position)+pi*0.5f,
 			glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 

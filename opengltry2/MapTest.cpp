@@ -2,7 +2,7 @@
 
 
 char MapFileNameChars[128];
-std::string MapFileName = "Maps/mappa.sav";
+std::string MapFileName =  /*"../../HEAT/Maps/base.sav";*/"Maps/mappa.sav";
 
 Scene Map;
 Texture tex;
@@ -50,10 +50,13 @@ polygon* SelectedPolygon = NULL;
 miscPoint* SelectedPoint;
 ParticleEmiter* CurrentParticleEmiter = NULL;
 LightSource* CurrentLightSource = NULL;
+Shader* CurrentShader = NULL;
 
 char ParticleEmitterCharName[256];
 char LightSourceCharName[256];
 char SelectedTextureCharName[256];
+char SelectedShaderCharArray[256];
+char NewShaderCharArray[256];
 std::string ParticleEmitterName = "New ParticleEmitter";
 ParticleEmiter pt;
 int selectedTexture = 0;
@@ -81,6 +84,7 @@ bool ShowParticlesWindow = false;
 bool ShowLightSourcesWindow = false;
 bool ShowTexturesWindow = false;
 bool ShowNormalMapsWindow = false;
+bool ShowShadersWindow = false;
 
 float LightVolume = 0.005f;
 
@@ -227,11 +231,15 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	if (CurrentParticleEmiter->Type == "LINE") tip = 1;
 	if (CurrentParticleEmiter->Type == "CIRCLE") tip = 2;
 	if (CurrentParticleEmiter->Type == "TEXTURED") tip = 3;
-	ImGui::SliderInt("Type", &tip, 0, 3);
+	if (CurrentParticleEmiter->Type == "TEXTUREDLINE") tip = 4;
+	ImGui::SliderInt("Type: " , &tip, 0, 4);
+	ImGui::SameLine();
+	ImGui::Text(CurrentParticleEmiter->Type.c_str());
 	if (tip == 0)CurrentParticleEmiter->Type = "QUAD";
 	if (tip == 1)CurrentParticleEmiter->Type = "LINE";
 	if (tip == 2)CurrentParticleEmiter->Type = "CIRCLE";
 	if (tip == 3)CurrentParticleEmiter->Type = "TEXTURED";
+	if (tip == 4)CurrentParticleEmiter->Type = "TEXTUREDLINE";
 
 
 	
@@ -516,6 +524,8 @@ void ShowRedactorWindow(LightSource* ls)
 
 	ImGui::Begin(CurrentLightSource->name.c_str());
 	
+
+
 	if (ImGui::Button("Close window"))
 	{
 		CurrentLightSource = NULL;
@@ -556,6 +566,7 @@ void ShowRedactorWindow(ball* Ball)
 	}
 
 	ImGui::DragInt("id", &SelectedBall->id, 0.1f);
+	ImGui::SliderInt("type", &SelectedBall->type, -1,1);
 	ImGui::DragInt("Z_Index", &SelectedBall->Z_Index, 0.1f);
 
 	ImGui::DragFloat("Radius", &SelectedBall->r);
@@ -569,11 +580,20 @@ void ShowRedactorWindow(ball* Ball)
 	float col[4] = { SelectedBall->color.r ,SelectedBall->color.g,SelectedBall->color.b,SelectedBall->color.a };
 	ImGui::ColorEdit4("Color", col);
 	SelectedBall->color = { col[0],col[1],col[2],col[3] };
-	if(SelectedBall->Textureid>-1)
-		ImGui::Text(Map.Textures[SelectedBall->Textureid].FileName.c_str());
-	else 
-		ImGui::Text("Clear Color");
-	ImGui::SliderInt("Texture", &SelectedBall->Textureid, -1, Map.Textures.size() - 1);
+		ImGui::SliderInt("Texture", &SelectedBall->Textureid, -1, Map.Textures.size() - 1);
+
+		if (SelectedBall->Textureid > -1)
+			ImGui::Text(Map.Textures[SelectedBall->Textureid].FileName.c_str());
+		if (SelectedBall->Textureid == -1)
+			ImGui::Text("Clear Color");
+		ImGui::SliderInt("Shader", &SelectedBall->Shaderid, -1, Map.Shaders.size() - 1);
+
+
+		if (SelectedBall->Shaderid > -1)
+			ImGui::Text(Map.Shaders[SelectedBall->Shaderid].Name.c_str());
+		if (SelectedBall->Shaderid == -1)
+			ImGui::Text("NoShader");
+
 	ImGui::SliderInt("NormalMap", &SelectedBall->NormalMapId, -1, Map.NormalMaps.size() - 1);
 	ImGui::Checkbox("Lighted", &SelectedBall->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedBall->Collision_Level, 0.01f);
@@ -590,10 +610,12 @@ void ShowRedactorWindow(cube* Cube)
 		return;
 	}
 	ImGui::DragInt("id", &SelectedCube->id, 0.1f);
+	ImGui::SliderInt("type", &SelectedCube->type, -1,1);
 	ImGui::DragInt("Z_Index", &SelectedCube->Z_Index, 0.1f);
 
 	ImGui::DragFloat("width", &SelectedCube->width);
 	ImGui::DragFloat("height", &SelectedCube->height);
+	ImGui::DragFloat("Rotation", &SelectedCube->Rotation,0.01f);
 
 	float pos[2] = { SelectedCube->position.x ,SelectedCube->position.y };
 	ImGui::DragFloat2("Position", pos);
@@ -604,11 +626,22 @@ void ShowRedactorWindow(cube* Cube)
 	float col[4] = { SelectedCube->color.r ,SelectedCube->color.g,SelectedCube->color.b,SelectedCube->color.a };
 	ImGui::ColorEdit4("Color", col);
 	SelectedCube->color = { col[0],col[1],col[2],col[3] };
-	if (SelectedCube->Textureid > -1)
-		ImGui::Text(Map.Textures[SelectedCube->Textureid].FileName.c_str());
-	else
-		ImGui::Text("Clear Color");
-	ImGui::SliderInt("Texture", &SelectedCube->Textureid,  -1, Map.Textures.size() - 1);
+
+		ImGui::SliderInt("Texture", &SelectedCube->Textureid, -1, Map.Textures.size() - 1);
+
+		if (SelectedCube->Textureid > -1)
+			ImGui::Text(Map.Textures[SelectedCube->Textureid].FileName.c_str());
+		if (SelectedCube->Textureid == -1)
+			ImGui::Text("Clear Color");
+
+		ImGui::SliderInt("Shader", &SelectedCube->Shaderid, -1, Map.Shaders.size() - 1);
+
+
+		if (SelectedCube->Shaderid > -1)
+			ImGui::Text(Map.Shaders[SelectedCube->Shaderid].Name.c_str());
+		if (SelectedCube->Shaderid == -1)
+			ImGui::Text("NoShader");
+	
 	ImGui::SliderInt("NormalMap", &SelectedCube->NormalMapId,  -1, Map.NormalMaps.size() - 1);
 	ImGui::Checkbox("Lighted", &SelectedCube->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedCube->Collision_Level, 0.01f);
@@ -859,7 +892,7 @@ void ShowRedactorWindow(Texture* Texture)
 	ImGui::Text("Texture ID = %i", CurrentTexture->texture);
 
 	int typ = CurrentTexture->Type;
-	ImGui::SliderInt("Type ", &CurrentTexture->Type, 0, 3);
+	ImGui::SliderInt("Type ", &CurrentTexture->Type, 0, 4);
 
 	if (CurrentTexture->Type == 0)
 		ImGui::Text("LoadFromName");
@@ -869,13 +902,15 @@ void ShowRedactorWindow(Texture* Texture)
 		ImGui::Text("Squere Noize");
 	if (CurrentTexture->Type == 3)
 		ImGui::Text("Smooth Squere Noize");
+	if (CurrentTexture->Type == 4)
+		ImGui::Text("Gradient");
 
 	if (typ != CurrentTexture->Type)
 	{
 		CurrentTexture->Delete();
 		CurrentTexture->Load();
 	}
-	if (CurrentTexture->Type != 0)
+	if (CurrentTexture->Type > 0 && CurrentTexture->Type < 4)
 	{
 		float Tex_Freq = CurrentTexture->Noize_Frequency;
 		ImGui::DragFloat("Frequency ", &CurrentTexture->Noize_Frequency,0.01f);
@@ -891,15 +926,45 @@ void ShowRedactorWindow(Texture* Texture)
 			CurrentTexture->Delete();
 			CurrentTexture->Load();
 		}
-		float Tex_Size = CurrentTexture->Noize_Size;
-		ImGui::DragFloat("Size ", &CurrentTexture->Noize_Size);
-		if (Tex_Size != CurrentTexture->Noize_Size)
+		float Tex_Size = CurrentTexture->Size;
+		ImGui::DragFloat("Size ", &CurrentTexture->Size);
+		if (Tex_Size != CurrentTexture->Size)
 		{
 			CurrentTexture->Delete();
 			CurrentTexture->Load();
 		}
 	}
+	else
+	{
+		glm::vec4 color = CurrentTexture->Gradient_Color1;
+		float col[4] = { CurrentTexture->Gradient_Color1.r ,CurrentTexture->Gradient_Color1.g,CurrentTexture->Gradient_Color1.b,CurrentTexture->Gradient_Color1.a };
+		ImGui::ColorEdit4("Gradient Color1", col);
+		CurrentTexture->Gradient_Color1 = { col[0],col[1],col[2],col[3] };
+		if(color != CurrentTexture->Gradient_Color1)
+		{
+			CurrentTexture->Delete();
+			CurrentTexture->Load();
+		}
 
+		color = CurrentTexture->Gradient_Color2;
+		float col2[4] = {CurrentTexture->Gradient_Color2.r ,CurrentTexture->Gradient_Color2.g,CurrentTexture->Gradient_Color2.b,CurrentTexture->Gradient_Color2.a};
+		ImGui::ColorEdit4("Gradient Color2", col2);
+		CurrentTexture->Gradient_Color2 = { col2[0],col2[1],col2[2],col2[3] };
+		if (color != CurrentTexture->Gradient_Color2)
+		{
+			CurrentTexture->Delete();
+			CurrentTexture->Load();
+		}
+
+		float Tex_Size = CurrentTexture->Size;
+		ImGui::DragFloat("Size ", &CurrentTexture->Size);
+		if (Tex_Size != CurrentTexture->Size)
+		{
+			CurrentTexture->Delete();
+			CurrentTexture->Load();
+		}
+
+	}
 	if (ImGui::Button("DeleteTexture"))
 		DeletetextureCountDown--;
 	ImGui::SameLine();
@@ -925,20 +990,103 @@ void ShowRedactorWindow(Texture* Texture)
 	ImGui::End();
 }
 
+void ShowRedactorWindow(Shader* shader)
+{
+	ImGui::Begin("Shader");
+	if (ImGui::Button("Close window"))
+	{
+		CurrentShader = NULL;
+		return;
+	}
+	for (int i = 0; i < 256; i++)
+		SelectedShaderCharArray[i] = char();
+	for (int i = 0; i < CurrentShader->Name.size(); i++)
+		SelectedShaderCharArray[i] = CurrentShader->Name[i];
+	ImGui::InputText("Name", SelectedShaderCharArray, 256);
+	std::string s = "";
+	for (int i = 0; i < 256; i++)
+	{
+		if (SelectedShaderCharArray[i] != char())
+			s += SelectedShaderCharArray[i];
+	}
+	CurrentShader->Name = s;
+
+	for (int i = 0; i < 256; i++)
+		SelectedShaderCharArray[i] = char();
+	for (int i = 0; i < CurrentShader->VertexPath.size(); i++)
+		SelectedShaderCharArray[i] = CurrentShader->VertexPath[i];
+	ImGui::InputText("VertexPath", SelectedShaderCharArray, 256);
+	s = "";
+	for (int i = 0; i < 256; i++)
+	{
+		if (SelectedShaderCharArray[i] != char())
+			s += SelectedShaderCharArray[i];
+	}
+	CurrentShader->VertexPath = s;
+
+	for (int i = 0; i < 256; i++)
+		SelectedShaderCharArray[i] = char();
+	for (int i = 0; i < CurrentShader->FragmentPath.size(); i++)
+		SelectedShaderCharArray[i] = CurrentShader->FragmentPath[i];
+	ImGui::InputText("FragmentPath", SelectedShaderCharArray, 256);
+	s = "";
+	for (int i = 0; i < 256; i++)
+	{
+		if (SelectedShaderCharArray[i] != char())
+			s += SelectedShaderCharArray[i];
+	}
+	CurrentShader->FragmentPath = s;
+	if (ImGui::Button("load"))
+	{
+		CurrentShader->ClearUniforms();
+		CurrentShader->Load();
+		CurrentShader->GetUniforms();
+	}
+	for (int i = 0; i < CurrentShader->Uniforms.size(); i++)
+	{
+		if (CurrentShader->Uniforms[i].type == 0)
+			ImGui::DragFloat(CurrentShader->Uniforms[i].name.c_str(), &CurrentShader->uniformfloat[CurrentShader->Uniforms[i].type_id]);
+		if (CurrentShader->Uniforms[i].type == 1)
+			ImGui::DragInt(CurrentShader->Uniforms[i].name.c_str(), &CurrentShader->uniformint[CurrentShader->Uniforms[i].type_id]);
+		if (CurrentShader->Uniforms[i].type == 2)
+		{
+			float v[2] = { CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].x,CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].y };
+			ImGui::DragFloat2(CurrentShader->Uniforms[i].name.c_str(), v, 0.1f);
+			CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id] = { v[0],v[1] };
+		}
+		if (CurrentShader->Uniforms[i].type == 3)
+		{
+			float v[3] = { CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].x,CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].y ,CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].z };
+			ImGui::DragFloat3(CurrentShader->Uniforms[i].name.c_str(), v, 0.1f);
+			CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id] = { v[0],v[1],v[2] };
+		}
+		if (CurrentShader->Uniforms[i].type == 4)
+		{
+			float v[4] = { CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].x,CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].y, CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].z,CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].w };
+			if (CurrentShader->Uniforms[i].name[0] == '_')ImGui::DragFloat4(CurrentShader->Uniforms[i].name.c_str(), v, 0.1f);
+			else ImGui::ColorEdit4(CurrentShader->Uniforms[i].name.c_str(), v);
+			CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id] = { v[0],v[1],v[2],v[3] };
+		}
+	}
+
+
+
+	ImGui::End();
+}
 
 
 void On_Create() 
 {
+
+
 		Map.LoadFrom(MapFileName);
 
 		for (int i = 0; i < MapFileName.size(); i++)
 			MapFileNameChars[i] = MapFileName[i];
 
-
-
-
-
 }
+glm::vec2 AqueredCameraScale = glm::vec2(1.0f);
+glm::vec2 PrevMousePos = glm::vec2(0.0f);
 void On_Update()
 {
 
@@ -946,20 +1094,71 @@ void On_Update()
 		if (keys[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;
 		if (keys[GLFW_KEY_A]) CameraPosition.x -= delta / CameraScale.x * 600.0f;
 		if (keys[GLFW_KEY_D]) CameraPosition.x += delta / CameraScale.x * 600.0f;
-		if (keys[GLFW_KEY_Q]) CameraScale *= 1.01f;
-		if (keys[GLFW_KEY_E]) CameraScale *= 0.99f;
+
+		
+
+		AqueredCameraScale *= 1.0f + scrollmovement * 0.1f;
+		CameraScale += (AqueredCameraScale - CameraScale) * 0.25f*delta * 60.0f;
+
+
+		glm::vec2 dif = glm::vec2(0.0f);
+		if (buttons[GLFW_MOUSE_BUTTON_MIDDLE])
+			dif = PrevMousePos - MousePosition;
+		MousePosition -= CameraPosition;
+		CameraPosition += dif;
+		MousePosition += CameraPosition;
+		PrevMousePos = MousePosition;
 
 
 		ImGui::Begin("Tools");
 
 		ImGui::Text("CameraPosition X = %.1f, Y = %.1f", CameraPosition.x, CameraPosition.y);
 		ImGui::Text("CameraScale X = %.3f, Y = %.3f", CameraScale.x, CameraScale.y);
+
+		if (ImGui::Button("Test texture"))
+		{
+			Texture t;
+			t.FileName = "poggers";
+			unsigned char* data = new unsigned char[40000];
+
+			for(int y=0;y<100;y++)
+				for (int x = 0; x < 100; x++)
+				{
+					unsigned int a = 255;//a
+					a = a << 8;
+					a += 0;//b
+					a = a << 8;
+					a += y*2.55;//g
+					a = a << 8;
+					a += x*2.55;//r
+					//std::cout << a << "\n";
+
+
+					unsigned char* b = new unsigned char[sizeof(a)];
+					memcpy(b, (const void*)&a, sizeof(a));
+
+					data[x * 4 + 0 + y * 400] = b[0];
+					data[x * 4 + 1 + y * 400] = b[1];
+					data[x * 4 + 2 + y * 400] = b[2];
+					data[x * 4 + 3 + y * 400] = b[3];
+
+					
+				}
+			LoadTextureFromData(&t.texture, 100, 100, data, 4);
+
+			Map.Textures.push_back(t);
+
+
+		}
+
 		if (ImGui::Button("Reset Camera"))
 		{
 			CameraPosition = { 0.0f,0.0f };
 			CameraScale = { 1.0f,1.0f };
 		}
+		
 
+		
 		ImGui::InputText("Save file:", MapFileNameChars, 128);
 		if (ImGui::Button("Save") || keys[GLFW_KEY_LEFT_CONTROL]&& keys[GLFW_KEY_S])
 		{
@@ -1116,7 +1315,13 @@ void On_Update()
 		if (ImGui::Button("SceneSettingsWindow"))
 			SettingsWindow = !SettingsWindow;
 
-		if (ImGui::Button("Recompile Shaders"))
+		if (ImGui::Button("SceneSettingsWindow"))
+			SettingsWindow = !SettingsWindow;
+
+		if (ImGui::Button("ShadersWindow"))
+			ShowShadersWindow = !ShowShadersWindow;
+
+		if (ImGui::Button("Recompile Main Shaders"))
 			PreLoadShaders();
 		ImGui::End();
 
@@ -1124,45 +1329,29 @@ void On_Update()
 		if (ShowTexturesWindow)
 		{
 			ImGui::Begin("Textures:");
-			ImGui::Text("texture/path/... or RN for (Round noize), SQRN for squere noize, SMN for smooth edged noize");
+			ImGui::Text("texture/path/... - load;");
 			ImGui::InputText("Texture path:", TexturePath, 128);
 
 
-			if (ImGui::Button("LoadTexture"))
+			if (ImGui::Button("Create New Texture"))
 			{
-				std::string s = "";
-				for (int i = 0; i < 128; i++)
-				{
-					if (TexturePath[i] != ' ')
-						s += TexturePath[i];
-				}
-				if (TexturePath[0] == 'R' && TexturePath[1] == 'N')
-				{
-					s = "RoundNoize";
-					tex.Type = 1;
-					s += std::to_string(noizeiterator);
-					noizeiterator++;
-				}
-				if (TexturePath[0] == 'S' && TexturePath[1] == 'Q' && TexturePath[2] == 'R' && TexturePath[3] == 'N')
-				{
-					s = "SquereNoize";
-					tex.Type = 2;
-					s += std::to_string(noizeiterator);
-					noizeiterator++;
-				}
-				if (TexturePath[0] == 'S' && TexturePath[1] == 'M' && TexturePath[2] == 'N')
-				{
-					s = "SmoothEdgedNoize";
-					tex.Type = 3;
-					s += std::to_string(noizeiterator);
-					noizeiterator++;
-				}
+				std::string s = "New Texture";
+			
+
+				s += std::to_string(noizeiterator);
+
+				noizeiterator++;
+
+				for (int i = 0; i < Map.Textures.size(); i++)
+					if (Map.Textures[i].FileName == s)
+						s += noizeiterator;
+
 				tex.FileName = s;
 				tex.id = Map.Textures.size();
 				tex.texture = NULL;
+				tex.Type = 1;
 				tex.Load();
-				if (tex.texture != NULL)
-					Map.Textures.push_back(tex);
+				Map.Textures.push_back(tex);
 			}
 
 			ImGui::Text("Textures:");
@@ -1272,7 +1461,43 @@ void On_Update()
 
 			ImGui::End();
 		}
+		if (ShowShadersWindow)
+		{
+			ImGui::Begin("Shaders:");
 
+			ImGui::InputText("New shader Name:", NewShaderCharArray, 256);
+			if (ImGui::Button("Add"))
+			{
+				Shader ls;
+				int EndOfName = -1;
+				for (int i = 255; i >= 0; i--)
+					if (NewShaderCharArray[i] != char() && NewShaderCharArray[i] != ' ' && EndOfName < 0)
+						EndOfName = i;
+
+
+				std::string nm = "";
+				if (EndOfName > 0)
+					for (int i = 0; i <= EndOfName; i++)
+						nm += NewShaderCharArray[i];
+				else if (EndOfName == 0)
+					nm += NewShaderCharArray[0];
+				else
+					nm = "Shader " + std::to_string(Map.Shaders.size());
+				ls.Name = nm;
+				Map.Shaders.push_back(ls);
+			}
+
+
+			ImGui::Text("Shaders:");
+			for (int i = 0; i < Map.Shaders.size(); i++)
+			{
+				if (ImGui::Button(Map.Shaders[i].Name.c_str()))
+					CurrentShader = &Map.Shaders[i];
+			}
+
+
+			ImGui::End();
+		}
 		if (!RedactingScene)
 		{
 			if (CurrentTexture != NULL)
@@ -1295,6 +1520,9 @@ void On_Update()
 
 			if (CurrentLightSource != NULL)
 				ShowRedactorWindow(CurrentLightSource);
+
+			if (CurrentShader != NULL)
+				ShowRedactorWindow(CurrentShader);
 		}
 
 		//GrabTool
@@ -1465,13 +1693,16 @@ void On_Update()
 
 		Map.Draw();
 
+		for (int i = 0; i < Map.Shaders.size(); i++)
+			Map.Shaders[i].UpdateUniforms();
 		for (int i = 0; i < Map.points.size(); i++)
 			DrawCircle(Map.points[i].position, 25, glm::vec4(1.0f,0.0f,0.0f,1.0f));
 }
 
 int main()
 {
-	initEngine();
+	//initEngine();
+	initEngine("Redactor", 1920,1020,false);
 	//app.init("Redactor",1920,1080,true);
 	Map.SaveAs(MapFileName + ".back");
 	return 0;

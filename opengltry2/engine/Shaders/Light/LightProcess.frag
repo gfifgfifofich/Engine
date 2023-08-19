@@ -8,16 +8,15 @@ uniform sampler2D BaseColor;
 uniform sampler2D NormalMap;
 uniform vec4 color = vec4(1.0f); 
 uniform vec3 position; 
-uniform vec2 scale; 
+//uniform vec2 scale; 
 uniform float volume; 
 
-uniform vec3 scr; 
-
+uniform float aspect; 
+uniform vec2 scr;
 void main()
 {             
 	vec2 scrSpace;
 	vec3 Pos = position+0.5f;
-	float aspect = scr.z;
 	Pos.x *=aspect;
 
 	scrSpace.x =gl_FragCoord.x / scr.x;

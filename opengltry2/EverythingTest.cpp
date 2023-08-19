@@ -7,10 +7,7 @@ ball balls[amount];
 Triangle tri(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f));
 
 int substeps = 4;
-class application : public Engine
-{
-public:
-	bool JustPressedLMB = false;
+
 
 	RigidBody b;
 	int counter = 0;
@@ -25,7 +22,7 @@ public:
 
 	ParticleEmiter Sparker; 
 	
-	void On_Create() override
+	void On_Create()
 	{
 		float r = 5.0f;
 		
@@ -107,7 +104,7 @@ public:
 
 	
 
-	void On_Update() override
+	void On_Update()
 	{
 		CameraPosition = b.body.position;
 
@@ -229,11 +226,9 @@ public:
 		
 		
 	}
-};
 
 int main()
 {
-	application app;
-	app.init("app" , 1920, 1080, true);
+	initEngine("app" , 1920, 1080, true);
 	return 0;
 }
