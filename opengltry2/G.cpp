@@ -159,7 +159,16 @@ void On_Update()
 }
 int main()
 {
-	initEngine("app", 1920, 1080, true);
+	std::cout << "input screen width";
+	int wi = 0;
+	std::cin >> wi;
+	std::cout << "input screen height";
+	int he = 0;
+	std::cin >> he;
+	bool fs = false;
+	std::cout << "Full screen? (1-yes/0-no)";
+	std::cin >> fs;
+	initEngine("ParticleSystemTest", wi, he, fs);
 	//initEngine("app");
 	return 0;
 }

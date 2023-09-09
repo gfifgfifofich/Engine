@@ -9,7 +9,6 @@ void NeuralNetwork::Create(int* Architecture, int archsize)
 	sizein = Architecture[0];
 	sizeout = Architecture[archsize - 1];
 
-	outputs = new float[sizeout];
 
 	int NN_Size = 0;
 	for (int i = 0; i < archsize; i++)
@@ -27,6 +26,7 @@ void NeuralNetwork::Create(int* Architecture, int archsize)
 		std::cerr << "NN err2: Invalid weights size";
 
 
+	outputs = new float[sizeout];
 	Nodes = new float[NN_Size];
 
 	biases = new float[NN_Size];
@@ -65,6 +65,25 @@ void NeuralNetwork::Create(int* Architecture, int archsize)
 
 
 }
+
+void NeuralNetwork::Delete()
+{
+	delete[sizeout] outputs;
+	delete[NodesAmount] Nodes;
+	delete[NodesAmount] biases;
+	delete[NodesAmount] biasGradients;
+
+
+	delete[WeightsAmount] weights;
+	delete[WeightsAmount] weightGradients;
+	delete[WeightsAmount] weightOutputs;
+
+
+	delete[LayersAmount] Arch;
+	delete[LayersAmount] NodesStep;
+	delete[LayersAmount] WeightsStep;
+}
+
 void NeuralNetwork::Randomize()
 {
 	for (int i = 0; i < WeightsAmount; i++)
@@ -103,6 +122,7 @@ void NeuralNetwork::Run(float* inputData)
 
 				PrevLayerNode++;
 			}
+
 			Nodes[n] = sigmoidApprox(sum + biases[n]);
 			node++;
 		}
@@ -110,8 +130,43 @@ void NeuralNetwork::Run(float* inputData)
 	}
 	for (int i = 0; i < sizeout; i++)
 		outputs[i] = Nodes[PrevNodeStart + i];
+}
+void NeuralNetwork::Run(float ActFunc(float), float* inputData)
+{
+	inputs = inputData;
 
+	for (int i = 0; i < sizein; i++)
+		Nodes[i] = inputData[i];
 
+	int PrevNodeStart = 0;
+	for (int i = 1; i < LayersAmount; i++)
+	{
+		int size = Arch[i];
+		int weightsPerNode = Arch[i - 1];
+		int node = 0;
+		for (int n = NodesStep[i]; n < NodesStep[i] + size; n++)
+		{//each node of layer
+
+			//WeightsStep[i-1]
+
+			float sum = 0.0f;
+			int start = (WeightsStep[i - 1] + node * weightsPerNode);
+			int PrevLayerNode = 0;
+			for (int w = start; w < start + weightsPerNode; w++)
+			{
+				weightOutputs[i] = weights[w] * Nodes[PrevNodeStart + PrevLayerNode];
+				sum += weightOutputs[i];
+
+				PrevLayerNode++;
+			}
+
+			Nodes[n] = ActFunc(sum + biases[n]);
+			node++;
+		}
+		PrevNodeStart = NodesStep[i];
+	}
+	for (int i = 0; i < sizeout; i++)
+		outputs[i] = Nodes[PrevNodeStart + i];
 }
 // inputs an array through a NN and calculates diviation from output 
 float NeuralNetwork::Cost(float* input, float* output, int amount)
@@ -142,37 +197,6 @@ float NeuralNetwork::Cost(float* input, float* output, int amount)
 	}
 
 	sum /= amount;
-	return sum;
-}
-// Cost() but with output to GUI
-float NeuralNetwork::TestCost(float* input, float* output, int amount)
-{
-	float sum = 0.0f;
-
-	for (int i = 0; i < amount; i++)
-	{
-		float* arr = new float[sizein];
-
-		for (int iter = 0; iter < sizein; iter++)
-			arr[iter] = input[i * sizein + iter];
-
-		Run(arr);
-
-		ImGui::Text("");
-		float tmp = 0.0f;
-		for (int a = 0; a < sizeout; a++)
-		{
-			tmp = outputs[a] - output[i * sizeout + a];
-
-			ImGui::SameLine();
-			ImGui::Text("  %.3f  ", outputs[a]);
-
-			tmp = tmp * tmp;
-			sum += tmp;
-		}
-	}
-	sum /= amount;
-	ImGui::Text("NN cost = %.3f", sum);
 	return sum;
 }
 void NeuralNetwork::ApplyGrad()
@@ -239,6 +263,189 @@ void NeuralNetwork::learn(float rate, float* input, float* output, int amount)
 			DeApplyGrad();
 	}
 }
+//std::string throutputs[12];
+
+
+void NeuralNetwork::Customlearn(float Costfunc(NeuralNetwork*), float Learnrate, bool finitediff)
+{
+	rate = Learnrate;
+	c1 = Costfunc(this);
+	std::vector<int> iter;
+
+	iter.resize(threadcount);
+	for (int i = 0; i < threadcount; i++)
+		iter[i] = i;
+
+	for (int i = 0; i < DataStorage.size(); i++)
+		DataStorage[i]->~NeuralNetwork();
+
+	DataStorage.clear();
+
+	if (!finitediff)
+	{
+		
+		DataStorage.resize(gyms);
+		for (int i = 0; i < DataStorage.size(); i++)
+		{
+
+			DataStorage[i] = new NeuralNetwork;
+			DataStorage[i]->Create(Arch, LayersAmount);
+		}
+		std::for_each(std::execution::par, iter.begin(), iter.end(), [this, Costfunc](int thr)
+			{
+				int amount = gyms / threadcount;
+				int start = (thr)*amount;
+				int end = (thr + 1) * amount;
+				if (thr == threadcount - 1)
+					end = gyms;
+				for (int s = start; s < end; s++)
+				{/*
+					DataStorage[s] = new NeuralNetwork;
+					DataStorage[s]->Create(Arch, LayersAmount);*/
+					for (int i = 0; i < WeightsAmount; i++)
+						DataStorage[s]->weights[i] = weights[i] + h * ((rand() % 1000) / 1000.0f - 0.5f) * 2.0f;
+
+					for (int i = 0; i < NodesAmount; i++)
+						DataStorage[s]->biases[i] = biases[i] + h * ((rand() % 1000) / 1000.0f - 0.5f) * 2.0f;
+
+					DataStorage[s]->lastCost = Costfunc(DataStorage[s]);
+				}
+
+
+
+			});
+		float mincost = lastCost;
+		NeuralNetwork* bestNN = NULL;
+		for (int i = 0; i < DataStorage.size(); i++)
+			if (DataStorage[i]->lastCost < mincost || (mincost < 0.0f && DataStorage[i]->lastCost >= 0.0f))
+			{
+				mincost = DataStorage[i]->lastCost;
+				bestNN = DataStorage[i];
+			}
+		if (mincost == lastCost)
+			bestNN = this;
+		if (mincost < lastCost && bestNN != NULL || lastCost < 0.0f) {
+			lastCost = mincost;
+
+			for (int i = 0; i < WeightsAmount; i++)
+			{
+				weightGradients[i] = (weights[i] - bestNN->weights[i]) * Learnrate;
+				//weights[i] = DataStorage[minIndex]->weights[i];
+			}
+			for (int i = 0; i < NodesAmount; i++)
+			{
+				biasGradients[i] = (biases[i] - bestNN->biases[i]) * Learnrate;
+				//biases[i] = DataStorage[minIndex]->biases[i];
+			}
+			
+		}
+		else
+		{
+			for (int i = 0; i < WeightsAmount; i++)
+			{
+				weightGradients[i] = 0.0f;
+				//weights[i] = DataStorage[minIndex]->weights[i];
+			}
+			for (int i = 0; i < NodesAmount; i++)
+			{
+				biasGradients[i] = 0.0f;
+				//biases[i] = DataStorage[minIndex]->biases[i];
+			}
+		}
+
+		/*	for (int i = 0; i < DataStorage.size(); i++)
+				DataStorage[i]->~NeuralNetwork();
+
+			DataStorage.clear();*/
+	}
+	else
+	{
+
+
+		DataStorage.resize(threadcount);
+		for (int i = 0; i < DataStorage.size(); i++)
+		{
+
+			DataStorage[i] = new NeuralNetwork();
+			DataStorage[i]->Create(Arch, LayersAmount);
+			for (int s = 0; s < WeightsAmount; s++)
+				DataStorage[i]->weights[s] = weights[s];
+			for (int s = 0; s < NodesAmount; s++)
+				DataStorage[i]->biases[s] = biases[s];
+		}
+	
+		std::for_each(std::execution::par, iter.begin(), iter.end(), [this, Costfunc](int thr)
+			{
+				int Wamount = WeightsAmount / threadcount;
+				//for (int s = thr * amount; s < (thr + 1) * amount; s++)
+				int Wstart = Wamount * thr ;
+				int Wend = Wamount * (thr + 1);
+				if (thr == threadcount - 1)
+					Wend = WeightsAmount;
+
+				for (int i = Wstart; i < Wend; i++)
+				{
+					DataStorage[thr]->weights[i] += (h * 0.01f);
+
+					float c2 = Costfunc(DataStorage[thr]);
+					DataStorage[thr]->weights[i] -= (h * 0.01f);
+					float slope = (c2 - c1) / (h * 0.01f);
+
+					weightGradients[i] = slope * rate * 0.001f;
+
+				}
+				int Namount = NodesAmount / threadcount;
+				int Nstart = Namount * thr;
+				int Nend = Namount * (thr + 1);
+				if (thr == threadcount - 1)
+					Nend = NodesAmount;
+
+				for (int i = Nstart; i < Nend; i++)
+				{
+					
+					DataStorage[thr]->biases[i] += (h * 0.01f);
+
+					float c2 = Costfunc(DataStorage[thr]);
+					DataStorage[thr]->biases[i] -= (h * 0.01f);
+					float slope = (c2 - c1) / (h * 0.01f);
+
+					biasGradients[i] = slope * rate*0.001f;
+
+				}
+
+
+			});
+		
+
+	}
+
+
+	ApplyGrad();
+	float cst = Costfunc(this);
+
+	float cst2 = cst;
+	bool run = true;
+	while (run)
+	{
+		run = false;
+		ApplyGrad();
+		cst2 = Costfunc(this);
+		if (cst2 < cst)
+		{
+			run = true;
+			cst = cst2;
+		}
+		else
+			DeApplyGrad();
+	}
+	lastCost = cst;
+
+	for (int i = 0; i < DataStorage.size(); i++)
+		DataStorage[i]->~NeuralNetwork();
+
+	DataStorage.clear();
+}
+
 // Draws NN structure, all weights(lines) and biases(circles)
 void NeuralNetwork::Draw(glm::vec2 position , float weigthScale , float NeuronScale , glm::vec2 scale )
 {
@@ -359,7 +566,7 @@ void NeuralNetwork::LoadFrom(std::string filename)
 		if (state == 0)
 		{
 			s >> LayersAmount >> WeightsAmount >> NodesAmount;
-			std::cout << LayersAmount << WeightsAmount << NodesAmount;
+			std::cout << "Layers = " << LayersAmount << "  WeightsAmount = " << WeightsAmount<<"  NodesAmount = " << NodesAmount;
 			Arch = new int[LayersAmount];
 			state = 1;
 		}
@@ -404,19 +611,3 @@ void NeuralNetwork::LoadFrom(std::string filename)
 	f.close();
 }
 
-void NeuralNetwork::Delete()
-{
-	delete[NodesAmount] Nodes;
-	delete[NodesAmount] biases;
-	delete[NodesAmount] biasGradients;
-
-
-	delete[WeightsAmount] weights;
-	delete[WeightsAmount] weightGradients;
-
-	delete[sizeout] outputs;
-
-	delete[LayersAmount] Arch;
-	delete[LayersAmount] NodesStep;
-	delete[LayersAmount] WeightsStep;
-}

@@ -4,7 +4,6 @@
 #include "Objects/Line.h";
 #include "Objects/Polygon.h";
 #include "Objects/Ray.h";
-#include "Objects/Softbody.h";
 #include "Objects/VerletObject.h";
 #include "Objects/NeuralNetwork.h";
 

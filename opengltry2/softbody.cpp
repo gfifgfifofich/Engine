@@ -1,6 +1,5 @@
 #include "engine/Components/Engine.h"
 
-#include "engine/Components/Physics/SoftBody.h"
 
 
 
@@ -71,16 +70,16 @@ void UpdateWorld()
 
 	SoftBody Body;
 
-	cube floor;
+	cube c;
 	ball center;
 
 	void On_Create() 
 	{//initialize
 		
-		floor.position -= 4000.0f;
+		c.position -= 4000.0f;
 
-		floor.width = 5000.0f;
-		floor.height = 5000.0f;
+		c.width = 5000.0f;
+		c.height = 5000.0f;
 
 		center.roughness = 0.1f;
 		center.bounciness = 0.1f;
@@ -260,7 +259,6 @@ void UpdateWorld()
 
 		//Drawing order, (circles, then quads -> quads above circles)
 		substeps = 32;
-		DrawingOrder = false;
 		//dt_of_sim = 0.0f;
 	}
 
@@ -269,6 +267,7 @@ void UpdateWorld()
 
 	float absorption = 1.0f;
 	float stiffnes = 10000.0f;
+	float dt_of_sim = 0;
 
 	void On_Update() 
 	{
@@ -356,13 +355,13 @@ void UpdateWorld()
 			DrawSpring(wheel2.balls[8].position, Body.balls[3].position, 150);
 
 			for (int i = 0; i < wheel1.balls.size(); i++)
-				BallToStaticQuadCollision(&wheel1.balls[i], floor);
+				BallToStaticQuadCollision(&wheel1.balls[i], c);
 
 			for (int i = 0; i < wheel2.balls.size(); i++)
-				BallToStaticQuadCollision(&wheel2.balls[i], floor);
+				BallToStaticQuadCollision(&wheel2.balls[i], c);
 
 			for (int i = 0; i < Body.balls.size(); i++)
-				BallToStaticQuadCollision(&Body.balls[i], floor);
+				BallToStaticQuadCollision(&Body.balls[i], c);
 
 			//FixedSpringBetweenBalls(&balls[0], &balls[1], Normalize(Rotate(balls[0].position - balls[amount - 1].position, angle)) * size * 2.0f * pi / (float)amount, stiffness * subdt,0.2f);
 			//FixedSpringBetweenBalls(&balls[amount - 1], &balls[0], Normalize(Rotate(balls[amount - 1].position - balls[amount - 2].position, angle)) * size * 2.0f * pi / (float)amount, stiffness * subdt, 0.2f);
@@ -424,7 +423,7 @@ void UpdateWorld()
 			{
 				bool b = false;
 				for(int i =0;i< Body.balls.size();i++)
-					if (BalltPointCollisionCheck(Body.balls[i], MousePosition))
+					if (BalltoPointCollisionCheck(Body.balls[i], MousePosition))
 						if (!b) 
 						{
 							tmp.x = i;
@@ -436,7 +435,7 @@ void UpdateWorld()
 			{
 				bool b = false;
 				for (int i = 0; i < Body.balls.size(); i++)
-					if (BalltPointCollisionCheck(Body.balls[i], MousePosition))
+					if (BalltoPointCollisionCheck(Body.balls[i], MousePosition))
 						if (!b && tmp.x != i)
 						{
 							tmp.y = i;
@@ -510,7 +509,7 @@ void UpdateWorld()
 			wheel1.springLength = 1.65f;
 		else wheel1.springLength = 1.0f;
 
-		DrawCube(floor);
+		DrawCube(c);
 
 		for (int i = 0; i < wheel1.balls.size(); i++)
 			DrawBall(wheel1.balls[i]);
@@ -615,6 +614,7 @@ void UpdateWorld()
 		}*/
 
 	}
+
 int main()
 {
 

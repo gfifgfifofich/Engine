@@ -579,7 +579,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Quadcolors.size());
 			glBindVertexArray(0);
 
-			glDeleteBuffers(9, &instanceVBO);
+			glDeleteBuffers(1, &instanceVBO);
 			DetachShader();
 			UseShader(CircleShader);
 			glUniform1f(glGetUniformLocation(CircleShader, "aspect"), aspect);
@@ -587,7 +587,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Circlecolors.size());
 			glBindVertexArray(0);
 
-			glDeleteBuffers(9, &instanceCircleVBO);
+			glDeleteBuffers(1, &instanceCircleVBO);
 			DetachShader();
 			SceneLayers[i].Quadcolors.clear();
 			SceneLayers[i].QuadPosScale.clear();
@@ -645,7 +645,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glVertexAttribDivisor(3, 1);
 
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size());
-				glDeleteBuffers(9, &instanceTexturedQuadVBO);
+				glDeleteBuffers(1, &instanceTexturedQuadVBO);
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -655,6 +655,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				SceneLayers[i].TexturedQuads[TQA].QuadRotations.clear();
 				DetachShader();
 			}
+			SceneLayers[i].TexturedQuads.clear();
 
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -706,7 +707,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCubePosScale.size());
 				
-				glDeleteBuffers(5, &instanceNormalMapCubeVBO);
+				glDeleteBuffers(1, &instanceNormalMapCubeVBO);
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -741,7 +742,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glVertexAttribDivisor(2, 1);
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCirclePosScale.size());
-				glDeleteBuffers(5, &instanceNormalMapCircleVBO);
+				glDeleteBuffers(1, &instanceNormalMapCircleVBO);
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -801,7 +802,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 					glVertexAttribDivisor(2, 1);
 
 					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMaps[NQA].QuadPosScale.size());
-					glDeleteBuffers(5, &instanceNormalMapTextureVBO);
+					glDeleteBuffers(1, &instanceNormalMapTextureVBO);
 
 					glBindVertexArray(0);
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -812,6 +813,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 					DetachShader();
 				}
 
+				SceneLayers[i].NormalMaps.clear();
 
 				if (HDR)
 					glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);

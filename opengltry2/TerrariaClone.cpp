@@ -237,10 +237,8 @@ void CrushTile(int x, int y)
 		Sparks.StartColor = glm::vec4(10.0f, 0.2f, 0.04f, 10.0f)*0.2f;
 		Sparks.EndColor = glm::vec4(0.7f, 0.7f, 0.7f, 0.0f);
 		Sparks.Type = "LINE";
-		ParticleEmiters.push_back(&Sparks);
 		player.LightBall.position = player.body.c.position;
 		player.LightBall.r = 10.0f;
-		ParticleEmiters.push_back(&player.rockParticles);
 		AmbientLight = 1.0f;
 	}
 
@@ -257,8 +255,8 @@ void CrushTile(int x, int y)
 		ImGui::Text("debris amount %i", debris.size());
 		ImGui::End();
 
-
-
+		Sparks.Process(delta);
+		player.rockParticles.Process(delta);
 
 		//Camera processing
 		ScreenShake *= 0.9;

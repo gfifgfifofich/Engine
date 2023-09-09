@@ -7,168 +7,36 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v17
 C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_tables.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_tables.cpp, Projects\engine\Libraries\include\imgui\imgui_tables.cpp.
 C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_widgets.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_widgets.cpp, Projects\engine\Libraries\include\imgui\imgui_widgets.cpp.
 C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем glm.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\glm\detail\glm.cpp, Projects\engine\Libraries\include\glm\detail\glm.cpp.
-  MapTest.cpp
+  NeuralNetworks.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\include\strstream(23,24): warning C4996: 'std::_Header_strstream': warning STL4005: <strstream> is deprecated in C++17. You can define _SILENCE_CXX17_STRSTREAM_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to acknowledge that you have received this warning.
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Mathematics.h(3,19): warning C4305: инициализация: усечение из "double" в "float"
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Mathematics.h(33,16): warning C4804: -: небезопасное использование типа "bool" в операции
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Mathematics.h(34,16): warning C4804: -: небезопасное использование типа "bool" в операции
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Mathematics.h(110,45): warning C4244: return: преобразование "double" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Mathematics.h(114,65): warning C4244: return: преобразование "double" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(100,15): warning C4244: инициализация: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(101,15): warning C4244: инициализация: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(160,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(162,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(166,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(168,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Drawing.h(274,83): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Drawing.h(274,76): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Drawing.h(850,70): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Drawing.h(850,63): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Drawing.h(902,83): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Drawing.h(902,76): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(178,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(179,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(182,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(183,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(185,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(185,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(186,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(187,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(193,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(198,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(201,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(202,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Polygon.h(203,1): warning C4267: =: преобразование из "size_t" в "T"; возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(186,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(189,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(190,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(192,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(193,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(195,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Box.h(39,1): warning C4305: =: усечение из "double" в "float"
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(196,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(198,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\SoftBody.h(87,31): warning C4244: -=: преобразование "float" в "T", возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\SoftBody.h(89,31): warning C4244: +=: преобразование "float" в "T", возможна потеря данных
-          with
-          [
-              T=int
-          ]
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Mathematics.h(7,32): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(2,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(3,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(4,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(5,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(6,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(7,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(8,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(11,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(12,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Libraries\include\freetype\config\ftheader.h(180,1): warning C4005: FT_FREETYPE_H: изменение макроопределения
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Text.h(3): message : см. предыдущее определение "FT_FREETYPE_H"
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Text.h(89,24): warning C4838: Преобразование из "FT_Pos" в "GLuint" требует сужающего преобразования.
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(204,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(145,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(158,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(167,14): warning C4244: =: преобразование "float" в "int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(170,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(179,14): warning C4244: =: преобразование "float" в "int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(182,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(190,14): warning C4244: =: преобразование "float" в "int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(193,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(203,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(212,1): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(350,19): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(351,18): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(387,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(393,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(400,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(406,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(429,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(456,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(462,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(468,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(727,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(970,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(971,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(1057,17): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(1058,16): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Particle.h(1071,16): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(220,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Scene.h(647,47): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Scene.h(659,49): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Scene.h(671,52): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Scene.h(780,110): warning C4244: аргумент: преобразование "unsigned int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Objects\Scene.h(784,111): warning C4244: аргумент: преобразование "unsigned int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(439,79): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(439,53): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(845,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(853,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(913,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(964,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(996,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1043,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1103,18): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1119,76): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1119,69): warning C4244: аргумент: преобразование "GLuint" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1289,59): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1289,30): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1298,115): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1298,87): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1311,56): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1311,30): warning C4244: аргумент: преобразование "double" в "GLsizei", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1400,14): warning C4244: =: преобразование "clock_t" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1441,10): warning C4244: =: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(1442,10): warning C4244: =: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(321,102): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(324,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(327,123): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(477,77): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(480,99): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(537,94): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(541,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(567,83): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(568,89): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(575,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(601,84): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(602,90): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(609,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(625,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(775,86): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(776,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(814,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(949,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(959,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(970,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(978,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1149,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1179,1): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Text.h(4): message : см. предыдущее определение "FT_FREETYPE_H"
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(13,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(163,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(164,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects\Softbody.h(59,31): warning C4244: -=: преобразование "float" в "T", возможна потеря данных
+          with
+          [
+              T=int
+          ]
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects\Softbody.h(61,31): warning C4244: +=: преобразование "float" в "T", возможна потеря данных
+          with
+          [
+              T=int
+          ]
+C:\Users\gfif\source\repos\opengltry2\opengltry2\NeuralNetworks.cpp(335,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\gfif\source\repos\opengltry2\opengltry2\NeuralNetworks.cpp(336,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\gfif\source\repos\opengltry2\opengltry2\NeuralNetworks.cpp(450,17): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
 x64\Release\glm.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
 x64\Release\imgui.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
 x64\Release\imgui_demo.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
@@ -179,9 +47,9 @@ x64\Release\imgui_tables.obj : warning LNK4042: объект указан бол
 x64\Release\imgui_widgets.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
-  42 of 4023 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
+  5 of 2755 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    42 functions had inline decision re-evaluated but remain unchanged
+    29 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
 glew32s.lib(glew.obj) : warning LNK4099: "glew_static.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Release\glew_static.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   opengltry2.vcxproj -> C:\Users\gfif\source\repos\opengltry2\x64\Release\Engine.exe

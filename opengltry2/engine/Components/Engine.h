@@ -1,5 +1,27 @@
 #pragma once
 
+/* EXAMPLE CODE
+
+#include "engine/Components/Engine.h"
+
+void On_Create()
+{
+
+}
+void On_Update()
+{
+
+}
+
+int main()
+{
+	initEngine();
+
+}
+
+*/
+
+
 #ifndef EngineMainModule
 #include "Include/Helper.h"
 #else 
@@ -35,6 +57,9 @@
 
 
 #include "Include/Mathematics.h"
+
+
+
 
 
 //Requeres DLL, + works funky
@@ -136,6 +161,7 @@ bool JustPressedLMB = false;
 
 
 #include "Include/Objects/Scene.h";
+#include "Include/Objects/Softbody.h";
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);

@@ -24,6 +24,8 @@ public:
 	int* NodesStep;
 	int* WeightsStep;
 
+
+
 	int NodesAmount;
 	int WeightsAmount;
 
@@ -36,25 +38,33 @@ public:
 	float rate = 1.0f;
 	float c1 = 1.0f;
 	float h = 1.0f;
-	int gyms = 96;// used only in a method of randomizing everything and choosing best
+	int gyms = 96;// used only in a method of randomizing everything and choosing best. better to be allignet to trheadcount of cpu
 
 	void Create(int* Architecture, int archsize);
 	void Randomize();
 	void Run(float* inputData);
+	void Run(float ActFunc(float), float* inputData);
+
 	// inputs an array through a NN and calculates diviation from output 
 	float Cost(float* input, float* output, int amount);
-	// Cost() but with output to GUI
-	float TestCost(float* input, float* output, int amount);
+
+	// Uses Cost() to minimize the diviation between outputs array and NN.outputs . Method - finite difirences. For more variety see CustomLearn()
+	void learn(float rate, float* input, float* output, int amount);
+
+
 	void ApplyGrad();
 	void DeApplyGrad();
-	// Uses Cost() to minimize the diviation. Method - finite difirences
-	void learn(float rate, float* input, float* output, int amount);
-	// unimplemented, use to make a custom NN learning scenario
-	float CustomCost();
+
+	//// unimplemented, use to make a custom NN learning scenario
+	//virtual float CustomCost() { std::cout << "Warning: use of un-overrided function CustomCost in NeuralNetwork\n"; };
+
 	// unimplemented, use to make a custom NN learning behaviour
-	void Customlearn(float Learnrate);
+	std::vector<NeuralNetwork*> DataStorage;
+	virtual void Customlearn(float Costfunc(NeuralNetwork*), float Learnrate, bool finitediff = false);
+
 	// Draws NN structure, all weights(lines) and biases(circles)
 	void Draw(glm::vec2 position = glm::vec2(0.0f), float weigthScale = 1.0f, float NeuronScale = 1.0f, glm::vec2 scale = glm::vec2(1.0f));
+
 	//Draws NN "During its work", weight activations(lines), Nodes values(circles)
 	void Draw(float* inputdata, glm::vec2 position = glm::vec2(0.0f), float weigthScale = 1.0f, float NeuronScale = 1.0f, glm::vec2 scale = glm::vec2(1.0f));
 	

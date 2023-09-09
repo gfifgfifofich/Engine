@@ -121,13 +121,13 @@ void On_Update()
 			pm.Spawn(glm::vec2(rand() % WIDTH,rand()%200), 3);*/
 		megaball.Force = { 0.0f,0.0f };
 		if (keys[GLFW_KEY_W])
-			megaball.Force.y = 10000;
+			megaball.Force.y = 100000;
 		if (keys[GLFW_KEY_S])
-			megaball.Force.y = -10000;
+			megaball.Force.y = -100000;
 		if (keys[GLFW_KEY_D])
-			megaball.Force.x = 10000;
+			megaball.Force.x = 100000;
 		if (keys[GLFW_KEY_A])
-			megaball.Force.x = -10000;
+			megaball.Force.x = -100000;
 		if (keys[GLFW_KEY_LEFT_SHIFT])
 			megaball.Force *= 100.0f;
 		megaball.Force.y -= 2500.0f;
@@ -283,7 +283,16 @@ int main()
 {
 
 
-	initEngine("pog",1280,980);
-	//initEngine("pog",1920,1080,true);
+	//initEngine("pog",1920,1080);
+		std::cout << "input screen width";
+		int wi = 0;
+		std::cin >> wi;
+		std::cout << "input screen height";
+		int he = 0;
+		std::cin >> he;
+		bool fs = false;
+		std::cout << "Full screen? (1-yes/0-no)";
+		std::cin >> fs;
+		initEngine("Space Partitioning test", wi, he, fs);
 	return 0;
 }

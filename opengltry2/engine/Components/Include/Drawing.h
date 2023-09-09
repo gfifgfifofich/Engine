@@ -9,7 +9,9 @@
 
 
 
-extern GLuint 
+extern
+
+GLuint 
 NoizeGenShader,
 GradientGenShader,
 AddTexturesShader,
@@ -195,6 +197,7 @@ void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = 
 void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool Lighted = false, unsigned int NormalMap = NULL, int Z_Index = 0);
 void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount = 4);
 void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned char* Data, int chanelsAmount = 4);
+void fLoadTextureFromData(unsigned int* texture, int width, int height, float* Data, int chanelsAmount = 4);
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers = 3, float freq = 10, int shape = ROUND);
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape = ROUND);
 void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND);

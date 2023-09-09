@@ -96,7 +96,82 @@
     <ClCompile Include="engine\Libraries\include\AL\alhelpers.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="MapTest.cpp">
+    <ClCompile Include="engine\Components\Cpps\Collisions\BallToBall.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Collisions\BallToLine.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Collisions\BallToPolygon.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Collisions\CircleToQuad.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Collisions\QuadToQuad.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Collisions\RayCastToShapes.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Ball.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Bodies.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Graph.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Line.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\NeuralNetwork.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Particle.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Polygon.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Ray.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\Scene.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\SoftBody.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Objects\VerletObject.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Physics\Rope.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Physics\Spring.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Physics\Strut.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Drawing.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Engine.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Math.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Shader.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\Text.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetworks.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1895,58 +1970,7 @@
     <ClInclude Include="Projects\engine\Components\Collisions\QuadToQuad.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\Ball to Polygon.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\BallToBall.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\BallToLine.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\CircleToQuad.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\QuadToQuad.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Ball.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Line.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Particle.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Polygon.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Quad.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\VerletObject.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Drawing.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Engine.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Mathematics.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Shader.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Classes.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Projects\Player.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Physics\Spring.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Projects\engine\Components\Physics\Spring.h">
@@ -2126,43 +2150,109 @@
     <ClInclude Include="engine\Libraries\include\dlg\output.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Components\Text.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\SoftBody.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Box.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Physics\Strut.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\BoxtoBox.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Components\LoadWAV.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="engine\Libraries\include\sndfile.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="engine\Libraries\include\sndfile.hh">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Components\sounds.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="engine\Libraries\include\ft2build.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Scene.h">
+    <ClInclude Include="engine\Components\Include\Collisions\BallToBall.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Components\Collisions\RayCastToShapes.h">
+    <ClInclude Include="engine\Components\Include\Collisions\BallToLine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="engine\Components\Objects\Ray.h">
+    <ClInclude Include="engine\Components\Include\Collisions\BalltoPolygon.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Collisions\CircleToQuad.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Collisions\QuadToQuad.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Collisions\RayCastToShapes.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Ball.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Bodies.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Graph.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Line.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\NeuralNetwork.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Particle.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Polygon.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Quad.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Ray.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\Scene.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\SoftBody.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects\VerletObject.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Physics\Rope.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Physics\Spring.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Physics\Strut.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Collisions.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Drawing.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Engine.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\LoadWAV.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Helper.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Mathematics.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Objects.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Physics.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Shader.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\sounds.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Components\Include\Text.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2177,7 +2267,7 @@
     <None Include="engine\Shaders\Quad\instance.vert" />
     <None Include="engine\Shaders\Quad\Quad.frag" />
     <None Include="engine\Shaders\Screen.frag" />
-    <None Include="engine\Shaders\Screen.vert" />
+    <None Include="engine\Shaders\Default.vert" />
     <None Include="engine\Libraries\include\glm\detail\func_common.inl">
       <Filter>Файлы заголовков</Filter>
     </None>
@@ -3017,20 +3107,24 @@
     <None Include="engine\Shaders\Round\Round.frag" />
     <None Include="engine\Shaders\Triangle\TexturedTriangle.vert" />
     <None Include="engine\Shaders\Triangle\TexturedTriangle.frag" />
-    <None Include="engine\Shaders\NormalMap\NormalMapDraw.frag" />
     <None Include="engine\Shaders\NormalMap\GenNormalMap.frag" />
     <None Include="engine\Shaders\Light\GenLightSphere.frag" />
     <None Include="engine\Shaders\Light\LightProcess.frag" />
     <None Include="engine\Shaders\Light\Light.vert" />
     <None Include="engine\Shaders\Textures\AddTextures.frag" />
-    <None Include="engine\Shaders\NormalMap\InstancedNMDraw.vert" />
     <None Include="engine\Shaders\InstancedTexturedQuad\InstancedTexturedQuad.vert" />
     <None Include="engine\Shaders\InstancedTexturedQuad\InstancedTexturedQuad.frag" />
     <None Include="engine\Shaders\InstancedNormalMap\NormalMapDraw.frag" />
     <None Include="engine\Shaders\InstancedNormalMap\InstancedNMDraw.vert" />
-    <None Include="Maps\CityTest.sav" />
-    <None Include="Maps\CityTest.sav.back" />
     <None Include="engine\Shaders\Triangle\Fill.vert" />
     <None Include="engine\Shaders\Triangle\Fill.frag" />
+    <None Include="engine\Shaders\GradientGen\GradientGen.frag" />
+    <None Include="engine\z1ShaderTests\FlatColor.frag" />
+    <None Include="engine\z1ShaderTests\default.vert" />
+    <None Include="Maps\Shadertest.sav" />
+    <None Include="engine\Shaders\GenPrimitiveTextureShader.frag" />
+    <None Include="engine\z1ShaderTests\gpudatagettest.vert" />
+    <None Include="engine\z1ShaderTests\NNRun.frag" />
+    <None Include="engine\z1ShaderTests\NNRunT.frag" />
   </ItemGroup>
 </Project>

@@ -148,7 +148,6 @@ float sigmoidApprox(float x)
 	if (x > 2.05f)
 		return x * 0.03f + 0.85f;
 }
-
 float ReLu(float x)
 {
 	return x >= 0.0f ? x : 0.0f;
