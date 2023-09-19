@@ -7,6 +7,13 @@ all .cpp's in main folder - example projects. Include one of them in project to 
 
 To build this as library, create a "static library" project with same settings, delete everything, disable precompiled headers, include everything from components, compile.
 
+## features
+- most of collision types
+- Z-Index layered drawing
+- Lighting
+- physics (springs, struts, ropes)
+- Particle system (up to 500k particles at 60FPS on my pc)
+- Neural network class, ~Easy to use
 
 ## libraries
 Dear_imgui(https://github.com/ocornut/imgui) 
