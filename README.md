@@ -1,6 +1,7 @@
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/opengltry2/Textures/Cool%20picture.png)
+
 ## booting up project
-1) in engine/components unpack Libraries.rar // cuz there is too many files, and github allows to upload only 100/time
-2) in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path. This directories are located in Libraries. Set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
+in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path.Set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
 
 all .cpp's in main folder - example projects. Include one of them in project to run.
 
