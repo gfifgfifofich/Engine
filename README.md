@@ -1,19 +1,21 @@
-# booting up project
+## booting up project
 1) in engine/components unpack Libraries.rar // cuz there is too many files, and github allows to upload only 100/time
 2) in Project settings (atleast it is how its done in Visual Studio), add "include" and "libraries" path. This directories are located in Libraries. Set include and lib directories to "your_project_location"/opengltry2/engine/Libraries/lib and to Libraries/include respectively
 
 all .cpp's in main folder - example projects. Include one of them in project to run.
 
+To build this as library, create a "static library" project with same settings, delete everything, disable precompiled headers, include everything from components, compile.
+
 
 ## libraries
-Dear imgui (https://github.com/ocornut/imgui)
-GLM (https://github.com/g-truc/glm)
-GLFW (https://github.com/glfw/glfw)
-glew (https://glew.sourceforge.net/)
-glad (https://github.com/Dav1dde/glad)
-freetype (https://freetype.org/download.html or https://github.com/freetype/freetype)
-OpenAL (https://github.com/kcat/openal-soft)
-stb_image (https://github.com/nothings/stb/blob/master/stb_image.h)
+Dear imgui (https://github.com/ocornut/imgui) 
+GLM (https://github.com/g-truc/glm) 
+GLFW (https://github.com/glfw/glfw) 
+glew (https://glew.sourceforge.net/) 
+glad (https://github.com/Dav1dde/glad) 
+freetype (https://freetype.org/download.html or https://github.com/freetype/freetype) 
+OpenAL (https://github.com/kcat/openal-soft) 
+stb_image (https://github.com/nothings/stb/blob/master/stb_image.h) 
 
 
 
@@ -25,6 +27,7 @@ Libraries/lib should contain:
 	glfw3.lib
 	OpenAL32.lib
 	sndfile.lib
+ 
 Libraries/Include should contain folowing directories:
 	AL (from openAL),
 	freetype (from freetype),
