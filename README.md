@@ -7,19 +7,12 @@ all .cpp's in main folder - example projects. Include one of them in project to 
 
 ## libraries
 Dear imgui (https://github.com/ocornut/imgui)
-
 GLM (https://github.com/g-truc/glm)
-
 GLFW (https://github.com/glfw/glfw)
-
 glew (https://glew.sourceforge.net/)
-
 glad (https://github.com/Dav1dde/glad)
-
 freetype (https://freetype.org/download.html or https://github.com/freetype/freetype)
-
 OpenAL (https://github.com/kcat/openal-soft)
-
 stb_image (https://github.com/nothings/stb/blob/master/stb_image.h)
 
 
