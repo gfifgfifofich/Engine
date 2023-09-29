@@ -2,6 +2,8 @@
 #include "../../Include/Helper.h"
 #include "../../Include/Objects/Graph.h"
 
+#include "../../Include/Text.h"
+#include "../../Include/Drawing.h"
 void Graph::Inspect(glm::vec2 Coord)
 {
 	if (Coord.x > position.x && Coord.x < (position.x + scale.x) && Coord.y>position.y && Coord.y < (position.y + scale.y))

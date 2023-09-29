@@ -4,6 +4,7 @@
 
 #include "../../Include/Helper.h"
 #include "../../Include/Objects/Particle.h"
+#include "../../Include/Drawing.h"
 
 // Contains and Process data for particles. Pushback ptr to ParticleEmiters array, or Process() somewhere else 
 
@@ -360,7 +361,17 @@ void ParticleEmiter::Process(float dt)
 										{
 											Particles[i].velocity += SpheresOfInfluence[s].velocity * delta;
 											if (SpheresOfInfluence[s].attractive)
-												Particles[i].velocity += (SpheresOfInfluence[s].position - Particles[i].position) * SpheresOfInfluence[s].attractionStrength * delta;
+											{
+												glm::vec2 dir = (SpheresOfInfluence[s].position - Particles[i].position);
+												if(sqrlength(dir)<=1.0f)
+													Particles[i].velocity += (dir) * SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength )* delta;
+												else
+												{
+													float sdist = sqrt(dist);
+													dir /= sdist;
+													Particles[i].velocity += (dir/ (sdist)) * SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * delta;
+												}
+											}
 										}
 									}
 									for (int s = 0; s < CubesOfInfluence.size(); s++)
@@ -370,10 +381,21 @@ void ParticleEmiter::Process(float dt)
 											CubesOfInfluence[s].position.y + CubesOfInfluence[s].scale.y >= Particles[i].position.y &&
 											CubesOfInfluence[s].position.y - CubesOfInfluence[s].scale.y <= Particles[i].position.y)
 										{
+											float dist = sqrlength(Particles[i].position - CubesOfInfluence[s].position);
 
 											Particles[i].velocity += CubesOfInfluence[s].velocity * delta;
 											if (CubesOfInfluence[s].attractive)
-												Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * delta;
+											{
+												glm::vec2 dir = (CubesOfInfluence[s].position - Particles[i].position);
+												if (sqrlength(dir) <= 1.0f)
+													Particles[i].velocity += (dir)*CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * delta;
+												else
+												{
+													float sdist = sqrt(dist);
+													dir /= sdist;
+													Particles[i].velocity += (dir / (sdist)) * CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * delta;
+												}
+											}
 										}
 									}
 								}
@@ -664,7 +686,17 @@ void ParticleEmiter::Process(float dt)
 							{
 								Particles[i].velocity += SpheresOfInfluence[s].velocity * dt;
 								if (SpheresOfInfluence[s].attractive)
-									Particles[i].velocity += (SpheresOfInfluence[s].position - Particles[i].position) * SpheresOfInfluence[s].attractionStrength * dt;
+								{
+									glm::vec2 dir = (SpheresOfInfluence[s].position - Particles[i].position);
+									if (sqrlength(dir) <= 1.0f)
+										Particles[i].velocity += (dir)*SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * delta;
+									else
+									{
+										float sdist = sqrt(dist);
+										dir /= sdist;
+										Particles[i].velocity += (dir / (sdist)) * SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * delta;
+									}
+								}
 							}
 						}
 						for (int s = 0; s < CubesOfInfluence.size(); s++)
@@ -679,7 +711,20 @@ void ParticleEmiter::Process(float dt)
 
 								Particles[i].velocity += CubesOfInfluence[s].velocity * dt;
 								if (CubesOfInfluence[s].attractive)
-									Particles[i].velocity += (CubesOfInfluence[s].position - Particles[i].position) * CubesOfInfluence[s].attractionStrength * dt;
+								{
+
+									float dist = sqrlength(Particles[i].position - CubesOfInfluence[s].position);
+									glm::vec2 dir = (CubesOfInfluence[s].position - Particles[i].position);
+									if (sqrlength(dir) <= 1.0f)
+										Particles[i].velocity += (dir)*CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * delta;
+									else
+									{
+										float sdist = sqrt(dist);
+										dir /= sdist;
+										Particles[i].velocity += (dir / (sdist)) * CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * delta;
+									}
+
+								}
 							}
 						}
 					}

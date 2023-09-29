@@ -66,86 +66,98 @@ void LoadFont(const char* font)
 	FT_Done_Face(face);   // Завершение работы с шрифтом face
 	FT_Done_FreeType(ft); // Завершение работы FreeType
 }
-
-void DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color, bool aboveEverything )
+glm::vec2 getTextSize(std::string Text, GLfloat scale)
 {
-	if (aboveEverything)
+	glm::vec2 size = {0.0f,0.0f};
+	for (int i = 0; i < Text.size(); i++)
 	{
-		TextLine txtline;
-
-		txtline.text = text;
-		txtline.x = x;
-		txtline.y = y;
-		txtline.scale = scale;
-		txtline.color = color;
-		txtline.aboveEverything = false;
-
-		TextLines.push_back(txtline);
+		size.x += Characters[Text[i]].Size.x * scale ;
+		if(size.y< Characters[Text[i]].Size.y * scale) size.y = Characters[Text[i]].Size.y * scale;
 	}
-	else
-	{
-		//glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT);
-		glm::vec2 position = glm::vec2(0.0f, 0.0f);
-		position -= CameraPosition;
-		glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
-			(position.x) * ScreenDivisorX * CameraScale.x,
-			(position.y) * ScreenDivisorY * CameraScale.y,
-			0.0f));
-
-
-		trans = glm::scale(trans, glm::vec3(CameraScale.x * ScaleMultiplyer, CameraScale.y * ScaleMultiplyer, 0.0f));
-
-
-
-		// Activate corresponding render state
-		UseShader(TextShader);
-		glUniform4f(glGetUniformLocation(TextShader, "color"), color.x, color.y, color.z, color.w);
-		glUniformMatrix4fv(glGetUniformLocation(TextShader, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
-
-		glUniform2f(glGetUniformLocation(TextShader, "scr"), (float)WIDTH, (float)HEIGHT);
-		glUniform1i(glGetUniformLocation(TextShader, "flipY"), true);
-
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(TextVAO);
-
-		// Iterate through all characters
-		std::string::const_iterator c;
-		for (c = text.begin(); c != text.end(); c++)
-		{
-			Character ch = Characters[*c];
-
-			GLfloat xpos = (x)+ch.Bearing.x * scale;
-			GLfloat ypos = (y)-(ch.Size.y - ch.Bearing.y) * scale;
-
-			GLfloat w = ch.Size.x * scale;
-			GLfloat h = ch.Size.y * scale;
-			// Update VBO for each character
-			GLfloat vertices[6][4] = {
-				{ xpos, ypos + h, 0.0, 0.0 },
-				{ xpos, ypos, 0.0, 1.0 },
-				{ xpos + w, ypos, 1.0, 1.0 },
-
-				{ xpos, ypos + h, 0.0, 0.0 },
-				{ xpos + w, ypos, 1.0, 1.0 },
-				{ xpos + w, ypos + h, 1.0, 0.0 }
-			};
-			// Render glyph texture over quad
-			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-			// Update content of VBO memory
-			glBindBuffer(GL_ARRAY_BUFFER, TextVBO);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			// Render quad
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-			// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-			x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
-		}
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	size.x += Characters[Text[Text.size()-1]].Size.x * scale;
+	//return { size.x* ScreenDivisorX, size.y * ScreenDivisorY };
+	return { size.x , size.y };
 }
-void DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color, bool aboveEverything )
+
+// actuallu draws text
+void _DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color)
 {
-	DrawText(text, position.x, position.y, scale, color, aboveEverything);
+	//glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT);
+	glm::vec2 position = glm::vec2(0.0f, 0.0f);
+	position -= CameraPosition;
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(
+		(position.x) * ScreenDivisorX * CameraScale.x,
+		(position.y) * ScreenDivisorY * CameraScale.y,
+		0.0f));
+
+
+	trans = glm::scale(trans, glm::vec3(CameraScale.x * ScaleMultiplyer, CameraScale.y * ScaleMultiplyer, 0.0f));
+
+
+
+	// Activate corresponding render state
+	UseShader(TextShader);
+	glUniform4f(glGetUniformLocation(TextShader, "color"), color.x, color.y, color.z, color.w);
+	glUniformMatrix4fv(glGetUniformLocation(TextShader, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+
+	glUniform2f(glGetUniformLocation(TextShader, "scr"), (float)WIDTH, (float)HEIGHT);
+	glUniform1i(glGetUniformLocation(TextShader, "flipY"), true);
+
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(TextVAO);
+
+	// Iterate through all characters
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++)
+	{
+		Character ch = Characters[*c];
+
+		GLfloat xpos = (x)+ch.Bearing.x * scale;
+		GLfloat ypos = (y)-(ch.Size.y - ch.Bearing.y) * scale;
+
+		GLfloat w = ch.Size.x * scale;
+		GLfloat h = ch.Size.y * scale;
+		// Update VBO for each character
+		GLfloat vertices[6][4] = {
+			{ xpos, ypos + h, 0.0, 0.0 },
+			{ xpos, ypos, 0.0, 1.0 },
+			{ xpos + w, ypos, 1.0, 1.0 },
+
+			{ xpos, ypos + h, 0.0, 0.0 },
+			{ xpos + w, ypos, 1.0, 1.0 },
+			{ xpos + w, ypos + h, 1.0, 0.0 }
+		};
+		// Render glyph texture over quad
+		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+		// Update content of VBO memory
+		glBindBuffer(GL_ARRAY_BUFFER, TextVBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// Render quad
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+void DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color, int Z_Index, bool Additive)
+{
+	TextLine txtline;
+
+	txtline.text = text;
+	txtline.x = x;
+	txtline.y = y;
+	txtline.scale = scale;
+	txtline.color = color;
+	txtline.aboveEverything = false;
+	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+	SceneLayers[SLI].TextLines.push_back(txtline);
+
+
+}
+void DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color, int Z_Index, bool Additive)
+{
+	DrawText(text, position.x, position.y, scale, color, Z_Index, Additive);
 }

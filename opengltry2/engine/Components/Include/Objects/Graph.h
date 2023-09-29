@@ -1,6 +1,4 @@
 #pragma once
-#include "../Text.h"
-#include "../Drawing.h"
 #include <list>
 class Graph
 {

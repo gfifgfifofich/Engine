@@ -2,6 +2,9 @@
 #include "../../Include/Drawing.h"
 #include "../../Include/Objects/NeuralNetwork.h"
 
+#include <thread>
+#include <algorithm>
+#include <execution>
 void NeuralNetwork::Create(int* Architecture, int archsize)
 {
 	//layers = new Layer[archsize];

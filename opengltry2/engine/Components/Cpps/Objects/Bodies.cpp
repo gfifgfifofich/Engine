@@ -1,6 +1,7 @@
 
 #include "../../Include/Helper.h"
 #include "../../Include/Objects/Bodies.h"
+#include "../../Include/Drawing.h"
 
 void KinematicBody::init(int type, glm::vec4 color )
 	{

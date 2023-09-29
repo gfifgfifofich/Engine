@@ -1,5 +1,7 @@
 
 #include "../../Include/Helper.h"
+#include "../../Include/Drawing.h"
+#include "../../Include/Objects.h"
 #include "../../Include/Objects/Scene.h"
 
 void Scene::SaveAs(std::string filename)

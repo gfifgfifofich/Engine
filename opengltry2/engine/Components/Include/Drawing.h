@@ -1,24 +1,27 @@
 #pragma once
 
 #include "Shader.h"
-#include "Objects.h"
+#include "Objects/Ball.h"
+#include "Objects/Quad.h"
 
 //Texture Generation
 #include <map>
 
 
 
-
+#ifndef DRAWINGIMPLEMENTATION
 extern
+#endif
 
-GLuint 
+
+GLuint
 NoizeGenShader,
 GradientGenShader,
 AddTexturesShader,
 RoundShader,
 GenNormalMapShader,
 GenLightSphereShader,
- GenPrimitiveTextureShader,
+GenPrimitiveTextureShader,
 
 
 FlatColorTexture,
@@ -72,9 +75,7 @@ TexturedTriangleVAO, TexturedTriangleVBO,
 
 TextVAO, TextVBO,
 TextShader;
-
-	
-
+;
 
 enum TextureShape
 {
@@ -94,32 +95,6 @@ struct TexturedQuadArray
 	std::vector <glm::vec4> Quadcolors;
 };
 
-struct SceneLayer
-{
-	int Z_Index = 0;
-
-	bool Additive = false;
-
-	std::vector <glm::vec4> CirclePosScale;
-	std::vector <float> CircleRotations;
-	std::vector <glm::vec4> Circlecolors;
-
-	std::vector <glm::vec4> QuadPosScale;
-	std::vector <float> QuadRotations;
-	std::vector <glm::vec4> Quadcolors;
-
-	std::vector <TexturedQuadArray> TexturedQuads;
-
-	std::vector <TexturedQuadArray> NormalMaps;
-
-	std::vector <glm::vec4> NormalMapCirclePosScale;
-	std::vector <float> NormalMapCircleRotations;
-
-	std::vector <glm::vec4> NormalMapCubePosScale;
-	std::vector <float> NormalMapCubeRotations;
-
-
-};
 struct LightSource
 {
 	float volume = 0.0f;
@@ -159,8 +134,6 @@ struct TextLine
 	glm::vec4 color = glm::vec4(1.0f);
 	bool aboveEverything = false;
 };
-
-
 struct Character {
 	GLuint     TextureID; // ID текстуры глифа
 	glm::ivec2 Size;      // Размеры глифа
@@ -168,11 +141,52 @@ struct Character {
 	GLuint     Advance;   // Горизонтальное смещение до начала следующего глифа
 };
 
-extern std::vector <TextLine> TextLines;
-extern std::map<GLchar, Character> Characters;
+struct SceneLayer
+{
+	int Z_Index = 0;
 
-extern std::vector <LightSource> LightSources;
-extern std::vector <SceneLayer> SceneLayers;
+	bool Additive = false;
+
+	std::vector <TextLine> TextLines;
+	std::vector <TextLine> UI_TextLines;
+
+
+	std::vector <glm::vec4> CirclePosScale;
+	std::vector <float> CircleRotations;
+	std::vector <glm::vec4> Circlecolors;
+
+	std::vector <glm::vec4> QuadPosScale;
+	std::vector <float> QuadRotations;
+	std::vector <glm::vec4> Quadcolors;
+
+	std::vector <TexturedQuadArray> TexturedQuads;
+
+	std::vector <TexturedQuadArray> NormalMaps;
+
+	std::vector <glm::vec4> NormalMapCirclePosScale;
+	std::vector <float> NormalMapCircleRotations;
+
+	std::vector <glm::vec4> NormalMapCubePosScale;
+	std::vector <float> NormalMapCubeRotations;
+
+
+};
+
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+std::map<GLchar, Character> Characters;
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+std::vector <LightSource> LightSources;
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+std::vector <SceneLayer> SceneLayers;
 
 void PreLoadShaders();
 void SortSceneLayers();
@@ -197,7 +211,6 @@ void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = 
 void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool Lighted = false, unsigned int NormalMap = NULL, int Z_Index = 0);
 void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount = 4);
 void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned char* Data, int chanelsAmount = 4);
-void fLoadTextureFromData(unsigned int* texture, int width, int height, float* Data, int chanelsAmount = 4);
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers = 3, float freq = 10, int shape = ROUND);
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape = ROUND);
 void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND);
@@ -206,8 +219,7 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 = glm::vec4(1.0
 void DrawShaderedQuad(glm::vec2 position, glm::vec2 scale, float rotation, unsigned int shaderProgram);
 void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation = 0.0f, glm::vec4 color = glm::vec4(1.0f), int Z_Index = 0, unsigned int NormalMap = NULL, bool Additive = false);
 void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f, int Z_Index = 0, unsigned int NormalMap = NULL, bool Additive = false);
-
-void DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = glm::vec4(1.0f), unsigned int NormalMap = CubeNormalMapTexture, int Z_Index = 0);
+void DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width =1.0f, glm::vec4 color=glm::vec4(1.0f), unsigned int NormalMap = NULL, int Z_Index = 0);
 void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = glm::vec4(1.0f));
 void DrawTexturedTriangle(
 	glm::vec2 p1,
@@ -219,3 +231,5 @@ void DrawTexturedTriangle(
 	glm::vec2 texcoord2 = glm::vec2(0.5f, 0.0f),
 	glm::vec2 texcoord3 = glm::vec2(1.0f, 1.0f)
 );
+
+

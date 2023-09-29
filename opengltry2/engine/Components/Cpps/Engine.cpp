@@ -47,10 +47,6 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		window = glfwCreateWindow(WIDTH, HEIGHT, Name, nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
-	if(VSync)
-		glfwSwapInterval(1);
-	else
-		glfwSwapInterval(0);
 
 	// Set the required callback functions
 	glfwSetKeyCallback(window, key_callback);
@@ -380,12 +376,12 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	GenPrimitiveTexture(&FlatColorCircleTexture, 400, ROUND);
 	GenPrimitiveTexture(&FlatColorTexture, 100, SQUERE);
 
-	unsigned int instanceCircleVBO;
-	unsigned int instanceNormalMapCircleVBO;
-	unsigned int instanceNormalMapCubeVBO;
-	unsigned int instanceNormalMapTextureVBO;
-	unsigned int instanceTexturedQuadVBO;
-	unsigned int instanceVBO;
+	unsigned int* instanceCircleVBO = new unsigned int[3];
+	unsigned int* instanceNormalMapCircleVBO = new unsigned int[2];
+	unsigned int* instanceVBO = new unsigned int[3];
+	unsigned int* instanceNormalMapCubeVBO = new unsigned int[2];
+	unsigned int* instanceNormalMapTextureVBO = new unsigned int[2];
+	unsigned int* instanceTexturedQuadVBO = new unsigned int[3];
 
 
 
@@ -395,6 +391,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 	On_Create();
 
+	if (VSync)
+		glfwSwapInterval(1);
+	else
+		glfwSwapInterval(0);
 
 	std::cout << "Scene created\n";
 
@@ -426,6 +426,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 		glClearColor(BackgroundColor.r, BackgroundColor.g, BackgroundColor.b, BackgroundColor.a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
 
 		MousePosition.x = (lastX - WIDTH * 0.5f) / CameraScale.x + CameraPosition.x;
 		MousePosition.y = (-lastY + HEIGHT * 0.5f) / CameraScale.y + CameraPosition.y;
@@ -488,8 +489,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 			// instancing
 			{
-				glGenBuffers(1, &instanceCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
+				glGenBuffers(3, &instanceCircleVBO[0]);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[0]);
 				glBindVertexArray(CircleVAO);
 
 
@@ -499,8 +500,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 				glVertexAttribDivisor(1, 1);
 
-				glGenBuffers(1, &instanceCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[1]);
 				glBindVertexArray(CircleVAO);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].CirclePosScale.size(), &SceneLayers[i].CirclePosScale[0], GL_STATIC_DRAW);
@@ -508,13 +508,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glEnableVertexAttribArray(2);
 				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 
-
 				glVertexAttribDivisor(2, 1);
 
-
-
-				glGenBuffers(1, &instanceCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[2]);
 				glBindVertexArray(CircleVAO);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].CircleRotations.size(), &SceneLayers[i].CircleRotations[0], GL_STATIC_DRAW);
@@ -527,8 +523,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			}
 			//quads
 			{
-				glGenBuffers(1, &instanceVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+				glGenBuffers(3, instanceVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
 
 				glBindVertexArray(quadVAO);
 
@@ -541,11 +537,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 
-				glGenBuffers(1, &instanceVBO);
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[1]);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].QuadPosScale.size(), &SceneLayers[i].QuadPosScale[0], GL_STATIC_DRAW);
+				glBindVertexArray(quadVAO);
 
 
 				glEnableVertexAttribArray(3);
@@ -554,11 +549,11 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glVertexAttribDivisor(3, 1);
 
-				glGenBuffers(1, &instanceVBO);
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+				
+				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[2]);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].QuadRotations.size(), &SceneLayers[i].QuadRotations[0], GL_STATIC_DRAW);
+				glBindVertexArray(quadVAO);
 
 
 				glEnableVertexAttribArray(4);
@@ -566,7 +561,6 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 				glVertexAttribDivisor(4, 1);
-
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -579,7 +573,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Quadcolors.size());
 			glBindVertexArray(0);
 
-			glDeleteBuffers(1, &instanceVBO);
+
 			DetachShader();
 			UseShader(CircleShader);
 			glUniform1f(glGetUniformLocation(CircleShader, "aspect"), aspect);
@@ -587,7 +581,11 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Circlecolors.size());
 			glBindVertexArray(0);
 
-			glDeleteBuffers(1, &instanceCircleVBO);
+			glDeleteBuffers(3, instanceCircleVBO);
+
+			
+
+			glDeleteBuffers(3, instanceVBO);
 			DetachShader();
 			SceneLayers[i].Quadcolors.clear();
 			SceneLayers[i].QuadPosScale.clear();
@@ -609,8 +607,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glBindTexture(GL_TEXTURE_2D, SceneLayers[i].TexturedQuads[TQA].Texture);
 				glUniform1i(glGetUniformLocation(InstanceTexturedQuadShader, "Texture"), 0);
 
-				glGenBuffers(1, &instanceTexturedQuadVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
+				glGenBuffers(3, instanceTexturedQuadVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[0]);
 				glBindVertexArray(quadVAO);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].TexturedQuads[TQA].Quadcolors.size(), &SceneLayers[i].TexturedQuads[TQA].Quadcolors[0], GL_STATIC_DRAW);
 
@@ -620,8 +618,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glVertexAttribDivisor(1, 1);
 
 
-				glGenBuffers(1, &instanceTexturedQuadVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[1]);
 				glBindVertexArray(quadVAO);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size(), &SceneLayers[i].TexturedQuads[TQA].QuadPosScale[0], GL_STATIC_DRAW);
@@ -631,9 +628,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glVertexAttribDivisor(2, 1);
 
-				glGenBuffers(1, &instanceTexturedQuadVBO);
 
-				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[2]);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].TexturedQuads[TQA].QuadRotations.size(), &SceneLayers[i].TexturedQuads[TQA].QuadRotations[0], GL_STATIC_DRAW);
 
@@ -645,7 +641,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glVertexAttribDivisor(3, 1);
 
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size());
-				glDeleteBuffers(1, &instanceTexturedQuadVBO);
+				glDeleteBuffers(3, instanceTexturedQuadVBO);
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -656,6 +652,14 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				DetachShader();
 			}
 			SceneLayers[i].TexturedQuads.clear();
+			//Text that marked ato Draw Above Everything else
+			for (int tt = 0; tt < SceneLayers[i].TextLines.size(); tt++)
+				_DrawText(SceneLayers[i].TextLines[tt].text, SceneLayers[i].TextLines[tt].x, SceneLayers[i].TextLines[tt].y, SceneLayers[i].TextLines[tt].scale, SceneLayers[i].TextLines[tt].color);
+			SceneLayers[i].TextLines.clear();
+
+			for (int tt = 0; tt < SceneLayers[i].UI_TextLines.size(); tt++)
+				_UI_DrawText(SceneLayers[i].UI_TextLines[tt].text, SceneLayers[i].UI_TextLines[tt].x, SceneLayers[i].UI_TextLines[tt].y, SceneLayers[i].UI_TextLines[tt].scale, SceneLayers[i].UI_TextLines[tt].color);
+			SceneLayers[i].UI_TextLines.clear();
 
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -682,8 +686,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 
-				glGenBuffers(1, &instanceNormalMapCubeVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
+				glGenBuffers(2, instanceNormalMapCubeVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO[0]);
 				glBindVertexArray(quadVAO);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCubeRotations.size(), &SceneLayers[i].NormalMapCubeRotations[0], GL_STATIC_DRAW);
 
@@ -693,8 +697,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glVertexAttribDivisor(1, 1);
 
 
-				glGenBuffers(1, &instanceNormalMapCubeVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO[1]);
 				glBindVertexArray(quadVAO);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCubePosScale.size(), &SceneLayers[i].NormalMapCubePosScale[0], GL_STATIC_DRAW);
@@ -707,7 +710,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCubePosScale.size());
 				
-				glDeleteBuffers(1, &instanceNormalMapCubeVBO);
+				glDeleteBuffers(2, instanceNormalMapCubeVBO);
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -721,8 +724,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
 				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
 
-				glGenBuffers(1, &instanceNormalMapCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
+				glGenBuffers(2, instanceNormalMapCircleVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO[0]);
 				glBindVertexArray(quadVAO);
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCircleRotations.size(), &SceneLayers[i].NormalMapCircleRotations[0], GL_STATIC_DRAW);
 
@@ -731,8 +734,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glVertexAttribDivisor(1, 1);
 
-				glGenBuffers(1, &instanceNormalMapCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO[1]);
 				glBindVertexArray(quadVAO);
 
 				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCirclePosScale.size(), &SceneLayers[i].NormalMapCirclePosScale[0], GL_STATIC_DRAW);
@@ -742,7 +744,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 				glVertexAttribDivisor(2, 1);
 				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCirclePosScale.size());
-				glDeleteBuffers(1, &instanceNormalMapCircleVBO);
+				glDeleteBuffers(2, instanceNormalMapCircleVBO);
+
+
 
 				glBindVertexArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -779,8 +783,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 						glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
 
 
-					glGenBuffers(1, &instanceNormalMapTextureVBO);
-					glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO);
+					glGenBuffers(2, instanceNormalMapTextureVBO);
+					glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO[0]);
 					glBindVertexArray(quadVAO);
 					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMaps[NQA].QuadRotations.size(), &SceneLayers[i].NormalMaps[NQA].QuadRotations[0], GL_STATIC_DRAW);
 
@@ -790,8 +794,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 					glVertexAttribDivisor(1, 1);
 
 
-					glGenBuffers(1, &instanceNormalMapTextureVBO);
-					glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO);
+					glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO[1]);
 					glBindVertexArray(quadVAO);
 
 					glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMaps[NQA].QuadPosScale.size(), &SceneLayers[i].NormalMaps[NQA].QuadPosScale[0], GL_STATIC_DRAW);
@@ -802,7 +805,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 					glVertexAttribDivisor(2, 1);
 
 					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMaps[NQA].QuadPosScale.size());
-					glDeleteBuffers(1, &instanceNormalMapTextureVBO);
+					glDeleteBuffers(2, instanceNormalMapTextureVBO);
 
 					glBindVertexArray(0);
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -918,10 +921,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		if (!loop)
 			std::cout << "Lighting processed\n";
 
-		//Text that marked ato Draw Above Everything else
-		for (int i = 0; i < TextLines.size(); i++)
-			DrawText(TextLines[i].text, TextLines[i].x, TextLines[i].y, TextLines[i].scale, TextLines[i].color, false);
-		TextLines.clear();
+		
 
 
 		if (!loop)

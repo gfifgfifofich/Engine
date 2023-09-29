@@ -85,6 +85,7 @@ GLfloat lastY;
 glm::vec4 BackgroundColor;
 
 glm::vec2 MousePosition;
+glm::vec2 ScreenMousePosition;
 glm::vec2 scrpos;
 
 bool keys[1024];
@@ -158,6 +159,7 @@ bool JustPressedLMB = false;
 #include "Include/Collisions.h"
 #include "Include/Physics.h"
 #include "Include/Text.h"
+#include "Include/UI.h"
 
 
 #include "Include/Objects/Scene.h";

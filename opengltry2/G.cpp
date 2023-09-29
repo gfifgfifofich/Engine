@@ -57,6 +57,8 @@ void On_Create()
 	mouseSphere = Sparker.AddSpheresOfInfluence({ 0.0f,0.0f }, 100.0f, { 0.0f,100.0f }, true, 10.0f);
 	//mouseSphere = Sparker.AddLightCube({ 0.0f,0.0f }, glm::vec2(300.0f,300.0f), glm::vec4(1.0f));
 	//mouseSphere = Sparker.AddLightSphere({ 0.0f,0.0f }, 200.0f, glm::vec4(10.0f,2.0f,0.4f,1.0f));
+	SettingsWindow = false;
+	VSync = true;
 	
 }
 float f = 0;
@@ -68,8 +70,15 @@ void On_Update()
 					DrawTexturedQuad({ i*200.0f,y*200.0f }, { 100.0f,100.0f }, noize, glm::vec3(0.0f,0.0f,i*y*0.6f), glm::vec4(3.0f),0, Sparker.NormalMap);
 			*/
 
-	Sparker.Process(delta);
+	if (VSync)
+		glfwSwapInterval(1);
+	else
+		glfwSwapInterval(0);
+	Sparker.Process(0.017f);
 	ImGui::Begin("s");
+
+	if (ImGui::Button("vsync"))
+		VSync = !VSync;
 	ImGui::SliderFloat("orb", &Sparker.OrbitalVelocityRandomness, -10.0f, 10.0f);
 	ImGui::SliderFloat("orb2", &Sparker.InitialOrbitalVelocity, -10.0f, 10.0f);
 	ImGui::SliderInt("int", &test, -100, 100);
@@ -99,12 +108,12 @@ void On_Update()
 	if (ImGui::Button("clear"))
 	{
 		Sparker.SpheresOfInfluence.clear();
-		mouseSphere = Sparker.AddSpheresOfInfluence(MousePosition, 100.0f, (MousePosition - prevpos) * 1.3f, true, 15.2f);
+		mouseSphere = Sparker.AddSpheresOfInfluence(MousePosition, 100.0f, (MousePosition - prevpos) * 1.3f, true, 152.0f);
 
 	}
 	if (buttons[GLFW_MOUSE_BUTTON_2])
 	{
-		mouseSphere = Sparker.AddSpheresOfInfluence(MousePosition, Sparker.SpheresOfInfluence[mouseSphere].r, (MousePosition - prevpos) * 1.3f, true, 15.2f);
+		mouseSphere = Sparker.AddSpheresOfInfluence(MousePosition, Sparker.SpheresOfInfluence[mouseSphere].r, (MousePosition - prevpos) * 1.3f, true, 152.0f);
 	}
 	for (int i = 0; i < amount; i++)
 	{
@@ -155,7 +164,7 @@ void On_Update()
 	DrawCircle(glm::vec2(0.0f), (HEIGHT * 0.3f),BackgroundColor);*/
 
 
-
+	ImGui::End();
 }
 int main()
 {

@@ -8,6 +8,7 @@ ALint state = AL_PLAYING;
 std::vector <ALuint*> sources;
 std::vector <ALuint*> sounds;
 std::vector <unsigned int> soundsArray;
+std::vector <unsigned int*> soundsArray2;
 
 ALCdevice* Device = alcOpenDevice(NULL);
 ALCcontext* Context;
@@ -164,28 +165,73 @@ void DeleteSource(unsigned int* source)
 
 void PlaySound(unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f)
 {
+		unsigned int src;
 
-	unsigned int src;
-	GenSource(&src);
+		alGenSources(1, &src);
+		alSourcef(src, AL_GAIN, 1.0f);
+		alSourcef(src, AL_PITCH, 1.0f);
+		alSource3f(src, AL_POSITION, 0.0f, 0.0f, 0.0f);
+		alSource3f(src, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+		alSourcei(src, AL_LOOPING, AL_FALSE); 
 
-	soundsArray.push_back(src);
-	SetSourcePosition(&soundsArray[soundsArray.size() - 1], position);
-	SetSourceSound(&soundsArray[soundsArray.size() - 1], sound);
-	SetSourceGain(&soundsArray[soundsArray.size() - 1], gain);
-	SetSourcePitch(&soundsArray[soundsArray.size() - 1], pitch);
-	PlaySource(&soundsArray[soundsArray.size() - 1]);
+		soundsArray.push_back(src);
+		SetSourcePosition(&soundsArray[soundsArray.size() - 1], position);
+		SetSourceSound(&soundsArray[soundsArray.size() - 1], sound);
+		SetSourceGain(&soundsArray[soundsArray.size() - 1], gain);
+		SetSourcePitch(&soundsArray[soundsArray.size() - 1], pitch);
+		PlaySource(&soundsArray[soundsArray.size() - 1]);
+	
 
 
 }
 void PlaySound(unsigned int* dst, unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f)
 {
-	if(*dst ==0)
-		GenSource(dst);
-	SetSourcePosition(dst, position);
-	SetSourceSound(dst, sound);
-	SetSourceGain(dst, gain);
-	SetSourcePitch(dst, pitch);
-	PlaySource(dst);
+	if (dst == NULL) {
+		std::cout << "asdasd";
+		dst = new unsigned int;
+	}
+		if (*dst == NULL)
+		{
+
+			alGenSources(1,dst);
+
+			alSourcef(*dst, AL_GAIN, 1.0f);
+			alSourcef(*dst, AL_PITCH, 1.0f);
+			alSource3f(*dst, AL_POSITION, 0.0f, 0.0f, 0.0f);
+			alSource3f(*dst, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+			alSourcei(*dst, AL_LOOPING, AL_FALSE); 
+			soundsArray2.push_back(dst);
+		}
+		SetSourcePosition(dst, position);
+		SetSourceSound(dst, sound);
+		SetSourceGain(dst, gain);
+		SetSourcePitch(dst, pitch);
+		PlaySource(dst);
+	
+}
+void PlaySound(unsigned int** dst, unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f)
+{
+	if (*dst == NULL) {
+		*dst = new unsigned int();
+	}
+	if (**dst == NULL)
+	{
+
+		alGenSources(1, *dst);
+
+		alSourcef(**dst, AL_GAIN, 1.0f);
+		alSourcef(**dst, AL_PITCH, 1.0f);
+		alSource3f(**dst, AL_POSITION, 0.0f, 0.0f, 0.0f);
+		alSource3f(**dst, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+		alSourcei(**dst, AL_LOOPING, AL_FALSE);
+		soundsArray2.push_back(*dst);
+	}
+	SetSourcePosition(*dst, position);
+	SetSourceSound(*dst, sound);
+	SetSourceGain(*dst, gain);
+	SetSourcePitch(*dst, pitch);
+	PlaySource(*dst);
+
 }
 void  AL_Destroy()
 {
@@ -207,13 +253,42 @@ void ProcessAL()
 		while (del && i < soundsArray.size())
 		{
 			del = false;
-			if (!SourcePlaying(&soundsArray[i]))
+			if (!SourcePlaying(&soundsArray[i]) || soundsArray[i] == 0 )
 			{
 				del = true;
-				DeleteSource(&soundsArray[i]);
+
+				alSourceStop(soundsArray[i]);
+				alDeleteSources(1, &soundsArray[i]);
+
 				soundsArray[i] = soundsArray[soundsArray.size() - 1];
 				soundsArray.pop_back();
 			}
+		}
+	}
+	for (int i = 0; i < soundsArray2.size(); i++)
+	{
+
+		bool del = true;
+		while (del && i < soundsArray2.size())
+		{
+			del = false;
+			if (soundsArray2[i] == 0 || *soundsArray2[i] == 0)
+			{
+				del = true;
+				soundsArray2[i] = soundsArray2[soundsArray2.size() - 1];
+				soundsArray2.pop_back();
+			}
+			else if (!SourcePlaying(soundsArray2[i]))
+			{
+				del = true;
+
+				alSourceStop(*soundsArray2[i]);
+				alDeleteSources(1, soundsArray2[i]);
+				*soundsArray2[i] = 0;
+				soundsArray2[i] = soundsArray2[soundsArray2.size() - 1];
+				soundsArray2.pop_back();
+			}
+			
 		}
 	}
 }

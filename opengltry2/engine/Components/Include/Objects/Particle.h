@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../Drawing.h"
 #include <thread>
 #include <algorithm>
 #include <execution>

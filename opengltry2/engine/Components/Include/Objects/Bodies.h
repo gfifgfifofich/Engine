@@ -1,5 +1,4 @@
 #pragma once
-#include "../Drawing.h"
 #include "Ball.h"
 #include "Quad.h"
 struct MegaStruct

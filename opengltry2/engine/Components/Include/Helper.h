@@ -52,6 +52,7 @@ extern GLfloat lastY;
 extern glm::vec4 BackgroundColor;
 
 extern glm::vec2 MousePosition;
+extern glm::vec2 ScreenMousePosition;
 extern glm::vec2 scrpos;
 
 extern bool keys[1024];

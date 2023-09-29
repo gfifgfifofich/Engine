@@ -329,7 +329,7 @@ void GenNNTexture(unsigned int* texture, NeuralNetwork* NN, unsigned int width, 
 		glDeleteTextures(1, texture);
 
 
-	float* uptexdata = new float[width * height * 3];
+	unsigned char* uptexdata = new unsigned char[width * height * 3];
 
 	//RenderNNToTexture(NN, uptexdata, width, height);
 	for (int y = 0; y < height; y++)
@@ -349,7 +349,7 @@ void GenNNTexture(unsigned int* texture, NeuralNetwork* NN, unsigned int width, 
 
 			//uptexdata[3 + (x + y * width) * 4] = 20.0f;
 		}
-	fLoadTextureFromData(texture, width, height, uptexdata, 3);
+	LoadTextureFromData(texture, width, height, uptexdata, 3);
 	delete[width * height * 3] uptexdata;
 
 }
@@ -394,6 +394,7 @@ void On_Create()
 {// called once while starting app
 	nn.Create(arch, 4);
 	nn.Randomize();
+	SettingsWindow = false;
 
 	
 	Texture = stbi_load("minisus.png", &ImageW, &ImageH, &nrChannels, 3);
@@ -448,6 +449,9 @@ glm::vec2 PrevMousePos = glm::vec2(0.0f);
 int learniterations = 1;
 
 int Upscalemult = 1.0f;
+
+
+bool testbool;
 void On_Update()
 {
 
@@ -470,8 +474,13 @@ void On_Update()
 	MousePosition += CameraPosition;
 	PrevMousePos = MousePosition;
 
+	UI_DrawCircle(ScreenMousePosition, 100, {1.0f,1.0f,1.0f,1.0f},false, NULL, 100, false);
 
+	UI_DrawTextOnPlate("asdasd", { 300,100 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, {0.0f,0.0f,0.0f,0.8f},102,false);
+	
 
+	UI_CheckBox(&testbool, "asd", { 100,100 });
+	
 	costgraph.scale = { 500.0f,500.0f };
 	costgraph.DataScale = { 1.0f,20.0f };
 	costgraph.position = { -0.49f*WIDTH, -0.49f*HEIGHT};
@@ -501,6 +510,7 @@ void On_Update()
 	ImGui::DragFloat("posx",&posX);
 	ImGui::Text("COstCost = %.3f", nn.lastCost);
 	ImGui::Checkbox("finitediff", &finitediff);
+
 	ImGui::Text("tex id %i", Genedtexture);
 	ImGui::Text("Scene layers %i", SceneLayers.size());
 
@@ -563,7 +573,7 @@ void On_Update()
 	}
 
 	costgraph.Draw();
-	DrawTexturedQuad({ -200.0f,-200.0f }, { 200.0f,200.0f }, texture);
+	DrawTexturedQuad({ -800.0f,300.0f }, { 200.0f,200.0f }, texture);
 	DrawTexturedQuad({ -200.0f,-600.0f }, { 200.0f,200.0f }, texture2);
 	if(Genedtexture!=NULL)
 		DrawTexturedQuad({ 200.0f,-400.0f }, { 200.0f,200.0f }, Genedtexture);
@@ -595,6 +605,15 @@ void On_Update()
 }
 int main()
 {
-	initEngine("NNLearnImage",1920,1080,true);
+	/*std::cout << "input screen width";
+	int wi = 0;
+	std::cin >> wi;
+	std::cout << "input screen height";
+	int he = 0;
+	std::cin >> he;
+	bool fs = false;
+	std::cout << "Full screen? (1-yes/0-no)";
+	std::cin >> fs;*/
+	initEngine("NN Learn image", 1920, 1080, true);
 	return 0;
 }

@@ -2,6 +2,7 @@
 
 #include "../../Include/Helper.h"
 #include "../../Include/Objects/Polygon.h"
+#include "../../Include/Drawing.h"
 
 
 void Triangle::Update_Shape()

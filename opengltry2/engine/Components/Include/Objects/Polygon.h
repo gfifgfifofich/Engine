@@ -1,5 +1,4 @@
 #pragma once
-#include "../Drawing.h"
 #include "line.h"
 #include "../Collisions/BallToLine.h"
 
