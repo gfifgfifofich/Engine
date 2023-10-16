@@ -32,6 +32,7 @@ polygon poly;
 		if (ImGui::Button("load polygon.pol"))
 		{
 			poly.Load("polygon.pol");
+			poly.Update_MidlePos();
 			poly.Update_Shape();
 		}
 
@@ -43,7 +44,7 @@ polygon poly;
 		{
 			poly.triangles.clear();
 			poly.indexes.clear();
-			poly.points.clear();
+			poly.Rawpoints.clear();
 			poly.colors.clear();
 			poly.TexturePoints.clear();
 			poly.state = 0;
@@ -55,18 +56,15 @@ polygon poly;
 
 		//LMB states
 
-
-		if (HoldingLMB && !buttons[GLFW_MOUSE_BUTTON_1]) ReleasedLMB = true;
-		else ReleasedLMB = false;
-
-		if (!HoldingLMB && buttons[GLFW_MOUSE_BUTTON_1]) JustPressedLMB = true;
-		else JustPressedLMB = false;
-
-		if (buttons[GLFW_MOUSE_BUTTON_1]) HoldingLMB = true;
-		else  HoldingLMB = false;
+		float a[2] = { poly.Position.x, poly.Position.y };
+		ImGui::DragFloat2("position", a);
+		poly.Position = { a[0],a[1] };
+		ImGui::DragFloat("Rotation", &poly.Rotation, 0.01f);
 
 
-
+		float ab[2] = { poly.Scale.x, poly.Scale.y };
+		ImGui::DragFloat2("Scale", ab, 0.01f);
+		poly.Scale = { ab[0],ab[1] };
 
 		if (ImGui::Button("cut") || keys[GLFW_KEY_SPACE])
 		{
@@ -77,8 +75,8 @@ polygon poly;
 		if (keys[GLFW_KEY_LEFT_ALT])
 		{
 
-			for (int i = 0; i < poly.points.size(); i++)
-				DrawCircle(poly.points[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+			for (int i = 0; i < poly.Rawpoints.size(); i++)
+				DrawCircle(poly.Rawpoints[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 
 
@@ -94,11 +92,11 @@ polygon poly;
 			{
 				bool gr = false;
 
-				for (int i = 0; i < poly.points.size(); i++)
+				for (int i = 0; i < poly.Rawpoints.size(); i++)
 				{
 					if (!gr)
 					{
-						float distance = sqrlength(poly.points[i] - MousePosition);
+						float distance = sqrlength(poly.Rawpoints[i] - MousePosition);
 
 						if (distance < 100)
 						{
@@ -125,8 +123,8 @@ polygon poly;
 			}
 			if (ReleasedLMB)grabbedpoint = -1;
 
-			if (grabbedpoint >= 0 && grabbedpoint < poly.points.size() && !grabbedMisc)
-				poly.points[grabbedpoint] = MousePosition;
+			if (grabbedpoint >= 0 && grabbedpoint < poly.Rawpoints.size() && !grabbedMisc)
+				poly.Rawpoints[grabbedpoint] = MousePosition;
 
 			if (grabbedpoint >= 0 && grabbedpoint < poly.MiscPoints.size() && grabbedMisc)
 			{
@@ -153,21 +151,21 @@ polygon poly;
 				DrawCircle(glm::vec2(poly.MiscPoints[i].x, poly.MiscPoints[i].y), 10, color);
 			}
 
-			for (int i = 0; i < poly.points.size(); i++)
-				DrawCircle(poly.points[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+			for (int i = 0; i < poly.Rawpoints.size(); i++)
+				DrawCircle(poly.Rawpoints[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 			poly.Update_Shape();
 		}
 
-		if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly.points.size() > 0)
+		if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly.Rawpoints.size() > 0)
 		{
 
 			if (JustPressedLMB)
 			{
 				int copycheck = indexCreationState;
-				for (int i = 0; i < poly.points.size(); i++)
+				for (int i = 0; i < poly.Rawpoints.size(); i++)
 				{
 
-					float distance = sqrlength(poly.points[i] - MousePosition);
+					float distance = sqrlength(poly.Rawpoints[i] - MousePosition);
 
 					if (distance < 100 && indexCreationState == copycheck)
 					{
@@ -196,10 +194,10 @@ polygon poly;
 					}
 				}
 			}
-			for (int i = 0; i < poly.points.size(); i++)
+			for (int i = 0; i < poly.Rawpoints.size(); i++)
 			{
 
-				DrawCircle(poly.points[i], 10, glm::vec4(
+				DrawCircle(poly.Rawpoints[i], 10, glm::vec4(
 					i == tmpIndex.x ? 1.0f : 0.0f,
 					i == tmpIndex.y ? 1.0f : 0.0f,
 					i == tmpIndex.z ? 1.0f : 0.0f,
@@ -208,8 +206,9 @@ polygon poly;
 			poly.Update_Shape();
 		}
 
+		poly.Update_Shape();
 
-
+		poly.DrawTriangles();
 	
 	}
 

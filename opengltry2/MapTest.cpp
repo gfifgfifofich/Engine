@@ -2,7 +2,8 @@
 
 
 char MapFileNameChars[128];
-std::string MapFileName =  /*"../../HEAT/Maps/base.sav";*/"Maps/mappa.sav";
+//std::string MapFileName =  /*"../../HEAT/Maps/base.sav";*/"Maps/mappa.sav";
+std::string MapFileName = "Maps/Shadertest.sav";
 
 Scene Map;
 Texture tex;
@@ -690,7 +691,7 @@ void PolygonTools(polygon* poly)
 	{
 		poly->triangles.clear();
 		poly->indexes.clear();
-		poly->points.clear();
+		poly->Rawpoints.clear();
 		poly->colors.clear();
 		poly->TexturePoints.clear();
 		poly->state = 0;
@@ -706,8 +707,8 @@ void PolygonTools(polygon* poly)
 	if (keys[GLFW_KEY_LEFT_ALT])
 	{
 
-		for (int i = 0; i < poly->points.size(); i++)
-			DrawCircle(poly->points[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		for (int i = 0; i < poly->Transofromedpoints.size(); i++)
+			DrawCircle(poly->Transofromedpoints[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 
 
@@ -723,11 +724,11 @@ void PolygonTools(polygon* poly)
 		{
 			bool gr = false;
 
-			for (int i = 0; i < poly->points.size(); i++)
+			for (int i = 0; i < poly->Rawpoints.size(); i++)
 			{
 				if (!gr)
 				{
-					float distance = sqrlength(poly->points[i] - MousePosition);
+					float distance = sqrlength(poly->Rawpoints[i] - MousePosition);
 
 					if (distance < 100)
 					{
@@ -738,27 +739,27 @@ void PolygonTools(polygon* poly)
 			}
 		}
 
-		if (grabbedpoint >= 0 && grabbedpoint < poly->points.size())
-			poly->points[grabbedpoint] = MousePosition;
+		if (grabbedpoint >= 0 && grabbedpoint < poly->Rawpoints.size())
+			poly->Rawpoints[grabbedpoint] = MousePosition;
 
 		if (ReleasedLMB)grabbedpoint = -1;
 
 
-		for (int i = 0; i < poly->points.size(); i++)
-			DrawCircle(poly->points[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+		for (int i = 0; i < poly->Rawpoints.size(); i++)
+			DrawCircle(poly->Rawpoints[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		poly->Update_Shape();
 	}
 	// connection
-	if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly->points.size() > 0)
+	if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly->Rawpoints.size() > 0)
 	{
 
 		if (JustPressedLMB)
 		{
 			int copycheck = indexCreationState;
-			for (int i = 0; i < poly->points.size(); i++)
+			for (int i = 0; i < poly->Rawpoints.size(); i++)
 			{
 
-				float distance = sqrlength(poly->points[i] - MousePosition);
+				float distance = sqrlength(poly->Rawpoints[i] - MousePosition);
 
 				if (distance < 100 && indexCreationState == copycheck)
 				{
@@ -787,10 +788,10 @@ void PolygonTools(polygon* poly)
 				}
 			}
 		}
-		for (int i = 0; i < poly->points.size(); i++)
+		for (int i = 0; i < poly->Rawpoints.size(); i++)
 		{
 
-			DrawCircle(poly->points[i], 10, glm::vec4(
+			DrawCircle(poly->Rawpoints[i], 10, glm::vec4(
 				i == tmpIndex.x ? 1.0f : 0.0f,
 				i == tmpIndex.y ? 1.0f : 0.0f,
 				i == tmpIndex.z ? 1.0f : 0.0f,
@@ -845,13 +846,13 @@ void ShowRedactorWindow(polygon* Polygon)
 	}
 	if (ShowPolygonPositions)
 	{
-		for (int i = 0; i < SelectedPolygon->points.size(); i++)
+		for (int i = 0; i < SelectedPolygon->Rawpoints.size(); i++)
 		{
 			std::string iter = std::to_string(i);
 
-			float ar[2] = { SelectedPolygon->points[i].x ,SelectedPolygon->points[i].y };
+			float ar[2] = { SelectedPolygon->Rawpoints[i].x ,SelectedPolygon->Rawpoints[i].y };
 			ImGui::DragFloat2(iter.c_str(), ar);
-			SelectedPolygon->points[i] = { ar[0],ar[1] };
+			SelectedPolygon->Rawpoints[i] = { ar[0],ar[1] };
 		}
 	}
 
@@ -1292,9 +1293,9 @@ void On_Update()
 				if (RedactorObject == 2)
 				{
 					float rar = length(MousePosition - PrevMousePosition);
-					Map.polygons[CurrentRedactorObject].points[0] = (PrevMousePosition - glm::vec2(rar, rar * 0.5f));
-					Map.polygons[CurrentRedactorObject].points[1] = (PrevMousePosition - glm::vec2(-rar, rar * 0.5f));
-					Map.polygons[CurrentRedactorObject].points[2] = (PrevMousePosition + glm::vec2(0, rar));
+					Map.polygons[CurrentRedactorObject].Rawpoints[0] = (PrevMousePosition - glm::vec2(rar, rar * 0.5f));
+					Map.polygons[CurrentRedactorObject].Rawpoints[1] = (PrevMousePosition - glm::vec2(-rar, rar * 0.5f));
+					Map.polygons[CurrentRedactorObject].Rawpoints[2] = (PrevMousePosition + glm::vec2(0, rar));
 					Map.polygons[CurrentRedactorObject].Update_Shape();
 				}
 			}

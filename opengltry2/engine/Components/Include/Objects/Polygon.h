@@ -15,12 +15,15 @@ public:
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels
+
+
 	std::vector <SubTriangle> SubTriangles;
 	float roughness = 1.0f;
 
 	line lines[3] = { lines[0] = line(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
 					  lines[1] = line(glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f)),
 					  lines[2] = line(glm::vec2(0.0f, 1.0f), glm::vec2(0.0f, 0.0f)) };
+
 
 
 	glm::vec2 points[3];
@@ -48,6 +51,7 @@ public:
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels
 	float roughness = 1.0f;
+	float bounciness = 1.0f;
 	std::vector <Triangle> triangles;
 
 	std::vector <glm::vec4> colors = { {1.0f,1.0f,1.0f,1.0f} }; // one - for whole poly, two or more for random color, colors_amount=triangles_amount foreach
@@ -55,26 +59,42 @@ public:
 
 	//glm::vec2 position = glm::vec2(0.0f);
 
-	std::vector <glm::vec2> points;
+	std::vector <glm::vec2> Rawpoints;
+	std::vector < glm::vec2> Transofromedpoints;
 	std::vector <glm::vec2> TexturePoints;
 	std::vector <glm::ivec3> indexes;
 
-	glm::vec2 position = glm::vec2(0.0f);
+	glm::vec2 RawmidlePosition = { 0.0f,0.0f };
+	glm::vec2 midlePosition = { 0.0f,0.0f };
+
+	glm::vec2 Position = { 0.0f,0.0f };
+	glm::vec2 Velocity = { 0.0f,0.0f };
+	glm::vec2 Force = { 0.0f,0.0f };
+	float  Mass = 1.0f;
+
+	float Rotation = 0.0f;
+	float RotationVelocity = 0.0f;
+	float RotationForce = 0.0f;
+	float RotationMass = 0.0f;
+
+
+	glm::vec2 Scale = { 1.0f,1.0f };
 
 	unsigned int Texture;
 
+	// leftover ofter i tried to make a map for a game using only polygon class
 	std::vector <glm::vec4> MiscPoints;
 
 
 
 	int state = 0;
 
-	void Move(glm::vec2 position);
 
-
+	void Process(float dt);
 
 	void add_Point(glm::vec2 point, bool addindex = false);
 
+	void Update_MidlePos();
 	void Update_Shape();
 
 	void SaveAs(std::string name);

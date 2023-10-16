@@ -44,6 +44,7 @@
     <ClCompile Include="engine\Components\Cpps\Physics\Strut.cpp" />
     <ClCompile Include="engine\Components\Cpps\Shader.cpp" />
     <ClCompile Include="engine\Components\Cpps\Text.cpp" />
+    <ClCompile Include="engine\Components\Cpps\UI.cpp" />
     <ClCompile Include="engine\Libraries\include\AL\alhelpers.c" />
     <ClCompile Include="engine\Libraries\include\imgui\imgui.cpp" />
     <ClCompile Include="engine\Libraries\include\imgui\imgui_demo.cpp" />
@@ -53,7 +54,7 @@
     <ClCompile Include="engine\Libraries\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="engine\Libraries\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="engine\Libraries\include\glm\detail\glm.cpp" />
-    <ClCompile Include="NeuralNetworks.cpp" />
+    <ClCompile Include="MapTest.cpp" />
     <ClCompile Include="Projects\engine\Libraries\include\glm\detail\glm.cpp" />
     <ClCompile Include="Projects\engine\Libraries\include\imgui\imgui.cpp" />
     <ClCompile Include="Projects\engine\Libraries\include\imgui\imgui_demo.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="engine\Components\Include\Shader.h" />
     <ClInclude Include="engine\Components\Include\sounds.h" />
     <ClInclude Include="engine\Components\Include\Text.h" />
+    <ClInclude Include="engine\Components\Include\UI.h" />
     <ClInclude Include="engine\Libraries\include\dlg\dlg.h" />
     <ClInclude Include="engine\Libraries\include\dlg\output.h" />
     <ClInclude Include="engine\Libraries\include\freetype\config\ftconfig.h" />

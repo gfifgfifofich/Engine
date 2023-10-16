@@ -9,8 +9,12 @@ void Triangle::Update_Shape()
 	{
 		SubTriangles.clear();
 
+		
+
+		midlePosition = { 0.0f,0.0f };
 		midlePosition = points[0] + points[1] + points[2];
 		midlePosition /= 3;
+
 
 		lines[0] = line(points[0], points[1]);
 		lines[1] = line(points[1], points[2]);
@@ -58,15 +62,15 @@ void Triangle::Update_Shape()
 	}
 
 Triangle::Triangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3)
-	{
-		points[0] = p1;
-		points[1] = p2;
-		points[2] = p3;
-		lines[0] = line(p1, p2);
-		lines[1] = line(p2, p3);
-		lines[2] = line(p3, p1);
-		Update_Shape();
-	}
+{
+	points[0] = p1;
+	points[1] = p2;
+	points[2] = p3;
+	lines[0] = line(p1, p2);
+	lines[1] = line(p2, p3);
+	lines[2] = line(p3, p1);
+	Update_Shape();
+}
 
 
 void Triangle::DrawOutline(glm::vec4 color )
@@ -74,14 +78,14 @@ void Triangle::DrawOutline(glm::vec4 color )
 		DrawLine(points[0], points[1], 2.0f, color);
 		DrawLine(points[1], points[2], 2.0f, color);
 		DrawLine(points[2], points[0], 2.0f, color);
-	}
+}
 void Triangle::DrawNormals()
-	{
-		glm::vec2 mid1 = points[0] + points[1];
-		mid1 *= 0.5f;
-		glm::vec2 mid2 = points[1] + points[2];
-		mid2 *= 0.5f;
-		glm::vec2 mid3 = points[2] + points[0];
+{
+	glm::vec2 mid1 = points[0] + points[1];
+	mid1 *= 0.5f;
+	glm::vec2 mid2 = points[1] + points[2];
+	mid2 *= 0.5f;
+	glm::vec2 mid3 = points[2] + points[0];
 		mid3 *= 0.5f;
 
 
@@ -91,91 +95,108 @@ void Triangle::DrawNormals()
 	}
 
 
-// Should be defined clockwise
-void polygon::Move(glm::vec2 position)
-	{
-		this->position += position;
-
-		for (int i = 0; i < triangles.size(); i++)
-		{
-			triangles[i].points[0] += position;
-			triangles[i].points[1] += position;
-			triangles[i].points[2] += position;
-			triangles[i].lines[0].P1 += position;
-			triangles[i].lines[0].P2 += position;
-			triangles[i].lines[1].P1 += position;
-			triangles[i].lines[1].P2 += position;
-			triangles[i].lines[2].P1 += position;
-			triangles[i].lines[2].P2 += position;
-		}
-		for (int i = 0; i < points.size(); i++)
-			points[i] += position;
-	}
 
 
 
 void polygon::add_Point(glm::vec2 point, bool addindex)
+{
+	point = RawmidlePosition +((Rotate((point - RawmidlePosition), -Rotation) / Scale) );
+
+	Rawpoints.push_back(point);
+
+	Transofromedpoints.push_back(point);
+
+	float aspx = 1.0f * ScreenDivisorX * CameraScale.x;
+	float aspy = 1.0f * ScreenDivisorY * CameraScale.y;
+
+	point.x = (point.x - CameraPosition.x) * aspx;
+	point.y = (point.y - CameraPosition.y) * aspy;
+
+	TexturePoints.push_back(point);
+	if (addindex)
 	{
-		points.push_back(point);
-
-		float aspx = 1.0f * ScreenDivisorX * CameraScale.x;
-		float aspy = 1.0f * ScreenDivisorY * CameraScale.y;
-
-		point.x = (point.x - CameraPosition.x) * aspx;
-		point.y = (point.y - CameraPosition.y) * aspy;
-
-		TexturePoints.push_back(point);
-		if (addindex)
+		if (state == 0)
 		{
-			if (state == 0)
-			{
-				glm::ivec3 d;
-				d.x = points.size() - 1;
-				d.y = points.size() - 1;
-				d.z = points.size() - 1;
-				indexes.push_back(d);
-				state++;
-			}
-			else if (state == 1)
-			{
-				indexes[indexes.size() - 1].y = points.size() - 1;
-				state++;
-			}
-			else
-			{
-				indexes[indexes.size() - 1].z = points.size() - 1;
-
-				glm::ivec3 d;
-				d.x = points.size() - 2;
-				d.y = points.size() - 1;
-				d.z = points.size() - 2;
-
-				indexes.push_back(d);
-			}
+			glm::ivec3 d;
+			d.x = Rawpoints.size() - 1;
+			d.y = Rawpoints.size() - 1;
+			d.z = Rawpoints.size() - 1;
+			indexes.push_back(d);
+			state++;
 		}
+		else if (state == 1)
+		{
+			indexes[indexes.size() - 1].y = Rawpoints.size() - 1;
+			state++;
+		}
+		else
+		{
+			indexes[indexes.size() - 1].z = Rawpoints.size() - 1;
 
+			glm::ivec3 d;
+			d.x = Rawpoints.size() - 2;
+			d.y = Rawpoints.size() - 1;
+			d.z = Rawpoints.size() - 2;
 
-
+			indexes.push_back(d);
+		}
 	}
+	Update_Shape();
 
+
+
+}
+
+void polygon::Update_MidlePos()
+{
+
+	RawmidlePosition = { 0.0f,0.0f };
+	for (int i = 0; i < Rawpoints.size(); i++)
+		RawmidlePosition += Rawpoints[i];
+	RawmidlePosition /= Rawpoints.size();
+
+
+	RotationMass = 0.0f;
+	for (int i = 0; i < Rawpoints.size(); i++)
+		RotationMass += length(RawmidlePosition - Rawpoints[i]);
+
+	midlePosition = { 0.0f,0.0f };
+	for (int i = 0; i < Transofromedpoints.size(); i++)
+	{
+		midlePosition += (RawmidlePosition + Rotate((Rawpoints[i] - RawmidlePosition) * Scale, Rotation)) + Position;
+	}
+	midlePosition /= Rawpoints.size();
+}
 void polygon::Update_Shape()
+{
+
+	Transofromedpoints.clear();
+	Transofromedpoints.resize(Rawpoints.size());
+
+	midlePosition = {0.0f,0.0f};
+	for (int i = 0; i < Transofromedpoints.size(); i++)
 	{
-		triangles.clear();
+		Transofromedpoints[i] = (RawmidlePosition + Rotate((Rawpoints[i] - RawmidlePosition) * Scale, Rotation)) + Position;
+		midlePosition += Transofromedpoints[i];
+	}
+	midlePosition /= Transofromedpoints.size();
 
-		for (int i = 0; i < indexes.size(); i++)
-		{
-			glm::vec2 p1 = points[indexes[i].x];
-			glm::vec2 p2 = points[indexes[i].y];
-			glm::vec2 p3 = points[indexes[i].z];
+	triangles.clear();
 
-			Triangle t(p1, p2, p3);
+	for (int i = 0; i < indexes.size(); i++)
+	{
+		glm::vec2 p1 = Transofromedpoints[indexes[i].x];
+		glm::vec2 p2 = Transofromedpoints[indexes[i].y];
+		glm::vec2 p3 = Transofromedpoints[indexes[i].z];
+
+		Triangle t(p1, p2, p3);
 
 
-			triangles.push_back(t);
-
-		}
+		triangles.push_back(t);
 
 	}
+
+}
 
 void polygon::SaveAs(std::string name)
 	{
@@ -183,13 +204,13 @@ void polygon::SaveAs(std::string name)
 
 
 
-		for (int i = 0; i < points.size(); i++)
+		for (int i = 0; i < Rawpoints.size(); i++)
 		{
 			SaveFile << "p";
-			std::string str = std::to_string(points[i].x);
+			std::string str = std::to_string(Rawpoints[i].x);
 			SaveFile << str;
 			SaveFile << " ";
-			str = std::to_string(points[i].y);
+			str = std::to_string(Rawpoints[i].y);
 			SaveFile << str;
 			SaveFile << "\n";
 		}
@@ -228,7 +249,8 @@ void polygon::SaveAs(std::string name)
 
 void polygon::Load(std::string name)
 	{
-		points.clear();
+		Rawpoints.clear();
+		Transofromedpoints.clear();
 		indexes.clear();
 		triangles.clear();
 		MiscPoints.clear();
@@ -250,7 +272,7 @@ void polygon::Load(std::string name)
 			{
 				glm::vec2 point;
 				s >> junk >> point.x >> point.y;
-				points.push_back(point);
+				Rawpoints.push_back(point);
 			}
 			if (line[0] == 'i')
 			{
@@ -272,10 +294,10 @@ void polygon::Load(std::string name)
 
 void polygon::DrawOutline(glm::vec4 color)
 	{
-		for (int i = 0; i < points.size(); i++)
+		for (int i = 0; i < Transofromedpoints.size(); i++)
 		{
-			if (i + 1 < points.size())DrawLine(points[i], points[i + 1], 2.0f, color);
-			else DrawLine(points[i], points[0], 2.0f, color);
+			if (i + 1 < Transofromedpoints.size())DrawLine(Transofromedpoints[i], Transofromedpoints[i + 1], 2.0f, color);
+			else DrawLine(Transofromedpoints[i], Transofromedpoints[0], 2.0f, color);
 		}
 
 	}
@@ -288,57 +310,66 @@ void polygon::DrawTrianglesOutlines(glm::vec4 color )
 	}
 
 void polygon::DrawTriangles()
+{
+	if (Texture == NULL)
 	{
-		if (Texture == NULL)
-		{
-			if (colors.size() == indexes.size())
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					DrawTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], colors[i]);
-				}
-			if (colors.size() == 1)
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					DrawTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], colors[0]);
-				}
-			if (colors.size() == 0)
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					DrawTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], glm::vec4(1.0f));
-				}
-			if (colors.size() > 0 && colors.size() < indexes.size())
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					int colI = i % colors.size();
-					DrawTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], colors[colI]);
+		if (colors.size() == indexes.size())
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				DrawTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], colors[i]);
+			}
+		if (colors.size() == 1)
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				DrawTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], colors[0]);
+			}
+		if (colors.size() == 0)
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				DrawTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], glm::vec4(1.0f));
+			}
+		if (colors.size() > 0 && colors.size() < indexes.size())
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				int colI = i % colors.size();
+				DrawTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], colors[colI]);
 
-				}
-		}
-		else
-		{
-
-			if (colors.size() == indexes.size())
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					DrawTexturedTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], Texture, colors[i], TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
-				}
-			else if (colors.size() == 1)
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					DrawTexturedTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], Texture, colors[0], TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
-				}
-			else if (colors.size() == 0)
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					DrawTexturedTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], Texture, glm::vec4(1.0f), TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
-				}
-			else if (colors.size() > 1)
-				for (int i = 0; i < indexes.size(); i++)
-				{
-					int colI = i % colors.size();
-					DrawTexturedTriangle(points[indexes[i].x], points[indexes[i].y], points[indexes[i].z], Texture, colors[colI], TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
-
-				}
-		}
+			}
 	}
+	else
+	{
 
+		if (colors.size() == indexes.size())
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				DrawTexturedTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], Texture, colors[i], TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
+			}
+		else if (colors.size() == 1)
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				DrawTexturedTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], Texture, colors[0], TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
+			}
+		else if (colors.size() == 0)
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				DrawTexturedTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], Texture, glm::vec4(1.0f), TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
+			}
+		else if (colors.size() > 1)
+			for (int i = 0; i < indexes.size(); i++)
+			{
+				int colI = i % colors.size();
+				DrawTexturedTriangle(Transofromedpoints[indexes[i].x], Transofromedpoints[indexes[i].y], Transofromedpoints[indexes[i].z], Texture, colors[colI], TexturePoints[indexes[i].x], TexturePoints[indexes[i].y], TexturePoints[indexes[i].z]);
+
+			}
+	}
+}
+
+void polygon::Process(float dt)
+{
+
+	Position += Velocity * dt;
+	Velocity += Force / Mass * dt;
+	Rotation += RotationVelocity * dt;
+	RotationVelocity += RotationForce / Mass * dt;
+	Update_Shape();
+}

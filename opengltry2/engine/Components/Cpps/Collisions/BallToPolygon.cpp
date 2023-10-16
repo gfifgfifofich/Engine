@@ -6,6 +6,7 @@
 
 void BallToTriangleCollision(ball* b, Triangle p)
 {
+
 	float roughness = b->roughness > p.roughness ? p.roughness : b->roughness;
 
 	for (int i = 0; i < p.SubTriangles.size(); i++)

@@ -234,13 +234,23 @@ void Scene::SaveAs(std::string filename)
 			SaveFile << std::to_string(polygons[i].Z_Index);
 			SaveFile << " ";
 			SaveFile << std::to_string(polygons[i].id);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].Position.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].Position.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].Scale.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].Scale.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygons[i].Rotation);
 			SaveFile << "\n";
-			for (int p = 0; p < polygons[i].points.size(); p++)
+			for (int p = 0; p < polygons[i].Rawpoints.size(); p++)
 			{
 				SaveFile << "p";
-				SaveFile << std::to_string(polygons[i].points[p].x);
+				SaveFile << std::to_string(polygons[i].Rawpoints[p].x);
 				SaveFile << " ";
-				SaveFile << std::to_string(polygons[i].points[p].y);
+				SaveFile << std::to_string(polygons[i].Rawpoints[p].y);
 				SaveFile << "\n";
 			}
 			for (int p = 0; p < polygons[i].indexes.size(); p++)
@@ -657,7 +667,7 @@ void Scene::LoadFrom(std::string filename)
 			else if (line[0] == 'P' && !readingParticle && !readingShader)
 			{
 				readingPoly = true;
-				s >> junk >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> pol.lighted >> pol.Z_Index >> pol.id;
+				s >> junk >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> pol.lighted >> pol.Z_Index >> pol.id >> pol.Position.x >> pol.Position.y>> pol.Scale.x >> pol.Scale.y >> pol.Rotation;
 			}
 
 			else if (line[0] == 'e' && !readingPoly && !readingShader)
@@ -679,7 +689,7 @@ void Scene::LoadFrom(std::string filename)
 
 					glm::vec2 pnt;
 					s >> junk >> pnt.x >> pnt.y;
-					pol.points.push_back(pnt);
+					pol.Rawpoints.push_back(pnt);
 				}
 				else if (line[0] == 'i')
 				{
@@ -699,6 +709,7 @@ void Scene::LoadFrom(std::string filename)
 				else if (line[0] == 'E')
 				{
 					readingPoly = false;
+					pol.Update_MidlePos();
 					pol.Update_Shape();
 					polygons.push_back(pol);
 					polygon pp;
@@ -898,10 +909,15 @@ void Scene::Rescale(glm::vec2 scale, int Z_Index)
 			cubes[i].Z_Index += Z_Index;
 		}
 		for (int i = 0; i < polygons.size(); i++)
-		{
-			for (int a = 0; a < polygons[i].points.size(); a++)
-				polygons[i].points[a] *= scale;
+		{/*
+			for (int a = 0; a < polygons[i].Rawpoints.size(); a++)
+				polygons[i].Rawpoints[a] *= scale;*/
+			polygons[i].Scale += scale;
+			polygons[i].Position *= scale;
 			polygons[i].Z_Index += Z_Index;
+			polygons[i].Update_MidlePos();
+			polygons[i].Update_Shape();
+
 
 		}
 		for (int i = 0; i < ParticleEmiters.size(); i++)
@@ -993,6 +1009,7 @@ void Scene::Draw()
 			else
 				BindTexture(&Shaders[balls[i].Shaderid].program, "en_objTexture", FlatColorCircleTexture, 0);
 
+			UseShader(Shaders[balls[i].Shaderid].program);
 			SetShader4f(&Shaders[balls[i].Shaderid].program, "en_objColor", balls[i].color);
 
 			DrawShaderedQuad(balls[i].position, { balls[i].r,balls[i].r }, balls[i].rotation, Shaders[balls[i].Shaderid].program);
@@ -1022,6 +1039,7 @@ void Scene::Draw()
 				BindTexture(&Shaders[cubes[i].Shaderid].program, "en_objTexture", Textures[cubes[i].Textureid].texture, 0);
 			else
 				BindTexture(&Shaders[cubes[i].Shaderid].program, "en_objTexture", FlatColorTexture, 0);
+			UseShader(Shaders[cubes[i].Shaderid].program);
 			SetShader4f(&Shaders[cubes[i].Shaderid].program, "en_objColor", cubes[i].color);
 
 			DrawShaderedQuad(cubes[i].position, { cubes[i].width,cubes[i].height }, cubes[i].Rotation, Shaders[cubes[i].Shaderid].program);
