@@ -1,13 +1,5 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: промежуточный каталог (x64\Release\) содержит файлы, которые используются совместно с другим проектом (opengltry2.vcxproj).  Это может привести к ошибкам очистки и перестроения.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui.cpp, Projects\engine\Libraries\include\imgui\imgui.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_demo.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_demo.cpp, Projects\engine\Libraries\include\imgui\imgui_demo.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_draw.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_draw.cpp, Projects\engine\Libraries\include\imgui\imgui_draw.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_impl_glfw.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_impl_glfw.cpp, Projects\engine\Libraries\include\imgui\imgui_impl_glfw.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_impl_opengl3.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_impl_opengl3.cpp, Projects\engine\Libraries\include\imgui\imgui_impl_opengl3.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_tables.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_tables.cpp, Projects\engine\Libraries\include\imgui\imgui_tables.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем imgui_widgets.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\imgui\imgui_widgets.cpp, Projects\engine\Libraries\include\imgui\imgui_widgets.cpp.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1098,5): warning MSB8027: два или более файлов с именем glm.cpp выводят результаты в одно и то же расположение. Это может стать причиной неверного результата сборки.  Включенные файлы — engine\Libraries\include\glm\detail\glm.cpp, Projects\engine\Libraries\include\glm\detail\glm.cpp.
-  NeuralNetworks.cpp
+  MapTest.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\include\strstream(23,24): warning C4996: 'std::_Header_strstream': warning STL4005: <strstream> is deprecated in C++17. You can define _SILENCE_CXX17_STRSTREAM_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to acknowledge that you have received this warning.
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Mathematics.h(7,32): warning C4305: инициализация: усечение из "double" в "float"
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(2,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
@@ -19,11 +11,11 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objec
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(8,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(11,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(12,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(13,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Libraries\include\freetype\config\ftheader.h(180,1): warning C4005: FT_FREETYPE_H: изменение макроопределения
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Text.h(4): message : см. предыдущее определение "FT_FREETYPE_H"
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(13,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(163,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(164,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(158,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(159,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects\Softbody.h(59,31): warning C4244: -=: преобразование "float" в "T", возможна потеря данных
           with
           [
@@ -34,22 +26,38 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objec
           [
               T=int
           ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\NeuralNetworks.cpp(335,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\gfif\source\repos\opengltry2\opengltry2\NeuralNetworks.cpp(336,21): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\gfif\source\repos\opengltry2\opengltry2\NeuralNetworks.cpp(450,17): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
-x64\Release\glm.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui_demo.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui_draw.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui_impl_glfw.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui_impl_opengl3.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui_tables.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
-x64\Release\imgui_widgets.obj : warning LNK4042: объект указан более одного раза; лишние не учитываются
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(331,102): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(334,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(337,123): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(487,77): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(490,99): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(556,94): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(558,9): warning C4551: в вызове функции отсутствует список аргументов
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(584,84): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(590,81): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(598,89): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(603,9): warning C4551: в вызове функции отсутствует список аргументов
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(631,84): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(638,81): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(646,90): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(651,9): warning C4551: в вызове функции отсутствует список аргументов
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(668,9): warning C4551: в вызове функции отсутствует список аргументов
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(822,86): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(823,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(859,9): warning C4551: в вызове функции отсутствует список аргументов
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1189,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1191,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1302,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1312,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1323,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1331,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1408,32): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1439,34): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
-  5 of 2755 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  1 of 4520 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    29 functions had inline decision re-evaluated but remain unchanged
+    44 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
 glew32s.lib(glew.obj) : warning LNK4099: "glew_static.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Release\glew_static.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   opengltry2.vcxproj -> C:\Users\gfif\source\repos\opengltry2\x64\Release\Engine.exe

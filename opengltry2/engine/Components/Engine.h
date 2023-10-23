@@ -116,13 +116,6 @@ enum SHAPE { CIRCLE, QUAD, LINE, TRIANGLE };
 bool DrawCubicColiders = false;
 
 
-float ScaleMultiplyer = 0.043545f * 0.05f;
-
-float ScreenAspectRatio = 1.0f;
-
-float ScreenDivisorX = 1.0;
-float ScreenDivisorY = 1.0;
-
 
 bool HDR = true;
 bool bloom = true;

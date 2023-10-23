@@ -120,7 +120,7 @@ void RenderNNToTextureSecondMethod(NeuralNetwork* nn, unsigned char* DataStorage
 
 
 	glViewport(0, 0, WIDTH, HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, Windows[0].framebuffer);
 	glDeleteFramebuffers(1, &framebuffer);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDeleteTextures(1, &texture2);
@@ -174,7 +174,7 @@ void RenderNNToTexture(NeuralNetwork* nn, unsigned char* DataStorage, int width,
 
 
 	glViewport(0, 0, WIDTH, HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, Windows[0].framebuffer);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDeleteTextures(1, &texture2);
 	glDeleteFramebuffers(1, &framebuffer);
@@ -229,7 +229,7 @@ void fRenderNNToTexture(NeuralNetwork* nn, float* DataStorage, int width, int he
 
 
 	glViewport(0, 0, WIDTH, HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, Windows[0].framebuffer);
 	glDeleteFramebuffers(1, &framebuffer);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDeleteTextures(1, &texture2);
@@ -473,7 +473,7 @@ void On_Update()
 	CameraPosition += dif; 
 	MousePosition += CameraPosition;
 	PrevMousePos = MousePosition;
-
+	Windows[0].Use();
 	UI_DrawCircle(ScreenMousePosition, 100, {1.0f,1.0f,1.0f,1.0f},false, NULL, 100, false);
 
 	UI_DrawTextOnPlate("asdasd", { 300,100 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, {0.0f,0.0f,0.0f,0.8f},102,false);

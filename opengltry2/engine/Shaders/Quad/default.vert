@@ -3,10 +3,10 @@ layout (location = 0) in vec4 aPos;
 
 out vec2 UV;
 
-uniform vec2 position;
-uniform vec2 scale;
-uniform float rotation;
-uniform float aspect;
+uniform vec2 position = vec2(0.0f);
+uniform vec2 scale = vec2(1.0f);
+uniform float rotation = 0.0f;
+uniform float aspect = 1.0f;
 void main()
 {
 	vec4 pos = vec4(aPos.xy,0.0f,1.0f);

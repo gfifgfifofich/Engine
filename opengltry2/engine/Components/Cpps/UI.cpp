@@ -7,6 +7,7 @@
 
 //void UI_NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
 
+
 void UI_NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap, float rotation, int Z_Index, unsigned int Texture, bool Additive)
 {
 	if (NormalMap != BallNormalMapTexture && NormalMap != CubeNormalMapTexture)
@@ -140,6 +141,39 @@ void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float ro
 
 
 }
+void UI_DrawFlippedTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color, int Z_Index, unsigned int NormalMap, bool Additive)
+{
+	if (NormalMap != NULL)
+		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
+	float aspx = ScreenDivisorX;
+	float aspy = ScreenDivisorY;
+
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
+
+
+	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+
+
+	int TQA = -1;
+
+	for (int i = 0; i < SceneLayers[SLI].FlippedTexturedQuads.size(); i++)
+		if (SceneLayers[SLI].FlippedTexturedQuads[i].Texture == texture)
+			TQA = i;
+	if (TQA == -1)
+	{
+		TexturedQuadArray NewTQA;
+		NewTQA.Texture = texture;
+		SceneLayers[SLI].FlippedTexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].FlippedTexturedQuads.size(); i++)
+			if (SceneLayers[SLI].FlippedTexturedQuads[i].Texture == texture)
+				TQA = i;
+	}
+	SceneLayers[SLI].FlippedTexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].FlippedTexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].FlippedTexturedQuads[TQA].QuadRotations.push_back(rotation);
+
+}
 void UI_DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width, glm::vec4 color, unsigned int NormalMap, int Z_Index)
 {
 	glm::vec2 midpos = (p2 + p1) / 2.0f;
@@ -256,7 +290,6 @@ void UI_DrawBall(ball b, glm::vec4 Color1, glm::vec4 Color2, bool Lighted, unsig
 	UI_DrawLine(b.position + glm::vec2(-univec.y * b.r * 0.7f, univec.x * b.r * 0.7f), b.position + glm::vec2(univec.y * b.r * 0.7f, -univec.x * b.r * 0.7f), 3.0f, Color2, Lighted, CubeNormalMapTexture, Z_Index);
 	UI_DrawCircle(b, Color1, Lighted, NormalMap, Z_Index - 1);
 }
-
 void _UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color)
 {
 	//glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT);
@@ -346,8 +379,6 @@ void UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale, glm
 	glm::vec2 scl = getTextSize(text, scale);
 	UI_DrawCube(position + scl * 0.50f, scl * 0.6f, 0.0f, platecolor,false,NULL, Z_Index -1, Additive);
 }
-
-
 bool UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive )
 {
 

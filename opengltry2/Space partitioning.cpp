@@ -25,7 +25,7 @@ cell cells[Cellsx][Cellsy];
 int tmp[100];
 int tmpiter = 0;;
 
-ParticleEmiter pm;
+//ParticleEmiter pm;
 ball objects[objAmount];
 float Temperatures[objAmount];
 
@@ -42,7 +42,7 @@ float Temperatures[objAmount];
 		for (int i = 0; i < 10; i++)
 		{
 			GenNoizeTexture(&noizes[i], 100, 1, 5);
-			pm.textures.push_back(noizes[i]);
+			//pm.textures.push_back(noizes[i]);
 		}
 		/*LoadTexture("container.jpg", &noizes[0]);
 		pm.textures.push_back(noizes[0]);
@@ -51,11 +51,11 @@ float Temperatures[objAmount];
 		pm.textures.push_back(noizes[1]);*/
 		LoadTexture("Screenshot_1.png", &peepoo);
 
-		pm.EndSize = glm::vec2(100, 100);
+		/*pm.EndSize = glm::vec2(100, 100);
 		pm.EndColor = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 
 		pm.ShowWindow = true;
-		pm.Type = "LINE";
+		pm.Type = "LINE";*/
 		//VerletObject b;
 		ball b;
 		CellsSizex = (float)WIDTH / (float)Cellsx;

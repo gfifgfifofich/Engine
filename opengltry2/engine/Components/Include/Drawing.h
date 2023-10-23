@@ -28,9 +28,13 @@ FlatColorTexture,
 FlatColorCircleTexture,
 //Drawing
 //Quad
+FillScreenShader,
 FillShader,
 TexturedQuadShader,
 
+InctanceQuadShader,
+InstanceTexturedQuadShader,
+InstanceFlippedTexturedQuadShader,
 
 //Circle
 CircleShader,
@@ -59,11 +63,11 @@ BallNormalMapTexture,
 CubeNormalMapTexture,
 LightSphereTexture,
 
-
+///////Was moved into window class
 //Buffers
-FrameBuffer, ColorBuffer,
-NormalMapFBO, NormalMapColorBuffer,
-LightColorFBO, LightColorBuffer,
+//FrameBuffer, ColorBuffer,
+//NormalMapFBO, NormalMapColorBuffer,
+//LightColorFBO, LightColorBuffer,
 
 
 //VertexObjects
@@ -76,6 +80,22 @@ TexturedTriangleVAO, TexturedTriangleVBO,
 TextVAO, TextVBO,
 TextShader;
 ;
+
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+float ScaleMultiplyer,
+ScreenAspectRatio,
+ScreenDivisorX,
+ScreenDivisorY;
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+
+int window_id;
+
 
 enum TextureShape
 {
@@ -160,6 +180,7 @@ struct SceneLayer
 	std::vector <glm::vec4> Quadcolors;
 
 	std::vector <TexturedQuadArray> TexturedQuads;
+	std::vector <TexturedQuadArray> FlippedTexturedQuads;
 
 	std::vector <TexturedQuadArray> NormalMaps;
 
@@ -188,9 +209,119 @@ extern
 #endif
 std::vector <SceneLayer> SceneLayers;
 
-void PreLoadShaders();
+
+// A class that can be used to draw scene unto a texture.
+class Window
+{
+
+	bool inited = false;
+
+public:
+
+	bool Lighting = true;
+
+	glm::vec2 Position = { 0.0f,0.0f };
+	glm::vec2 Scale = { 1.0f,1.0f };
+
+	//ScreenMousePosition, but in window
+	glm::vec2 WindowMousePosition;
+
+
+	float w_ScreenAspectRatio = -1.0f;
+
+
+	float w_ScreenDivisorX = -1.0f;
+	float w_ScreenDivisorY = -1.0f;
+	float w_ScaleMultiplyer = -1.0f;
+
+	// Given after creation. May change when after creation or delition of window.
+	unsigned int id = 0;
+
+	unsigned int framebuffer = NULL;
+	//Texture on wich window is drawn.
+	unsigned int Texture = NULL;
+
+
+	unsigned int
+		NormalMapFBO = NULL,
+		NormalMapColorBuffer = NULL,
+		LightColorFBO = NULL,
+		LightColorBuffer = NULL;
+
+
+	std::vector <LightSource> w_LightSources;
+	std::vector <SceneLayer> w_SceneLayers;
+	glm::vec2 w_CameraPosition = { 0.0f,0.0f };
+	glm::vec2 w_CameraScale = {1.0f,1.0f};
+
+	glm::vec2 ViewportSize = { 400,400 };
+
+	// Allows UI interactions (mouse clicks, button presses) ( Not implemented)
+	bool active = true;
+
+	bool Autoclear = true;// Automatically clear window each frame
+	glm::vec4 backgroundColor = { 0.0f,0.0f,0.0f,1.0f };
+
+
+	bool AutoActive = false;// not implemented
+
+
+	bool Destroyed = false;
+
+	
+
+
+	// Do it if you changed ViewportSize
+	void RecalculateSize();
+
+
+	void Init(glm::vec2 ViewportSize = { 400.0f,400.0f }, bool linearFilter = true, bool hdr = true);
+
+	// Sets this window's texture as drawing target. 
+	void Use();
+
+	void Clear(glm::vec4 Color);
+
+	// Sets everything back to normal, after Use(). 
+	void End();
+
+	void _Draw();
+
+	void Draw(int Z_Index =0);
+	glm::vec2 GetSize();
+
+	void Destroy();
+
+};
+
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+Window* CurrentWindow;
+
+#ifndef DRAWINGIMPLEMENTATION
+extern
+#endif
+
+std::vector<Window> Windows;
+
 void SortSceneLayers();
 int FindSceneLayer(int Z_Index, bool Additive);
+
+int CreateWindow();
+
+//One time use. May become invalid after adding or deleating window, safe if otherwise.
+Window* GetWindow(int id);
+
+void UpdateWindows();
+
+
+void UseWindow(int id);
+void EndOfWindow();
+
+
+void PreLoadShaders();
 void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
 void DrawLight(glm::vec3 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
 void NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap = BallNormalMapTexture, float rotation = 0.0f, int Z_Index = 0, unsigned int Texture = NULL, bool Additive = false);
@@ -219,6 +350,7 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 = glm::vec4(1.0
 void DrawShaderedQuad(glm::vec2 position, glm::vec2 scale, float rotation, unsigned int shaderProgram);
 void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation = 0.0f, glm::vec4 color = glm::vec4(1.0f), int Z_Index = 0, unsigned int NormalMap = NULL, bool Additive = false);
 void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f, int Z_Index = 0, unsigned int NormalMap = NULL, bool Additive = false);
+void DrawFlippedTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color, int Z_Index, unsigned int NormalMap, bool Additive);
 void DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width =1.0f, glm::vec4 color=glm::vec4(1.0f), unsigned int NormalMap = NULL, int Z_Index = 0);
 void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = glm::vec4(1.0f));
 void DrawTexturedTriangle(

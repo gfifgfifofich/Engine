@@ -3,6 +3,8 @@
 
 void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 {
+	threadcount = std::thread::hardware_concurrency();
+
 	unsigned int DownScaleBuffers[6];
 
 
@@ -20,8 +22,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	WIDTH = width;
 	HEIGHT = height;
 
+	window_id = 0;
+
 	ScreenAspectRatio = (float)WIDTH / HEIGHT;
-	threadcount = std::thread::hardware_concurrency();
 
 
 	ScreenDivisorX = (WIDTH / (ScreenAspectRatio * 2)) - ScreenAspectRatio * 0.75f;
@@ -70,50 +73,17 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
+	int wId = CreateWindow();
+	Window* w = GetWindow(wId);
+	Windows[0].Init({WIDTH,HEIGHT});
+
 	//ScreenShaderStuff for HDR and postprocessing
 
-	GLuint InctanceQuadShader;
-	GLuint InstanceTexturedQuadShader;
+	//GLuint InctanceQuadShader;
+	//GLuint InstanceTexturedQuadShader;
 
-	LoadShader(&InctanceQuadShader, "engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
-	LoadShader(&InstanceTexturedQuadShader, "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.frag");
-
-	////Texture Generation
-	//LoadShader(&GradientGenShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
-	//LoadShader(&NoizeGenShader, "engine/Shaders/NoizeGen/NoizeGen.vert", "engine/Shaders/NoizeGen/NoizeGen.frag");
-	//LoadShader(&RoundShader, "engine/Shaders/Round/Round.vert", "engine/Shaders/Round/Round.frag");
-	//LoadShader(&AddTexturesShader, "engine/Shaders/Default.vert", "engine/Shaders/Textures/AddTextures.frag");
-	//LoadShader(&GenNormalMapShader, "engine/Shaders/Default.vert", "engine/Shaders/NormalMap/GenNormalMap.frag");
-	//LoadShader(&GenLightSphereShader, "engine/Shaders/Default.vert", "engine/Shaders/Light/GenLightSphere.frag");
-
-	////Post processing
-	//LoadShader(&BlurShader, "engine/Shaders/blur/blur.vert", "engine/Shaders/blur/blur.frag");
-	//LoadShader(&shaderBloom, "engine/Shaders/Default.vert", "engine/Shaders/Bloom/bloom.frag");
-	//LoadShader(&ScrShade, "engine/Shaders/Default.vert", "engine/Shaders/Screen.frag");
-	//LoadShader(&Chromatic, "engine/Shaders/Default.vert", "engine/Shaders/Chromatic/Chromatic.frag");
-	//LoadShader(&DownsampleBlur, "engine/Shaders/Default.vert", "engine/Shaders/blur/DownscaleBlur.frag");
-	//LoadShader(&UpsampleBlur, "engine/Shaders/Default.vert", "engine/Shaders/blur/UpsampleBlur.frag");
-
-	////Drawing
-	////Quad
-	//LoadShader(&FillShader, "engine/Shaders/Quad/default.vert", "engine/Shaders/Quad/Quad.frag");
-	//LoadShader(&TexturedQuadShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Quad/TexturedQuad.frag");
-
-	////Circle	
-	//LoadShader(&CircleShader, "engine/Shaders/Circle/Circle.vert", "engine/Shaders/Circle/Circle.frag");
-
-	////Lighting
-	//LoadShader(&InstancedNormalMapShader, "engine/Shaders/InstancedNormalMap/InstancedNMDraw.vert", "engine/Shaders/InstancedNormalMap/NormalMapDraw.frag");
-	//LoadShader(&NormalMapDrawShader, "engine/Shaders/NormalMap/NormalMapDraw.vert", "engine/Shaders/NormalMap/NormalMapDraw.frag");
-
-	//LoadShader(&LightShader, "engine/Shaders/Light/Light.vert", "engine/Shaders/Light/LightProcess.frag");
-
-	////Triangle	
-	//LoadShader(&FillTriangleShader, "engine/Shaders/Triangle/Fill.vert", "engine/Shaders/Triangle/Fill.frag");
-	//LoadShader(&TexturedTriangleShader, "engine/Shaders/Triangle/TexturedTriangle.vert", "engine/Shaders/Triangle/TexturedTriangle.frag");
-
-	////Text
-	//LoadShader(&TextShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Text.frag");
+	//LoadShader(&InctanceQuadShader, "engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
+	//LoadShader(&InstanceTexturedQuadShader, "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.frag");
 
 	PreLoadShaders();
 
@@ -142,7 +112,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	glGenFramebuffers(1, &FrameBuffer);
+	/*glGenFramebuffers(1, &FrameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
 
 	glGenTextures(1, &ColorBuffer);
@@ -154,7 +124,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorBuffer, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorBuffer, 0);*/
 
 
 
@@ -200,7 +170,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
-	glGenFramebuffers(1, &NormalMapFBO);
+	/*glGenFramebuffers(1, &NormalMapFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
 	glGenTextures(1, &NormalMapColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
@@ -224,7 +194,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, LightColorBuffer, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 
 
 	//HDR
@@ -376,12 +346,12 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	GenPrimitiveTexture(&FlatColorCircleTexture, 400, ROUND);
 	GenPrimitiveTexture(&FlatColorTexture, 100, SQUERE);
 
-	unsigned int* instanceCircleVBO = new unsigned int[3];
-	unsigned int* instanceNormalMapCircleVBO = new unsigned int[2];
-	unsigned int* instanceVBO = new unsigned int[3];
-	unsigned int* instanceNormalMapCubeVBO = new unsigned int[2];
-	unsigned int* instanceNormalMapTextureVBO = new unsigned int[2];
-	unsigned int* instanceTexturedQuadVBO = new unsigned int[3];
+	//unsigned int instanceCircleVBO[3];
+	//unsigned int instanceNormalMapCircleVBO[2];
+	//unsigned int instanceVBO[3];
+	//unsigned int instanceNormalMapCubeVBO[2];
+	//unsigned int instanceNormalMapTextureVBO[2];
+	//unsigned int instanceTexturedQuadVBO[3];
 
 
 
@@ -400,7 +370,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 	bool loop = false;
 	while (!glfwWindowShouldClose(window)) {
-		
+
 		if (!loop)
 			std::cout << "Running...\n";
 		glfwPollEvents();
@@ -411,25 +381,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
 
-		glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if (HDR)
-			glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-		else
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		glClearColor(BackgroundColor.r, BackgroundColor.g, BackgroundColor.b, BackgroundColor.a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
-
-		MousePosition.x = (lastX - WIDTH * 0.5f) / CameraScale.x + CameraPosition.x;
-		MousePosition.y = (-lastY + HEIGHT * 0.5f) / CameraScale.y + CameraPosition.y;
+		//MousePosition.x = (lastX - WIDTH * 0.5f) / CameraScale.x + CameraPosition.x;
+		//MousePosition.y = (-lastY + HEIGHT * 0.5f) / CameraScale.y + CameraPosition.y;
 
 		for (int i = 0; i < 1024; i++)
 		{
@@ -464,749 +419,130 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		else HoldingLMB = false;
 
 
-		if (!loop)
-			std::cout << "Inputs processed\n";
+
+
 		// update Scene
+		Windows[0].Use();
 		On_Update();
 		scrollmovement = 0;
 		TextFromKeyboard.clear();
+		
+		//Drawing from back, so the main scene (window 0) will get updated data.
+		for(int i = Windows.size()-1;i>=0;i--)
+			Windows[i]._Draw();
+		// Post Processing
 
-		if (!loop)
-			std::cout << "On_Update() succeded\n";
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glClear(GL_COLOR_BUFFER_BIT);
 
 
+		glBindVertexArray(ScreenVAO);
+		glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
+		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
 
+		UseShader(shaderBloom);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, Windows[0].Texture);
+		glUniform1i(glGetUniformLocation(shaderBloom, "screenTexture"), 1);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		DetachShader();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
-		float aspect = (float)HEIGHT / WIDTH;
-
-		for (int i = 0; i < SceneLayers.size(); i++)
+		glBindVertexArray(ScreenVAO);
+		UseShader(DownsampleBlur);
+		for (int i = 0; i < 6; i++)
 		{
-			if (SceneLayers[i].Additive)
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			else
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glViewport(0, 0, WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
+			glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i]);
 
-			// instancing
-			{
-				glGenBuffers(3, &instanceCircleVBO[0]);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[0]);
-				glBindVertexArray(CircleVAO);
+			//input texture
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, i == 0 ? blurColorbuffers[0] : DownScaleBuffers[i - 1]);
+			glUniform1i(glGetUniformLocation(DownsampleBlur, "srcTexture"), 0);
 
 
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].Circlecolors.size(), &SceneLayers[i].Circlecolors[0], GL_STATIC_DRAW);
+			glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
 
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-				glVertexAttribDivisor(1, 1);
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[1]);
-				glBindVertexArray(CircleVAO);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].CirclePosScale.size(), &SceneLayers[i].CirclePosScale[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-				glVertexAttribDivisor(2, 1);
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[2]);
-				glBindVertexArray(CircleVAO);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].CircleRotations.size(), &SceneLayers[i].CircleRotations[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-			}
-			//quads
-			{
-				glGenBuffers(3, instanceVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
-
-				glBindVertexArray(quadVAO);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].Quadcolors.size(), &SceneLayers[i].Quadcolors[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-				glVertexAttribDivisor(2, 1);
-
-
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[1]);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].QuadPosScale.size(), &SceneLayers[i].QuadPosScale[0], GL_STATIC_DRAW);
-				glBindVertexArray(quadVAO);
-
-
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-
-				glVertexAttribDivisor(3, 1);
-
-				
-				glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[2]);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].QuadRotations.size(), &SceneLayers[i].QuadRotations[0], GL_STATIC_DRAW);
-				glBindVertexArray(quadVAO);
-
-
-				glEnableVertexAttribArray(4);
-				glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
-
-				glVertexAttribDivisor(4, 1);
-
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			}
-
-			UseShader(InctanceQuadShader);
-			glUniform1f(glGetUniformLocation(InctanceQuadShader, "aspect"), aspect);
-			glBindVertexArray(quadVAO);
-			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Quadcolors.size());
-			glBindVertexArray(0);
-
-
-			DetachShader();
-			UseShader(CircleShader);
-			glUniform1f(glGetUniformLocation(CircleShader, "aspect"), aspect);
-			glBindVertexArray(CircleVAO);
-			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Circlecolors.size());
-			glBindVertexArray(0);
-
-			glDeleteBuffers(3, instanceCircleVBO);
-
-			
-
-			glDeleteBuffers(3, instanceVBO);
-			DetachShader();
-			SceneLayers[i].Quadcolors.clear();
-			SceneLayers[i].QuadPosScale.clear();
-			SceneLayers[i].QuadRotations.clear();
-
-			SceneLayers[i].Circlecolors.clear();
-			SceneLayers[i].CirclePosScale.clear();
-			SceneLayers[i].CircleRotations.clear();
-
-
-			for (int TQA = 0; TQA < SceneLayers[i].TexturedQuads.size(); TQA++)
-			{
-				UseShader(InstanceTexturedQuadShader);
-
-				glUniform1f(glGetUniformLocation(InstanceTexturedQuadShader, "aspect"), aspect);
-
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, SceneLayers[i].TexturedQuads[TQA].Texture);
-				glUniform1i(glGetUniformLocation(InstanceTexturedQuadShader, "Texture"), 0);
-
-				glGenBuffers(3, instanceTexturedQuadVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[0]);
-				glBindVertexArray(quadVAO);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].TexturedQuads[TQA].Quadcolors.size(), &SceneLayers[i].TexturedQuads[TQA].Quadcolors[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-				glVertexAttribDivisor(1, 1);
-
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[1]);
-				glBindVertexArray(quadVAO);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size(), &SceneLayers[i].TexturedQuads[TQA].QuadPosScale[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-				glVertexAttribDivisor(2, 1);
-
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[2]);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].TexturedQuads[TQA].QuadRotations.size(), &SceneLayers[i].TexturedQuads[TQA].QuadRotations[0], GL_STATIC_DRAW);
-
-
-				glEnableVertexAttribArray(3);
-				glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
-
-				glVertexAttribDivisor(3, 1);
-
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size());
-				glDeleteBuffers(3, instanceTexturedQuadVBO);
-
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-				SceneLayers[i].TexturedQuads[TQA].Quadcolors.clear();
-				SceneLayers[i].TexturedQuads[TQA].QuadPosScale.clear();
-				SceneLayers[i].TexturedQuads[TQA].QuadRotations.clear();
-				DetachShader();
-			}
-			SceneLayers[i].TexturedQuads.clear();
-			//Text that marked ato Draw Above Everything else
-			for (int tt = 0; tt < SceneLayers[i].TextLines.size(); tt++)
-				_DrawText(SceneLayers[i].TextLines[tt].text, SceneLayers[i].TextLines[tt].x, SceneLayers[i].TextLines[tt].y, SceneLayers[i].TextLines[tt].scale, SceneLayers[i].TextLines[tt].color);
-			SceneLayers[i].TextLines.clear();
-
-			for (int tt = 0; tt < SceneLayers[i].UI_TextLines.size(); tt++)
-				_UI_DrawText(SceneLayers[i].UI_TextLines[tt].text, SceneLayers[i].UI_TextLines[tt].x, SceneLayers[i].UI_TextLines[tt].y, SceneLayers[i].UI_TextLines[tt].scale, SceneLayers[i].UI_TextLines[tt].color);
-			SceneLayers[i].UI_TextLines.clear();
-
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			// NormalMaps
-			if (Lighting)
-			{
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-				glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
-
-				UseShader(InstancedNormalMapShader);
-
-
-				glUniform1f(glGetUniformLocation(InstancedNormalMapShader, "aspect"), aspect);
-
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, CubeNormalMapTexture);
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
-
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
-
-
-
-				glGenBuffers(2, instanceNormalMapCubeVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO[0]);
-				glBindVertexArray(quadVAO);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCubeRotations.size(), &SceneLayers[i].NormalMapCubeRotations[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
-				glVertexAttribDivisor(1, 1);
-
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO[1]);
-				glBindVertexArray(quadVAO);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCubePosScale.size(), &SceneLayers[i].NormalMapCubePosScale[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-
-				glVertexAttribDivisor(2, 1);
-
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCubePosScale.size());
-				
-				glDeleteBuffers(2, instanceNormalMapCubeVBO);
-
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, BallNormalMapTexture);
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
-
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
-				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
-
-				glGenBuffers(2, instanceNormalMapCircleVBO);
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO[0]);
-				glBindVertexArray(quadVAO);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCircleRotations.size(), &SceneLayers[i].NormalMapCircleRotations[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
-				glVertexAttribDivisor(1, 1);
-
-				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO[1]);
-				glBindVertexArray(quadVAO);
-
-				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCirclePosScale.size(), &SceneLayers[i].NormalMapCirclePosScale[0], GL_STATIC_DRAW);
-
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-				glVertexAttribDivisor(2, 1);
-				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCirclePosScale.size());
-				glDeleteBuffers(2, instanceNormalMapCircleVBO);
-
-
-
-				glBindVertexArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-				
-				SceneLayers[i].NormalMapCirclePosScale.clear();
-				SceneLayers[i].NormalMapCubePosScale.clear();
-				SceneLayers[i].NormalMapCircleRotations.clear();
-				SceneLayers[i].NormalMapCubeRotations.clear();
-				DetachShader();
-
-				for (int NQA = 0; NQA < SceneLayers[i].NormalMaps.size(); NQA++)
-				{
-					UseShader(InstancedNormalMapShader);
-
-					glUniform1f(glGetUniformLocation(InstancedNormalMapShader, "aspect"), aspect);
-
-					glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), false);
-					glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), true);
-
-					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture);
-					glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
-
-
-					glActiveTexture(GL_TEXTURE1);
-					glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture2);
-					glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture2"), 1);
-
-					if (SceneLayers[i].NormalMaps[NQA].Texture2 != NULL)
-						glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), true);
-					else
-						glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
-
-
-					glGenBuffers(2, instanceNormalMapTextureVBO);
-					glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO[0]);
-					glBindVertexArray(quadVAO);
-					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMaps[NQA].QuadRotations.size(), &SceneLayers[i].NormalMaps[NQA].QuadRotations[0], GL_STATIC_DRAW);
-
-					glEnableVertexAttribArray(1);
-					glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
-					glVertexAttribDivisor(1, 1);
-
-
-					glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO[1]);
-					glBindVertexArray(quadVAO);
-
-					glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMaps[NQA].QuadPosScale.size(), &SceneLayers[i].NormalMaps[NQA].QuadPosScale[0], GL_STATIC_DRAW);
-
-					glEnableVertexAttribArray(2);
-					glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-
-					glVertexAttribDivisor(2, 1);
-
-					glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMaps[NQA].QuadPosScale.size());
-					glDeleteBuffers(2, instanceNormalMapTextureVBO);
-
-					glBindVertexArray(0);
-					glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-					SceneLayers[i].NormalMaps[NQA].Quadcolors.clear();
-					SceneLayers[i].NormalMaps[NQA].QuadPosScale.clear();
-					SceneLayers[i].NormalMaps[NQA].QuadRotations.clear();
-					DetachShader();
-				}
-
-				SceneLayers[i].NormalMaps.clear();
-
-				if (HDR)
-					glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-				else
-					glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			}
+			glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		}
 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		if (!loop)
-			std::cout << "Scene layers Drawn\n";
+		DetachShader();
 
+		glBindVertexArray(ScreenVAO);
+		UseShader(UpsampleBlur);
+		glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
+		for (int i = 5; i > 0; i--)
+		{
+			glViewport(0, 0, WIDTH / (pow(2.0f, i)), HEIGHT / (pow(2.0f, i)));
+			glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i - 1]);
 
-
-
-		if (Lighting) {
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
-
-			UseShader(LightShader);
-
+			//input texture
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
-			glUniform1i(glGetUniformLocation(LightShader, "NormalMap"), 0);
+			glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i]);
+			glUniform1i(glGetUniformLocation(UpsampleBlur, "srcTexture"), 0);
 
-			glActiveTexture(GL_TEXTURE2);
-			glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-			glUniform1i(glGetUniformLocation(LightShader, "BaseColor"), 2);
-
-
-			for (int i = 0; i < LightSources.size(); i++)
-			{
-
-				float aspx = ScreenDivisorX * CameraScale.x;
-				float aspy = ScreenDivisorY * CameraScale.y;
-				glm::vec2 Apos = glm::vec2(LightSources[i].position.x, LightSources[i].position.y);
-				Apos -= CameraPosition;
-				Apos.x *= aspx;
-				Apos.y*= aspy;
-				LightSources[i].scale *= glm::vec2(aspx, aspy);
-
-				LightSources[i].position.x -= CameraPosition.x;
-				LightSources[i].position.y -= CameraPosition.y;
-				LightSources[i].position.x *= CameraScale.x / WIDTH;
-				LightSources[i].position.y *= CameraScale.y / HEIGHT;
-
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, LightSources[i].texture);
-				glUniform1i(glGetUniformLocation(LightShader, "Texture"), 1);
-
-				glUniform3f(glGetUniformLocation(LightShader, "position"), LightSources[i].position.x, LightSources[i].position.y, LightSources[i].position.z);
-				glUniform2f(glGetUniformLocation(LightShader, "Aposition"), Apos.x, Apos.y);
-				glUniform2f(glGetUniformLocation(LightShader, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
-				glUniform1f(glGetUniformLocation(LightShader, "angle"), LightSources[i].rotation);
-
-				glUniform4f(glGetUniformLocation(LightShader, "color"), LightSources[i].color.r, LightSources[i].color.g, LightSources[i].color.b, LightSources[i].color.a);
-				glUniform1f(glGetUniformLocation(LightShader, "volume"), LightSources[i].volume);
-				glUniform1f(glGetUniformLocation(LightShader, "aspect"), aspect);
-				glUniform2f(glGetUniformLocation(LightShader, "scr"), WIDTH,HEIGHT);
-
-
-
-				glBindVertexArray(quadVAO);
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-				glBindVertexArray(0);
-
-
-			}
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			DetachShader();
-
-			if (HDR)
-				glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-			else
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			LightSources.clear();
-
-			glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-
-			UseShader(AddTexturesShader);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, LightColorBuffer);
-			glUniform1i(glGetUniformLocation(AddTexturesShader, "Texture1"), 0);
 
 			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-			glUniform1i(glGetUniformLocation(AddTexturesShader, "Texture2"), 1);
-			glUniform2f(glGetUniformLocation(AddTexturesShader, "proportions"), DirectionalLight, AmbientLight);
+			glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i - 1]);
+			glUniform1i(glGetUniformLocation(UpsampleBlur, "PrevTexture"), 1);
 
-			glBindVertexArray(ScreenVAO);
+			glUniform1f(glGetUniformLocation(UpsampleBlur, "weight"), bloomLevels[i]);
+
 			glDrawArrays(GL_TRIANGLES, 0, 6);
-			glBindVertexArray(0);
-			glActiveTexture(GL_TEXTURE0);
 
-			DetachShader();
 		}
+		DetachShader();
+		glViewport(0, 0, WIDTH, HEIGHT);
 
-		if (!loop)
-			std::cout << "Lighting processed\n";
-
-		
-
-
-		if (!loop)
-			std::cout << "Text processed\n";
-
-		int fb = 0;
-		if (SettingsWindow)
-		{
-			ImGui::Begin("Settings");
-
-
-			if (ImGui::Button("Lighting"))
-				Lighting = !Lighting;
-
-			if (HDR)
-				ImGui::SliderFloat("SceneExposure", &SceneExposure, 0.0f, 2.0f);
-
-
-			if (ImGui::Button("bloom"))
-				bloom = !bloom;
-			ImGui::SameLine();
-			if (bloom)
-				ImGui::Text("on");
-			else
-				ImGui::Text("off");
-
-			ImGui::SliderFloat("AmbientLight", &AmbientLight, 0.0f, 1.0f);
-			ImGui::SliderFloat("DirectionalLight", &DirectionalLight, 0.0f, 1.0f);
-
-
-
-			ImGui::SliderFloat("strength", &ChromaticStrength, 0.0f, 1.0f);
-
-			float col[4] = { BackgroundColor.r ,BackgroundColor.g,BackgroundColor.b,BackgroundColor.a };
-			ImGui::ColorEdit4("BackgroundColor", col);
-			BackgroundColor = { col[0],col[1],col[2],col[3] };
-
-			if (ImGui::Button("Show NormalMaps"))
-			{
-				NormalMap = true;
-				RegularMap = false;
-				LightingMap = false;
-			}
-			if (ImGui::Button("Show RegularMap"))
-			{
-				NormalMap = false;
-				RegularMap = true;
-				LightingMap = false;
-			}
-			if (ImGui::Button("Show LightingMap"))
-			{
-				NormalMap = false;
-				RegularMap = false;
-				LightingMap = true;
-			}
 
-			if (ImGui::Button("VSync"))
-			{
-				if (VSync)
-				{
-					glfwSwapInterval(0);
-					VSync = 0;
-				}
-				else
-				{
-					glfwSwapInterval(1);
-					VSync = 1;
-				}
-			}
-
-			if (NormalMap)fb = NormalMapColorBuffer;
-			if (RegularMap)fb = blurColorbuffers[0];
-			if (LightingMap)fb = LightColorBuffer;
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-				1000.0f / ImGui::GetIO().Framerate,
-				ImGui::GetIO().Framerate);
-			if (ImGui::Button("Bloom Settings"))
-				BloomLevelsWindow = !BloomLevelsWindow;
-			ImGui::Text("delta %.3f ms", delta);
-
-			ImGui::End();
-
-			if (BloomLevelsWindow)
-			{
-				ImGui::Begin("Bloom");
-				ImGui::SliderFloat("bloomIntensity", &bloomIntensity, 0.0f, 10.0f);
+		glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		UseShader(ScrShade);
 
-				ImGui::SliderFloat("Level 0", &bloomLevels[0], 0.0f, 10.0f);
-				ImGui::SliderFloat("Level 1", &bloomLevels[1], 0.0f, 10.0f);
-				ImGui::SliderFloat("Level 2", &bloomLevels[2], 0.0f, 10.0f);
-				ImGui::SliderFloat("Level 3", &bloomLevels[3], 0.0f, 10.0f);
-				ImGui::SliderFloat("Level 4", &bloomLevels[4], 0.0f, 10.0f);
-				ImGui::SliderFloat("Level 5", &bloomLevels[5], 0.0f, 10.0f);
-
-				ImGui::End();
-
-			}
-		}
-		/*Imgui example
-		{
-			// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		glUniform1f(glGetUniformLocation(ScrShade, "bloom"), bloom);
+		glUniform1f(glGetUniformLocation(ScrShade, "exposure"), SceneExposure);
 
+		glUniform1f(glGetUniformLocation(ScrShade, "BloomStrength"), bloomIntensity);
 
-			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-			//{
-			//	static int counter = 0;
 
-			//	ImGui::Begin("Settings");                          // Create a window called "Hello, world!" and append into it.
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, Windows[0].Texture);
+		glUniform1i(glGetUniformLocation(ScrShade, "scene"), 1);
 
-			//	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[0]);
+		glUniform1i(glGetUniformLocation(ScrShade, "bloomBlur"), 0);
 
-			//	ImGui::SliderFloat("float", &f, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			//	ImGui::ColorEdit4("clear color", (float*)&firecolor); // Edit 3 floats representing a color
 
-			//	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			//		counter++;
-			//	ImGui::SameLine();
-			//	ImGui::Text("counter = %d", counter);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		DetachShader();
 
-			//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-			//		1000.0f / ImGui::GetIO().Framerate,
-			//		ImGui::GetIO().Framerate);
-			//	ImGui::End();
-			//}
+		unsigned int fm = blurColorbuffers[0];
 
-			// 3. Show another simple window.
-			//if (show_another_window)
-			//{
-			//	ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-			//	ImGui::Text("Hello from another window!");
-			//	if (ImGui::Button("Close Me"))
-			//		show_another_window = false;
-			//	ImGui::End();
-			//}
-		}
-		*/
+		//Clearing windows that are marked to autoclear
+		for (int i = Windows.size() - 1; i >= 0; i--)
+			if (Windows[i].Autoclear) Windows[i].Clear(Windows[i].backgroundColor);
 
+		UseShader(Chromatic);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, fm);
 
+		ChromaticPoint = glm::vec2(0.5f, 0.5f);
+		glUniform2f(glGetUniformLocation(Chromatic, "point"), ChromaticPoint.x, ChromaticPoint.y);
 
 
-		if (HDR)
-		{
-			if (bloom) {
+		glUniform1f(glGetUniformLocation(Chromatic, "strength"), ChromaticStrength);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 6);// the last drawing, directly to screen
 
-				glClear(GL_COLOR_BUFFER_BIT);
 
 
-				glBindVertexArray(ScreenVAO);
-				glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
-				glDisable(GL_DEPTH_TEST);
-				glClear(GL_COLOR_BUFFER_BIT);
-
-				//threshholding the main image
-				UseShader(shaderBloom);
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-				glUniform1i(glGetUniformLocation(shaderBloom, "screenTexture"), 1);
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-				DetachShader();
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-				//Downsample and blur a few times
-				glBindVertexArray(ScreenVAO);
-				UseShader(DownsampleBlur);
-				for (int i = 0; i < 6; i++)
-				{
-					glViewport(0, 0, WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
-					glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i]);
-
-					//input texture
-					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, i == 0 ? blurColorbuffers[0] : DownScaleBuffers[i - 1]);
-					glUniform1i(glGetUniformLocation(DownsampleBlur, "srcTexture"), 0);
-
-
-					glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
-
-					glDrawArrays(GL_TRIANGLES, 0, 6);
-
-				}
-
-
-				DetachShader();
-				//Upsample backwards and blur
-				glBindVertexArray(ScreenVAO);
-				UseShader(UpsampleBlur);
-				glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
-				for (int i = 5; i > 0; i--)
-				{
-					glViewport(0, 0, WIDTH / (pow(2.0f, i)), HEIGHT / (pow(2.0f, i)));
-					glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i - 1]);
-
-					//input texture
-					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i]);
-					glUniform1i(glGetUniformLocation(UpsampleBlur, "srcTexture"), 0);
-
-
-					glActiveTexture(GL_TEXTURE1);
-					glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i - 1]);
-					glUniform1i(glGetUniformLocation(UpsampleBlur, "PrevTexture"), 1);
-
-					glUniform1f(glGetUniformLocation(UpsampleBlur, "weight"), bloomLevels[i]);
-
-					glDrawArrays(GL_TRIANGLES, 0, 6);
-
-				}
-				DetachShader();
-				////Reset parameters back to normal
-				glViewport(0, 0, WIDTH, HEIGHT);
-
-
-				glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				UseShader(ScrShade);
-
-				glUniform1f(glGetUniformLocation(ScrShade, "bloom"), bloom);
-				glUniform1f(glGetUniformLocation(ScrShade, "exposure"), SceneExposure);
-
-				glUniform1f(glGetUniformLocation(ScrShade, "BloomStrength"), bloomIntensity);
-
-
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-				glUniform1i(glGetUniformLocation(ScrShade, "scene"), 1);
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[0]);
-				glUniform1i(glGetUniformLocation(ScrShade, "bloomBlur"), 0);
-
-
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-				DetachShader();
-
-				unsigned int fm = blurColorbuffers[0];
-
-				if (fb == 0)
-					fm = blurColorbuffers[0];
-				else
-					fm = fb;
-
-				UseShader(Chromatic);
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glBindTexture(GL_TEXTURE_2D, fm);
-
-				ChromaticPoint = glm::vec2(0.5f, 0.5f);
-				glUniform2f(glGetUniformLocation(Chromatic, "point"), ChromaticPoint.x, ChromaticPoint.y);
-
-
-				glUniform1f(glGetUniformLocation(Chromatic, "strength"), ChromaticStrength);
-
-				glDrawArrays(GL_TRIANGLES, 0, 6);// the last drawing, directly to screen
-
-
-
-				glBindVertexArray(0);
-				DetachShader();
-
-
-			}
-			else
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-				glBindVertexArray(ScreenVAO);
-
-				UseShader(ScrShade);
-
-				glBindTexture(GL_TEXTURE_2D, ColorBuffer);
-
-				glUniform1f(glGetUniformLocation(ScrShade, "bloom"), bloom);
-				glUniform1f(glGetUniformLocation(ScrShade, "exposure"), SceneExposure);
-				glDisable(GL_DEPTH_TEST);
-
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-				glBindVertexArray(0);
-				DetachShader();
-			}
-		}
-
-
-		
-
+		glBindVertexArray(0);
+		DetachShader();
 
 		if (!loop)
 			std::cout << "Post processing applyied\n";

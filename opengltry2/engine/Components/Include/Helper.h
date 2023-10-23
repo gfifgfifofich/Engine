@@ -82,13 +82,13 @@ extern float SceneExposure;
 enum SHAPE { CIRCLE, QUAD, LINE, TRIANGLE };
 extern bool DrawCubicColiders ;
 
-
-extern float ScaleMultiplyer ;
-
-extern float ScreenAspectRatio ;
-
-extern float ScreenDivisorX ;
-extern float ScreenDivisorY ;
+//
+//extern float ScaleMultiplyer ;
+//
+//extern float ScreenAspectRatio ;
+//
+//extern float ScreenDivisorX ;
+//extern float ScreenDivisorY ;
 
 
 extern bool HDR ;

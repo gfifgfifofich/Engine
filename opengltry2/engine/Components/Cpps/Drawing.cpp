@@ -10,221 +10,718 @@
 #define DRAWINGIMPLEMENTATION
 #include "../Include/Drawing.h"
 
-//Texture Generation
+#include "../Include/Text.h"
+#include "../Include/UI.h"
+
+//One time use. May become invalid after adding or deleating window, safe if otherwise.
+Window* GetWindow(int id)
+{
+	for (int i = 0; i < Windows.size(); i++)
+		if (Windows[i].id == id)return &Windows[i];
+}
+
+glm::vec2 Window::GetSize() 
+{
+	return (ViewportSize*0.5f) * Scale;
+}
+
+void Window::RecalculateSize()
+{
+	w_ScreenAspectRatio = ViewportSize.x / ViewportSize.y;
 
 
-//GLuint
-//NoizeGenShader,
-//GradientGenShader,
-//AddTexturesShader,
-//RoundShader,
-//GenNormalMapShader,
-//GenLightSphereShader,
-//GenPrimitiveTextureShader,
-//
-//
-//FlatColorTexture,
-//FlatColorCircleTexture,
-////Drawing
-////Quad
-//FillShader,
-//TexturedQuadShader,
-//
-//
-////Circle
-//CircleShader,
-//
-////Lighting
-//InstancedNormalMapShader,
-//NormalMapDrawShader,
-//LightShader,
-//
-////Triangle
-//FillTriangleShader,
-//TexturedTriangleShader,
-//
-//
-////Post processing
-//BlurShader,
-//UpsampleBlur,
-//DownsampleBlur,
-//
-//Chromatic,
-//shaderBloom,
-//ScrShade,
-//
-////Textures
-//BallNormalMapTexture,
-//CubeNormalMapTexture,
-//LightSphereTexture,
-//
-//
-////Buffers
-//FrameBuffer, ColorBuffer,
-//NormalMapFBO, NormalMapColorBuffer,
-//LightColorFBO, LightColorBuffer,
-//
-//
-////VertexObjects
-//quadVAO, quadVBO,
-//ScreenVAO, ScreenVBO,
-//CircleVAO, CircleVBO,
-//TriangleVAO, TriangleVBO,
-//TexturedTriangleVAO, TexturedTriangleVBO,
-//
-//TextVAO, TextVBO,
-//TextShader;
-//;
-//
-//
-//
-//enum TextureShape
-//{
-//	SQUERE = 0,
-//	SMOOTH_EDGE = 1,
-//	ROUND = 2
-//};
-//
-//
-//
-//struct TexturedQuadArray
-//{
-//	GLuint Texture;
-//	GLuint Texture2;
-//	std::vector <glm::vec4> QuadPosScale;
-//	std::vector <float> QuadRotations;
-//	std::vector <glm::vec4> Quadcolors;
-//};
-//
-//struct SceneLayer
-//{
-//	int Z_Index = 0;
-//
-//	bool Additive = false;
-//
-//	std::vector <glm::vec4> CirclePosScale;
-//	std::vector <float> CircleRotations;
-//	std::vector <glm::vec4> Circlecolors;
-//
-//	std::vector <glm::vec4> QuadPosScale;
-//	std::vector <float> QuadRotations;
-//	std::vector <glm::vec4> Quadcolors;
-//
-//	std::vector <TexturedQuadArray> TexturedQuads;
-//
-//	std::vector <TexturedQuadArray> NormalMaps;
-//
-//	std::vector <glm::vec4> NormalMapCirclePosScale;
-//	std::vector <float> NormalMapCircleRotations;
-//
-//	std::vector <glm::vec4> NormalMapCubePosScale;
-//	std::vector <float> NormalMapCubeRotations;
-//
-//
-//};
-//struct LightSource
-//{
-//	float volume = 0.0f;
-//	glm::vec3 position = glm::vec3(0.0f, 0.0, -0.5f);
-//	glm::vec2 scale = glm::vec2(0.0f);
-//	float rotation = 0.0f;
-//	glm::vec4 color = glm::vec4(0.0f);
-//	unsigned int texture = LightSphereTexture;
-//	int TextureId = 0;
-//	std::string name = "LightSource";
-//};
-//class Texture
-//{
-//public:
-//	int id = 0;//meaningless number
-//	std::string FileName;
-//	int Type = 0;// 0-Texture, 1-ROUNDNOIZE, 2-SQUERENOIZE, 3-SMOOTH_EDGENOIZE;
-//	unsigned int texture;
-//
-//	float Noize_Frequency = 10;
-//	int Noize_Layers = 3;
-//
-//	float Size = 100.0f;
-//
-//	glm::vec4 Gradient_Color1 = glm::vec4(1.0f);
-//	glm::vec4 Gradient_Color2 = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
-//
-//	void Load();
-//	void Delete();
-//};
-//
-//struct TextLine
-//{
-//	std::string text;
-//	GLfloat x;
-//	GLfloat y;
-//	GLfloat scale;
-//	glm::vec4 color = glm::vec4(1.0f);
-//	bool aboveEverything = false;
-//};
-//
-//
-//struct Character {
-//	GLuint     TextureID; // ID текстуры глифа
-//	glm::ivec2 Size;      // Размеры глифа
-//	glm::ivec2 Bearing;   // Смещение верхней левой точки глифа
-//	GLuint     Advance;   // Горизонтальное смещение до начала следующего глифа
-//};
-//
-//std::vector <TextLine> TextLines;
-//std::map<GLchar, Character> Characters;
-//
-//std::vector <LightSource> LightSources;
-//std::vector <SceneLayer> SceneLayers;
-//
-//void PreLoadShaders();
-//void SortSceneLayers();
-//int FindSceneLayer(int Z_Index, bool Additive);
-//void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
-//void DrawLight(glm::vec3 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
-//void NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap = BallNormalMapTexture, float rotation = 0.0f, int Z_Index = 0, unsigned int Texture = NULL, bool Additive = false);
-//void NormalMapDrawTriangle(
-//	glm::vec2 p1,
-//	glm::vec2 p2,
-//	glm::vec2 p3,
-//	unsigned int NormalMap,
-//	glm::vec2 texcoord1 = glm::vec2(0.0f, 1.0f),
-//	glm::vec2 texcoord2 = glm::vec2(0.5f, 0.0f),
-//	glm::vec2 texcoord3 = glm::vec2(1.0f, 1.0f)
-//);
-//void DrawCircle(glm::vec2 position, float r, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = BallNormalMapTexture, int Z_Index = 0, bool Additive = false);
-//void DrawCircle(ball b, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = BallNormalMapTexture, int Z_Index = 0, bool Additive = false);
-//void DrawCube(glm::vec2 position, glm::vec2 scale, float rotation = 0.0f, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = CubeNormalMapTexture, int Z_Index = 0, bool Additive = false);
-//void DrawCube(cube c, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f, bool Lighted = false, unsigned int NormalMap = NULL, int Z_Index = 0, bool Additive = false);
-//void DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color = glm::vec4(1.0f), bool Lighted = false, unsigned int NormalMap = CubeNormalMapTexture, int Z_Index = 0);
-//void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool Lighted = false, unsigned int NormalMap = NULL, int Z_Index = 0);
-//void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount = 4);
-//void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned char* Data, int chanelsAmount = 4);
-//void GenNoizeTexture(unsigned int* texture1, int Size, int Layers = 3, float freq = 10, int shape = ROUND);
-//void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape = ROUND);
-//void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND);
-//void GenLightSphereTexture(unsigned int* texture1, int Size);
-//void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), int Size = 100);
-//void DrawShaderedQuad(glm::vec2 position, glm::vec2 scale, float rotation, unsigned int shaderProgram);
-//void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation = 0.0f, glm::vec4 color = glm::vec4(1.0f), int Z_Index = 0, unsigned int NormalMap = NULL, bool Additive = false);
-//void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f, int Z_Index = 0, unsigned int NormalMap = NULL, bool Additive = false);
-//void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color = glm::vec4(1.0f));
-//void DrawTexturedTriangle(
-//	glm::vec2 p1,
-//	glm::vec2 p2,
-//	glm::vec2 p3,
-//	unsigned int texture,
-//	glm::vec4 color = glm::vec4(1.0f),
-//	glm::vec2 texcoord1 = glm::vec2(0.0f, 1.0f),
-//	glm::vec2 texcoord2 = glm::vec2(0.5f, 0.0f),
-//	glm::vec2 texcoord3 = glm::vec2(1.0f, 1.0f)
-//);
+	w_ScreenDivisorX = (ViewportSize.x / (w_ScreenAspectRatio * 2));
+	w_ScreenDivisorY = (ViewportSize.y / 2.0f);
+
+	w_ScreenDivisorX = 1.0f / w_ScreenDivisorX;
+	w_ScreenDivisorY = 1.0f / w_ScreenDivisorY;
+	w_ScaleMultiplyer = 1.0f / ViewportSize.y * 2.0f;
+}
+void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
+{
+	inited = false;
+	Use();
+	Destroy();
+	this->ViewportSize = ViewportSize;
+	RecalculateSize();
+
+	glGenFramebuffers(1, &framebuffer);
+	glGenTextures(1, &Texture);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	if (hdr)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, ViewportSize.x, ViewportSize.y, 0, GL_RGBA, GL_FLOAT, NULL);
+	else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ViewportSize.x, ViewportSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linearFilter ? GL_LINEAR : GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linearFilter ? GL_LINEAR : GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Texture, 0);
+
+	glGenFramebuffers(1, &NormalMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+	glGenTextures(1, &NormalMapColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, ViewportSize.x, ViewportSize.y, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, NormalMapColorBuffer, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenFramebuffers(1, &LightColorFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
+	glGenTextures(1, &LightColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, LightColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, ViewportSize.x, ViewportSize.y, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, LightColorBuffer, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	GetWindow(window_id)->Use();
+	inited = true;
+}
+
+void Window::Use()
+{
+
+	glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
+	glViewport(0, 0, ViewportSize.x, ViewportSize.y);
+	WIDTH = ViewportSize.x;
+	HEIGHT = ViewportSize.y;
+	Window* prevWindow = GetWindow(window_id);
+	if (id == 0)
+	{
+		ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
+		//ScreenMousePosition -= Position;
+
+		MousePosition.x = ScreenMousePosition.x / CameraScale.x + CameraPosition.x;
+		MousePosition.y = ScreenMousePosition.y / CameraScale.y + CameraPosition.y;
+
+		WindowMousePosition = ScreenMousePosition;
+	}
+	else
+	{
+		WindowMousePosition = (prevWindow->WindowMousePosition - Position);
+
+		MousePosition.x = WindowMousePosition.x / CameraScale.x + CameraPosition.x;
+		MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
+
+		ScreenMousePosition = WindowMousePosition;
+	}
+
+
+	prevWindow->w_LightSources = LightSources;
+	prevWindow->w_SceneLayers = SceneLayers;
+	
+	prevWindow->w_CameraPosition = CameraPosition;
+	prevWindow->w_CameraScale = CameraScale;
+	
+
+	ScreenAspectRatio = w_ScreenAspectRatio ;
+
+	LightSources = this->w_LightSources;
+	SceneLayers = this->w_SceneLayers;
+
+	ScreenDivisorX = w_ScreenDivisorX ;
+	ScreenDivisorY = w_ScreenDivisorY ;
+	ScaleMultiplyer = w_ScaleMultiplyer;
+
+	CameraPosition = w_CameraPosition;
+	CameraScale = w_CameraScale;
+	window_id = id;
+}
+
+void  Window::Clear(glm::vec4 Color)
+{
+	glViewport(0, 0, ViewportSize.x, ViewportSize.y);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glClearColor(Color.r, Color.g, Color.b, Color.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// why making a transparent texture so hard?
+	glBlendFunc(GL_ZERO, GL_ONE);
+	glBindVertexArray(ScreenVAO);
+	UseShader(FillScreenShader);
+	SetShader4f(&FillScreenShader, "color", Color);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	DetachShader();
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	GetWindow(window_id)->Use();
+}
+void Window::End()
+{
+
+	GetWindow(0)->Use();
+}
+
+void Window::Destroy()
+{
+	if (inited)
+		Destroyed = true;
+	if (Texture != NULL)
+		glDeleteTextures(1, &Texture);
+	if (this->framebuffer != NULL)
+		glDeleteFramebuffers(1, &this->framebuffer);
+	if (window_id == id)
+		window_id = 0;
+}
+void Window::_Draw()
+{
+	Use();
+
+
+
+
+
+	unsigned int instanceCircleVBO[3];
+	unsigned int instanceNormalMapCircleVBO[2];
+	unsigned int instanceVBO[3];
+	unsigned int instanceNormalMapCubeVBO[2];
+	unsigned int instanceNormalMapTextureVBO[2];
+	unsigned int instanceTexturedQuadVBO[3];
+
+	float aspect = (float)HEIGHT / WIDTH;
+
+	for (int i = 0; i < SceneLayers.size(); i++)
+	{
+		if (SceneLayers[i].Additive)
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		else
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// instancing
+		{
+			glGenBuffers(3, &instanceCircleVBO[0]);
+			glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[0]);
+			glBindVertexArray(CircleVAO);
+
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].Circlecolors.size(), &SceneLayers[i].Circlecolors[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+			glVertexAttribDivisor(1, 1);
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[1]);
+			glBindVertexArray(CircleVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].CirclePosScale.size(), &SceneLayers[i].CirclePosScale[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(2, 1);
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceCircleVBO[2]);
+			glBindVertexArray(CircleVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].CircleRotations.size(), &SceneLayers[i].CircleRotations[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+		//quads
+		{
+			glGenBuffers(3, instanceVBO);
+			glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
+
+			glBindVertexArray(quadVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].Quadcolors.size(), &SceneLayers[i].Quadcolors[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(2, 1);
+
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[1]);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].QuadPosScale.size(), &SceneLayers[i].QuadPosScale[0], GL_STATIC_DRAW);
+			glBindVertexArray(quadVAO);
+
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+
+			glVertexAttribDivisor(3, 1);
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[2]);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].QuadRotations.size(), &SceneLayers[i].QuadRotations[0], GL_STATIC_DRAW);
+			glBindVertexArray(quadVAO);
+
+
+			glEnableVertexAttribArray(4);
+			glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+
+			glVertexAttribDivisor(4, 1);
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		}
+
+		UseShader(InctanceQuadShader);
+		glUniform1f(glGetUniformLocation(InctanceQuadShader, "aspect"), aspect);
+		glBindVertexArray(quadVAO);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Quadcolors.size());
+		glBindVertexArray(0);
+
+
+		DetachShader();
+		UseShader(CircleShader);
+		glUniform1f(glGetUniformLocation(CircleShader, "aspect"), aspect);
+		glBindVertexArray(CircleVAO);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].Circlecolors.size());
+		glBindVertexArray(0);
+
+		glDeleteBuffers(3, instanceCircleVBO);
+
+
+
+		glDeleteBuffers(3, instanceVBO);
+		DetachShader();
+		SceneLayers[i].Quadcolors.clear();
+		SceneLayers[i].QuadPosScale.clear();
+		SceneLayers[i].QuadRotations.clear();
+
+		SceneLayers[i].Circlecolors.clear();
+		SceneLayers[i].CirclePosScale.clear();
+		SceneLayers[i].CircleRotations.clear();
+
+
+		for (int TQA = 0; TQA < SceneLayers[i].TexturedQuads.size(); TQA++)
+		{
+			UseShader(InstanceTexturedQuadShader);
+
+			glUniform1f(glGetUniformLocation(InstanceTexturedQuadShader, "aspect"), aspect);
+
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, SceneLayers[i].TexturedQuads[TQA].Texture);
+			glUniform1i(glGetUniformLocation(InstanceTexturedQuadShader, "Texture"), 0);
+
+			glGenBuffers(3, instanceTexturedQuadVBO);
+			glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[0]);
+			glBindVertexArray(quadVAO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].TexturedQuads[TQA].Quadcolors.size(), &SceneLayers[i].TexturedQuads[TQA].Quadcolors[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(1, 1);
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[1]);
+			glBindVertexArray(quadVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size(), &SceneLayers[i].TexturedQuads[TQA].QuadPosScale[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(2, 1);
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[2]);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].TexturedQuads[TQA].QuadRotations.size(), &SceneLayers[i].TexturedQuads[TQA].QuadRotations[0], GL_STATIC_DRAW);
+
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+
+			glVertexAttribDivisor(3, 1);
+
+			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].TexturedQuads[TQA].QuadPosScale.size());
+			glDeleteBuffers(3, instanceTexturedQuadVBO);
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			SceneLayers[i].TexturedQuads[TQA].Quadcolors.clear();
+			SceneLayers[i].TexturedQuads[TQA].QuadPosScale.clear();
+			SceneLayers[i].TexturedQuads[TQA].QuadRotations.clear();
+			DetachShader();
+		}
+		for (int TQA = 0; TQA < SceneLayers[i].FlippedTexturedQuads.size(); TQA++)
+		{
+			UseShader(InstanceFlippedTexturedQuadShader);
+
+			glUniform1f(glGetUniformLocation(InstanceFlippedTexturedQuadShader, "aspect"), aspect);
+
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, SceneLayers[i].FlippedTexturedQuads[TQA].Texture);
+			glUniform1i(glGetUniformLocation(InstanceFlippedTexturedQuadShader, "Texture"), 0);
+
+			glGenBuffers(3, instanceTexturedQuadVBO);
+			glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[0]);
+			glBindVertexArray(quadVAO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4)* SceneLayers[i].FlippedTexturedQuads[TQA].Quadcolors.size(), &SceneLayers[i].FlippedTexturedQuads[TQA].Quadcolors[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(1, 1);
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[1]);
+			glBindVertexArray(quadVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4)* SceneLayers[i].FlippedTexturedQuads[TQA].QuadPosScale.size(), &SceneLayers[i].FlippedTexturedQuads[TQA].QuadPosScale[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(2, 1);
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceTexturedQuadVBO[2]);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float)* SceneLayers[i].FlippedTexturedQuads[TQA].QuadRotations.size(), &SceneLayers[i].FlippedTexturedQuads[TQA].QuadRotations[0], GL_STATIC_DRAW);
+
+
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+
+			glVertexAttribDivisor(3, 1);
+
+			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].FlippedTexturedQuads[TQA].QuadPosScale.size());
+			glDeleteBuffers(3, instanceTexturedQuadVBO);
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			SceneLayers[i].FlippedTexturedQuads[TQA].Quadcolors.clear();
+			SceneLayers[i].FlippedTexturedQuads[TQA].QuadPosScale.clear();
+			SceneLayers[i].FlippedTexturedQuads[TQA].QuadRotations.clear();
+			DetachShader();
+		}
+		SceneLayers[i].FlippedTexturedQuads.clear();
+		//Text that marked ato Draw Above Everything else
+		for (int tt = 0; tt < SceneLayers[i].TextLines.size(); tt++)
+			_DrawText(SceneLayers[i].TextLines[tt].text, SceneLayers[i].TextLines[tt].x, SceneLayers[i].TextLines[tt].y, SceneLayers[i].TextLines[tt].scale, SceneLayers[i].TextLines[tt].color);
+		SceneLayers[i].TextLines.clear();
+
+		for (int tt = 0; tt < SceneLayers[i].UI_TextLines.size(); tt++)
+			_UI_DrawText(SceneLayers[i].UI_TextLines[tt].text, SceneLayers[i].UI_TextLines[tt].x, SceneLayers[i].UI_TextLines[tt].y, SceneLayers[i].UI_TextLines[tt].scale, SceneLayers[i].UI_TextLines[tt].color);
+		SceneLayers[i].UI_TextLines.clear();
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// NormalMaps
+		if (Lighting)
+		{
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+
+			UseShader(InstancedNormalMapShader);
+
+
+			glUniform1f(glGetUniformLocation(InstancedNormalMapShader, "aspect"), aspect);
+
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, CubeNormalMapTexture);
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
+
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
+
+
+
+			glGenBuffers(2, instanceNormalMapCubeVBO);
+			glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO[0]);
+			glBindVertexArray(quadVAO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCubeRotations.size(), &SceneLayers[i].NormalMapCubeRotations[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+			glVertexAttribDivisor(1, 1);
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCubeVBO[1]);
+			glBindVertexArray(quadVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCubePosScale.size(), &SceneLayers[i].NormalMapCubePosScale[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+
+			glVertexAttribDivisor(2, 1);
+
+			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCubePosScale.size());
+
+			glDeleteBuffers(2, instanceNormalMapCubeVBO);
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, BallNormalMapTexture);
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
+
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), true);
+			glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), false);
+
+			glGenBuffers(2, instanceNormalMapCircleVBO);
+			glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO[0]);
+			glBindVertexArray(quadVAO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMapCircleRotations.size(), &SceneLayers[i].NormalMapCircleRotations[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+			glVertexAttribDivisor(1, 1);
+
+			glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapCircleVBO[1]);
+			glBindVertexArray(quadVAO);
+
+			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMapCirclePosScale.size(), &SceneLayers[i].NormalMapCirclePosScale[0], GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+			glVertexAttribDivisor(2, 1);
+			glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMapCirclePosScale.size());
+			glDeleteBuffers(2, instanceNormalMapCircleVBO);
+
+
+
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+			SceneLayers[i].NormalMapCirclePosScale.clear();
+			SceneLayers[i].NormalMapCubePosScale.clear();
+			SceneLayers[i].NormalMapCircleRotations.clear();
+			SceneLayers[i].NormalMapCubeRotations.clear();
+			DetachShader();
+
+			for (int NQA = 0; NQA < SceneLayers[i].NormalMaps.size(); NQA++)
+			{
+				UseShader(InstancedNormalMapShader);
+
+				glUniform1f(glGetUniformLocation(InstancedNormalMapShader, "aspect"), aspect);
+
+				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "generated"), false);
+				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "flipY"), true);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture);
+				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture"), 0);
+
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, SceneLayers[i].NormalMaps[NQA].Texture2);
+				glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "Texture2"), 1);
+
+				if (SceneLayers[i].NormalMaps[NQA].Texture2 != NULL)
+					glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), true);
+				else
+					glUniform1i(glGetUniformLocation(InstancedNormalMapShader, "AlphaTexture"), false);
+
+
+				glGenBuffers(2, instanceNormalMapTextureVBO);
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO[0]);
+				glBindVertexArray(quadVAO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * SceneLayers[i].NormalMaps[NQA].QuadRotations.size(), &SceneLayers[i].NormalMaps[NQA].QuadRotations[0], GL_STATIC_DRAW);
+
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+
+				glVertexAttribDivisor(1, 1);
+
+
+				glBindBuffer(GL_ARRAY_BUFFER, instanceNormalMapTextureVBO[1]);
+				glBindVertexArray(quadVAO);
+
+				glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * SceneLayers[i].NormalMaps[NQA].QuadPosScale.size(), &SceneLayers[i].NormalMaps[NQA].QuadPosScale[0], GL_STATIC_DRAW);
+
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+
+				glVertexAttribDivisor(2, 1);
+
+				glDrawArraysInstanced(GL_TRIANGLES, 0, 6, SceneLayers[i].NormalMaps[NQA].QuadPosScale.size());
+				glDeleteBuffers(2, instanceNormalMapTextureVBO);
+
+				glBindVertexArray(0);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				SceneLayers[i].NormalMaps[NQA].Quadcolors.clear();
+				SceneLayers[i].NormalMaps[NQA].QuadPosScale.clear();
+				SceneLayers[i].NormalMaps[NQA].QuadRotations.clear();
+				DetachShader();
+			}
+
+			SceneLayers[i].NormalMaps.clear();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		}
+
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+
+
+	if (Lighting) {
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
+
+		UseShader(LightShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
+		glUniform1i(glGetUniformLocation(LightShader, "NormalMap"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glUniform1i(glGetUniformLocation(LightShader, "BaseColor"), 2);
+
+		//std::cout<<"\ni "<<id<<" ls = "<<LightSources.size();
+
+		for (int i = 0; i < LightSources.size(); i++)
+		{
+
+			float aspx = ScreenDivisorX * CameraScale.x;
+			float aspy = ScreenDivisorY * CameraScale.y;
+			glm::vec2 Apos = glm::vec2(LightSources[i].position.x, LightSources[i].position.y);
+			Apos -= CameraPosition;
+			Apos.x *= aspx;
+			Apos.y *= aspy;
+			LightSources[i].scale *= glm::vec2(aspx, aspy);
+
+			LightSources[i].position.x -= CameraPosition.x;
+			LightSources[i].position.y -= CameraPosition.y;
+			LightSources[i].position.x *= CameraScale.x / WIDTH;
+			LightSources[i].position.y *= CameraScale.y / HEIGHT;
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, LightSources[i].texture);
+			glUniform1i(glGetUniformLocation(LightShader, "Texture"), 1);
+
+			glUniform3f(glGetUniformLocation(LightShader, "position"), LightSources[i].position.x, LightSources[i].position.y, LightSources[i].position.z);
+			glUniform2f(glGetUniformLocation(LightShader, "Aposition"), Apos.x, Apos.y);
+			glUniform2f(glGetUniformLocation(LightShader, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
+			glUniform1f(glGetUniformLocation(LightShader, "angle"), LightSources[i].rotation);
+
+			glUniform4f(glGetUniformLocation(LightShader, "color"), LightSources[i].color.r, LightSources[i].color.g, LightSources[i].color.b, LightSources[i].color.a);
+			glUniform1f(glGetUniformLocation(LightShader, "volume"), LightSources[i].volume);
+			glUniform1f(glGetUniformLocation(LightShader, "aspect"), aspect);
+			glUniform2f(glGetUniformLocation(LightShader, "scr"), WIDTH, HEIGHT);
+
+
+
+			glBindVertexArray(quadVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
+
+
+		}
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		DetachShader();
+
+		LightSources.clear();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+		UseShader(AddTexturesShader);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, LightColorBuffer);
+		glUniform1i(glGetUniformLocation(AddTexturesShader, "Texture1"), 0);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glUniform1i(glGetUniformLocation(AddTexturesShader, "Texture2"), 1);
+		glUniform2f(glGetUniformLocation(AddTexturesShader, "proportions"), DirectionalLight, AmbientLight);
+
+		glBindVertexArray(ScreenVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+		glActiveTexture(GL_TEXTURE0);
+
+		DetachShader();
+	}
+
+}
+
+
+
+int CreateWindow()
+{
+	Window w;
+	w.id = Windows.size();
+	Windows.push_back(w);
+
+	CurrentWindow = GetWindow(window_id);
+	return w.id;
+}
+
+
+void UseWindow(int id)
+{
+	GetWindow(id)->Use();
+}
+void EndOfWindow()
+{
+	window_id = 0;
+}
+
 
 
 
 void PreLoadShaders()
 {
 
+
+	LoadShader(&FillScreenShader, "engine/Shaders/Default.vert", "engine/Shaders/FillScreen.frag");
+
+	LoadShader(&InctanceQuadShader, "engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
+	LoadShader(&InstanceTexturedQuadShader, "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedTexturedQuad.frag");
+	LoadShader(&InstanceFlippedTexturedQuadShader, "engine/Shaders/InstancedTexturedQuad/InstancedFlippedTexturedQuad.vert", "engine/Shaders/InstancedTexturedQuad/InstancedFlippedTexturedQuad.frag");
 
 
 	//Texture Generation
@@ -272,7 +769,7 @@ void SortSceneLayers()
 		int i = 1;
 		int a = 2;
 
-		while (i < SceneLayers.size())
+		while (i <SceneLayers.size())
 		{
 			if ((SceneLayers[i - 1].Z_Index < SceneLayers[i].Z_Index) ||
 				(SceneLayers[i - 1].Z_Index == SceneLayers[i].Z_Index) && !SceneLayers[i - 1].Additive && SceneLayers[i].Additive)
@@ -297,7 +794,7 @@ void SortSceneLayers()
 	}
 	else if (SceneLayers.size() == 2)
 	{
-		if ((SceneLayers[0].Z_Index > SceneLayers[1].Z_Index) ||
+		if ((SceneLayers[0].Z_Index >SceneLayers[1].Z_Index) ||
 			((SceneLayers[0].Z_Index == SceneLayers[1].Z_Index) && SceneLayers[0].Additive && !SceneLayers[1].Additive))
 		{
 			SceneLayer tmp = SceneLayers[0];
@@ -326,6 +823,7 @@ int FindSceneLayer(int Z_Index, bool Additive)
 	}
 	return SLI;
 }
+
 void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volume, float rotation, unsigned int texture)
 {
 	LightSource ls;
@@ -365,7 +863,7 @@ void NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap ,
 		int TQA = -1;
 
 		for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-			if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap && SceneLayers[SLI].NormalMaps[i].Texture2 == Texture)
+			if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap &&SceneLayers[SLI].NormalMaps[i].Texture2 == Texture)
 				TQA = i;
 
 		if (TQA == -1)
@@ -395,7 +893,7 @@ void NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap ,
 
 
 
-		int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+		int SLI =FindSceneLayer(Z_Index, Additive);
 
 		if (NormalMap == BallNormalMapTexture)
 		{
@@ -420,7 +918,7 @@ void NormalMapDrawTriangle(
 )
 {
 
-	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->NormalMapFBO);
 	UseShader(TexturedTriangleShader);
 	glBindVertexArray(TexturedTriangleVAO);
 	float aspx = ScreenDivisorX * CameraScale.x;
@@ -459,10 +957,8 @@ void NormalMapDrawTriangle(
 	glBindVertexArray(0);
 
 
-	if (HDR)
-		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
 }
 void DrawCircle(glm::vec2 position, float r, glm::vec4 color , bool Lighted , unsigned int NormalMap , int Z_Index, bool Additive )
 {
@@ -550,7 +1046,7 @@ void DrawCube(cube c, glm::vec4 color, float rotation , bool Lighted, unsigned i
 	position *= glm::vec2(aspx, aspy);
 	glm::vec2 scale = glm::vec2(c.width, c.height) * glm::vec2(aspx, aspy);
 
-	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+	int SLI =FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
 
 	SceneLayers[SLI].QuadPosScale.push_back(glm::vec4(position, scale));
 	SceneLayers[SLI].QuadRotations.push_back(rotation);
@@ -787,10 +1283,7 @@ void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq ,
 
 
 
-	if (HDR)
-		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
 }
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape )
 {
@@ -837,10 +1330,7 @@ void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape )
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	if (HDR)
-		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
 }
 void GenNormalMapTexture(unsigned int* texture1, int Size, int shape )
 {
@@ -889,10 +1379,7 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape )
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	if (HDR)
-		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
 }
 void GenLightSphereTexture(unsigned int* texture1, int Size)
 {
@@ -930,10 +1417,7 @@ void GenLightSphereTexture(unsigned int* texture1, int Size)
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	if (HDR)
-		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
 }
 void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Color2 , int Size )
 {
@@ -973,10 +1457,7 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	if (HDR)
-		glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
 }
 void Texture::Load()
 {
@@ -1097,6 +1578,42 @@ void DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color , float rota
 
 
 }
+void DrawFlippedTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color, int Z_Index, unsigned int NormalMap, bool Additive)
+{
+
+	if (NormalMap != NULL)
+		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
+
+	float aspx = ScreenDivisorX * CameraScale.x;
+	float aspy = ScreenDivisorY * CameraScale.y;
+
+	position -= CameraPosition;
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
+
+
+	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+
+
+	int TQA = -1;
+
+	for (int i = 0; i < SceneLayers[SLI].FlippedTexturedQuads.size(); i++)
+		if (SceneLayers[SLI].FlippedTexturedQuads[i].Texture == texture)
+			TQA = i;
+	if (TQA == -1)
+	{
+		TexturedQuadArray NewTQA;
+		NewTQA.Texture = texture;
+		SceneLayers[SLI].FlippedTexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].FlippedTexturedQuads.size(); i++)
+			if (SceneLayers[SLI].FlippedTexturedQuads[i].Texture == texture)
+				TQA = i;
+	}
+	SceneLayers[SLI].FlippedTexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].FlippedTexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].FlippedTexturedQuads[TQA].QuadRotations.push_back(rotation);
+
+}
 void DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width, glm::vec4 color, unsigned int NormalMap, int Z_Index)
 {
 	glm::vec2 midpos = (p2 + p1) / 2.0f;
@@ -1196,4 +1713,9 @@ void DrawTexturedTriangle(
 	DetachShader();
 
 
+}
+
+void Window::Draw(int Z_Index)
+{
+	UI_DrawFlippedTexturedQuad(Position, GetSize(), Texture,0.0f);
 }
