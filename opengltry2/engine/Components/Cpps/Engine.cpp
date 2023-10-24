@@ -358,6 +358,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 	LoadFont("engine/fonts/arial.ttf");
+	Windows[0].Use();
 
 	On_Create();
 

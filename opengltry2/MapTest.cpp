@@ -1081,6 +1081,7 @@ void ShowRedactorWindow(Shader* shader)
 int SceneWindowID;
 int InspectorWindowID;
 int ProjectWindowID;
+int ConsoleWindowID;
 
 void On_Create()
 {
@@ -1092,31 +1093,153 @@ void On_Create()
 
 	InspectorWindowID = CreateWindow();
 	Window* iw = GetWindow(InspectorWindowID);
-	iw->Init({ 320,1020 });
+	iw->Init({ ((WIDTH - 1280) * 0.5f),HEIGHT });
 	iw->Position = { w->ViewportSize.x * 0.5f + iw->ViewportSize.x * 0.5f,0.0f };
 	iw->backgroundColor = { 0.0025f,0.0025f,0.0025f,1.0f };
 
 	ProjectWindowID = CreateWindow();
 	Window* pw = GetWindow(ProjectWindowID);
-	pw->Init({ 320,1020 });
+	pw->Init({ ((WIDTH - 1280) * 0.5f),HEIGHT });
 	pw->Position = { -w->ViewportSize.x * 0.5f - pw->ViewportSize.x * 0.5f,0.0f };
 	pw->backgroundColor = { 0.0025f,0.0025f,0.0025f,1.0f };
+
+	ConsoleWindowID = CreateWindow();
+	Window* cw = GetWindow(ConsoleWindowID);
+	cw->Init({ 1280,HEIGHT - 720 });
+	cw->Position = { 0.0f,w->Position.y - w->ViewportSize.y*0.5f};
+	cw->backgroundColor = { 0.025f,0.00025f,0.00025f,1.0f };
 
 	Map.LoadFrom(MapFileName);
 
 	for (int i = 0; i < MapFileName.size(); i++)
 		MapFileNameChars[i] = MapFileName[i];
+	w->RecalculateSize();
 
 }
 glm::vec2 AqueredCameraScale = glm::vec2(1.0f);
 glm::vec2 PrevMousePos = glm::vec2(0.0f);
 
+
+bool grebbedWindow[3];// bools for window resizing
+bool grebbedAnyWindow = true;// bools for window resizing
+glm::vec2 GrabStartMousePos = { 0.0f,0.0f };
+
 bool Test[10];
 void On_Update()
 {
-	GetWindow(SceneWindowID)->Draw(1000);
-	GetWindow(InspectorWindowID)->Draw(1000);
-	GetWindow(ProjectWindowID)->Draw(1000);
+	Window* w = GetWindow(SceneWindowID);
+	Window* iw = GetWindow(InspectorWindowID);
+	Window* pw = GetWindow(ProjectWindowID);
+	Window* cw = GetWindow(ConsoleWindowID);/*
+	DrawCircle({ WIDTH*0.5f - iw->ViewportSize.x, MousePosition.y }, 10,glm::vec4(1.0f,0.0f,0.0f,1.0f),false,NULL,1001);
+	DrawCircle({ pw->ViewportSize.x - 5 -WIDTH * 0.5f, MousePosition.y }, 10,glm::vec4(1.0f,0.0f,0.0f,1.0f),false,NULL,1001);
+	DrawCircle({ pw->ViewportSize.x + 5 -WIDTH * 0.5f, MousePosition.y }, 10,glm::vec4(1.0f,0.0f,0.0f,1.0f),false,NULL,1001);
+	DrawCircle({ MousePosition.x, cw->ViewportSize.y - 3 - HEIGHT * 0.5f }, 10,glm::vec4(1.0f,0.0f,0.0f,1.0f),false,NULL,1001);
+	DrawCircle({ MousePosition.x, cw->ViewportSize.y + 3 - HEIGHT * 0.5f }, 10,glm::vec4(1.0f,0.0f,0.0f,1.0f),false,NULL,1001);
+	DrawCircle(MousePosition, 10,glm::vec4(1.0f,0.0f,1.0f,1.0f),false,NULL,1001);*/
+	if(!grebbedAnyWindow)
+		GrabStartMousePos = MousePosition;
+
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1] )
+	{
+		if (MousePosition.x > WIDTH * 0.5f - iw->ViewportSize.x - 3 && MousePosition.x < WIDTH * 0.5f - iw->ViewportSize.x + 3)
+		{
+			grebbedWindow[1] = true;
+			grebbedAnyWindow = true;
+		}
+		if ((MousePosition.x > pw->ViewportSize.x - 3 - WIDTH * 0.5f) && (MousePosition.x < pw->ViewportSize.x + 3 - WIDTH * 0.5f))
+		{
+			grebbedWindow[0] = true;
+			grebbedAnyWindow = true;
+		}
+		if ((MousePosition.y > cw->ViewportSize.y - 3 - HEIGHT * 0.5f) && (MousePosition.y < cw->ViewportSize.y + 3 - HEIGHT * 0.5f))
+		{
+			grebbedWindow[2] = true;
+			grebbedAnyWindow = true;
+		}
+		GrabStartMousePos = MousePosition;
+	}
+
+	if (grebbedWindow[0])//project window /// left
+	{
+		pw->Scale.x = 1.0f + (MousePosition.x - GrabStartMousePos.x) / pw->ViewportSize.x;
+		if (pw->Scale.x * pw->ViewportSize.x < 25) pw->Scale.x = 25 / pw->ViewportSize.x;
+		if (pw->Scale.x * pw->ViewportSize.x > WIDTH  - 100 - iw->ViewportSize.x) pw->Scale.x = (WIDTH  - 100 - iw->ViewportSize.x) / pw->ViewportSize.x;
+	}
+	if (grebbedWindow[1])//inspector window /// right
+	{
+		iw->Scale.x = 1.0f + (GrabStartMousePos.x - MousePosition.x) / iw->ViewportSize.x;
+		if (iw->Scale.x * iw->ViewportSize.x < 25) iw->Scale.x = 25 / iw->ViewportSize.x;
+		if (iw->Scale.x * iw->ViewportSize.x > WIDTH - 100 - pw->ViewportSize.x) iw->Scale.x = (WIDTH - 100 - pw->ViewportSize.x) / iw->ViewportSize.x;
+	}
+	if (grebbedWindow[2])//inspector window /// right
+	{
+		cw->Scale.y = 1.0f + (MousePosition.y - GrabStartMousePos.y) / cw->ViewportSize.y;
+		if (cw->Scale.y * cw->ViewportSize.y < 25) cw->Scale.y = 25 / cw->ViewportSize.y;
+		if (cw->Scale.y * cw->ViewportSize.y > HEIGHT - 100) cw->Scale.y = (HEIGHT - 100 ) / cw->ViewportSize.y;
+	}
+
+
+	float rightx = pw->ViewportSize.x * pw->Scale.x - WIDTH * 0.5f;
+	float leftx = WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x;
+
+	float maxy = HEIGHT*0.5f;
+	float miny = cw->ViewportSize.y * cw->Scale.y - HEIGHT * 0.5f;
+	if (grebbedAnyWindow) 
+	{
+		cw->Scale.x = (leftx - rightx) / cw->ViewportSize.x;
+
+		w->Scale.x = (leftx - rightx) / w->ViewportSize.x;
+		w->Scale.y = (maxy - miny) / w->ViewportSize.y;
+	}
+	if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1] && grebbedAnyWindow)
+	{
+
+		w->ViewportSize *= w->Scale;
+		iw->ViewportSize *= iw->Scale;
+		pw->ViewportSize *= pw->Scale;
+		cw->ViewportSize *= cw->Scale;
+
+		w->Scale = {1.0f,1.0f};
+		iw->Scale = { 1.0f,1.0f };
+		pw->Scale = {1.0f,1.0f};
+		cw->Scale = {1.0f,1.0f};
+
+
+		for (int i = 0; i < 3; i++)
+			grebbedWindow[i] = false;
+		grebbedAnyWindow = false;
+
+		
+
+
+		iw->RecalculateSize();
+		pw->RecalculateSize();
+		cw->RecalculateSize();
+		w->RecalculateSize();
+		std::cout << "w" << w->ViewportSize.x << "  " << w->ViewportSize.y<<"\n";
+		std::cout << "cw" << cw->ViewportSize.x << "  " << cw->ViewportSize.y<<"\n";
+		std::cout << "iw" << iw->ViewportSize.x << "  " << iw->ViewportSize.y<<"\n";
+		std::cout << "pw" << pw->ViewportSize.x << "  " << pw->ViewportSize.y<<"\n";
+	}
+
+
+
+	iw->Position = { WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x * 0.5f ,0.0f };
+	iw->Draw(1000);
+	
+	
+	pw->Position = {pw->ViewportSize.x * pw->Scale.x * 0.5f - WIDTH * 0.5f,0.0f };
+	pw->Draw(1000);
+
+	cw->Position = { (rightx + leftx) * 0.5f,cw->ViewportSize.y * cw->Scale.y * 0.5f - HEIGHT * 0.5f };
+	cw->Draw(1000);
+
+
+	w->Position.x = (rightx + leftx) * 0.5f;
+	w->Position.y = (maxy + miny) * 0.5f;
+	w->Draw(1000);
+
 
 	glm::vec2 Corner = { 0.0f,0.0f };
 	GetWindow(InspectorWindowID)->Use();
@@ -1133,6 +1256,7 @@ void On_Update()
 	UI_CheckBox(&Test[1], "TestObami", Corner);
 
 
+
 	if (Test[0])
 		DirectionalLight = 1.0f;
 	else
@@ -1144,7 +1268,6 @@ void On_Update()
 
 	GetWindow(SceneWindowID)->Use();
 
-	UI_DrawCircle(MousePosition, 30, glm::vec4(1.0f));
 
 	if (keys[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
 	if (keys[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;

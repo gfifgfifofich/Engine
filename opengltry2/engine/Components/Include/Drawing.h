@@ -222,7 +222,8 @@ public:
 
 	glm::vec2 Position = { 0.0f,0.0f };
 	glm::vec2 Scale = { 1.0f,1.0f };
-
+	bool linearFilter; 
+	bool hdr;
 	//ScreenMousePosition, but in window
 	glm::vec2 WindowMousePosition;
 

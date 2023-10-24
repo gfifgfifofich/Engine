@@ -45,19 +45,19 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(668,9): warning C45
 C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(822,86): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
 C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(823,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
 C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(859,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1189,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1191,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1302,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1312,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1323,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1331,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1408,32): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1439,34): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1312,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1314,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1425,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1435,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1446,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1454,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1531,32): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1562,34): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
-  1 of 4520 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  2 of 4522 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    44 functions had inline decision re-evaluated but remain unchanged
+    43 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
 glew32s.lib(glew.obj) : warning LNK4099: "glew_static.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Release\glew_static.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   opengltry2.vcxproj -> C:\Users\gfif\source\repos\opengltry2\x64\Release\Engine.exe

@@ -27,6 +27,10 @@ glm::vec2 Window::GetSize()
 
 void Window::RecalculateSize()
 {
+
+	inited = false;
+	Destroy();
+	inited = true;
 	w_ScreenAspectRatio = ViewportSize.x / ViewportSize.y;
 
 
@@ -36,14 +40,6 @@ void Window::RecalculateSize()
 	w_ScreenDivisorX = 1.0f / w_ScreenDivisorX;
 	w_ScreenDivisorY = 1.0f / w_ScreenDivisorY;
 	w_ScaleMultiplyer = 1.0f / ViewportSize.y * 2.0f;
-}
-void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
-{
-	inited = false;
-	Use();
-	Destroy();
-	this->ViewportSize = ViewportSize;
-	RecalculateSize();
 
 	glGenFramebuffers(1, &framebuffer);
 	glGenTextures(1, &Texture);
@@ -87,7 +83,16 @@ void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, LightColorBuffer, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+}
+void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
+{
+	Use();
+	this->ViewportSize = ViewportSize;
+	RecalculateSize();
 
+
+	this->linearFilter = linearFilter;
+	this->hdr = hdr;
 	GetWindow(window_id)->Use();
 	inited = true;
 }
@@ -95,32 +100,9 @@ void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
 void Window::Use()
 {
 
-	glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
-	glViewport(0, 0, ViewportSize.x, ViewportSize.y);
-	WIDTH = ViewportSize.x;
-	HEIGHT = ViewportSize.y;
+
+
 	Window* prevWindow = GetWindow(window_id);
-	if (id == 0)
-	{
-		ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
-		//ScreenMousePosition -= Position;
-
-		MousePosition.x = ScreenMousePosition.x / CameraScale.x + CameraPosition.x;
-		MousePosition.y = ScreenMousePosition.y / CameraScale.y + CameraPosition.y;
-
-		WindowMousePosition = ScreenMousePosition;
-	}
-	else
-	{
-		WindowMousePosition = (prevWindow->WindowMousePosition - Position);
-
-		MousePosition.x = WindowMousePosition.x / CameraScale.x + CameraPosition.x;
-		MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
-
-		ScreenMousePosition = WindowMousePosition;
-	}
-
-
 	prevWindow->w_LightSources = LightSources;
 	prevWindow->w_SceneLayers = SceneLayers;
 	
@@ -139,6 +121,30 @@ void Window::Use()
 
 	CameraPosition = w_CameraPosition;
 	CameraScale = w_CameraScale;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
+	glViewport(0, 0, ViewportSize.x, ViewportSize.y);
+	WIDTH = ViewportSize.x;
+	HEIGHT = ViewportSize.y;
+	if (id == 0)
+	{
+		ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
+		//ScreenMousePosition -= Position;
+
+		MousePosition.x = ScreenMousePosition.x / CameraScale.x + CameraPosition.x;
+		MousePosition.y = ScreenMousePosition.y / CameraScale.y + CameraPosition.y;
+
+		WindowMousePosition = ScreenMousePosition;
+	}
+	else
+	{
+		WindowMousePosition = (prevWindow->WindowMousePosition - Position);
+		WindowMousePosition /= Scale;
+		MousePosition.x = WindowMousePosition.x / CameraScale.x + CameraPosition.x;
+		MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
+		ScreenMousePosition = WindowMousePosition;
+	}
+
 	window_id = id;
 }
 
@@ -182,6 +188,19 @@ void Window::Destroy()
 		glDeleteTextures(1, &Texture);
 	if (this->framebuffer != NULL)
 		glDeleteFramebuffers(1, &this->framebuffer);
+
+
+	if (LightColorBuffer != NULL)
+		glDeleteTextures(1, &LightColorBuffer);
+	if (this->LightColorFBO != NULL)
+		glDeleteFramebuffers(1, &this->LightColorFBO);
+
+
+	if (NormalMapColorBuffer != NULL)
+		glDeleteTextures(1, &NormalMapColorBuffer);
+	if (this->NormalMapFBO != NULL)
+		glDeleteFramebuffers(1, &this->NormalMapFBO);
+
 	if (window_id == id)
 		window_id = 0;
 }
