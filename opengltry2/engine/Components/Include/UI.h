@@ -16,13 +16,25 @@ void UI_DrawLine(glm::vec2 p1, glm::vec2 p2, float width = 1.0f, glm::vec4 color
 void UI_DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), bool Lighted = false, unsigned int NormalMap = NULL, int Z_Index = 0);
 
 void _UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color);
-void UI_DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
-void UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), int Z_Index=0, bool Additive=false);
 
-void UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), glm::vec4 platecolor = glm::vec4(0.0f, 0.0f, 0.0f, 0.7f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2 UI_DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
 
-bool UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2 UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), int Z_Index=0, bool Additive=false);
 
-bool UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
 
-void UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+
+//UI returns size of object
+glm::vec2 UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), glm::vec4 platecolor = glm::vec4(0.0f, 0.0f, 0.0f, 0.7f), int Z_Index = 0, bool Additive = false);
+
+//UI returns size of object
+glm::vec2  UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2  UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, float min = 0.0f, float max=1.0f, float sLength = 100.0f ,float scale = 1.0f, float textScale = 0.5f, glm::vec4 Lcolor = glm::vec4(0.9f), glm::vec4 Bcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2  UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int min = 0, int max=1, float sLength = 100.0f ,float scale = 1.0f, float textScale = 0.5f, glm::vec4 Lcolor = glm::vec4(0.9f), glm::vec4 Bcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2  UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);

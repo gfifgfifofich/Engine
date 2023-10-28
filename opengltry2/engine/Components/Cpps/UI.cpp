@@ -352,7 +352,9 @@ void _UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::ve
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
-void UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color, int Z_Index, bool Additive)
+
+//UI returns size of object
+glm::vec2 UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color, int Z_Index, bool Additive)
 {
 	TextLine txtline;
 
@@ -366,20 +368,25 @@ void UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec
 
 	SceneLayers[SLI].UI_TextLines.push_back(txtline);
 
-	
+	return getTextSize(text, scale);
 }
-void UI_DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color, int Z_Index, bool Additive)
+//UI returns size of object
+glm::vec2 UI_DrawText(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color, int Z_Index, bool Additive)
 {
 	UI_DrawText(text, position.x, position.y, scale, color, Z_Index, Additive);
+	return getTextSize(text, scale);
 }
-void UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color, glm::vec4 platecolor, int Z_Index, bool Additive)
+//UI returns size of object
+glm::vec2 UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color, glm::vec4 platecolor, int Z_Index, bool Additive)
 {
 	UI_DrawText(text, position.x, position.y, scale, color, Z_Index, Additive);
 
 	glm::vec2 scl = getTextSize(text, scale);
 	UI_DrawCube(position + scl * 0.50f, scl * 0.6f, 0.0f, platecolor,false,NULL, Z_Index -1, Additive);
+	return scl * 0.6f;
 }
-bool UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive )
+//UI returns size of object
+glm::vec2 UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive )
 {
 
 
@@ -399,20 +406,24 @@ bool UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float sca
 
 	if (*param)
 	{
-		UI_DrawCube(scrPosition, { scale , scale }, pi * 0.25f, colorON, false, 0, Z_Index, Additive);
+		UI_DrawCube(scrPosition, { scale , scale }, 0.0f, colorON, false, 0, Z_Index, Additive);
 		UI_DrawText(text, scrPosition + textOffset, TextScale, colorON, Z_Index, Additive);
 	}
 	else
 	{
-		UI_DrawCube(scrPosition, { scale , scale }, pi * 0.25f, ColorOFF, false, 0, Z_Index, Additive);
+		UI_DrawCube(scrPosition, { scale , scale }, 0.0f, ColorOFF, false, 0, Z_Index, Additive);
 		UI_DrawText(text, scrPosition + textOffset, TextScale , ColorOFF, Z_Index, Additive);
 	}
 
+	glm::vec2 Testsize = getTextSize(text, TextScale);
+	Testsize.x += textOffset.x + scale;
+	Testsize.y = textOffset.y + scale > Testsize.y? textOffset.y + scale : Testsize.y;
+	return Testsize * 2.0f;
 
 
-	return param;
 }
-bool UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float scale , float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive )
+//UI returns size of object
+glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float scale , float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive )
 {
 
 
@@ -432,20 +443,144 @@ bool UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float
 
 	if (*param)
 	{
-		UI_DrawCube(scrPosition, { scale , scale }, pi * 0.25f, colorON, false, 0, Z_Index, Additive);
+		UI_DrawCube(scrPosition, { scale , scale }, 0.0f, colorON, false, 0, Z_Index, Additive);
 		UI_DrawText(text, scrPosition + textOffset, TextScale, colorON, Z_Index, Additive);
 	}
 	else
 	{
-		UI_DrawCube(scrPosition, { scale , scale }, pi * 0.25f, ColorOFF, false, 0, Z_Index, Additive);
+		UI_DrawCube(scrPosition, { scale , scale }, 0.0f, ColorOFF, false, 0, Z_Index, Additive);
 		UI_DrawText(text, scrPosition + textOffset, TextScale , ColorOFF, Z_Index, Additive);
 	}
 
 
+	glm::vec2 Testsize = getTextSize(text, TextScale);
+	Testsize.x += textOffset.x + scale;
+	Testsize.y = textOffset.y + scale > Testsize.y ? textOffset.y + scale : Testsize.y;
+	return Testsize * 2.0f;
 
-	return param;
 }
-void UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive)
+//UI returns size of object
+glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, float min, float max, float sLength, float scale, float TextScale, glm::vec4 Lcolor, glm::vec4 Bcolor, int Z_Index, bool Additive)
+{
+
+
+	UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + sLength, scrPosition.y), 2.0f * scale, Lcolor, false, NULL, Z_Index);
+
+	float range = max - min;
+
+
+
+	float stage = (*param - min) / range;
+
+	if (stage < 0.0f)stage = 0.0f;
+	if (stage > 1.0f)stage = 1.0f;
+	glm::vec2 bpos = { stage * sLength + scrPosition.x,scrPosition.y };
+	float bsize = 1.0f;
+	glm::vec2 dif = ScreenMousePosition;
+	if (/*dif.x >= scrPosition.x &&            dif.x <=scrPosition.x + sLength*/ /*&&
+		dif.y>scrPosition.y - 10 * scale &&  dif.y < scrPosition.y + 10 * scale*/
+
+		(dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < sLength &&
+		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < 10
+
+		)
+
+	{
+		bsize *= 1.1f;
+		if (buttons[GLFW_MOUSE_BUTTON_1])
+		{
+			float w = ((ScreenMousePosition.x - scrPosition.x) / sLength);
+			*param = LinearInterpolation(min, max, w);
+
+
+			if (*param < min)*param = min;
+			if (*param > max)*param = max;
+
+		}
+	}
+
+	stage = (*param - min) / range;
+
+	if (stage < 0.0f)stage = 0.0f;
+	if (stage > 1.0f)stage = 1.0f;
+
+	bpos = { stage * sLength + scrPosition.x,scrPosition.y };
+
+	UI_DrawCircle(bpos, 10 * scale * bsize, Bcolor, false, NULL, Z_Index);
+
+	glm::vec2 textOffset = glm::vec2(sLength + 10.0f, -15.0f * TextScale);
+	UI_DrawText(text, scrPosition + textOffset, TextScale);
+
+
+	glm::vec2 Testsize = getTextSize(text, TextScale);
+	Testsize.x += textOffset.x + scale;
+	Testsize.y = textOffset.y + scale > Testsize.y ? textOffset.y + scale : Testsize.y;
+	return Testsize * 2.0f;
+
+
+}
+//UI returns size of object
+glm::vec2  UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int min,int max, float sLength, float scale, float TextScale, glm::vec4 Lcolor, glm::vec4 Bcolor, int Z_Index, bool Additive)
+{
+
+
+	UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + sLength, scrPosition.y), 2.0f * scale, Lcolor, false, NULL, Z_Index);
+
+	float range = max - min;
+
+
+
+	float stage = (*param - min) / range;
+
+	if (stage < 0.0f)stage = 0.0f;
+	if (stage > 1.0f)stage = 1.0f;
+	glm::vec2 bpos = { stage * sLength + scrPosition.x,scrPosition.y };
+	float bsize = 1.0f;
+	glm::vec2 dif = ScreenMousePosition;
+	if (/*dif.x >= scrPosition.x &&            dif.x <=scrPosition.x + sLength*/ /*&&
+		dif.y>scrPosition.y - 10 * scale &&  dif.y < scrPosition.y + 10 * scale*/
+
+		(dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < sLength &&
+		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < 10
+
+		)
+
+	{
+		bsize *= 1.1f;
+		if (buttons[GLFW_MOUSE_BUTTON_1])
+		{
+			float w = ((ScreenMousePosition.x - scrPosition.x) / sLength);
+			*param = round(LinearInterpolation(min, max, w));
+
+
+			if (*param < min)*param = min;
+			if (*param > max)*param = max;
+
+		}
+	}
+
+	stage = (*param - min) / range;
+
+	if (stage < 0.0f)stage = 0.0f;
+	if (stage > 1.0f)stage = 1.0f;
+
+	bpos = { stage * sLength + scrPosition.x,scrPosition.y };
+
+	UI_DrawCircle(bpos, 10 * scale * bsize, Bcolor, false, NULL, Z_Index);
+
+	glm::vec2 textOffset = glm::vec2(sLength + 10.0f, -15.0f * TextScale);
+	UI_DrawText(text, scrPosition + textOffset, TextScale);
+
+
+
+	glm::vec2 Testsize = getTextSize(text, TextScale);
+	Testsize.x += textOffset.x + scale;
+	Testsize.y = textOffset.y + scale > Testsize.y ? textOffset.y + scale : Testsize.y;
+	return Testsize * 2.0f;
+
+}
+//UI returns size of object
+glm::vec2  UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive)
 {
 
 
@@ -482,4 +617,11 @@ void UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrP
 		UI_DrawCube(scrPosition, { scale , scale  }, pi * 0.25f, ColorOFF , NULL, Z_Index, Additive);
 		UI_DrawText(*text, scrPosition + textOffset, TextScale , ColorOFF, Z_Index, Additive);
 	}
+
+	glm::vec2 Testsize = getTextSize(*text, TextScale);
+	Testsize.x += textOffset.x + scale;
+	Testsize.y = textOffset.y + scale > Testsize.y ? textOffset.y + scale : Testsize.y;
+	return Testsize * 2.0f;
 }
+
+

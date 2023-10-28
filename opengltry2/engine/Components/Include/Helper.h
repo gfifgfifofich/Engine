@@ -58,12 +58,49 @@ extern glm::vec2 scrpos;
 extern bool keys[1024];
 extern bool JustPressedkey[1024];
 extern bool JustReleasedkey[1024];
+//Same as keys[], but affected by window activity
 extern bool Holdingkey[1024];
+
 extern bool buttons[64];
 extern bool JustPressedbutton[64];
 extern bool JustReleasedbutton[64];
+//Same as buttons[], but affected by window activity
 extern bool Holdingbutton[64];
+
 extern int scrollmovement;
+
+extern bool ReleasedLMB;
+extern bool HoldingLMB;
+extern bool JustPressedLMB;
+
+// saved controls for window stuff
+extern bool bJustPressedkey[1024];
+extern bool bJustReleasedkey[1024];
+extern bool bHoldingkey[1024];
+extern bool bJustPressedbutton[64];
+extern bool bJustReleasedbutton[64];
+extern bool bHoldingbutton[64];
+extern int bscrollmovement;
+
+
+extern bool bReleasedLMB;
+extern bool bHoldingLMB;
+extern bool bJustPressedLMB;
+
+extern glm::vec2 LastJustPressedLMBScrMousePos;
+extern glm::vec2 LastJustPressedMMBScrMousePos;
+extern glm::vec2 LastJustPressedRMBScrMousePos;
+extern glm::vec2 LastJustPressedLMBMousePos;
+extern glm::vec2 LastJustPressedRMBMousePos;
+extern glm::vec2 LastJustPressedMMBMousePos;
+
+//Saving copies again, for windows activity stuff
+extern glm::vec2 _LastJustPressedLMBScrMousePos;
+extern glm::vec2 _LastJustPressedMMBScrMousePos;
+extern glm::vec2 _LastJustPressedRMBScrMousePos;
+extern glm::vec2 _LastJustPressedLMBMousePos;
+extern glm::vec2 _LastJustPressedMMBMousePos;
+extern glm::vec2 _LastJustPressedRMBMousePos;
 
 extern bool SettingsWindow ;
 extern int threadcount;
@@ -112,8 +149,4 @@ extern bool BloomLevelsWindow ;
 extern float ChromaticStrength ;
 extern glm::vec2 ChromaticPoint ;
 extern glm::vec4 AmbientColor ;
-
-extern bool ReleasedLMB;
-extern bool HoldingLMB;
-extern bool JustPressedLMB;
 

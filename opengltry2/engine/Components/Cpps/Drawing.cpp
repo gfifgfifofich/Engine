@@ -86,13 +86,13 @@ void Window::RecalculateSize()
 }
 void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
 {
-	Use();
 	this->ViewportSize = ViewportSize;
-	RecalculateSize();
-
 
 	this->linearFilter = linearFilter;
 	this->hdr = hdr;
+	RecalculateSize();
+
+
 	GetWindow(window_id)->Use();
 	inited = true;
 }
@@ -135,6 +135,7 @@ void Window::Use()
 		MousePosition.y = ScreenMousePosition.y / CameraScale.y + CameraPosition.y;
 
 		WindowMousePosition = ScreenMousePosition;
+
 	}
 	else
 	{
@@ -144,7 +145,104 @@ void Window::Use()
 		MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
 		ScreenMousePosition = WindowMousePosition;
 	}
+	if (AutoActive) {
+		if (ScreenMousePosition.x < ViewportSize.x * 0.5f && ScreenMousePosition.x > -ViewportSize.x * 0.5f &&
+			ScreenMousePosition.y < ViewportSize.y * 0.5f && ScreenMousePosition.y > -ViewportSize.y * 0.5f)
+			active = true;
+		else
+			active = false;
+	}
+	if (active) 
+	{
+		for (int i = 0; i < 1024; i++)
+		{
+			JustPressedkey[i] = bJustPressedkey[i];
+			JustReleasedkey[i] = bJustReleasedkey[i];
+			Holdingkey[i] = bHoldingkey[i];
+		}
+		for (int i = 0; i < 64; i++)
+		{
+			JustPressedbutton[i] = bJustPressedbutton[i];
+			JustReleasedbutton[i] = bJustReleasedbutton[i];
+			Holdingbutton[i] = bHoldingbutton[i];
+		}
 
+		JustPressedLMB = bJustPressedLMB;
+		ReleasedLMB = bReleasedLMB;
+		HoldingLMB = bHoldingLMB;
+
+		scrollmovement = bscrollmovement;
+	}
+	else
+	{
+		for (int i = 0; i < 1024; i++)
+		{
+			JustPressedkey[i] = 0;
+			JustReleasedkey[i] = 0;
+			Holdingkey[i] = 0;
+		}
+		for (int i = 0; i < 64; i++)
+		{
+			JustPressedbutton[i] = 0;
+			JustReleasedbutton[i] = 0;
+			Holdingbutton[i] = 0;
+		}
+
+		JustPressedLMB = 0;
+		ReleasedLMB = 0;
+		HoldingLMB = 0;
+		scrollmovement = 0;
+
+	}
+	if (id == 0)
+	{
+
+		if (JustPressedLMB)
+		{
+			_LastJustPressedLMBScrMousePos = ScreenMousePosition;
+			_LastJustPressedLMBMousePos = MousePosition;
+		}
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
+		{
+			_LastJustPressedRMBScrMousePos = ScreenMousePosition;
+			_LastJustPressedRMBMousePos = MousePosition;
+		}
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
+		{
+			_LastJustPressedMMBScrMousePos = ScreenMousePosition;
+			_LastJustPressedMMBMousePos = MousePosition;
+		}
+		LastJustPressedLMBScrMousePos = _LastJustPressedLMBScrMousePos;
+		LastJustPressedRMBScrMousePos = _LastJustPressedRMBScrMousePos;
+		LastJustPressedMMBScrMousePos = _LastJustPressedMMBScrMousePos;
+
+		LastJustPressedLMBMousePos = _LastJustPressedLMBMousePos;
+		LastJustPressedRMBMousePos = _LastJustPressedRMBMousePos;
+		LastJustPressedMMBMousePos = _LastJustPressedMMBMousePos;
+	}
+	else
+	{
+		glm::vec2 div = 1.0f / Scale;
+		
+
+
+		LastJustPressedLMBScrMousePos = (_LastJustPressedLMBScrMousePos - Position);
+		LastJustPressedLMBScrMousePos *= div;
+
+		LastJustPressedRMBScrMousePos = (_LastJustPressedRMBScrMousePos - Position);
+		LastJustPressedRMBScrMousePos *= div;
+
+		LastJustPressedMMBScrMousePos = (_LastJustPressedMMBScrMousePos - Position);
+		LastJustPressedMMBScrMousePos *= div;
+
+		LastJustPressedLMBMousePos = LastJustPressedLMBScrMousePos / CameraScale + CameraPosition;
+		LastJustPressedRMBMousePos = LastJustPressedRMBScrMousePos / CameraScale + CameraPosition;
+		LastJustPressedMMBMousePos = LastJustPressedMMBScrMousePos / CameraScale + CameraPosition;
+
+	}
+
+	
+	
 	window_id = id;
 }
 
@@ -163,7 +261,8 @@ void  Window::Clear(glm::vec4 Color)
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glClearColor(Color.r, Color.g, Color.b, Color.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// why making a transparent texture so hard?
+
+	// why making a transparent background so hard?
 	glBlendFunc(GL_ZERO, GL_ONE);
 	glBindVertexArray(ScreenVAO);
 	UseShader(FillScreenShader);
@@ -213,11 +312,11 @@ void Window::_Draw()
 
 
 	unsigned int instanceCircleVBO[3];
-	unsigned int instanceNormalMapCircleVBO[2];
 	unsigned int instanceVBO[3];
+	unsigned int instanceTexturedQuadVBO[3];
+	unsigned int instanceNormalMapCircleVBO[2];
 	unsigned int instanceNormalMapCubeVBO[2];
 	unsigned int instanceNormalMapTextureVBO[2];
-	unsigned int instanceTexturedQuadVBO[3];
 
 	float aspect = (float)HEIGHT / WIDTH;
 

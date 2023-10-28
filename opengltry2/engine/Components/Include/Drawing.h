@@ -264,8 +264,7 @@ public:
 	glm::vec4 backgroundColor = { 0.0f,0.0f,0.0f,1.0f };
 
 
-	bool AutoActive = false;// not implemented
-
+	bool AutoActive = true;
 
 	bool Destroyed = false;
 

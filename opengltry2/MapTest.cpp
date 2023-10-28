@@ -1244,6 +1244,8 @@ void On_Update()
 	glm::vec2 Corner = { 0.0f,0.0f };
 	GetWindow(InspectorWindowID)->Use();
 
+	UI_DrawCircle(LastJustPressedLMBScrMousePos, 15, { 1.0f,0.0f,0.0f,1.0f });
+	DrawCircle(LastJustPressedLMBMousePos, 10, { 0.0f,0.0f,1.0f,1.0f });
 
 	GetWindow(InspectorWindowID)->End();
 
@@ -1256,6 +1258,8 @@ void On_Update()
 	UI_CheckBox(&Test[1], "TestObami", Corner);
 
 
+	UI_DrawCircle(LastJustPressedLMBScrMousePos, 15, {1.0f,0.0f,0.0f,1.0f});
+	DrawCircle(LastJustPressedLMBMousePos, 10, { 0.0f,0.0f,1.0f,1.0f });
 
 	if (Test[0])
 		DirectionalLight = 1.0f;
@@ -1268,6 +1272,8 @@ void On_Update()
 
 	GetWindow(SceneWindowID)->Use();
 
+	UI_DrawCircle(LastJustPressedLMBScrMousePos, 15, { 1.0f,0.0f,0.0f,1.0f });
+	DrawCircle(LastJustPressedLMBMousePos, 10, { 0.0f,0.0f,1.0f,1.0f });
 
 	if (keys[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
 	if (keys[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;

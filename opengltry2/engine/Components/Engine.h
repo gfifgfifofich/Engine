@@ -98,6 +98,41 @@ bool JustReleasedbutton[64];
 bool Holdingbutton[64];
 int scrollmovement = 0;
 
+bool ReleasedLMB = false;
+bool HoldingLMB = false;
+bool JustPressedLMB = false;
+
+// saved controls for window stuff
+bool bJustPressedkey[1024];
+bool bJustReleasedkey[1024];
+bool bHoldingkey[1024];
+bool bJustPressedbutton[64];
+bool bJustReleasedbutton[64];
+bool bHoldingbutton[64];
+int bscrollmovement = 0;
+
+
+bool bReleasedLMB = false;
+bool bHoldingLMB = false;
+bool bJustPressedLMB = false;
+
+glm::vec2 LastJustPressedLMBScrMousePos = { 0.0f,0.0f };
+glm::vec2 LastJustPressedMMBScrMousePos = { 0.0f,0.0f };
+glm::vec2 LastJustPressedRMBScrMousePos = { 0.0f,0.0f };
+glm::vec2 LastJustPressedLMBMousePos = { 0.0f,0.0f };
+glm::vec2 LastJustPressedRMBMousePos = { 0.0f,0.0f };
+glm::vec2 LastJustPressedMMBMousePos = { 0.0f,0.0f };
+
+//Saving copies again, for windows activity stuff
+glm::vec2 _LastJustPressedLMBScrMousePos = {0.0f,0.0f};
+glm::vec2 _LastJustPressedMMBScrMousePos = {0.0f,0.0f};
+glm::vec2 _LastJustPressedRMBScrMousePos = {0.0f,0.0f};
+glm::vec2 _LastJustPressedLMBMousePos = { 0.0f,0.0f };
+glm::vec2 _LastJustPressedMMBMousePos = { 0.0f,0.0f };
+glm::vec2 _LastJustPressedRMBMousePos = { 0.0f,0.0f };
+
+
+
 bool SettingsWindow = true;
 int  threadcount;
 
@@ -141,9 +176,6 @@ glm::vec4 AmbientColor = glm::vec4(1.0f);
 
 
 
-bool ReleasedLMB = false;
-bool HoldingLMB = false;
-bool JustPressedLMB = false;
 #endif 
 
 #include "Include/Shader.h"

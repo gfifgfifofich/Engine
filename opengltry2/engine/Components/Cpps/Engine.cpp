@@ -73,10 +73,6 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-	int wId = CreateWindow();
-	Window* w = GetWindow(wId);
-	Windows[0].Init({WIDTH,HEIGHT});
-
 	//ScreenShaderStuff for HDR and postprocessing
 
 	//GLuint InctanceQuadShader;
@@ -338,6 +334,11 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 
+	int wId = CreateWindow();
+	Window* w = GetWindow(wId);
+	Windows[0].Init({ WIDTH,HEIGHT });
+
+	Windows[0].Use();
 
 	GenNormalMapTexture(&BallNormalMapTexture, 1000, 2);
 	GenNormalMapTexture(&CubeNormalMapTexture, 1000, 0);
@@ -358,7 +359,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 	LoadFont("engine/fonts/arial.ttf");
-	Windows[0].Use();
+
 
 	On_Create();
 
@@ -397,6 +398,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 			if (keys[i]) Holdingkey[i] = true;
 			else Holdingkey[i] = false;
+
+			bJustPressedkey[i] = JustPressedkey[i];
+			bJustReleasedkey[i] = JustReleasedkey[i];
+			bHoldingkey[i] = Holdingkey[i];
 		}
 		for (int i = 0; i < 64; i++)
 		{
@@ -408,6 +413,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 			if (buttons[i]) Holdingbutton[i] = true;
 			else Holdingbutton[i] = false;
+
+			bJustPressedbutton[i] = JustPressedbutton[i];
+			bJustReleasedbutton[i] = JustReleasedbutton[i];
+			bHoldingbutton[i] = Holdingbutton[i];
 		}
 
 		if (!HoldingLMB && buttons[GLFW_MOUSE_BUTTON_1]) JustPressedLMB = true;
@@ -419,13 +428,17 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		if (buttons[GLFW_MOUSE_BUTTON_1]) HoldingLMB = true;
 		else HoldingLMB = false;
 
+		bJustPressedLMB= JustPressedLMB;
+		bReleasedLMB = ReleasedLMB;
+		bHoldingLMB = HoldingLMB;
 
-
+		bscrollmovement = scrollmovement;
 
 		// update Scene
 		Windows[0].Use();
 		On_Update();
 		scrollmovement = 0;
+		bscrollmovement = 0;
 		TextFromKeyboard.clear();
 		
 		//Drawing from back, so the main scene (window 0) will get updated data.
