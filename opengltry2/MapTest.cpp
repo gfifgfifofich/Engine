@@ -1254,12 +1254,14 @@ void On_Update()
 	GetWindow(ProjectWindowID)->Use();
 	float step = 10.0f;
 	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
-	Corner += glm::vec2(50.0f, -50.0f);
+	Corner += glm::vec2(15.0f, -25.0f);
 	Corner.y += UI_CheckBox(&Test[0], "Lighting", Corner).y * -1.0f - step;
 	Corner.y += UI_CheckBox(&Test[1], "TestObami", Corner).y*-1.0f  - step;
 	Corner.y += UI_CheckBox(&Test[2], "TestObami2", Corner).y*-1.0f  - step;
 	Corner.y += UI_Slider(&GetWindow(SceneWindowID)->w_AmbientLight, "AmbientLight", Corner).y*-1.0f  - step;
 	Corner.y += UI_Slider(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
+	Corner.y += UI_Drag(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
+	Corner.y += UI_Drag(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
 
 	UI_DrawCircle(LastJustPressedLMBScrMousePos, 5);
 	

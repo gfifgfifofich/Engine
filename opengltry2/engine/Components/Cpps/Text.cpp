@@ -71,7 +71,7 @@ glm::vec2 getTextSize(std::string Text, GLfloat scale)
 	glm::vec2 size = {0.0f,0.0f};
 	for (int i = 0; i < Text.size(); i++)
 	{
-		size.x += Characters[Text[i]].Size.x * scale ;
+		size.x += (Characters[Text[i]].Bearing.x + Characters[Text[i]].Size.x) * scale ;
 		if(size.y< Characters[Text[i]].Size.y * scale) size.y = Characters[Text[i]].Size.y * scale;
 	}
 	size.x += Characters[Text[Text.size()-1]].Size.x * scale;

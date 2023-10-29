@@ -29,12 +29,40 @@ glm::vec2 UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm
 glm::vec2 UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale, glm::vec4 color = glm::vec4(1.0f), glm::vec4 platecolor = glm::vec4(0.0f, 0.0f, 0.0f, 0.7f), int Z_Index = 0, bool Additive = false);
 
 //UI returns size of object
-glm::vec2  UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+glm::vec2 UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.35f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
 //UI returns size of object
-glm::vec2  UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.35f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+
+
+#ifndef UI_Implementation
+extern
+#endif
+int
+iDragBuff;
+
+#ifndef UI_Implementation
+extern
+#endif
+float
+fDragBuff;
+
+#ifndef UI_Implementation
+extern
+#endif
+bool
+Dragging;
+
+	
+
 //UI returns size of object
-glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, float min = 0.0f, float max=1.0f, float sLength = 100.0f ,float scale = 1.0f, float textScale = 0.5f, glm::vec4 Lcolor = glm::vec4(0.9f), glm::vec4 Bcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+glm::vec2 UI_Slider(float* param, const char* text, glm::vec2 scrPosition, float min = 0.0f, float max=1.0f, glm::vec2 scale = glm::vec2(150.0f, 5.0f), float textScale = 0.35f, glm::vec4 Lcolor = glm::vec4(0.9f), glm::vec4 Bcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
 //UI returns size of object
-glm::vec2  UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int min = 0, int max=1, float sLength = 100.0f ,float scale = 1.0f, float textScale = 0.5f, glm::vec4 Lcolor = glm::vec4(0.9f), glm::vec4 Bcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+glm::vec2 UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int min = 0, int max=1, glm::vec2 scale = glm::vec2(150.0f, 5.0f), float textScale = 0.35f, glm::vec4 Lcolor = glm::vec4(0.9f), glm::vec4 Bcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+
 //UI returns size of object
-glm::vec2  UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.5f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+glm::vec2 UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float speed = 1.0f, glm::vec2 scale = glm::vec2(150.0f,15.0f), float textScale = 0.35f, glm::vec4 Backcolor = glm::vec4(0.4f), glm::vec4 Textcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+//UI returns size of object
+glm::vec2 UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float speed = 1.0f , glm::vec2 scale = glm::vec2(150.0f, 15.0f), float textScale = 0.35f, glm::vec4 Backcolor = glm::vec4(0.4f), glm::vec4 Textcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
+
+//UI returns size of object
+glm::vec2 UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.35f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
