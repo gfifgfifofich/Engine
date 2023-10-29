@@ -313,6 +313,8 @@ void Scene::SaveAs(std::string filename)
 			SaveFile << std::to_string(ParticleEmiters[i].NormalMapid);
 			SaveFile << " ";
 			SaveFile << std::to_string(ParticleEmiters[i].Additive);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].DrawToNormalMap);
 			SaveFile << "\n";
 
 
@@ -667,7 +669,12 @@ void Scene::LoadFrom(std::string filename)
 			else if (line[0] == 'P' && !readingParticle && !readingShader)
 			{
 				readingPoly = true;
-				s >> junk >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >> pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> pol.lighted >> pol.Z_Index >> pol.id >> pol.Position.x >> pol.Position.y>> pol.Scale.x >> pol.Scale.y >> pol.Rotation;
+				s >> junk >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >>
+					pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> 
+					pol.lighted >> pol.Z_Index >> pol.id >>
+					pol.Position.x >> pol.Position.y>> 
+					pol.Scale.x >> pol.Scale.y >>
+					pol.Rotation;
 			}
 
 			else if (line[0] == 'e' && !readingPoly && !readingShader)
@@ -676,7 +683,7 @@ void Scene::LoadFrom(std::string filename)
 				s >> junk >> part.InitialRotation >> part.RotationAcceleration >> part.RotationDamper >>
 					part.RotationRandomness >> part.RotationVelocity >> part.VelocityDamper >>
 					part.InitialOrbitalVelocity >> part.OrbitalVelocityRandomness >> part.lifetime >> part.lifetimeRandomness >>
-					part.lighted >> part.influenced >> part.Type >> part.Name >> part.Z_Index >> part.id >> part.NormalMapid >> part.Additive;
+					part.lighted >> part.influenced >> part.Type >> part.Name >> part.Z_Index >> part.id >> part.NormalMapid >> part.Additive>> part.DrawToNormalMap;
 			}
 
 
@@ -1064,9 +1071,10 @@ void Scene::Draw()
 		unsigned int NM = NULL;
 		if (ParticleEmiters[i].DrawToNormalMap)
 		{
-			if (ParticleEmiters[i].NormalMapid > -1 && ParticleEmiters[i].NormalMapid < NormalMaps.size())
+			if (ParticleEmiters[i].NormalMapid >=0 && ParticleEmiters[i].NormalMapid < NormalMaps.size())
 				NM = NormalMaps[ParticleEmiters[i].NormalMapid].texture;
-			else NM = CubeNormalMapTexture;
+			else if(ParticleEmiters[i].NormalMapid == -1) NM = CubeNormalMapTexture;
+			else if(ParticleEmiters[i].NormalMapid == -2) NM = BallNormalMapTexture;
 
 			ParticleEmiters[i].NormalMap = NM;
 		}
@@ -1090,6 +1098,7 @@ void Scene::Draw()
 	}
 	for (int i = 0; i < Shaders.size(); i++)
 	{
+		UseShader(Shaders[i].program);
 		SetShader1f(&Shaders[i].program, "en_Time", clock() * 0.001f);
 		Shaders[i].UpdateUniforms();
 	}

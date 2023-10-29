@@ -487,7 +487,7 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 		ImGui::SliderInt("TextureId", &selectedTexture, 0, Map.Textures.size() - 1);
 		if (selectedTexture >= 0 && selectedTexture < Map.Textures.size())
 			ImGui::Text(Map.Textures[selectedTexture].FileName.c_str());
-		ImGui::SliderInt("NormalMap", &CurrentParticleEmiter->NormalMapid, -1, Map.NormalMaps.size() - 1);
+		ImGui::SliderInt("NormalMap", &CurrentParticleEmiter->NormalMapid, -2, Map.NormalMaps.size() - 1);
 		if (ImGui::Button("Add"))
 		{
 			CurrentParticleEmiter->Textureids.push_back(selectedTexture);
@@ -539,7 +539,7 @@ void ShowRedactorWindow(LightSource* ls)
 
 
 	float pos[3] = { CurrentLightSource->position.x ,CurrentLightSource->position.y,CurrentLightSource->position.z };
-	ImGui::DragFloat3("Position", pos,0.001f);
+	ImGui::DragFloat3("Position", pos,1.0f);
 	CurrentLightSource->position = { pos[0],pos[1],pos[2] };
 
 	float col[4] = { CurrentLightSource->color.r ,CurrentLightSource->color.g,CurrentLightSource->color.b,CurrentLightSource->color.a };
@@ -1252,19 +1252,24 @@ void On_Update()
 	GetWindow(InspectorWindowID)->End();
 
 	GetWindow(ProjectWindowID)->Use();
+	float step = 10.0f;
 	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
 	Corner += glm::vec2(50.0f, -50.0f);
-	UI_CheckBox(&Test[0], "Lighting", Corner);
+	Corner.y += UI_CheckBox(&Test[0], "Lighting", Corner).y * -1.0f - step;
+	Corner.y += UI_CheckBox(&Test[1], "TestObami", Corner).y*-1.0f  - step;
+	Corner.y += UI_CheckBox(&Test[2], "TestObami2", Corner).y*-1.0f  - step;
+	Corner.y += UI_Slider(&GetWindow(SceneWindowID)->w_AmbientLight, "AmbientLight", Corner).y*-1.0f  - step;
+	Corner.y += UI_Slider(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
 
-	Corner += glm::vec2(0.0f, -60.0f);
-	UI_CheckBox(&Test[1], "TestObami", Corner);
+	UI_DrawCircle(LastJustPressedLMBScrMousePos, 5);
+	
+	std::cout << "\nReal x: " << ScreenMousePosition.x << "  y: " << ScreenMousePosition.y;
+	std::cout << "    x: " << LastJustPressedLMBScrMousePos.x << "  y: " << LastJustPressedLMBScrMousePos.y;
 
-
-
-	if (Test[0])
-		DirectionalLight = 1.0f;
-	else
-		DirectionalLight = 0.0f;
+	//if (Test[0])
+	//	DirectionalLight = 1.0f;
+	//else
+	//	DirectionalLight = 0.0f;
 
 
 	GetWindow(ProjectWindowID)->End();

@@ -433,11 +433,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		bHoldingLMB = HoldingLMB;
 
 		bscrollmovement = scrollmovement;
-
 		// update Scene
-		Windows[0].Use();
+		Windows[0].Use(false);
 		On_Update();
-		Windows[0].Use();
+		Windows[0].Use(false);
 		scrollmovement = 0;
 		bscrollmovement = 0;
 		TextFromKeyboard.clear();

@@ -8,7 +8,7 @@ uniform sampler2D BaseColor;
 uniform sampler2D NormalMap;
 uniform vec4 color = vec4(1.0f); 
 uniform vec3 position; 
-//uniform vec2 scale; 
+uniform vec2 CameraScale; 
 uniform float volume; 
 
 uniform float aspect; 
@@ -30,6 +30,8 @@ void main()
 
 	scrSpace.x /=aspect;
 
+	scrSpace /= CameraScale;
+	Pos.xy /= CameraScale;
 	vec3 rel = normalize(vec3(Pos.xy-scrSpace,Pos.z));
 
 

@@ -97,7 +97,7 @@ void Window::Init(glm::vec2 ViewportSize, bool linearFilter, bool hdr)
 	inited = true;
 }
 
-void Window::Use()
+void Window::Use(bool ProcessControls)
 {
 
 
@@ -108,6 +108,9 @@ void Window::Use()
 
 	prevWindow->w_CameraPosition = CameraPosition;
 	prevWindow->w_CameraScale = CameraScale;
+
+	prevWindow->w_AmbientLight = AmbientLight;
+	prevWindow->w_DirectionalLight = DirectionalLight;
 
 
 	ScreenAspectRatio = w_ScreenAspectRatio;
@@ -122,103 +125,103 @@ void Window::Use()
 	CameraPosition = w_CameraPosition;
 	CameraScale = w_CameraScale;
 
+	AmbientLight = w_AmbientLight;
+	DirectionalLight = w_DirectionalLight;
+
+	window_id = id;
 	glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
 	glViewport(0, 0, ViewportSize.x, ViewportSize.y);
 	WIDTH = ViewportSize.x;
 	HEIGHT = ViewportSize.y;
-	if (id == 0)
-	{
-		ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
-		//ScreenMousePosition -= Position;
+	if (ProcessControls) {
+		if (id == 0)
+		{
+			ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
+			//ScreenMousePosition -= Position;
 
-		MousePosition.x = ScreenMousePosition.x / CameraScale.x + CameraPosition.x;
-		MousePosition.y = ScreenMousePosition.y / CameraScale.y + CameraPosition.y;
+			MousePosition.x = ScreenMousePosition.x / CameraScale.x + CameraPosition.x;
+			MousePosition.y = ScreenMousePosition.y / CameraScale.y + CameraPosition.y;
 
-		WindowMousePosition = ScreenMousePosition;
+			WindowMousePosition = ScreenMousePosition;
 
-	}
-	else
-	{
-		WindowMousePosition = (prevWindow->WindowMousePosition - Position);
-		WindowMousePosition /= Scale;
-		MousePosition.x = WindowMousePosition.x / CameraScale.x + CameraPosition.x;
-		MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
-		ScreenMousePosition = WindowMousePosition;
-	}
-
-
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
-		w_LastJustPressedLMBScrMousePos = ScreenMousePosition;
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
-		w_LastJustPressedRMBScrMousePos = ScreenMousePosition;
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
-		w_LastJustPressedMMBScrMousePos = ScreenMousePosition;
-
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
-		w_LastJustPressedLMBMousePos = MousePosition;
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
-		w_LastJustPressedRMBMousePos = MousePosition;
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
-		w_LastJustPressedMMBMousePos = MousePosition;
-
-	LastJustPressedLMBScrMousePos = w_LastJustPressedLMBScrMousePos;
-	LastJustPressedMMBScrMousePos = w_LastJustPressedMMBScrMousePos;
-	LastJustPressedRMBScrMousePos = w_LastJustPressedRMBScrMousePos;
-
-	LastJustPressedLMBMousePos = w_LastJustPressedLMBMousePos;
-	LastJustPressedMMBMousePos = w_LastJustPressedMMBMousePos;
-	LastJustPressedRMBMousePos = w_LastJustPressedRMBMousePos;
-	glm::vec2 ScrMP = GetWindow(0)->WindowMousePosition;
-	if (AutoActive) {
-		if (ScrMP.x < Position.x + ViewportSize.x * 0.5f * Scale.x && ScrMP.x >  Position.x -ViewportSize.x * 0.5f * Scale.x &&
-			ScrMP.y < Position.y + ViewportSize.y * 0.5f * Scale.y && ScrMP.y >  Position.y -ViewportSize.y * 0.5f * Scale.y)
-
-			//backgroundColor = { 0.0f,0.25f,0.0f,1.0f };
-			active = true;
+		}
 		else
-			//backgroundColor = { 0.25f,0.0f,0.0f,1.0f };
-			active = false;
+		{
+			WindowMousePosition = (prevWindow->WindowMousePosition - Position);
+			WindowMousePosition /= Scale;
+			MousePosition.x = WindowMousePosition.x / CameraScale.x + CameraPosition.x;
+			MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
+			ScreenMousePosition = WindowMousePosition;
+		}
+		glm::vec2 ScrMP = GetWindow(0)->WindowMousePosition;
+		if (AutoActive) {
+			if (ScrMP.x < Position.x + ViewportSize.x * 0.5f * Scale.x && ScrMP.x >  Position.x - ViewportSize.x * 0.5f * Scale.x &&
+				ScrMP.y < Position.y + ViewportSize.y * 0.5f * Scale.y && ScrMP.y >  Position.y - ViewportSize.y * 0.5f * Scale.y)
+
+				//backgroundColor = { 0.0f,0.25f,0.0f,1.0f };
+				active = true;
+			else
+				//backgroundColor = { 0.25f,0.0f,0.0f,1.0f };
+				active = false;
+		}
+		if (active)
+		{
+			for (int i = 0; i < 1024; i++)
+			{
+				JustPressedkey[i] = bJustPressedkey[i];
+				Holdingkey[i] = bHoldingkey[i];
+			}
+			for (int i = 0; i < 64; i++)
+			{
+				JustPressedbutton[i] = bJustPressedbutton[i];
+				Holdingbutton[i] = bHoldingbutton[i];
+			}
+
+			JustPressedLMB = bJustPressedLMB;
+			HoldingLMB = bHoldingLMB;
+
+			scrollmovement = bscrollmovement;
+		}
+		else
+		{
+			for (int i = 0; i < 1024; i++)
+			{
+				JustPressedkey[i] = 0;
+				Holdingkey[i] = 0;
+			}
+			for (int i = 0; i < 64; i++)
+			{
+				JustPressedbutton[i] = 0;
+				Holdingbutton[i] = 0;
+			}
+
+			JustPressedLMB = 0;
+			HoldingLMB = 0;
+			scrollmovement = 0;
+
+		}
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+			w_LastJustPressedLMBScrMousePos = WindowMousePosition;
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
+			w_LastJustPressedRMBScrMousePos = WindowMousePosition;
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
+			w_LastJustPressedMMBScrMousePos = WindowMousePosition;
+
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+			w_LastJustPressedLMBMousePos = MousePosition;
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
+			w_LastJustPressedRMBMousePos = MousePosition;
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
+			w_LastJustPressedMMBMousePos = MousePosition;
+		LastJustPressedLMBScrMousePos = w_LastJustPressedLMBScrMousePos;
+		LastJustPressedMMBScrMousePos = w_LastJustPressedMMBScrMousePos;
+		LastJustPressedRMBScrMousePos = w_LastJustPressedRMBScrMousePos;
+
+		LastJustPressedLMBMousePos = w_LastJustPressedLMBMousePos;
+		LastJustPressedMMBMousePos = w_LastJustPressedMMBMousePos;
+		LastJustPressedRMBMousePos = w_LastJustPressedRMBMousePos;
 	}
-	if (active)
-	{
-		for (int i = 0; i < 1024; i++)
-		{
-			JustPressedkey[i] = bJustPressedkey[i];
-			Holdingkey[i] = bHoldingkey[i];
-		}
-		for (int i = 0; i < 64; i++)
-		{
-			JustPressedbutton[i] = bJustPressedbutton[i];
-			Holdingbutton[i] = bHoldingbutton[i];
-		}
 
-		JustPressedLMB = bJustPressedLMB;
-		HoldingLMB = bHoldingLMB;
-
-		scrollmovement = bscrollmovement;
-	}
-	else
-	{
-		for (int i = 0; i < 1024; i++)
-		{
-			JustPressedkey[i] = 0;
-			Holdingkey[i] = 0;
-		}
-		for (int i = 0; i < 64; i++)
-		{
-			JustPressedbutton[i] = 0;
-			Holdingbutton[i] = 0;
-		}
-
-		JustPressedLMB = 0;
-		HoldingLMB = 0;
-		scrollmovement = 0;
-
-	}
-
-
-
-	window_id = id;
 }
 
 void  Window::Clear(glm::vec4 Color)
@@ -250,7 +253,6 @@ void  Window::Clear(glm::vec4 Color)
 }
 void Window::End()
 {
-
 	GetWindow(0)->Use();
 }
 
@@ -280,7 +282,7 @@ void Window::Destroy()
 }
 void Window::_Draw()
 {
-	Use();
+	Use(false);
 
 
 
@@ -695,10 +697,6 @@ void Window::_Draw()
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glm::vec2 vps = GetWindow(0)->ViewportSize;
-
-	float aspect2 = vps.y / vps.x;
-
 
 	if (Lighting) {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -741,6 +739,7 @@ void Window::_Draw()
 			glUniform3f(glGetUniformLocation(LightShader, "position"), LightSources[i].position.x, LightSources[i].position.y, LightSources[i].position.z);
 			glUniform2f(glGetUniformLocation(LightShader, "Aposition"), Apos.x, Apos.y);
 			glUniform2f(glGetUniformLocation(LightShader, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
+			glUniform2f(glGetUniformLocation(LightShader, "CameraScale"), CameraScale.x, CameraScale.y);
 			glUniform1f(glGetUniformLocation(LightShader, "angle"), LightSources[i].rotation);
 
 			glUniform4f(glGetUniformLocation(LightShader, "color"), LightSources[i].color.r, LightSources[i].color.g, LightSources[i].color.b, LightSources[i].color.a);
@@ -762,7 +761,7 @@ void Window::_Draw()
 
 		LightSources.clear();
 
-		Use();
+		Use(false);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 

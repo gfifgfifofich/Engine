@@ -268,14 +268,16 @@ public:
 
 	bool Destroyed = false;
 
+	float w_AmbientLight = 1.0f;
+	float w_DirectionalLight = 1.0f;
 
-	glm::vec2 w_LastJustPressedLMBMousePos;
-	glm::vec2 w_LastJustPressedRMBMousePos;
-	glm::vec2 w_LastJustPressedMMBMousePos;
+	glm::vec2 w_LastJustPressedLMBMousePos = glm::vec2(0.0f);
+	glm::vec2 w_LastJustPressedRMBMousePos = glm::vec2(0.0f);
+	glm::vec2 w_LastJustPressedMMBMousePos = glm::vec2(0.0f);
 
-	glm::vec2 w_LastJustPressedLMBScrMousePos;
-	glm::vec2 w_LastJustPressedRMBScrMousePos;
-	glm::vec2 w_LastJustPressedMMBScrMousePos;
+	glm::vec2 w_LastJustPressedLMBScrMousePos = glm::vec2(0.0f);
+	glm::vec2 w_LastJustPressedRMBScrMousePos = glm::vec2(0.0f);
+	glm::vec2 w_LastJustPressedMMBScrMousePos = glm::vec2(0.0f);
 
 
 	// Do it if you changed ViewportSize
@@ -285,7 +287,7 @@ public:
 	void Init(glm::vec2 ViewportSize = { 400.0f,400.0f }, bool linearFilter = true, bool hdr = true);
 
 	// Sets this window's texture as drawing target. 
-	void Use();
+	void Use(bool ProcessControls = true);
 
 	void Clear(glm::vec4 Color);
 

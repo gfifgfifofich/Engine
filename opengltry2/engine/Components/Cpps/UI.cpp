@@ -476,7 +476,7 @@ glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, floa
 	if (stage > 1.0f)stage = 1.0f;
 	glm::vec2 bpos = { stage * sLength + scrPosition.x,scrPosition.y };
 	float bsize = 1.0f;
-	glm::vec2 dif = ScreenMousePosition;
+	glm::vec2 dif = LastJustPressedLMBScrMousePos;
 	if (/*dif.x >= scrPosition.x &&            dif.x <=scrPosition.x + sLength*/ /*&&
 		dif.y>scrPosition.y - 10 * scale &&  dif.y < scrPosition.y + 10 * scale*/
 
@@ -487,7 +487,7 @@ glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, floa
 
 	{
 		bsize *= 1.1f;
-		if (buttons[GLFW_MOUSE_BUTTON_1])
+		if (buttons[GLFW_MOUSE_BUTTON_1] && GetWindow(window_id)->active)
 		{
 			float w = ((ScreenMousePosition.x - scrPosition.x) / sLength);
 			*param = LinearInterpolation(min, max, w);
@@ -536,7 +536,7 @@ glm::vec2  UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int
 	if (stage > 1.0f)stage = 1.0f;
 	glm::vec2 bpos = { stage * sLength + scrPosition.x,scrPosition.y };
 	float bsize = 1.0f;
-	glm::vec2 dif = ScreenMousePosition;
+	glm::vec2 dif = LastJustPressedLMBScrMousePos;
 	if (/*dif.x >= scrPosition.x &&            dif.x <=scrPosition.x + sLength*/ /*&&
 		dif.y>scrPosition.y - 10 * scale &&  dif.y < scrPosition.y + 10 * scale*/
 
