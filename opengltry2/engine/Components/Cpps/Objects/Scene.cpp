@@ -1080,11 +1080,11 @@ void Scene::Draw()
 		unsigned int t = LightSphereTexture;
 
 		if (LightSources[i].TextureId <= 0)
-			DrawLight(LightSources[i].position, LightSources[i].scale, LightSources[i].color, LightSources[i].volume, t);
+			DrawLight(LightSources[i].position, LightSources[i].scale, LightSources[i].color, LightSources[i].volume,0.0f, t);
 		else if (LightSources[i].TextureId > 0)
 		{
 			t = Textures[LightSources[i].TextureId].texture;
-			DrawLight(LightSources[i].position, LightSources[i].scale, LightSources[i].color, LightSources[i].volume, t);
+			DrawLight(LightSources[i].position, LightSources[i].scale, LightSources[i].color, LightSources[i].volume, 0.0f, t);
 		}
 
 	}

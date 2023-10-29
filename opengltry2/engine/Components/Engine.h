@@ -123,14 +123,6 @@ glm::vec2 LastJustPressedLMBMousePos = { 0.0f,0.0f };
 glm::vec2 LastJustPressedRMBMousePos = { 0.0f,0.0f };
 glm::vec2 LastJustPressedMMBMousePos = { 0.0f,0.0f };
 
-//Saving copies again, for windows activity stuff
-glm::vec2 _LastJustPressedLMBScrMousePos = {0.0f,0.0f};
-glm::vec2 _LastJustPressedMMBScrMousePos = {0.0f,0.0f};
-glm::vec2 _LastJustPressedRMBScrMousePos = {0.0f,0.0f};
-glm::vec2 _LastJustPressedLMBMousePos = { 0.0f,0.0f };
-glm::vec2 _LastJustPressedMMBMousePos = { 0.0f,0.0f };
-glm::vec2 _LastJustPressedRMBMousePos = { 0.0f,0.0f };
-
 
 
 bool SettingsWindow = true;

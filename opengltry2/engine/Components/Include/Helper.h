@@ -94,13 +94,6 @@ extern glm::vec2 LastJustPressedLMBMousePos;
 extern glm::vec2 LastJustPressedRMBMousePos;
 extern glm::vec2 LastJustPressedMMBMousePos;
 
-//Saving copies again, for windows activity stuff
-extern glm::vec2 _LastJustPressedLMBScrMousePos;
-extern glm::vec2 _LastJustPressedMMBScrMousePos;
-extern glm::vec2 _LastJustPressedRMBScrMousePos;
-extern glm::vec2 _LastJustPressedLMBMousePos;
-extern glm::vec2 _LastJustPressedMMBMousePos;
-extern glm::vec2 _LastJustPressedRMBMousePos;
 
 extern bool SettingsWindow ;
 extern int threadcount;

@@ -437,6 +437,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		// update Scene
 		Windows[0].Use();
 		On_Update();
+		Windows[0].Use();
 		scrollmovement = 0;
 		bscrollmovement = 0;
 		TextFromKeyboard.clear();

@@ -1121,7 +1121,7 @@ glm::vec2 PrevMousePos = glm::vec2(0.0f);
 
 
 bool grebbedWindow[3];// bools for window resizing
-bool grebbedAnyWindow = true;// bools for window resizing
+bool grebbedAnyWindow = false;// bools for window resizing
 glm::vec2 GrabStartMousePos = { 0.0f,0.0f };
 
 bool Test[10];
@@ -1225,27 +1225,29 @@ void On_Update()
 
 
 
-	iw->Position = { WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x * 0.5f ,0.0f };
-	iw->Draw(1000);
+	iw->Position = glm::vec2(WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x * 0.5f ,0.0f );
+	iw->Draw(1001);
 	
 	
-	pw->Position = {pw->ViewportSize.x * pw->Scale.x * 0.5f - WIDTH * 0.5f,0.0f };
-	pw->Draw(1000);
+	pw->Position = glm::vec2(pw->ViewportSize.x * pw->Scale.x * 0.5f - WIDTH * 0.5f,0.0f );
+	pw->Draw(1002);
 
-	cw->Position = { (rightx + leftx) * 0.5f,cw->ViewportSize.y * cw->Scale.y * 0.5f - HEIGHT * 0.5f };
-	cw->Draw(1000);
+	cw->Position = glm::vec2((rightx + leftx) * 0.5f,cw->ViewportSize.y * cw->Scale.y * 0.5f - HEIGHT * 0.5f );
+	cw->Draw(1004);
 
 
 	w->Position.x = (rightx + leftx) * 0.5f;
 	w->Position.y = (maxy + miny) * 0.5f;
 	w->Draw(1000);
+	GetWindow(ConsoleWindowID)->Use();
 
+
+
+	GetWindow(ConsoleWindowID)->End();
 
 	glm::vec2 Corner = { 0.0f,0.0f };
 	GetWindow(InspectorWindowID)->Use();
 
-	UI_DrawCircle(LastJustPressedLMBScrMousePos, 15, { 1.0f,0.0f,0.0f,1.0f });
-	DrawCircle(LastJustPressedLMBMousePos, 10, { 0.0f,0.0f,1.0f,1.0f });
 
 	GetWindow(InspectorWindowID)->End();
 
@@ -1258,8 +1260,6 @@ void On_Update()
 	UI_CheckBox(&Test[1], "TestObami", Corner);
 
 
-	UI_DrawCircle(LastJustPressedLMBScrMousePos, 15, {1.0f,0.0f,0.0f,1.0f});
-	DrawCircle(LastJustPressedLMBMousePos, 10, { 0.0f,0.0f,1.0f,1.0f });
 
 	if (Test[0])
 		DirectionalLight = 1.0f;
@@ -1272,8 +1272,6 @@ void On_Update()
 
 	GetWindow(SceneWindowID)->Use();
 
-	UI_DrawCircle(LastJustPressedLMBScrMousePos, 15, { 1.0f,0.0f,0.0f,1.0f });
-	DrawCircle(LastJustPressedLMBMousePos, 10, { 0.0f,0.0f,1.0f,1.0f });
 
 	if (keys[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
 	if (keys[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;
@@ -1502,8 +1500,6 @@ void On_Update()
 	if (ImGui::Button("SceneSettingsWindow"))
 		SettingsWindow = !SettingsWindow;
 
-	if (ImGui::Button("SceneSettingsWindow"))
-		SettingsWindow = !SettingsWindow;
 
 	if (ImGui::Button("ShadersWindow"))
 		ShowShadersWindow = !ShowShadersWindow;

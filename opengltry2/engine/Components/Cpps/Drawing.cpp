@@ -105,18 +105,18 @@ void Window::Use()
 	Window* prevWindow = GetWindow(window_id);
 	prevWindow->w_LightSources = LightSources;
 	prevWindow->w_SceneLayers = SceneLayers;
-	
+
 	prevWindow->w_CameraPosition = CameraPosition;
 	prevWindow->w_CameraScale = CameraScale;
-	
 
-	ScreenAspectRatio = w_ScreenAspectRatio ;
+
+	ScreenAspectRatio = w_ScreenAspectRatio;
 
 	LightSources = this->w_LightSources;
 	SceneLayers = this->w_SceneLayers;
 
-	ScreenDivisorX = w_ScreenDivisorX ;
-	ScreenDivisorY = w_ScreenDivisorY ;
+	ScreenDivisorX = w_ScreenDivisorX;
+	ScreenDivisorY = w_ScreenDivisorY;
 	ScaleMultiplyer = w_ScaleMultiplyer;
 
 	CameraPosition = w_CameraPosition;
@@ -145,30 +145,54 @@ void Window::Use()
 		MousePosition.y = WindowMousePosition.y / CameraScale.y + CameraPosition.y;
 		ScreenMousePosition = WindowMousePosition;
 	}
+
+
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+		w_LastJustPressedLMBScrMousePos = ScreenMousePosition;
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
+		w_LastJustPressedRMBScrMousePos = ScreenMousePosition;
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
+		w_LastJustPressedMMBScrMousePos = ScreenMousePosition;
+
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+		w_LastJustPressedLMBMousePos = MousePosition;
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
+		w_LastJustPressedRMBMousePos = MousePosition;
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
+		w_LastJustPressedMMBMousePos = MousePosition;
+
+	LastJustPressedLMBScrMousePos = w_LastJustPressedLMBScrMousePos;
+	LastJustPressedMMBScrMousePos = w_LastJustPressedMMBScrMousePos;
+	LastJustPressedRMBScrMousePos = w_LastJustPressedRMBScrMousePos;
+
+	LastJustPressedLMBMousePos = w_LastJustPressedLMBMousePos;
+	LastJustPressedMMBMousePos = w_LastJustPressedMMBMousePos;
+	LastJustPressedRMBMousePos = w_LastJustPressedRMBMousePos;
+	glm::vec2 ScrMP = GetWindow(0)->WindowMousePosition;
 	if (AutoActive) {
-		if (ScreenMousePosition.x < ViewportSize.x * 0.5f && ScreenMousePosition.x > -ViewportSize.x * 0.5f &&
-			ScreenMousePosition.y < ViewportSize.y * 0.5f && ScreenMousePosition.y > -ViewportSize.y * 0.5f)
+		if (ScrMP.x < Position.x + ViewportSize.x * 0.5f * Scale.x && ScrMP.x >  Position.x -ViewportSize.x * 0.5f * Scale.x &&
+			ScrMP.y < Position.y + ViewportSize.y * 0.5f * Scale.y && ScrMP.y >  Position.y -ViewportSize.y * 0.5f * Scale.y)
+
+			//backgroundColor = { 0.0f,0.25f,0.0f,1.0f };
 			active = true;
 		else
+			//backgroundColor = { 0.25f,0.0f,0.0f,1.0f };
 			active = false;
 	}
-	if (active) 
+	if (active)
 	{
 		for (int i = 0; i < 1024; i++)
 		{
 			JustPressedkey[i] = bJustPressedkey[i];
-			JustReleasedkey[i] = bJustReleasedkey[i];
 			Holdingkey[i] = bHoldingkey[i];
 		}
 		for (int i = 0; i < 64; i++)
 		{
 			JustPressedbutton[i] = bJustPressedbutton[i];
-			JustReleasedbutton[i] = bJustReleasedbutton[i];
 			Holdingbutton[i] = bHoldingbutton[i];
 		}
 
 		JustPressedLMB = bJustPressedLMB;
-		ReleasedLMB = bReleasedLMB;
 		HoldingLMB = bHoldingLMB;
 
 		scrollmovement = bscrollmovement;
@@ -178,71 +202,22 @@ void Window::Use()
 		for (int i = 0; i < 1024; i++)
 		{
 			JustPressedkey[i] = 0;
-			JustReleasedkey[i] = 0;
 			Holdingkey[i] = 0;
 		}
 		for (int i = 0; i < 64; i++)
 		{
 			JustPressedbutton[i] = 0;
-			JustReleasedbutton[i] = 0;
 			Holdingbutton[i] = 0;
 		}
 
 		JustPressedLMB = 0;
-		ReleasedLMB = 0;
 		HoldingLMB = 0;
 		scrollmovement = 0;
 
 	}
-	if (id == 0)
-	{
-
-		if (JustPressedLMB)
-		{
-			_LastJustPressedLMBScrMousePos = ScreenMousePosition;
-			_LastJustPressedLMBMousePos = MousePosition;
-		}
-		if (JustPressedbutton[GLFW_MOUSE_BUTTON_3])
-		{
-			_LastJustPressedRMBScrMousePos = ScreenMousePosition;
-			_LastJustPressedRMBMousePos = MousePosition;
-		}
-		if (JustPressedbutton[GLFW_MOUSE_BUTTON_2])
-		{
-			_LastJustPressedMMBScrMousePos = ScreenMousePosition;
-			_LastJustPressedMMBMousePos = MousePosition;
-		}
-		LastJustPressedLMBScrMousePos = _LastJustPressedLMBScrMousePos;
-		LastJustPressedRMBScrMousePos = _LastJustPressedRMBScrMousePos;
-		LastJustPressedMMBScrMousePos = _LastJustPressedMMBScrMousePos;
-
-		LastJustPressedLMBMousePos = _LastJustPressedLMBMousePos;
-		LastJustPressedRMBMousePos = _LastJustPressedRMBMousePos;
-		LastJustPressedMMBMousePos = _LastJustPressedMMBMousePos;
-	}
-	else
-	{
-		glm::vec2 div = 1.0f / Scale;
-		
 
 
-		LastJustPressedLMBScrMousePos = (_LastJustPressedLMBScrMousePos - Position);
-		LastJustPressedLMBScrMousePos *= div;
 
-		LastJustPressedRMBScrMousePos = (_LastJustPressedRMBScrMousePos - Position);
-		LastJustPressedRMBScrMousePos *= div;
-
-		LastJustPressedMMBScrMousePos = (_LastJustPressedMMBScrMousePos - Position);
-		LastJustPressedMMBScrMousePos *= div;
-
-		LastJustPressedLMBMousePos = LastJustPressedLMBScrMousePos / CameraScale + CameraPosition;
-		LastJustPressedRMBMousePos = LastJustPressedRMBScrMousePos / CameraScale + CameraPosition;
-		LastJustPressedMMBMousePos = LastJustPressedMMBScrMousePos / CameraScale + CameraPosition;
-
-	}
-
-	
-	
 	window_id = id;
 }
 
@@ -720,7 +695,9 @@ void Window::_Draw()
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glm::vec2 vps = GetWindow(0)->ViewportSize;
 
+	float aspect2 = vps.y / vps.x;
 
 
 	if (Lighting) {
@@ -782,7 +759,10 @@ void Window::_Draw()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		DetachShader();
 
+
 		LightSources.clear();
+
+		Use();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
@@ -946,7 +926,7 @@ void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volum
 {
 	LightSource ls;
 	ls.volume = volume;
-	ls.position = glm::vec3(position, -0.5f);
+	ls.position = glm::vec3(position, 0.0f);
 	ls.scale = scale;
 	ls.rotation = rotation;
 	ls.color = color;

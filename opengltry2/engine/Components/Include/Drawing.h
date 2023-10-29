@@ -268,7 +268,14 @@ public:
 
 	bool Destroyed = false;
 
-	
+
+	glm::vec2 w_LastJustPressedLMBMousePos;
+	glm::vec2 w_LastJustPressedRMBMousePos;
+	glm::vec2 w_LastJustPressedMMBMousePos;
+
+	glm::vec2 w_LastJustPressedLMBScrMousePos;
+	glm::vec2 w_LastJustPressedRMBScrMousePos;
+	glm::vec2 w_LastJustPressedMMBScrMousePos;
 
 
 	// Do it if you changed ViewportSize
