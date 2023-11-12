@@ -593,7 +593,10 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 	UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + scale.x, scrPosition.y), scale.y, Backcolor, false, NULL, Z_Index);
 
 
-
+	if (keys[GLFW_KEY_LEFT_SHIFT])
+		speed *= 10.0f;
+	if (keys[GLFW_KEY_LEFT_ALT])
+		speed *= 0.1f;
 
 	glm::vec2 dif = LastJustPressedLMBScrMousePos;
 	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
@@ -606,6 +609,8 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 			Dragging = true;
 			fDragBuff = *param;
 		}
+		if (Dragging)
+			*param = fDragBuff + (ScreenMousePosition.x - LastJustPressedLMBScrMousePos.x) * speed;
 	}
 	if (!buttons[GLFW_MOUSE_BUTTON_1])
 	{
@@ -614,8 +619,6 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 
 	}
 
-	if (Dragging)
-		*param = fDragBuff + (ScreenMousePosition.x - LastJustPressedLMBScrMousePos.x) * speed;
 
 	std::string number = std::to_string(*param);
 	number.pop_back();
@@ -647,6 +650,10 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 
 
 
+	if (keys[GLFW_KEY_LEFT_SHIFT])
+		speed *= 10.0f;
+	if (keys[GLFW_KEY_LEFT_ALT])
+		speed *= 0.1f;
 
 	glm::vec2 dif = LastJustPressedLMBScrMousePos;
 	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
@@ -659,6 +666,8 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 			Dragging = true;
 			iDragBuff = *param;
 		}
+		if (Dragging)
+			*param = iDragBuff + (ScreenMousePosition.x - LastJustPressedLMBScrMousePos.x) * speed;
 	}
 	if (!buttons[GLFW_MOUSE_BUTTON_1])
 	{
@@ -667,8 +676,6 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 
 	}
 
-	if (Dragging)
-		*param = iDragBuff + (ScreenMousePosition.x - LastJustPressedLMBScrMousePos.x) * speed;
 
 	std::string number = std::to_string(*param);
 
@@ -689,47 +696,127 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 
 
 //UI returns size of object
-glm::vec2  UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive)
+glm::vec2  UI_InputText(std::string* text, glm::vec2 scrPosition, int* cursorPosition, bool* edit, int maxTextSize, glm::vec2 scale, float TextScale, glm::vec4 Backcolor, glm::vec4 Textcolor, int Z_Index , bool Additive)
 {
 
 
 
-	float r = scale  * 1.25;
-	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r)
+
+
+	glm::vec2 dif = LastJustPressedLMBScrMousePos;
+	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
+		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y
+		)
 	{
-		scale *= 1.1f;
-		if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
-			*edit = !*edit;
+
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+			*edit = true;
 	}
-	float TextScale = textScale;
-	glm::vec2 textOffset = glm::vec2(30.0f  -20.0f * TextScale);
+	else
+		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+			*edit = false;
+	if (JustPressedkey[GLFW_KEY_ENTER] || JustPressedkey[GLFW_KEY_ESCAPE])
+		*edit = false;
 
-
-
-	TextEditMode = *edit;
+	glm::vec2 Testsize = getTextSize(*text, TextScale);
 
 	if (*edit)
 	{
 
-		if (JustPressedkey[GLFW_KEY_BACKSPACE] && text->size() > 0)
-			text->pop_back();
-		else if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + text->size() <= maxTextSize || maxTextSize < 0))
-			*text += TextFromKeyboard;
-		if (JustPressedkey[GLFW_KEY_ENTER] || JustPressedkey[GLFW_KEY_ESCAPE])
-			*edit = false;
 
-		UI_DrawCube(scrPosition, { scale , scale }, pi * 0.25f, colorON, NULL , Z_Index, Additive);
-		UI_DrawText(*text, scrPosition + textOffset, TextScale, colorON, Z_Index, Additive);
+		std::string tmptext = "";
+
+		if (JustPressedkey[GLFW_KEY_LEFT])
+			*cursorPosition -= 1;
+		if (JustPressedkey[GLFW_KEY_RIGHT] )
+			*cursorPosition += 1;
+
+
+		if (*cursorPosition <= -1)
+			*cursorPosition = -1;
+		else if (*cursorPosition > text->size() - 1)
+			*cursorPosition = text->size() - 1;
+
+		bool CursorProcessed = false;
+		if (*cursorPosition == -1 && !CursorProcessed)
+		{
+			if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + tmptext.size() <= maxTextSize || maxTextSize < 0))
+			{
+				tmptext += TextFromKeyboard;
+				*cursorPosition += TextFromKeyboard.size();
+			}
+			CursorProcessed = true;
+			UI_DrawCube(scrPosition, glm::vec2(2.0f, scale.y * 0.9f), 0.0f, Textcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), false, NULL, Z_Index + 10);
+		}
+		glm::vec2 size = { 0.0f,0.0f };
+		if (text->size() == 0 && !CursorProcessed)
+		{
+
+			if (JustPressedkey[GLFW_KEY_BACKSPACE] && tmptext.size() > 0)
+			{
+				tmptext.pop_back();
+				*cursorPosition -= 1;
+			}
+			else if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + tmptext.size() <= maxTextSize || maxTextSize < 0))
+			{
+				tmptext += TextFromKeyboard;
+				*cursorPosition += TextFromKeyboard.size();
+			}
+			UI_DrawCube(scrPosition + glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, scale.y * 0.9f), 0.0f, Textcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), false, NULL, Z_Index + 10);
+			CursorProcessed = true;
+		}
+		else
+			for (int i = 0; i < text->size(); i++)
+			{
+				if (i == *cursorPosition && !CursorProcessed)
+				{
+
+
+					if (JustPressedkey[GLFW_KEY_BACKSPACE] && text->size() > 0 && *cursorPosition >= 0)
+					{
+						*cursorPosition -= 1;
+					}
+					else if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + tmptext.size() <= maxTextSize || maxTextSize < 0))
+					{
+						tmptext += (*text)[i];
+						tmptext += TextFromKeyboard;
+						*cursorPosition += TextFromKeyboard.size();
+					}
+					else
+						tmptext += (*text)[i];
+
+					size.x += (Characters[(*text)[i]].Advance >> 6) * TextScale;
+					if (size.y < Characters[(*text)[i]].Size.y * TextScale)
+						size.y = Characters[(*text)[i]].Size.y * TextScale;
+					UI_DrawCube(scrPosition + glm::vec2(size.x, 0.0f), glm::vec2(2.0f, scale.y * 0.9f), 0.0f, Textcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), false, NULL, Z_Index + 10);
+
+					CursorProcessed = true;
+
+				}
+				else
+				{
+					tmptext += (*text)[i];
+					size.x += (Characters[tmptext[i]].Advance >> 6) * TextScale;
+					if (size.y < Characters[tmptext[i]].Size.y * TextScale)
+						size.y = Characters[tmptext[i]].Size.y * TextScale;
+				}
+			
+			}
+
+		
+
+		*text = tmptext;
+
+		UI_DrawText(*text, scrPosition - glm::vec2(0.0f,Testsize.y*0.5f), TextScale, Textcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), Z_Index, Additive);
+		UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + scale.x, scrPosition.y), scale.y, Backcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), false, NULL, Z_Index);
 	}
 	else
 	{
-		UI_DrawCube(scrPosition, { scale , scale  }, pi * 0.25f, ColorOFF , NULL, Z_Index, Additive);
-		UI_DrawText(*text, scrPosition + textOffset, TextScale , ColorOFF, Z_Index, Additive);
+		UI_DrawText(*text, scrPosition - glm::vec2(0.0f, Testsize.y * 0.5f), TextScale, Textcolor, Z_Index, Additive);
+		UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + scale.x, scrPosition.y), scale.y, Backcolor, false, NULL, Z_Index);
 	}
-
-	glm::vec2 Testsize = getTextSize(*text, TextScale);
-	Testsize.x += textOffset.x + scale;
-	Testsize.y = textOffset.y + scale > Testsize.y ? textOffset.y + scale : Testsize.y;
+	Testsize.x += scale.x;
+	Testsize.y = scale.y > Testsize.y ? scale.y : Testsize.y;
 	return Testsize * 2.0f;
 }
 

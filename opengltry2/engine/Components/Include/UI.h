@@ -65,4 +65,4 @@ glm::vec2 UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float s
 glm::vec2 UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float speed = 1.0f , glm::vec2 scale = glm::vec2(150.0f, 15.0f), float textScale = 0.35f, glm::vec4 Backcolor = glm::vec4(0.4f), glm::vec4 Textcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);
 
 //UI returns size of object
-glm::vec2 UI_InputText(bool* edit, int maxTextSize, std::string* text, glm::vec2 scrPosition, float scale = 18.0f, float textScale = 0.35f, glm::vec4 colorON = glm::vec4(1.0f), glm::vec4 ColorOFF = glm::vec4(0.7f), int Z_Index = 0, bool Additive = false);
+glm::vec2 UI_InputText(std::string* text, glm::vec2 scrPosition, int* cursorPosition, bool* edit,int maxTextSize, glm::vec2 scale = glm::vec2(150.0f, 15.0f), float textScale = 0.55f, glm::vec4 Backcolor = glm::vec4(0.4f), glm::vec4 Textcolor = glm::vec4(1.0f), int Z_Index = 0, bool Additive = false);

@@ -155,10 +155,10 @@ struct TextLine
 	bool aboveEverything = false;
 };
 struct Character {
-	GLuint     TextureID; // ID текстуры глифа
-	glm::ivec2 Size;      // Размеры глифа
-	glm::ivec2 Bearing;   // Смещение верхней левой точки глифа
-	GLuint     Advance;   // Горизонтальное смещение до начала следующего глифа
+	GLuint     TextureID; 
+	glm::ivec2 Size;      
+	glm::ivec2 Bearing;   
+	GLint     Advance;   
 };
 
 struct SceneLayer
@@ -257,14 +257,16 @@ public:
 
 	glm::vec2 ViewportSize = { 400,400 };
 
+
 	// Allows UI interactions (mouse clicks, button presses) ( Not implemented)
 	bool active = true;
 
-	bool Autoclear = true;// Automatically clear window each frame
 	glm::vec4 backgroundColor = { 0.0f,0.0f,0.0f,1.0f };
 
 
-	bool AutoActive = true;
+	bool Autoclear = true;// Automatically clear window each frame
+	bool AutoActive = true;// Automatically activate window when mouse is over it, deactivate otherwise
+	bool AutoDraw = true;// Automatically call _Draw() function after On_Update()
 
 	bool Destroyed = false;
 

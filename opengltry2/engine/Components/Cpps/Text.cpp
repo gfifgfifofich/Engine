@@ -56,15 +56,15 @@ void LoadFont(const char* font)
 		// Now store character for later use
 		Character character = {
 			texture,
-			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			face->glyph->advance.x
+			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows ),
+			glm::ivec2(face->glyph->bitmap_left , face->glyph->bitmap_top ),
+			face->glyph->advance.x 
 		};
 		Characters.insert(std::pair<GLchar, Character>(c, character));
 		// Characters[c] = character;
 	}
-	FT_Done_Face(face);   // Завершение работы с шрифтом face
-	FT_Done_FreeType(ft); // Завершение работы FreeType
+	FT_Done_Face(face);   
+	FT_Done_FreeType(ft); 
 }
 glm::vec2 getTextSize(std::string Text, GLfloat scale)
 {
@@ -79,7 +79,7 @@ glm::vec2 getTextSize(std::string Text, GLfloat scale)
 	return { size.x , size.y };
 }
 
-// actuallu draws text
+// actually draws text
 void _DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec4 color)
 {
 	//glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT);

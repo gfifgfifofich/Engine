@@ -358,7 +358,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 
-	LoadFont("engine/fonts/arial.ttf");
+	LoadFont("engine/fonts/LiberationSansR.ttf");
 
 
 	On_Create();
@@ -433,6 +433,12 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		bHoldingLMB = HoldingLMB;
 
 		bscrollmovement = scrollmovement;
+
+		//Drawing from back, so the main scene (window 0) will get updated data.
+		for (int i = Windows.size() - 1; i >= 0; i--)
+			if (Windows[i].AutoDraw)
+				Windows[i]._Draw();
+
 		// update Scene
 		Windows[0].Use(false);
 		On_Update();
@@ -441,9 +447,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		bscrollmovement = 0;
 		TextFromKeyboard.clear();
 		
-		//Drawing from back, so the main scene (window 0) will get updated data.
-		for(int i = Windows.size()-1;i>=0;i--)
-			Windows[i]._Draw();
+		
 		// Post Processing
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

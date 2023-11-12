@@ -992,7 +992,12 @@ void Scene::Rescale(glm::vec2 scale, int Z_Index)
 void Scene::Draw()
 {
 
-
+	for (int i = 0; i < Shaders.size(); i++)
+	{
+		UseShader(Shaders[i].program);
+		SetShader1f(&Shaders[i].program, "en_Time", clock() * 0.001f);
+		Shaders[i].UpdateUniforms();
+	}
 
 	for (int i = 0; i < balls.size(); i++)
 	{
@@ -1011,12 +1016,12 @@ void Scene::Draw()
 			DrawTexturedQuad(balls[i].position, glm::vec2(balls[i].r), Textures[balls[i].Textureid].texture, balls[i].rotation, balls[i].color, balls[i].Z_Index, NM);
 		else if (balls[i].Shaderid >= 0)// Shader
 		{
+			UseShader(Shaders[balls[i].Shaderid].program);
 			if (balls[i].Textureid >= 0)
 				BindTexture(&Shaders[balls[i].Shaderid].program, "en_objTexture", Textures[balls[i].Textureid].texture, 0);
 			else
 				BindTexture(&Shaders[balls[i].Shaderid].program, "en_objTexture", FlatColorCircleTexture, 0);
 
-			UseShader(Shaders[balls[i].Shaderid].program);
 			SetShader4f(&Shaders[balls[i].Shaderid].program, "en_objColor", balls[i].color);
 
 			DrawShaderedQuad(balls[i].position, { balls[i].r,balls[i].r }, balls[i].rotation, Shaders[balls[i].Shaderid].program);
@@ -1042,11 +1047,11 @@ void Scene::Draw()
 		else if (cubes[i].Shaderid >= 0)// Shader
 		{
 
+			UseShader(Shaders[cubes[i].Shaderid].program);
 			if (cubes[i].Textureid >= 0)
 				BindTexture(&Shaders[cubes[i].Shaderid].program, "en_objTexture", Textures[cubes[i].Textureid].texture, 0);
 			else
 				BindTexture(&Shaders[cubes[i].Shaderid].program, "en_objTexture", FlatColorTexture, 0);
-			UseShader(Shaders[cubes[i].Shaderid].program);
 			SetShader4f(&Shaders[cubes[i].Shaderid].program, "en_objColor", cubes[i].color);
 
 			DrawShaderedQuad(cubes[i].position, { cubes[i].width,cubes[i].height }, cubes[i].Rotation, Shaders[cubes[i].Shaderid].program);
@@ -1096,12 +1101,7 @@ void Scene::Draw()
 		}
 
 	}
-	for (int i = 0; i < Shaders.size(); i++)
-	{
-		UseShader(Shaders[i].program);
-		SetShader1f(&Shaders[i].program, "en_Time", clock() * 0.001f);
-		Shaders[i].UpdateUniforms();
-	}
+	
 }
 void Scene::DeleteNormalMaps()
 {

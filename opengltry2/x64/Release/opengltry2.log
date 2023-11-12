@@ -1,7 +1,8 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: промежуточный каталог (x64\Release\) содержит файлы, которые используются совместно с другим проектом (opengltry2.vcxproj).  Это может привести к ошибкам очистки и перестроения.
-  MapTest.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\include\strstream(23,24): warning C4996: 'std::_Header_strstream': warning STL4005: <strstream> is deprecated in C++17. You can define _SILENCE_CXX17_STRSTREAM_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to acknowledge that you have received this warning.
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Mathematics.h(7,32): warning C4305: инициализация: усечение из "double" в "float"
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: промежуточный каталог (x64\Release\) содержит файлы, которые используются совместно с другим проектом (opengltry2.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+  UI.cpp
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Mathematics.h(7,25): warning C4305: инициализация: усечение из "double" в "float"
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Libraries\include\freetype\config\ftheader.h(180,1): warning C4005: FT_FREETYPE_H: изменение макроопределения
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Text.h(4,1): message : см. предыдущее определение "FT_FREETYPE_H"
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(2,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(3,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(4,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
@@ -12,52 +13,53 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objec
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(11,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(12,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(13,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Libraries\include\freetype\config\ftheader.h(180,1): warning C4005: FT_FREETYPE_H: изменение макроопределения
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Text.h(4): message : см. предыдущее определение "FT_FREETYPE_H"
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(190,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(191,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects\Softbody.h(59,31): warning C4244: -=: преобразование "float" в "T", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(395,10): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(435,10): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(513,36): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(534,14): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(558,44): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(558,39): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(558,18): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(574,36): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(670,23): warning C4244: =: преобразование "T" в "int", возможна потеря данных
           with
           [
-              T=int
+              T=float
           ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects\Softbody.h(61,31): warning C4244: +=: преобразование "float" в "T", возможна потеря данных
-          with
-          [
-              T=int
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(331,102): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(334,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(337,123): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(487,77): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(490,99): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(556,94): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(558,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(584,84): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(590,81): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(598,89): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(603,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(631,84): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(638,81): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(646,90): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(651,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(668,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(822,86): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(823,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(859,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1318,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1320,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1431,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1441,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1452,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1460,52): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1537,32): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1568,34): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(738,35): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(746,45): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(763,45): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp(788,47): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
-  1 of 4525 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 4430 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    44 functions had inline decision re-evaluated but remain unchanged
+    46 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
-glew32s.lib(glew.obj) : warning LNK4099: "glew_static.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\Users\gfif\source\repos\opengltry2\x64\Release\glew_static.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+glew32s.lib(glew.obj) : warning LNK4099: "" PDB не найден с "glew32s.lib(glew.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftbase.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftbase.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftinit.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftinit.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftsystem.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftsystem.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(autofit.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(autofit.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(truetype.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(truetype.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(type1.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(type1.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(cff.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(cff.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(type1cid.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(type1cid.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(pfr.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(pfr.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(type42.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(type42.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(winfnt.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(winfnt.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(pcf.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(pcf.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(bdf.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(bdf.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(psaux.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(psaux.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(psmodule.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(psmodule.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(pshinter.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(pshinter.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(sfnt.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(sfnt.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(smooth.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(smooth.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(raster.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(raster.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(sdf.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(sdf.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(svg.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(svg.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftgzip.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftgzip.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftlzw.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftlzw.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftbitmap.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftbitmap.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
+freetype.lib(ftdebug.obj) : warning LNK4099: "" PDB не найден с "freetype.lib(ftdebug.obj)" или на ""; компоновка объекта выполняется как при отсутствии отладочных данных
   opengltry2.vcxproj -> C:\Users\gfif\source\repos\opengltry2\x64\Release\Engine.exe

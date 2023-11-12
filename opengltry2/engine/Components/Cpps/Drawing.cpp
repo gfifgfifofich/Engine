@@ -282,6 +282,8 @@ void Window::Destroy()
 }
 void Window::_Draw()
 {
+
+	int prev = window_id;
 	Use(false);
 
 
@@ -782,7 +784,7 @@ void Window::_Draw()
 
 		DetachShader();
 	}
-
+	UseWindow(prev);
 }
 
 
