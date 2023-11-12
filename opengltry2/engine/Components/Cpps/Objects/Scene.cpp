@@ -997,6 +997,7 @@ void Scene::Draw()
 		UseShader(Shaders[i].program);
 		SetShader1f(&Shaders[i].program, "en_Time", clock() * 0.001f);
 		Shaders[i].UpdateUniforms();
+		DetachShader();
 	}
 
 	for (int i = 0; i < balls.size(); i++)
@@ -1025,6 +1026,7 @@ void Scene::Draw()
 			SetShader4f(&Shaders[balls[i].Shaderid].program, "en_objColor", balls[i].color);
 
 			DrawShaderedQuad(balls[i].position, { balls[i].r,balls[i].r }, balls[i].rotation, Shaders[balls[i].Shaderid].program);
+			DetachShader();
 		}
 
 	}
@@ -1055,6 +1057,7 @@ void Scene::Draw()
 			SetShader4f(&Shaders[cubes[i].Shaderid].program, "en_objColor", cubes[i].color);
 
 			DrawShaderedQuad(cubes[i].position, { cubes[i].width,cubes[i].height }, cubes[i].Rotation, Shaders[cubes[i].Shaderid].program);
+			DetachShader();
 		}
 	}
 	for (int i = 0; i < polygons.size(); i++)

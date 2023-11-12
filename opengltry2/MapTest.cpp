@@ -93,6 +93,11 @@ bool ShowShadersWindow = false;
 
 float LightVolume = 0.005f;
 
+
+
+int Texteditcurspos = 0;
+bool textedit = false;
+
 void ShowParticleObjectRedactorWindow(ParticleEmiter* PE,int type,int i)
 {
 	ImGui::Begin("Particle Object");
@@ -860,69 +865,65 @@ int DeletetextureCountDown = 2;
 void ShowRedactorWindow(Texture* Texture)
 {
 
-	ImGui::Begin("Texture");
-	//ImGui::Text( CurrentTexture->FileName.c_str() );
-	
-	if (ImGui::Button("Close window"))
-	{
-		CurrentTexture = NULL;
-		ImGui::End();
-		return;
-	}
-	for (int i = 0; i < 256; i++)
-	{
-		if (i < CurrentTexture->FileName.size())
-			SelectedTextureCharName[i] = CurrentTexture->FileName[i];
-		else
-			SelectedTextureCharName[i] = char();
-	}
 
-	ImGui::InputText("Texture Name:", SelectedTextureCharName, 256);
+	float step = 20.0f;
+	Corner.y += UI_DrawText("Da Texture", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_DrawText(CurrentTexture->FileName.c_str(), Corner, 0.35f).y * -1.0f - step;
 
-	CurrentTexture->FileName.clear();
-	for (int i = 0; i < 256; i++)
-		if (SelectedTextureCharName[i] != char())
-			CurrentTexture->FileName += SelectedTextureCharName[i];
 
-	ImGui::Text("Texture ID = %i", CurrentTexture->texture);
+
+	Corner.y += UI_TextBox(&CurrentTexture->FileName,Corner,&Texteditcurspos,&textedit,-1).y * -1.0f - step;
+
+
+
+	float xsize = 0;
+
+	std::string tmp = "Texture ID: ";
+	tmp += std::to_string(CurrentTexture->texture);
+	Corner.y += UI_DrawText(tmp, Corner, 0.35f).y * -1.0f - step;
 
 	int typ = CurrentTexture->Type;
-	ImGui::SliderInt("Type ", &CurrentTexture->Type, 0, 4);
+
+	Corner.y += UI_SliderInt(&CurrentTexture->Type, "type", Corner, 0, 4).y * -1.0f - step;
 
 	if (CurrentTexture->Type == 0)
-		ImGui::Text("LoadFromName");
+		Corner.y += UI_DrawText("LoadFromName",Corner,0.35f).y * -1.0f - step;
 	if (CurrentTexture->Type == 1)
-		ImGui::Text("Round Noize");
+		Corner.y += UI_DrawText("Round Noize",Corner,0.35f).y * -1.0f - step;
 	if (CurrentTexture->Type == 2)
-		ImGui::Text("Squere Noize");
+		Corner.y += UI_DrawText("Squere Noize",Corner,0.35f).y * -1.0f - step;
 	if (CurrentTexture->Type == 3)
-		ImGui::Text("Smooth Squere Noize");
+		Corner.y += UI_DrawText("Smooth Squere Noize",Corner,0.35f).y * -1.0f - step;
 	if (CurrentTexture->Type == 4)
-		ImGui::Text("Gradient");
+		Corner.y += UI_DrawText("Gradient",Corner,0.35f).y * -1.0f - step;
 
 	if (typ != CurrentTexture->Type)
 	{
 		CurrentTexture->Delete();
 		CurrentTexture->Load();
 	}
+
+
 	if (CurrentTexture->Type > 0 && CurrentTexture->Type < 4)
 	{
 		float Tex_Freq = CurrentTexture->Noize_Frequency;
-		ImGui::DragFloat("Frequency ", &CurrentTexture->Noize_Frequency,0.01f);
+		Corner.y += UI_Drag(&CurrentTexture->Noize_Frequency,"Frequency ",Corner, 0.01f).y * -1.0f - step;
 		if (Tex_Freq != CurrentTexture->Noize_Frequency)
 		{
 			CurrentTexture->Delete();
 			CurrentTexture->Load();
 		}
 		int NoizeLayers = CurrentTexture->Noize_Layers;
-		ImGui::DragInt("Layers ", &CurrentTexture->Noize_Layers);
+
+		Corner.y += UI_DragInt(&CurrentTexture->Noize_Layers, "Layers ", Corner, 0.01f).y * -1.0f - step;
+
 		if (NoizeLayers != CurrentTexture->Noize_Layers)
 		{
 			CurrentTexture->Delete();
 			CurrentTexture->Load();
 		}
 		float Tex_Size = CurrentTexture->Size;
-		ImGui::DragFloat("Size ", &CurrentTexture->Size);
+		Corner.y += UI_Drag(&CurrentTexture->Size, "Size ", Corner, 0.1f).y * -1.0f - step;
 		if (Tex_Size != CurrentTexture->Size)
 		{
 			CurrentTexture->Delete();
@@ -932,19 +933,28 @@ void ShowRedactorWindow(Texture* Texture)
 	else
 	{
 		glm::vec4 color = CurrentTexture->Gradient_Color1;
-		float col[4] = { CurrentTexture->Gradient_Color1.r ,CurrentTexture->Gradient_Color1.g,CurrentTexture->Gradient_Color1.b,CurrentTexture->Gradient_Color1.a };
-		ImGui::ColorEdit4("Gradient Color1", col);
-		CurrentTexture->Gradient_Color1 = { col[0],col[1],col[2],col[3] };
-		if(color != CurrentTexture->Gradient_Color1)
+
+
+		Corner.y += UI_DrawText("Gradient Color1", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&CurrentTexture->Gradient_Color1.r, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&CurrentTexture->Gradient_Color1.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&CurrentTexture->Gradient_Color1.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&CurrentTexture->Gradient_Color1.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
+		if (color != CurrentTexture->Gradient_Color1)
 		{
 			CurrentTexture->Delete();
 			CurrentTexture->Load();
 		}
 
 		color = CurrentTexture->Gradient_Color2;
-		float col2[4] = {CurrentTexture->Gradient_Color2.r ,CurrentTexture->Gradient_Color2.g,CurrentTexture->Gradient_Color2.b,CurrentTexture->Gradient_Color2.a};
-		ImGui::ColorEdit4("Gradient Color2", col2);
-		CurrentTexture->Gradient_Color2 = { col2[0],col2[1],col2[2],col2[3] };
+
+		Corner.y += UI_DrawText("Gradient Color2", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&CurrentTexture->Gradient_Color2.r, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&CurrentTexture->Gradient_Color2.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&CurrentTexture->Gradient_Color2.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&CurrentTexture->Gradient_Color2.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
 		if (color != CurrentTexture->Gradient_Color2)
 		{
 			CurrentTexture->Delete();
@@ -952,7 +962,8 @@ void ShowRedactorWindow(Texture* Texture)
 		}
 
 		float Tex_Size = CurrentTexture->Size;
-		ImGui::DragFloat("Size ", &CurrentTexture->Size);
+		Corner.y += UI_Drag(&CurrentTexture->Size, "Size ", Corner, 0.1f).y * -1.0f - step;
+
 		if (Tex_Size != CurrentTexture->Size)
 		{
 			CurrentTexture->Delete();
@@ -960,10 +971,12 @@ void ShowRedactorWindow(Texture* Texture)
 		}
 
 	}
-	if (ImGui::Button("DeleteTexture"))
+	bool del = false;
+	xsize = UI_buttonOnlyON(&del,"DeleteTexture", Corner).x * 0.5f;
+	if(del)
 		DeletetextureCountDown--;
-	ImGui::SameLine();
-	ImGui::Text("%i", DeletetextureCountDown);
+
+	Corner.y += UI_DrawText(std::to_string(DeletetextureCountDown),Corner+glm::vec2(xsize,0.0f),0.35f).y*-1.0f - step;
 	if (DeletetextureCountDown <= 0)
 	{
 		DeletetextureCountDown = 2;
@@ -979,59 +992,36 @@ void ShowRedactorWindow(Texture* Texture)
 		Map.Textures[i] = Map.Textures[Map.Textures.size() - 1];
 		Map.Textures.pop_back();
 		CurrentTexture = NULL;
-		ImGui::End();
 		return;
 	}
-	ImGui::End();
+
 }
 
 void ShowRedactorWindow(Shader* shader)
 {
-	ImGui::Begin("Shader");
-	if (ImGui::Button("Close window"))
-	{
-		CurrentShader = NULL;
-		return;
-	}
-	for (int i = 0; i < 256; i++)
-		SelectedShaderCharArray[i] = char();
-	for (int i = 0; i < CurrentShader->Name.size(); i++)
-		SelectedShaderCharArray[i] = CurrentShader->Name[i];
-	ImGui::InputText("Name", SelectedShaderCharArray, 256);
-	std::string s = "";
-	for (int i = 0; i < 256; i++)
-	{
-		if (SelectedShaderCharArray[i] != char())
-			s += SelectedShaderCharArray[i];
-	}
-	CurrentShader->Name = s;
+	float step = 20.0f;
+	Corner.y += UI_DrawText("Shader", Corner, 0.35f).y * -1.0f - step;
 
-	for (int i = 0; i < 256; i++)
-		SelectedShaderCharArray[i] = char();
-	for (int i = 0; i < CurrentShader->VertexPath.size(); i++)
-		SelectedShaderCharArray[i] = CurrentShader->VertexPath[i];
-	ImGui::InputText("VertexPath", SelectedShaderCharArray, 256);
-	s = "";
-	for (int i = 0; i < 256; i++)
-	{
-		if (SelectedShaderCharArray[i] != char())
-			s += SelectedShaderCharArray[i];
-	}
-	CurrentShader->VertexPath = s;
+	std::string tmp = "Program ID: ";
+	tmp += std::to_string(CurrentShader->program);
+	Corner.y += UI_DrawText(tmp, Corner, 0.35f).y * -1.0f - step;
 
-	for (int i = 0; i < 256; i++)
-		SelectedShaderCharArray[i] = char();
-	for (int i = 0; i < CurrentShader->FragmentPath.size(); i++)
-		SelectedShaderCharArray[i] = CurrentShader->FragmentPath[i];
-	ImGui::InputText("FragmentPath", SelectedShaderCharArray, 256);
-	s = "";
-	for (int i = 0; i < 256; i++)
-	{
-		if (SelectedShaderCharArray[i] != char())
-			s += SelectedShaderCharArray[i];
-	}
-	CurrentShader->FragmentPath = s;
-	if (ImGui::Button("load"))
+
+	Corner.y += UI_DrawText("Name: ", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->Name, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+
+
+	Corner.y += UI_DrawText("Vertex path: ", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->VertexPath, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+
+
+	Corner.y += UI_DrawText("Fragment path: ", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->FragmentPath, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+
+	bool b = false;
+	Corner.y += UI_buttonOnlyON(&b,"Load", Corner).y * -1.0f - step;
+
+	if (b)
 	{
 		CurrentShader->ClearUniforms();
 		CurrentShader->Load();
@@ -1039,28 +1029,36 @@ void ShowRedactorWindow(Shader* shader)
 	}
 	for (int i = 0; i < CurrentShader->Uniforms.size(); i++)
 	{
+
+		float xsize = 0.0f;
+
 		if (CurrentShader->Uniforms[i].type == 0)
-			ImGui::DragFloat(CurrentShader->Uniforms[i].name.c_str(), &CurrentShader->uniformfloat[CurrentShader->Uniforms[i].type_id]);
+			Corner.y += UI_Drag(&CurrentShader->uniformfloat[CurrentShader->Uniforms[i].type_id], CurrentShader->Uniforms[i].name.c_str(), Corner, 0.01f).y * -1.0f - step;
 		if (CurrentShader->Uniforms[i].type == 1)
-			ImGui::DragInt(CurrentShader->Uniforms[i].name.c_str(), &CurrentShader->uniformint[CurrentShader->Uniforms[i].type_id]);
+			Corner.y += UI_DragInt(&CurrentShader->uniformint[CurrentShader->Uniforms[i].type_id], CurrentShader->Uniforms[i].name.c_str(), Corner, 0.01f).y * -1.0f - step;
 		if (CurrentShader->Uniforms[i].type == 2)
 		{
-			float v[2] = { CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].x,CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].y };
-			ImGui::DragFloat2(CurrentShader->Uniforms[i].name.c_str(), v, 0.1f);
-			CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id] = { v[0],v[1] };
+
+			Corner.y += UI_DrawText(CurrentShader->Uniforms[i].name.c_str(), Corner, 0.35f).y * -1.0f - step;
+			xsize = UI_Drag(&CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].x, "x", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+			Corner.y += UI_Drag(&CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
 		}
 		if (CurrentShader->Uniforms[i].type == 3)
 		{
-			float v[3] = { CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].x,CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].y ,CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].z };
-			ImGui::DragFloat3(CurrentShader->Uniforms[i].name.c_str(), v, 0.1f);
-			CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id] = { v[0],v[1],v[2] };
+
+			Corner.y += UI_DrawText(CurrentShader->Uniforms[i].name.c_str(), Corner, 0.35f).y * -1.0f - step;
+			xsize = UI_Drag(&CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].x, "x", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+			xsize += UI_Drag(&CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+			Corner.y += UI_Drag(&CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].z, "z", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
 		}
 		if (CurrentShader->Uniforms[i].type == 4)
 		{
-			float v[4] = { CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].x,CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].y, CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].z,CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].w };
-			if (CurrentShader->Uniforms[i].name[0] == '_')ImGui::DragFloat4(CurrentShader->Uniforms[i].name.c_str(), v, 0.1f);
-			else ImGui::ColorEdit4(CurrentShader->Uniforms[i].name.c_str(), v);
-			CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id] = { v[0],v[1],v[2],v[3] };
+
+			Corner.y += UI_DrawText(CurrentShader->Uniforms[i].name.c_str(), Corner, 0.35f).y * -1.0f - step;
+			xsize = UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].x, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+			xsize += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].y, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+			xsize += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].z, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+			Corner.y += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].w, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
 		}
 	}
 
@@ -1248,7 +1246,7 @@ void On_Update()
 	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
 	Corner += glm::vec2(20.0f, -25.0f);
 
-	Corner.y += UI_InputText(&sTest[0], Corner,&sTesti[0], &sTestb[0],32 ).y * -1.0f - step;
+	Corner.y += UI_TextBox(&sTest[0], Corner,&sTesti[0], &sTestb[0],32 ).y * -1.0f - step;
 	Corner.y += UI_DragInt(&sTesti[0],"cursorpos", Corner,0.1f).y * -1.0f - step;
 
 	GetWindow(ConsoleWindowID)->End();

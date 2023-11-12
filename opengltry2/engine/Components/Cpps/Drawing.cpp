@@ -1599,6 +1599,7 @@ void DrawShaderedQuad(glm::vec2 position, glm::vec2 scale, float rotation, unsig
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+		DetachShader();
 	}
 }
 void DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color, int Z_Index , unsigned int NormalMap , bool Additive)

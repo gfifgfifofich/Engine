@@ -696,26 +696,31 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 
 
 //UI returns size of object
-glm::vec2  UI_InputText(std::string* text, glm::vec2 scrPosition, int* cursorPosition, bool* edit, int maxTextSize, glm::vec2 scale, float TextScale, glm::vec4 Backcolor, glm::vec4 Textcolor, int Z_Index , bool Additive)
+glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int* cursorPosition, bool* edit, int maxTextSize, glm::vec2 scale, float TextScale, glm::vec4 Backcolor, glm::vec4 Textcolor, int Z_Index , bool Additive)
 {
 
 
 
 
 
-	glm::vec2 dif = LastJustPressedLMBScrMousePos;
+	glm::vec2 dif = LastJustPressedLMBMousePos;
 	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
-		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y
-		)
+		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y)
 	{
 
+		*edit = true;
 		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
-			*edit = true;
+			*cursorPosition = (*text).size();
 	}
 	else
-		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
+		*edit = false;
+
+	if ((ScreenMousePosition.x - scrPosition.x) > 0 && (ScreenMousePosition.x - scrPosition.x) < scale.x &&
+		(ScreenMousePosition.y - scrPosition.y) > -10 && (ScreenMousePosition.y - scrPosition.y) < scale.y)
+		if(bJustReleasedbutton[GLFW_MOUSE_BUTTON_1])
 			*edit = false;
-	if (JustPressedkey[GLFW_KEY_ENTER] || JustPressedkey[GLFW_KEY_ESCAPE])
+
+	if (bJustPressedkey[GLFW_KEY_ENTER] || bJustPressedkey[GLFW_KEY_ESCAPE])
 		*edit = false;
 
 	glm::vec2 Testsize = getTextSize(*text, TextScale);
@@ -726,9 +731,10 @@ glm::vec2  UI_InputText(std::string* text, glm::vec2 scrPosition, int* cursorPos
 
 		std::string tmptext = "";
 
-		if (JustPressedkey[GLFW_KEY_LEFT])
+
+		if (bJustPressedkey[GLFW_KEY_LEFT])
 			*cursorPosition -= 1;
-		if (JustPressedkey[GLFW_KEY_RIGHT] )
+		if (bJustPressedkey[GLFW_KEY_RIGHT] )
 			*cursorPosition += 1;
 
 
@@ -752,7 +758,7 @@ glm::vec2  UI_InputText(std::string* text, glm::vec2 scrPosition, int* cursorPos
 		if (text->size() == 0 && !CursorProcessed)
 		{
 
-			if (JustPressedkey[GLFW_KEY_BACKSPACE] && tmptext.size() > 0)
+			if (bJustPressedkey[GLFW_KEY_BACKSPACE] && tmptext.size() > 0)
 			{
 				tmptext.pop_back();
 				*cursorPosition -= 1;
@@ -772,7 +778,7 @@ glm::vec2  UI_InputText(std::string* text, glm::vec2 scrPosition, int* cursorPos
 				{
 
 
-					if (JustPressedkey[GLFW_KEY_BACKSPACE] && text->size() > 0 && *cursorPosition >= 0)
+					if (bJustPressedkey[GLFW_KEY_BACKSPACE] && text->size() > 0 && *cursorPosition >= 0)
 					{
 						*cursorPosition -= 1;
 					}
