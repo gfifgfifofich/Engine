@@ -4,7 +4,35 @@
 char MapFileNameChars[128];
 std::string MapFileName =  /*"../../HEAT/Maps/base.sav";*/"Maps/mappa.sav";
 //std::string MapFileName = "Maps/Shadertest.sav";
+/*
 
+
+	Corner.y += UI_DrawText("Fragment path: ", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->FragmentPath, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+	Corner.y += UI_buttonOnlyON(&b,"Load", Corner).y * -1.0f - step;
+	Corner.y += UI_CheckBox(&CurrentParticleEmiter->ShowWindow,"ShowSettings", Corner).y * -1.0f - step;
+
+
+	float xsize = 0.0f;
+
+	Corner.y += UI_Drag(&CurrentShader->uniformfloat[CurrentShader->Uniforms[i].type_id], CurrentShader->Uniforms[i].name.c_str(), Corner, 0.01f).y * -1.0f - step;
+	Corner.y += UI_DragInt(&CurrentShader->uniformint[CurrentShader->Uniforms[i].type_id], CurrentShader->Uniforms[i].name.c_str(), Corner, 0.01f).y * -1.0f - step;
+	
+	Corner.y += UI_DrawText(CurrentShader->Uniforms[i].name.c_str(), Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].x, "x", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&CurrentShader->uniformvec2[CurrentShader->Uniforms[i].type_id].y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
+	Corner.y += UI_DrawText(CurrentShader->Uniforms[i].name.c_str(), Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].x, "x", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&CurrentShader->uniformvec3[CurrentShader->Uniforms[i].type_id].z, "z", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+		
+	Corner.y += UI_DrawText(CurrentShader->Uniforms[i].name.c_str(), Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].x, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].y, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].z, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].w, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+*/
 
 
 Scene Map;
@@ -13,7 +41,7 @@ Texture tex;
 ball b;
 polygon pol;
 
-char TexturePath[128];
+std::string TexturePath;
 
 Texture* CurrentTexture = NULL;
 
@@ -57,11 +85,10 @@ ParticleEmiter* CurrentParticleEmiter = NULL;
 LightSource* CurrentLightSource = NULL;
 Shader* CurrentShader = NULL;
 
-char ParticleEmitterCharName[256];
-char LightSourceCharName[256];
-char SelectedTextureCharName[256];
-char SelectedShaderCharArray[256];
-char NewShaderCharArray[256];
+std::string LightSourceName = "New LightSource";
+std::string SelectedTextureName = "New SelectedTexture";
+std::string SelectedShaderArray = "New SelectedShader";
+std::string NewShaderArray = "New NewShader";
 std::string ParticleEmitterName = "New ParticleEmitter";
 ParticleEmiter pt;
 int selectedTexture = 0;
@@ -100,125 +127,151 @@ bool textedit = false;
 
 void ShowParticleObjectRedactorWindow(ParticleEmiter* PE,int type,int i)
 {
-	ImGui::Begin("Particle Object");
+	float step = 20.0f;
+	float xsize = 0.0f;
+
+	Corner.y += UI_DrawText("Particle Object", Corner, 0.35f).y * -1.0f - step;
 	if (type == 0)
 	{
-		ImGui::Text("Sphere of influence");
 
-		ImGui::DragFloat("attractionForce",&PE->SpheresOfInfluence[i].attractionStrength);
-		ImGui::Checkbox("attractive",&PE->SpheresOfInfluence[i].attractive);
 
-		ImGui::DragFloat("Radius", &PE->SpheresOfInfluence[i].r);
+		Corner.y += UI_DrawText("Sphere of influence", Corner, 0.35f).y * -1.0f - step;
 
-		float p[2] = { PE->SpheresOfInfluence[i].position.x,PE->SpheresOfInfluence[i].position.y };
-		ImGui::DragFloat2("Position",p);
-		PE->SpheresOfInfluence[i].position = { p[0],p[1] };
 
-		float v[2] = { PE->SpheresOfInfluence[i].velocity.x,PE->SpheresOfInfluence[i].velocity.y };
-		ImGui::DragFloat2("velocity", v);
-		PE->SpheresOfInfluence[i].velocity = { v[0],v[1] };
+		Corner.y += UI_Drag(&PE->SpheresOfInfluence[i].attractionStrength, "attractionForce", Corner, 0.01f).y * -1.0f - step;
+		Corner.y += UI_CheckBox(&PE->SpheresOfInfluence[i].attractive, "attractive", Corner).y * -1.0f - step;
+
+		Corner.y += UI_Drag(&PE->SpheresOfInfluence[i].r, "Radius", Corner, 0.1f).y * -1.0f - step;
+
+
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->SpheresOfInfluence[i].position.x, "x", Corner , 1.0f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->SpheresOfInfluence[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 80.0f,15.0f }).y * -1.0f - step;
+
+		Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->SpheresOfInfluence[i].velocity.x, "x", Corner , 1.0f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->SpheresOfInfluence[i].velocity.y, "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 80.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else if (type == 1)
 	{
-		ImGui::Text("Cube of influence");
+		Corner.y += UI_DrawText("Cube of influence", Corner, 0.35f).y * -1.0f - step;
 
-		ImGui::DragFloat("attractionForce", &PE->CubesOfInfluence[i].attractionStrength);
-		ImGui::Checkbox("attractive", &PE->CubesOfInfluence[i].attractive);
+		Corner.y += UI_Drag(&PE->CubesOfInfluence[i].attractionStrength, "attractionForce", Corner, 0.01f).y * -1.0f - step;
+		Corner.y += UI_CheckBox(&PE->CubesOfInfluence[i].attractive, "attractive", Corner).y * -1.0f - step;
 
-		float s[2] = { PE->CubesOfInfluence[i].scale.x,PE->CubesOfInfluence[i].scale.y };
-		ImGui::DragFloat2("Scale", s);
-		PE->CubesOfInfluence[i].scale = { s[0],s[1] };
+		Corner.y += UI_DrawText("Scale", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->CubesOfInfluence[i].scale.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->CubesOfInfluence[i].scale.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
 
-		float p[2] = { PE->CubesOfInfluence[i].position.x,PE->CubesOfInfluence[i].position.y };
-		ImGui::DragFloat2("Position", p);
-		PE->CubesOfInfluence[i].position = { p[0],p[1] };
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->CubesOfInfluence[i].position.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->CubesOfInfluence[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
 
-		float v[2] = { PE->CubesOfInfluence[i].velocity.x,PE->CubesOfInfluence[i].velocity.y };
-		ImGui::DragFloat2("Velocity", v);
-		PE->CubesOfInfluence[i].velocity = { v[0],v[1] };
+		Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->CubesOfInfluence[i].velocity.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->CubesOfInfluence[i].velocity.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else if (type == 2)
 	{
-		ImGui::Text("PointEmiter");
+		Corner.y += UI_DrawText("Point Emiter", Corner, 0.35f).y * -1.0f - step;
 
-		ImGui::DragFloat("Tick", &PE->EmitionPoints[i].tick);
-		ImGui::DragInt("Amount", &PE->EmitionPoints[i].amount);
 
-		float p[2] = { PE->EmitionPoints[i].position.x,PE->EmitionPoints[i].position.y };
-		ImGui::DragFloat2("Position", p);
-		PE->EmitionPoints[i].position = { p[0],p[1] };
+		Corner.y += UI_Drag(&PE->EmitionPoints[i].tick, "Tick", Corner, 0.01f).y * -1.0f - step;
+		Corner.y += UI_DragInt(&PE->EmitionPoints[i].amount, "Amount", Corner, 0.01f).y * -1.0f - step;
 
-		float v[2] = { PE->EmitionPoints[i].velocity.x,PE->EmitionPoints[i].velocity.y };
-		ImGui::DragFloat2("Velocity", v);
-		PE->EmitionPoints[i].velocity = { v[0],v[1] };
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionPoints[i].position.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionPoints[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
+		Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionPoints[i].velocity.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionPoints[i].velocity.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else if (type == 3)
 	{
-		ImGui::Text("Crcle Emiter");
+		Corner.y += UI_DrawText("Crcle Emiter", Corner, 0.35f).y * -1.0f - step;
 
-		ImGui::DragFloat("Tick", &PE->EmitionCircles[i].tick);
-		ImGui::DragInt("Amount", &PE->EmitionCircles[i].amount);
-		ImGui::DragFloat("Radius", &PE->EmitionCircles[i].r);
 
-		float p[2] = { PE->EmitionCircles[i].position.x,PE->EmitionCircles[i].position.y };
-		ImGui::DragFloat2("Position", p);
-		PE->EmitionCircles[i].position = { p[0],p[1] };
+		Corner.y += UI_Drag(&PE->EmitionCircles[i].tick, "Tick", Corner, 0.01f).y * -1.0f - step;
+		Corner.y += UI_DragInt(&PE->EmitionCircles[i].amount, "Amount", Corner, 0.01f).y * -1.0f - step;
 
-		float v[2] = { PE->EmitionCircles[i].velocity.x,PE->EmitionCircles[i].velocity.y };
-		ImGui::DragFloat2("Velocity", v);
-		PE->EmitionCircles[i].velocity = { v[0],v[1] };
+		Corner.y += UI_Drag(&PE->EmitionCircles[i].r, "Radius", Corner, 0.01f).y * -1.0f - step;
+
+
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionCircles[i].position.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionCircles[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
+		Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionCircles[i].velocity.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionCircles[i].velocity.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else if (type == 4)
 	{
-		ImGui::Text("Cube Emiter");
+		Corner.y += UI_DrawText("Cube Emiter", Corner, 0.35f).y * -1.0f - step;
 
-		ImGui::DragFloat("Tick", &PE->EmitionCubes[i].tick);
-		ImGui::DragInt("Amount", &PE->EmitionCubes[i].amount);
 
-		float s[2] = { PE->EmitionCubes[i].scale.x,PE->EmitionCubes[i].scale.y };
-		ImGui::DragFloat2("scale", s);
-		PE->EmitionCubes[i].scale = { s[0],s[1] };
+		Corner.y += UI_Drag(&PE->EmitionCubes[i].tick, "Tick", Corner, 0.01f).y * -1.0f - step;
+		Corner.y += UI_DragInt(&PE->EmitionCubes[i].amount, "Amount", Corner, 0.01f).y * -1.0f - step;
 
-		float p[2] = { PE->EmitionCubes[i].position.x,PE->EmitionCubes[i].position.y };
-		ImGui::DragFloat2("Position", p);
-		PE->EmitionCubes[i].position = { p[0],p[1] };
 
-		float v[2] = { PE->EmitionCubes[i].velocity.x,PE->EmitionCubes[i].velocity.y };
-		ImGui::DragFloat2("Velocity", v);
-		PE->EmitionCubes[i].velocity = { v[0],v[1] };
+		Corner.y += UI_DrawText("scale", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionCubes[i].scale.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionCubes[i].scale.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionCubes[i].position.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionCubes[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
+		Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->EmitionCubes[i].velocity.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->EmitionCubes[i].velocity.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else if (type == 5)
 	{
-		ImGui::Text("Light sphere");
-
-		ImGui::DragFloat("Radius", &PE->LightSpheres[i].r);
+		Corner.y += UI_DrawText("Light sphere", Corner, 0.35f).y * -1.0f - step;
 
 
+		Corner.y += UI_Drag(&PE->LightSpheres[i].r, "Radius", Corner, 0.01f).y * -1.0f - step;
 
-		float p[2] = { PE->LightSpheres[i].position.x,PE->LightSpheres[i].position.y };
-		ImGui::DragFloat2("Position", p);
-		PE->LightSpheres[i].position = { p[0],p[1] };
 
-		float v[4] = { PE->LightSpheres[i].Color.x,PE->LightSpheres[i].Color.y ,PE->LightSpheres[i].Color.z,PE->LightSpheres[i].Color.w };
-		ImGui::ColorEdit4("Color", v);
-		PE->LightSpheres[i].Color = { v[0],v[1],v[2],v[3] };
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->LightSpheres[i].position.x, "x", Corner, 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->LightSpheres[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
+
+
+		Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->LightSpheres[i].Color.x, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&PE->LightSpheres[i].Color.y, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&PE->LightSpheres[i].Color.z, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->LightSpheres[i].Color.w, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else if (type == 6)
 	{
-		ImGui::Text("Light cube");
+		Corner.y += UI_DrawText("Light cube", Corner, 0.35f).y * -1.0f - step;
 
 
-		float s[2] = { PE->LightCubes[i].scale.x,PE->LightCubes[i].scale.y };
-		ImGui::DragFloat2("scale", s);
-		PE->LightCubes[i].scale = { s[0],s[1] };
+		Corner.y += UI_DrawText("scale", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->LightCubes[i].scale.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->LightCubes[i].scale.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
 
-		float p[2] = { PE->LightCubes[i].position.x,PE->LightCubes[i].position.y };
-		ImGui::DragFloat2("Position", p);
-		PE->LightCubes[i].position = { p[0],p[1] };
+		Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->LightCubes[i].position.x, "x", Corner , 0.01f, { 80.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->LightCubes[i].position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 80.0f,15.0f }).y * -1.0f - step;
 
-		float v[4] = { PE->LightCubes[i].Color.x,PE->LightCubes[i].Color.y ,PE->LightCubes[i].Color.z,PE->LightCubes[i].Color.w };
-		ImGui::ColorEdit4("Color", v);
-		PE->LightCubes[i].Color = { v[0],v[1],v[2],v[3] };
+
+		Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&PE->LightCubes[i].Color.x, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&PE->LightCubes[i].Color.y, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&PE->LightCubes[i].Color.z, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&PE->LightCubes[i].Color.w, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
 	}
 	else
 	{
@@ -227,13 +280,14 @@ void ShowParticleObjectRedactorWindow(ParticleEmiter* PE,int type,int i)
 		CurrentRedactingParticleObject = -1;
 		CurrentRedactingParticleObjectType = -1;
 	}
-	ImGui::End();
 }
 void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 {
-	ImGui::Begin(CurrentParticleEmiter->Name.c_str());
-	if (ImGui::Button("ShowSettings"))
-		CurrentParticleEmiter->ShowWindow = !CurrentParticleEmiter->ShowWindow;
+	float step = 20.0f;
+	float xsize = 0.0f;
+	Corner.y += UI_DrawText(CurrentParticleEmiter->Name, Corner, 0.35f).y * -1.0f - step;
+
+	Corner.y += UI_CheckBox(&CurrentParticleEmiter->ShowWindow,"ShowSettings", Corner).y * -1.0f - step;
 
 
 	int tip = 0;
@@ -242,27 +296,28 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 	if (CurrentParticleEmiter->Type == "CIRCLE") tip = 2;
 	if (CurrentParticleEmiter->Type == "TEXTURED") tip = 3;
 	if (CurrentParticleEmiter->Type == "TEXTUREDLINE") tip = 4;
-	ImGui::SliderInt("Type: " , &tip, 0, 4);
-	ImGui::SameLine();
-	ImGui::Text(CurrentParticleEmiter->Type.c_str());
+	Corner.y += UI_SliderInt(&tip, "Type", Corner,0,4).y * -1.0f - step;
 	if (tip == 0)CurrentParticleEmiter->Type = "QUAD";
 	if (tip == 1)CurrentParticleEmiter->Type = "LINE";
 	if (tip == 2)CurrentParticleEmiter->Type = "CIRCLE";
 	if (tip == 3)CurrentParticleEmiter->Type = "TEXTURED";
 	if (tip == 4)CurrentParticleEmiter->Type = "TEXTUREDLINE";
+	Corner.y += UI_DrawText(CurrentParticleEmiter->Type, Corner, 0.35f).y * -1.0f - step;
 
+	bool r = RedactingParticlesEmiter;
+	Corner.y += UI_CheckBox(&RedactingParticlesEmiter, "Redact", Corner).y * -1.0f - step;
 
-	
-	if (ImGui::Button("Redact"))
+	if (r != RedactingParticlesEmiter)
 	{
-		RedactingParticlesEmiter = !RedactingParticlesEmiter;
 		GrabSelectTool = false;
 		RedactingScene = false;
 		RedactingPolygon = false;
 	}
+
 	if (RedactingParticlesEmiter)
 	{
-		ImGui::Text("object Type:");
+
+		Corner.y += UI_DrawText("object Type:", Corner, 0.35f).y * -1.0f - step;
 		const char* str;
 		if (ParticleObject == 0)str = "InfluenceSphere";
 		if (ParticleObject == 1)str = "InfluenceQuad";
@@ -271,60 +326,93 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 		if (ParticleObject == 4)str = "EmiterQuad";
 		if (ParticleObject == 5)str = "LightSphere";
 		if (ParticleObject == 6)str = "LightQuad";
-		ImGui::SliderInt(str, &ParticleObject, 0, 6);
+		Corner.y += UI_SliderInt(&ParticleObject,str, Corner, 0, 6).y * -1.0f - step;
 		if (ParticleObject > 1 && ParticleObject < 5)
 		{
-			ImGui::DragInt("Amount", &amount, 0.1f);
-			ImGui::DragFloat("tick", &tick, 0.001f, 0);
-			ImGui::DragFloat2("velocity", vel, 1.0f);
+			Corner.y += UI_DragInt(&amount, "Amount", Corner, 0.1f).y * -1.0f - step;
+			Corner.y += UI_Drag(&tick, "tick", Corner, 0.001f).y * -1.0f - step;
+
+			Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+			xsize = UI_Drag(&vel[0], "x", Corner + glm::vec2(xsize, 0.0f), 0.01f, {40.0f,15.0f}).x * 0.5f;
+			Corner.y += UI_Drag(&vel[1], "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
 		}
-		if (ImGui::Button("Add/Redact"))
-			AddRedact = !AddRedact;
+
+		Corner.y += UI_CheckBox(&AddRedact, "Add / Redact", Corner).y * -1.0f - step;
 		if (AddRedact)
 		{
-			ImGui::Text("Hold Shift to add 1 object/click ");
+			Corner.y += UI_DrawText("Hold Shift to add 1 object/click ", Corner, 0.35f).y * -1.0f - step;
 
 			if (ParticleObject == 0)
 			{
-				ImGui::DragFloat2("velocity", vel, 1.0f);
-				ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-				ImGui::DragFloat("AttractionForce", &AttractionForce, 0.1f);
-				ImGui::Checkbox("attracticve", &attracticve);
-				ImGui::Text("if holding Shift, drag mouse to change raduis");
+
+				Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&vel[0], "x", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&vel[1], "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_Drag(&radius, "Radius", Corner, 0.1f).y * -1.0f - step;
+				Corner.y += UI_Drag(&AttractionForce, "AttractionForce", Corner, 0.1f).y * -1.0f - step;
+
+				Corner.y += UI_CheckBox(&attracticve, "attracticve", Corner).y * -1.0f - step;
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 			if (ParticleObject == 1)
 			{
-				ImGui::DragFloat2("velocity", vel, 1.0f);
-				ImGui::DragFloat2("Size", size, 1.0f, 0);
-				ImGui::DragFloat("AttractionForce", &AttractionForce, 0.1f);
-				ImGui::Checkbox("attracticve", &attracticve);
-				ImGui::Text("if holding Shift, drag mouse to change size");
+				Corner.y += UI_DrawText("velocity", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&vel[0], "x", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&vel[1], "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_DrawText("Size", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&size[0], "x", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&size[1], "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_Drag(&AttractionForce, "AttractionForce", Corner, 0.1f).y * -1.0f - step;
+
+				Corner.y += UI_CheckBox(&attracticve, "attracticve", Corner).y * -1.0f - step;
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 			if (ParticleObject == 2)
 			{
-				ImGui::Text("if holding Shift, drag mouse to change velocity");
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 			if (ParticleObject == 3)
 			{
-				ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-				ImGui::Text("if holding Shift, drag mouse to change Raduis");
+				Corner.y += UI_Drag(&radius, "Radius", Corner, 0.1f).y * -1.0f - step;
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 			if (ParticleObject == 4)
 			{
-				ImGui::DragFloat2("Size", size, 1.0f, 0);
-				ImGui::Text("if holding Shift, drag mouse to change Size");
+				Corner.y += UI_DrawText("Size", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&size[0], "x", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&size[1], "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 			if (ParticleObject == 5)
 			{
-				ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-				ImGui::ColorEdit4("Color", LightColor);
-				ImGui::Text("if holding Shift, drag mouse to change raduis");
+				Corner.y += UI_Drag(&radius, "Radius", Corner, 0.1f).y * -1.0f - step;
+
+				Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&LightColor[0], "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+				xsize += UI_Drag(&LightColor[1], "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+				xsize += UI_Drag(&LightColor[2], "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&LightColor[3], "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 			if (ParticleObject == 6)
 			{
-				ImGui::DragFloat2("Size", size, 1.0f, 0);
-				ImGui::ColorEdit4("Color", LightColor);
-				ImGui::Text("if holding Shift, drag mouse to change size");
+				Corner.y += UI_DrawText("Size", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&size[0], "x", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&size[1], "y", Corner + glm::vec2(xsize, 0.0f), 1.0f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+				xsize = UI_Drag(&LightColor[0], "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+				xsize += UI_Drag(&LightColor[1], "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+				xsize += UI_Drag(&LightColor[2], "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+				Corner.y += UI_Drag(&LightColor[3], "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
+				Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 			}
 
 			if (keys[GLFW_KEY_LEFT_SHIFT] && JustPressedLMB)
@@ -395,109 +483,121 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 		{
 			if (ParticleObject == 0)
 			{
-				ImGui::Text("SpheresOfInfluence:");
+				Corner.y += UI_DrawText("SpheresOfInfluence:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->SpheresOfInfluence.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 0;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
 			if (ParticleObject == 1)
 			{
-				ImGui::Text("CubeOfInfluence:");
+				Corner.y += UI_DrawText("CubeOfInfluence:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->CubesOfInfluence.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 1;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
 			if (ParticleObject == 2)
 			{
-				ImGui::Text("EmitionPoints:");
+				Corner.y += UI_DrawText("EmitionPoints:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 2;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
 			if (ParticleObject == 3)
 			{
-				ImGui::Text("EmitionCircles:");
+				Corner.y += UI_DrawText("EmitionCircles:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->EmitionCircles.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 3;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
 			if (ParticleObject == 4)
 			{
-				ImGui::Text("EmitionCubes:");
+				Corner.y += UI_DrawText("EmitionCubes:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->EmitionCubes.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 4;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
 			if (ParticleObject == 5)
 			{
-				ImGui::Text("LightSpheres:");
+				Corner.y += UI_DrawText("LightSpheres:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->LightSpheres.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 5;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
 			if (ParticleObject == 6)
 			{
-				ImGui::Text("LightCubes:");
+				Corner.y += UI_DrawText("LightCubes:", Corner, 0.35f).y * -1.0f - step;
 				for (int i = 0; i < CurrentParticleEmiter->LightCubes.size(); i++)
-					if (ImGui::Button(std::to_string(i).c_str()))
+				{
+					bool pressed = false;
+					Corner.y += UI_buttonOnlyON(&pressed, std::to_string(i).c_str(), Corner).y * -1.0f - step;
+					if (pressed)
 					{
 						CurrentRedactingParticleObjectType = 6;
 						CurrentRedactingParticleObject = i;
 					}
+				}
 			}
-			if (CurrentRedactingParticleObjectType > -1 && CurrentRedactingParticleObject > -1)
-				ShowParticleObjectRedactorWindow(CurrentParticleEmiter, CurrentRedactingParticleObjectType, CurrentRedactingParticleObject);
 		}
-		for (int i = 0; i < CurrentParticleEmiter->SpheresOfInfluence.size(); i++)
-			DrawCircle(CurrentParticleEmiter->SpheresOfInfluence[i].position, CurrentParticleEmiter->SpheresOfInfluence[i].r, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
+		
 
-		for (int i = 0; i < CurrentParticleEmiter->EmitionCircles.size(); i++)
-			DrawCircle(CurrentParticleEmiter->EmitionCircles[i].position, CurrentParticleEmiter->EmitionCircles[i].r, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->LightSpheres.size(); i++)
-			DrawCircle(CurrentParticleEmiter->LightSpheres[i].position, CurrentParticleEmiter->LightSpheres[i].r, glm::vec4(1.0f, 1.0f,0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->CubesOfInfluence.size(); i++)
-			DrawCube(CurrentParticleEmiter->CubesOfInfluence[i].position, CurrentParticleEmiter->CubesOfInfluence[i].scale, 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->EmitionCubes.size(); i++)
-			DrawCube(CurrentParticleEmiter->EmitionCubes[i].position, CurrentParticleEmiter->EmitionCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->LightCubes.size(); i++)
-			DrawCube(CurrentParticleEmiter->LightCubes[i].position, CurrentParticleEmiter->LightCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
-			DrawCircle(CurrentParticleEmiter->EmitionPoints[i].position,10, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-		ImGui::End();
+		
 	}
 	else
 	{
-		ImGui::DragInt("id", &CurrentParticleEmiter->id, 0.1f);
-		ImGui::DragInt("Z_Index", &CurrentParticleEmiter->Z_Index, 0.1f);
-		ImGui::SliderInt("TextureId", &selectedTexture, 0, Map.Textures.size() - 1);
+
+		Corner.y += UI_DragInt(&CurrentParticleEmiter->id, "id", Corner, 0.1f).y * -1.0f - step;
+		Corner.y += UI_DragInt(&CurrentParticleEmiter->Z_Index, "Z_Index", Corner, 0.1f).y * -1.0f - step;
+		Corner.y += UI_SliderInt(&selectedTexture, "TextureId", Corner, 0, Map.Textures.size() - 1).y * -1.0f - step;
+
 		if (selectedTexture >= 0 && selectedTexture < Map.Textures.size())
-			ImGui::Text(Map.Textures[selectedTexture].FileName.c_str());
-		ImGui::SliderInt("NormalMap", &CurrentParticleEmiter->NormalMapid, -2, Map.NormalMaps.size() - 1);
-		if (ImGui::Button("Add"))
+			Corner.y += UI_DrawText(Map.Textures[selectedTexture].FileName.c_str(), Corner, 0.35f).y * -1.0f - step;
+
+		bool add = false;
+		Corner.y += UI_buttonOnlyON(&add, "Add", Corner).y * -1.0f - step;
+
+		if (add)
 		{
 			CurrentParticleEmiter->Textureids.push_back(selectedTexture);
 
@@ -505,14 +605,20 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 			for (int i = 0; i < CurrentParticleEmiter->Textureids.size(); i++)
 				CurrentParticleEmiter->textures.push_back(Map.Textures[CurrentParticleEmiter->Textureids[i]].texture);
 		}
-		ImGui::Text("Textures:");
+
+		Corner.y += UI_SliderInt(&CurrentParticleEmiter->NormalMapid, "NormalMap", Corner, -2, Map.NormalMaps.size() - 1).y * -1.0f - step;
+
+		
+		Corner.y += UI_DrawText("Textures:", Corner, 0.35f).y * -1.0f - step;
 		for (int i = 0; i < CurrentParticleEmiter->textures.size(); i++)
 		{
-			ImGui::Text(Map.Textures[CurrentParticleEmiter->Textureids[i]].FileName.c_str());
+			xsize = UI_DrawText(Map.Textures[CurrentParticleEmiter->Textureids[i]].FileName.c_str(), Corner, 0.35f).x * 0.5f;
 			std::string cl = "Delete ";
 			cl += std::to_string(i);
-			ImGui::SameLine();
-			if (ImGui::Button(cl.c_str()))
+			bool d = false;
+			Corner.y += UI_buttonOnlyON(&d, cl.c_str(), Corner + glm::vec2(xsize + step, 0.0f)).y * -1.0f - step;
+
+			if (d)
 			{
 				CurrentParticleEmiter->Textureids[i] = CurrentParticleEmiter->Textureids[CurrentParticleEmiter->Textureids.size() - 1];
 				CurrentParticleEmiter->Textureids.pop_back();
@@ -524,146 +630,9 @@ void ShowRedactorWindow(ParticleEmiter* ParticleEmiter)
 			}
 
 		}
-		if (ImGui::Button("Close window"))
-			CurrentParticleEmiter = NULL;
 	}
-	ImGui::End();
 }
-void ShowRedactorWindow(LightSource* ls)
-{
 
-	ImGui::Begin(CurrentLightSource->name.c_str());
-	
-
-
-	if (ImGui::Button("Close window"))
-	{
-		CurrentLightSource = NULL;
-		return;
-	}
-	
-	float s[2] = { CurrentLightSource->scale.x ,CurrentLightSource->scale.y };
-	ImGui::DragFloat2("Scale", s);
-	CurrentLightSource->scale = { s[0],s[1] };
-
-
-	float pos[3] = { CurrentLightSource->position.x ,CurrentLightSource->position.y,CurrentLightSource->position.z };
-	ImGui::DragFloat3("Position", pos,1.0f);
-	CurrentLightSource->position = { pos[0],pos[1],pos[2] };
-
-	float col[4] = { CurrentLightSource->color.r ,CurrentLightSource->color.g,CurrentLightSource->color.b,CurrentLightSource->color.a };
-	ImGui::ColorEdit4("Color", col);
-	CurrentLightSource->color = { col[0],col[1],col[2],col[3] };
-
-	ImGui::DragFloat("Volume", &CurrentLightSource->volume, 0.01f);
-
-	if (CurrentLightSource->TextureId > 0)
-		ImGui::Text(Map.Textures[CurrentLightSource->TextureId].FileName.c_str());
-	else
-		ImGui::Text("Light Sphere Texture");
-
-	ImGui::DragInt("Texture", &CurrentLightSource->TextureId, 0.01f, -1, Map.Textures.size() - 1);
-
-	ImGui::End;
-}
-void ShowRedactorWindow(ball* Ball)
-{
-	float step = 10.0f;
-	Corner.y += UI_DrawText("Da ball",Corner,0.35f).y*-1.0f-step;
-	Corner.y += UI_DragInt(&SelectedBall->id,"id",Corner, 0.1f).y*-1.0f-step;
-	Corner.y += UI_SliderInt(&SelectedBall->type,"type",Corner, -1,1).y*-1.0f-step;
-	Corner.y += UI_DragInt(&SelectedBall->Z_Index,"Z_Index",Corner, 0.1f).y*-1.0f-step;
-	Corner.y += UI_Drag(&SelectedBall->r,"Radius",Corner).y*-1.0f-step;
-	Corner.y += UI_Drag(&SelectedBall->rotation,"Rotation",Corner,0.01f).y*-1.0f-step;
-
-	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
-	float xsize = UI_Drag(&SelectedBall->position.x, "x", Corner, 0.01f, {70.0f,15.0f}).x*0.5f;
-	Corner.y += UI_Drag(&SelectedBall->position.y,"y",Corner + glm::vec2(xsize,0.0f),0.01f, { 70.0f,15.0f }).y*-1.0f-step;
-	
-
-	Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
-	xsize = UI_Drag(&SelectedBall->color.r, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
-	xsize += UI_Drag(&SelectedBall->color.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
-	xsize += UI_Drag(&SelectedBall->color.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
-	Corner.y += UI_Drag(&SelectedBall->color.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
-
-	Corner.y += UI_SliderInt(&SelectedBall->Textureid, "Texture", Corner, -1, Map.Textures.size() - 1).y * -1.0f - step;
-
-	if (SelectedBall->Textureid > -1 && SelectedBall->Textureid < Map.Textures.size())
-		Corner.y += UI_DrawText(Map.Textures[SelectedBall->Textureid].FileName, Corner, 0.35f).y * -1.0f - step;
-	else if (SelectedBall->Textureid == -1)
-		Corner.y += UI_DrawText("Clear color", Corner, 0.35f).y * -1.0f - step;
-
-	Corner.y += UI_SliderInt(&SelectedBall->Shaderid, "Shader", Corner, -1, Map.Shaders.size() - 1).y * -1.0f - step;
-
-	if (SelectedBall->Shaderid > -1)
-		Corner.y += UI_DrawText(Map.Shaders[SelectedBall->Shaderid].Name, Corner, 0.35f).y * -1.0f - step;
-	if (SelectedBall->Shaderid == -1)
-		Corner.y += UI_DrawText("No shader", Corner, 0.35f).y * -1.0f - step;
-
-	Corner.y += UI_SliderInt(&SelectedBall->NormalMapId, "NormalMap", Corner, -1, Map.NormalMaps.size() - 1).y * -1.0f - step;
-
-
-	Corner.y += UI_CheckBox(&SelectedBall->lighted, "Lighted",Corner).y * -1.0f - step;
-	return;
-}
-void ShowRedactorWindow(cube* Cube)
-{
-	float step = 10.0f;
-	Corner.y += UI_DrawText("Da Cube", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_DragInt(&SelectedCube->id, "id", Corner, 0.1f).y * -1.0f - step;
-	Corner.y += UI_SliderInt(&SelectedCube->type, "type", Corner, -1, 1).y * -1.0f - step;
-	Corner.y += UI_DragInt(&SelectedCube->Z_Index, "Z_Index", Corner, 0.1f).y * -1.0f - step;
-	//Corner.y += UI_Drag(&SelectedCube->Width, "Scale", Corner).y * -1.0f - step;
-
-	Corner.y += UI_DrawText("Scale", Corner, 0.35f).y * -1.0f - step;
-	float xsize = UI_Drag(&SelectedCube->width, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
-	Corner.y += UI_Drag(&SelectedCube->height, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
-
-	//Corner.y += UI_Drag(&SelectedCube->rotation, "Rotation", Corner, 0.01f).y * -1.0f - step;
-
-	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
-	xsize = UI_Drag(&SelectedCube->position.x, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
-	Corner.y += UI_Drag(&SelectedCube->position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
-
-
-	Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
-	xsize = UI_Drag(&SelectedCube->color.r, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
-	xsize += UI_Drag(&SelectedCube->color.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
-	xsize += UI_Drag(&SelectedCube->color.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
-	Corner.y += UI_Drag(&SelectedCube->color.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
-
-	Corner.y += UI_SliderInt(&SelectedCube->Textureid, "Texture", Corner, -1, Map.Textures.size() - 1).y * -1.0f - step;
-
-	if (SelectedCube->Textureid > -1 && SelectedCube->Textureid < Map.Textures.size())
-		Corner.y += UI_DrawText(Map.Textures[SelectedCube->Textureid].FileName, Corner, 0.35f).y * -1.0f - step;
-	else if (SelectedCube->Textureid == -1)
-		Corner.y += UI_DrawText("Clear color", Corner, 0.35f).y * -1.0f - step;
-
-	Corner.y += UI_SliderInt(&SelectedCube->Shaderid, "Shader", Corner, -1, Map.Shaders.size() - 1).y * -1.0f - step;
-
-	if (SelectedCube->Shaderid > -1)
-		Corner.y += UI_DrawText(Map.Shaders[SelectedCube->Shaderid].Name, Corner, 0.35f).y * -1.0f - step;
-	if (SelectedCube->Shaderid == -1)
-		Corner.y += UI_DrawText("No shader", Corner, 0.35f).y * -1.0f - step;
-
-	Corner.y += UI_SliderInt(&SelectedCube->NormalMapId, "NormalMap", Corner, -1, Map.NormalMaps.size() - 1).y * -1.0f - step;
-
-
-	Corner.y += UI_CheckBox(&SelectedCube->lighted, "Lighted", Corner).y * -1.0f - step;
-	return;
-
-}
-void ShowRedactorWindow(miscPoint* point)
-{
-	float step = 10.0f;
-	Corner.y += UI_DrawText("Da point", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_DragInt(&SelectedPoint->id, "id", Corner, 0.1f).y * -1.0f - step;
-
-	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
-	float xsize = UI_Drag(&SelectedPoint->position.x, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
-	Corner.y += UI_Drag(&SelectedPoint->position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
-}
 void PolygonTools(polygon* poly)
 {
 
@@ -817,7 +786,7 @@ void ShowRedactorWindow(polygon* Polygon)
 	else
 		ImGui::Text("Clear Color");
 	ImGui::SliderInt("Texture", &SelectedPolygon->Textureid, -1, Map.Textures.size() - 1);
-	ImGui::SliderInt("NormalMap", &SelectedPolygon->NormalMapId,  -1, Map.NormalMaps.size() - 1);
+	ImGui::SliderInt("NormalMap", &SelectedPolygon->NormalMapId, -1, Map.NormalMaps.size() - 1);
 	ImGui::Checkbox("Lighted", &SelectedPolygon->lighted);
 	ImGui::DragInt("Collision_Level", &SelectedPolygon->Collision_Level, 0.01f);
 	ImGui::DragInt("Collision_Mask", &SelectedPolygon->Collision_Mask, 0.01f);
@@ -859,9 +828,137 @@ void ShowRedactorWindow(polygon* Polygon)
 		PolygonTools(SelectedPolygon);
 }
 
+void ShowRedactorWindow(LightSource* ls)
+{
+
+	float step = 20.0f;
+	Corner.y += UI_DrawText("Da Light source", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_DrawText(CurrentLightSource->name.c_str(), Corner, 0.35f).y * -1.0f - step;
+
+
+	Corner.y += UI_DrawText("Scale", Corner, 0.35f).y * -1.0f - step;
+	float xsize = UI_Drag(&CurrentLightSource->scale.x, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&CurrentLightSource->scale.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+
+	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&CurrentLightSource->position.x, "x", Corner, 0.1f, { 70.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&CurrentLightSource->position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.1f, { 70.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&CurrentLightSource->position.z, "z", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+
+	Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&CurrentLightSource->color.r, "r", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&CurrentLightSource->color.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&CurrentLightSource->color.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&CurrentLightSource->color.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+
+	Corner.y += UI_Drag(&CurrentLightSource->volume, "Volume", Corner, 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+
+	if (CurrentLightSource->TextureId >= 0)
+		Corner.y += UI_DrawText(Map.Textures[CurrentLightSource->TextureId].FileName.c_str(), Corner, 0.35f).y * -1.0f - step;
+	else
+		Corner.y += UI_DrawText("Light Sphere Texture", Corner, 0.35f).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&CurrentLightSource->TextureId, "Texture", Corner, -1, Map.Textures.size() - 1).y * -1.0f - step;
+}
+void ShowRedactorWindow(ball* Ball)
+{
+	float step = 10.0f;
+	Corner.y += UI_DrawText("Da ball",Corner,0.35f).y*-1.0f-step;
+	Corner.y += UI_DragInt(&SelectedBall->id,"id",Corner, 0.1f).y*-1.0f-step;
+	Corner.y += UI_SliderInt(&SelectedBall->type,"type",Corner, -1,1).y*-1.0f-step;
+	Corner.y += UI_DragInt(&SelectedBall->Z_Index,"Z_Index",Corner, 0.1f).y*-1.0f-step;
+	Corner.y += UI_Drag(&SelectedBall->r,"Radius",Corner).y*-1.0f-step;
+	Corner.y += UI_Drag(&SelectedBall->rotation,"Rotation",Corner,0.01f).y*-1.0f-step;
+
+	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+	float xsize = UI_Drag(&SelectedBall->position.x, "x", Corner, 0.01f, {70.0f,15.0f}).x*0.5f;
+	Corner.y += UI_Drag(&SelectedBall->position.y,"y",Corner + glm::vec2(xsize,0.0f),0.01f, { 70.0f,15.0f }).y*-1.0f-step;
+	
+
+	Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&SelectedBall->color.r, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&SelectedBall->color.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&SelectedBall->color.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&SelectedBall->color.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&SelectedBall->Textureid, "Texture", Corner, -1, Map.Textures.size() - 1).y * -1.0f - step;
+
+	if (SelectedBall->Textureid > -1 && SelectedBall->Textureid < Map.Textures.size())
+		Corner.y += UI_DrawText(Map.Textures[SelectedBall->Textureid].FileName, Corner, 0.35f).y * -1.0f - step;
+	else if (SelectedBall->Textureid == -1)
+		Corner.y += UI_DrawText("Clear color", Corner, 0.35f).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&SelectedBall->Shaderid, "Shader", Corner, -1, Map.Shaders.size() - 1).y * -1.0f - step;
+
+	if (SelectedBall->Shaderid > -1)
+		Corner.y += UI_DrawText(Map.Shaders[SelectedBall->Shaderid].Name, Corner, 0.35f).y * -1.0f - step;
+	if (SelectedBall->Shaderid == -1)
+		Corner.y += UI_DrawText("No shader", Corner, 0.35f).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&SelectedBall->NormalMapId, "NormalMap", Corner, -1, Map.NormalMaps.size() - 1).y * -1.0f - step;
+
+
+	Corner.y += UI_CheckBox(&SelectedBall->lighted, "Lighted",Corner).y * -1.0f - step;
+	return;
+}
+void ShowRedactorWindow(cube* Cube)
+{
+	float step = 10.0f;
+	Corner.y += UI_DrawText("Da Cube", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_DragInt(&SelectedCube->id, "id", Corner, 0.1f).y * -1.0f - step;
+	Corner.y += UI_SliderInt(&SelectedCube->type, "type", Corner, -1, 1).y * -1.0f - step;
+	Corner.y += UI_DragInt(&SelectedCube->Z_Index, "Z_Index", Corner, 0.1f).y * -1.0f - step;
+	//Corner.y += UI_Drag(&SelectedCube->Width, "Scale", Corner).y * -1.0f - step;
+
+	Corner.y += UI_DrawText("Scale", Corner, 0.35f).y * -1.0f - step;
+	float xsize = UI_Drag(&SelectedCube->width, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&SelectedCube->height, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+
+	//Corner.y += UI_Drag(&SelectedCube->rotation, "Rotation", Corner, 0.01f).y * -1.0f - step;
+
+	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&SelectedCube->position.x, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&SelectedCube->position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+
+
+	Corner.y += UI_DrawText("Color", Corner, 0.35f).y * -1.0f - step;
+	xsize = UI_Drag(&SelectedCube->color.r, "r", Corner, 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&SelectedCube->color.g, "g", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	xsize += UI_Drag(&SelectedCube->color.b, "b", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&SelectedCube->color.a, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&SelectedCube->Textureid, "Texture", Corner, -1, Map.Textures.size() - 1).y * -1.0f - step;
+
+	if (SelectedCube->Textureid > -1 && SelectedCube->Textureid < Map.Textures.size())
+		Corner.y += UI_DrawText(Map.Textures[SelectedCube->Textureid].FileName, Corner, 0.35f).y * -1.0f - step;
+	else if (SelectedCube->Textureid == -1)
+		Corner.y += UI_DrawText("Clear color", Corner, 0.35f).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&SelectedCube->Shaderid, "Shader", Corner, -1, Map.Shaders.size() - 1).y * -1.0f - step;
+
+	if (SelectedCube->Shaderid > -1)
+		Corner.y += UI_DrawText(Map.Shaders[SelectedCube->Shaderid].Name, Corner, 0.35f).y * -1.0f - step;
+	if (SelectedCube->Shaderid == -1)
+		Corner.y += UI_DrawText("No shader", Corner, 0.35f).y * -1.0f - step;
+
+	Corner.y += UI_SliderInt(&SelectedCube->NormalMapId, "NormalMap", Corner, -1, Map.NormalMaps.size() - 1).y * -1.0f - step;
+
+
+	Corner.y += UI_CheckBox(&SelectedCube->lighted, "Lighted", Corner).y * -1.0f - step;
+	return;
+
+}
+void ShowRedactorWindow(miscPoint* point)
+{
+	float step = 10.0f;
+	Corner.y += UI_DrawText("Da point", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_DragInt(&SelectedPoint->id, "id", Corner, 0.1f).y * -1.0f - step;
+
+	Corner.y += UI_DrawText("Position", Corner, 0.35f).y * -1.0f - step;
+	float xsize = UI_Drag(&SelectedPoint->position.x, "x", Corner, 0.01f, { 70.0f,15.0f }).x * 0.5f;
+	Corner.y += UI_Drag(&SelectedPoint->position.y, "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 70.0f,15.0f }).y * -1.0f - step;
+}
 int DeletetextureCountDown = 2;
-
-
 void ShowRedactorWindow(Texture* Texture)
 {
 
@@ -996,7 +1093,6 @@ void ShowRedactorWindow(Texture* Texture)
 	}
 
 }
-
 void ShowRedactorWindow(Shader* shader)
 {
 	float step = 20.0f;
@@ -1073,6 +1169,16 @@ int InspectorWindowID;
 int ProjectWindowID;
 int ConsoleWindowID;
 
+float SceneWindowScroll = 0.0f;
+float InspectorWindowScroll = 0.0f;
+float ProjectWindowScroll = 0.0f;
+float ConsoleWindowScroll = 0.0f;
+
+float SceneWindowMaxScroll = 0.0f;
+float InspectorWindowMaxScroll = 0.0f;
+float ProjectWindowMaxScroll = 0.0f;
+float ConsoleWindowMaxScroll = 0.0f;
+
 glm::vec4 EditorColor = { 0.005f,0.005f,0.005f,1.0f };
 
 bool Test[10];
@@ -1135,10 +1241,10 @@ void On_Update()
 	Window* pw = GetWindow(ProjectWindowID);
 	Window* cw = GetWindow(ConsoleWindowID);
 
-	if(!grebbedAnyWindow)
+	if (!grebbedAnyWindow)
 		GrabStartMousePos = MousePosition;
 
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1] )
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
 	{
 		if (MousePosition.x > WIDTH * 0.5f - iw->ViewportSize.x - 3 && MousePosition.x < WIDTH * 0.5f - iw->ViewportSize.x + 3)
 		{
@@ -1162,7 +1268,7 @@ void On_Update()
 	{
 		pw->Scale.x = 1.0f + (MousePosition.x - GrabStartMousePos.x) / pw->ViewportSize.x;
 		if (pw->Scale.x * pw->ViewportSize.x < 25) pw->Scale.x = 25 / pw->ViewportSize.x;
-		if (pw->Scale.x * pw->ViewportSize.x > WIDTH  - 100 - iw->ViewportSize.x) pw->Scale.x = (WIDTH  - 100 - iw->ViewportSize.x) / pw->ViewportSize.x;
+		if (pw->Scale.x * pw->ViewportSize.x > WIDTH - 100 - iw->ViewportSize.x) pw->Scale.x = (WIDTH - 100 - iw->ViewportSize.x) / pw->ViewportSize.x;
 	}
 	if (grebbedWindow[1])//inspector window /// right
 	{
@@ -1174,16 +1280,16 @@ void On_Update()
 	{
 		cw->Scale.y = 1.0f + (MousePosition.y - GrabStartMousePos.y) / cw->ViewportSize.y;
 		if (cw->Scale.y * cw->ViewportSize.y < 25) cw->Scale.y = 25 / cw->ViewportSize.y;
-		if (cw->Scale.y * cw->ViewportSize.y > HEIGHT - 100) cw->Scale.y = (HEIGHT - 100 ) / cw->ViewportSize.y;
+		if (cw->Scale.y * cw->ViewportSize.y > HEIGHT - 100) cw->Scale.y = (HEIGHT - 100) / cw->ViewportSize.y;
 	}
 
 
-	float rightx = pw->ViewportSize.x * pw->Scale.x - WIDTH * 0.5f+2.0f;
-	float leftx = WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x -2.0f;
+	float rightx = pw->ViewportSize.x * pw->Scale.x - WIDTH * 0.5f + 2.0f;
+	float leftx = WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x - 2.0f;
 
-	float maxy = HEIGHT*0.5f;
-	float miny = cw->ViewportSize.y * cw->Scale.y - HEIGHT * 0.5f+2.0f;
-	if (grebbedAnyWindow || initialsizecalc) 
+	float maxy = HEIGHT * 0.5f;
+	float miny = cw->ViewportSize.y * cw->Scale.y - HEIGHT * 0.5f + 2.0f;
+	if (grebbedAnyWindow || initialsizecalc)
 	{
 		cw->Scale.x = (leftx - rightx) / cw->ViewportSize.x;
 
@@ -1198,17 +1304,17 @@ void On_Update()
 		pw->ViewportSize *= pw->Scale;
 		cw->ViewportSize *= cw->Scale;
 
-		w->Scale = {1.0f,1.0f};
+		w->Scale = { 1.0f,1.0f };
 		iw->Scale = { 1.0f,1.0f };
-		pw->Scale = {1.0f,1.0f};
-		cw->Scale = {1.0f,1.0f};
+		pw->Scale = { 1.0f,1.0f };
+		cw->Scale = { 1.0f,1.0f };
 
 
 		for (int i = 0; i < 3; i++)
 			grebbedWindow[i] = false;
 		grebbedAnyWindow = false;
 
-		
+
 
 
 		iw->RecalculateSize();
@@ -1226,28 +1332,46 @@ void On_Update()
 	//CountourSize
 
 
-	iw->Position = glm::vec2(WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x * 0.5f+2.0f, 0.0f);
+	iw->Position = glm::vec2(WIDTH * 0.5f - iw->ViewportSize.x * iw->Scale.x * 0.5f + 2.0f, 0.0f);
 	iw->Draw(1001);
 
-	pw->Position = glm::vec2(pw->ViewportSize.x  * pw->Scale.x * 0.5f - WIDTH * 0.5f-2.0f,0.0f );
+	pw->Position = glm::vec2(pw->ViewportSize.x * pw->Scale.x * 0.5f - WIDTH * 0.5f - 2.0f, 0.0f);
 	pw->Draw(1002);
 
-	cw->Position = glm::vec2((rightx + leftx) * 0.5f,cw->ViewportSize.y  * cw->Scale.y * 0.5f - HEIGHT * 0.5f -2.0f);
+	cw->Position = glm::vec2((rightx + leftx) * 0.5f, cw->ViewportSize.y * cw->Scale.y * 0.5f - HEIGHT * 0.5f - 2.0f);
 	cw->Draw(1003);
 
 	w->Position.x = (rightx + leftx) * 0.5f;
 	w->Position.y = (maxy + miny) * 0.5f;
 	w->Draw(1000);
 
+	float step = 20.0f;
 
 	GetWindow(ConsoleWindowID)->Use();
 
-	float step = 10.0f;
-	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
+	ConsoleWindowScroll += scrollmovement * 10.0f;
+	CameraPosition.y += (ConsoleWindowScroll - CameraPosition.y) * 0.25f;
+
+	Corner = { WIDTH * -0.5f , HEIGHT * 0.5f - CameraPosition.y };
 	Corner += glm::vec2(20.0f, -25.0f);
 
-	Corner.y += UI_TextBox(&sTest[0], Corner,&sTesti[0], &sTestb[0],32 ).y * -1.0f - step;
-	Corner.y += UI_DragInt(&sTesti[0],"cursorpos", Corner,0.1f).y * -1.0f - step;
+	if (CurrentRedactingParticleObjectType > -1 && CurrentRedactingParticleObject > -1)
+		ShowParticleObjectRedactorWindow(CurrentParticleEmiter, CurrentRedactingParticleObjectType, CurrentRedactingParticleObject);
+
+	if (HEIGHT * 0.5f < abs(Corner.y - step * 2.0f + CameraPosition.y))
+	{
+		if (ConsoleWindowScroll > 0.0f)
+			ConsoleWindowScroll = 0.0f;
+		else if (ConsoleWindowScroll - HEIGHT * 0.3f < Corner.y)
+			ConsoleWindowScroll = Corner.y + HEIGHT * 0.3f;
+	}
+	else
+		ConsoleWindowScroll = 0.0f;
+	//Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
+	//Corner += glm::vec2(20.0f, -25.0f);
+
+	//Corner.y += UI_TextBox(&sTest[0], Corner,&sTesti[0], &sTestb[0],32 ).y * -1.0f - step;
+	//Corner.y += UI_DragInt(&sTesti[0],"cursorpos", Corner,0.1f).y * -1.0f - step;
 
 	GetWindow(ConsoleWindowID)->End();
 
@@ -1256,54 +1380,66 @@ void On_Update()
 
 	GetWindow(InspectorWindowID)->Use();
 
-	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
+
+	InspectorWindowScroll += scrollmovement * 10.0f;
+	CameraPosition.y += (InspectorWindowScroll - CameraPosition.y) * 0.25f;
+
+	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f - CameraPosition.y };
 	Corner += glm::vec2(20.0f, -25.0f);
 
-		if (CurrentTexture != NULL)
-			ShowRedactorWindow(CurrentTexture);
+	if (CurrentTexture != NULL)
+		ShowRedactorWindow(CurrentTexture);
 
 
-		if (CurrentParticleEmiter != NULL)
-			ShowRedactorWindow(CurrentParticleEmiter);
+	if (CurrentParticleEmiter != NULL)
+		ShowRedactorWindow(CurrentParticleEmiter);
 
-		if (SelectedBall != NULL)
-			ShowRedactorWindow(SelectedBall);
+	if (SelectedBall != NULL)
+		ShowRedactorWindow(SelectedBall);
 
-		if (SelectedCube != NULL)
-			ShowRedactorWindow(SelectedCube);
+	if (SelectedCube != NULL)
+		ShowRedactorWindow(SelectedCube);
 
 
-		if (SelectedPoint != NULL)
-			ShowRedactorWindow(SelectedPoint);
+	if (SelectedPoint != NULL)
+		ShowRedactorWindow(SelectedPoint);
 
-		if (CurrentLightSource != NULL)
-			ShowRedactorWindow(CurrentLightSource);
+	if (CurrentLightSource != NULL)
+		ShowRedactorWindow(CurrentLightSource);
 
-		if (CurrentShader != NULL)
-			ShowRedactorWindow(CurrentShader);
+	if (CurrentShader != NULL)
+		ShowRedactorWindow(CurrentShader);
 
-		if (SelectedPolygon != NULL)
-			ShowRedactorWindow(SelectedPolygon);
-	
+	if (SelectedPolygon != NULL)
+		ShowRedactorWindow(SelectedPolygon);
+
+
+	if (HEIGHT * 0.5f < abs(Corner.y - step * 2.0f + CameraPosition.y))
+	{
+		if (InspectorWindowScroll > 0.0f)
+			InspectorWindowScroll = 0.0f;
+		else if (InspectorWindowScroll - HEIGHT * 0.3f < Corner.y)
+			InspectorWindowScroll = Corner.y + HEIGHT * 0.3f;
+	}
+	else
+		InspectorWindowScroll = 0.0f;
+
 	GetWindow(InspectorWindowID)->End();
 
 
 
 
 	GetWindow(ProjectWindowID)->Use();
-	step = 10.0f;
-	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
+
+
+	ProjectWindowScroll += scrollmovement * 10.0f;
+	CameraPosition.y += (ProjectWindowScroll - CameraPosition.y) * 0.25f;
+
+	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f - CameraPosition.y };
 	Corner += glm::vec2(20.0f, -25.0f);
-	Corner.y += UI_CheckBox(&Test[0], "Lighting", Corner).y * -1.0f - step;
-	Corner.y += UI_CheckBox(&Test[1], "TestObami", Corner).y*-1.0f  - step;
-	Corner.y += UI_CheckBox(&Test[2], "TestObami2", Corner).y*-1.0f  - step;
-	Corner.y += UI_Slider(&GetWindow(SceneWindowID)->w_AmbientLight, "AmbientLight", Corner).y*-1.0f  - step;
-	Corner.y += UI_Slider(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
-	Corner.y += UI_Drag(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
-	Corner.y += UI_Drag(&GetWindow(SceneWindowID)->w_DirectionalLight, "DirectionalLight", Corner).y*-1.0f  - step;
 
 	UI_DrawCircle(LastJustPressedLMBScrMousePos, 5);
-	
+
 
 	//if (Test[0])
 	//	DirectionalLight = 1.0f;
@@ -1311,40 +1447,26 @@ void On_Update()
 	//	DirectionalLight = 0.0f;
 
 
-	GetWindow(ProjectWindowID)->End();
-
-
-	GetWindow(SceneWindowID)->Use();
-
-
-	if (Holdingkey[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
-	if (Holdingkey[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;
-	if (Holdingkey[GLFW_KEY_A]) CameraPosition.x -= delta / CameraScale.x * 600.0f;
-	if (Holdingkey[GLFW_KEY_D]) CameraPosition.x += delta / CameraScale.x * 600.0f;
 
 
 
-	AqueredCameraScale *= 1.0f + scrollmovement * 0.1f;
-	CameraScale += (AqueredCameraScale - CameraScale) * 0.25f * delta * 60.0f;
+	Corner.y += UI_DrawText("Tools", Corner, 0.35f).y * -1.0f - step;
+
+	std::string s = "CameraPosition X = ";
+	s += CameraPosition.x;
+	s += CameraPosition.y;
+	Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
+
+	s = "CameraScale X =";
+	s += CameraScale.x;
+	s += CameraScale.y;
+	Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
+
+	bool b = false;
+	Corner.y += UI_CheckBox(&b,"Test texture", Corner).y * -1.0f - step;
 
 
-	if (JustPressedbutton[GLFW_MOUSE_BUTTON_MIDDLE])
-		PrevMousePos = MousePosition;
-
-	glm::vec2 dif = glm::vec2(0.0f);
-	if (buttons[GLFW_MOUSE_BUTTON_MIDDLE])
-		dif = PrevMousePos - MousePosition;
-	CameraPosition += dif;
-	MousePosition += dif;
-
-
-
-	ImGui::Begin("Tools");
-
-	ImGui::Text("CameraPosition X = %.1f, Y = %.1f", CameraPosition.x, CameraPosition.y);
-	ImGui::Text("CameraScale X = %.3f, Y = %.3f", CameraScale.x, CameraScale.y);
-
-	if (ImGui::Button("Test texture"))
+	if (b)
 	{
 		Texture t;
 		t.FileName = "poggers";
@@ -1379,8 +1501,10 @@ void On_Update()
 
 
 	}
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Reset Camera", Corner).y * -1.0f - step;
 
-	if (ImGui::Button("Reset Camera"))
+	if (b)
 	{
 		CameraPosition = { 0.0f,0.0f };
 		CameraScale = { 1.0f,1.0f };
@@ -1388,8 +1512,12 @@ void On_Update()
 
 
 
-	ImGui::InputText("Save file:", MapFileNameChars, 128);
-	if (ImGui::Button("Save") || keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_S])
+	Corner.y += UI_DrawText("Save file:", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_TextBox(&MapFileName, Corner,&Texteditcurspos,&textedit,128).y * -1.0f - step;
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Save", Corner).y * -1.0f - step;
+
+	if (b || keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_S])
 	{
 		MapFileName = "";
 		for (int i = 0; i < 128; i++)
@@ -1398,7 +1526,12 @@ void On_Update()
 				MapFileName += MapFileNameChars[i];
 		}
 		Map.SaveAs(MapFileName);
-	}if (ImGui::Button("Load"))
+	}
+	
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Load", Corner).y * -1.0f - step;
+
+	if (b)
 	{
 		MapFileName = "";
 		for (int i = 0; i < 128; i++)
@@ -1409,55 +1542,61 @@ void On_Update()
 		Map.LoadFrom(MapFileName);
 	}
 
-	if (RedactingParticlesEmiter)ImGui::Text("RedactingParticlesEmiter");
-	else if (RedactingPolygon)ImGui::Text("RedactingPolygon");
-	else if (RedactingScene)ImGui::Text("RedactingScene");
-	else if (GrabSelectTool)ImGui::Text("GrabSelectTool");
+	if (RedactingParticlesEmiter)Corner.y += UI_DrawText("RedactingParticlesEmiter", Corner, 0.35f).y * -1.0f - step;
+	else if (RedactingPolygon)Corner.y += UI_DrawText("RedactingPolygon", Corner, 0.35f).y * -1.0f - step;
+	else if (RedactingScene)Corner.y += UI_DrawText("RedactingScene", Corner, 0.35f).y * -1.0f - step;
+	else if (GrabSelectTool)Corner.y += UI_DrawText("GrabSelectTool", Corner, 0.35f).y * -1.0f - step;
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Switch modes", Corner).y * -1.0f - step;
 
-	if (!RedactingParticlesEmiter && !RedactingPolygon)
-		if (ImGui::Button("Switch modes"))
+	if (b && !RedactingParticlesEmiter && !RedactingPolygon)
+	{
+		RedactingScene = !RedactingScene;
+		GrabSelectTool = !GrabSelectTool;
+		if (RedactingScene && GrabSelectTool || !RedactingScene && !GrabSelectTool)
 		{
-			RedactingScene = !RedactingScene;
-			GrabSelectTool = !GrabSelectTool;
-			if (RedactingScene && GrabSelectTool || !RedactingScene && !GrabSelectTool)
-			{
-				GrabSelectTool = true;
-				RedactingScene = false;
-			}
+			GrabSelectTool = true;
+			RedactingScene = false;
 		}
+	}
 
 	//RedactingScene Tool
 	if (!RedactingParticlesEmiter && RedactingScene && !GrabSelectTool && !RedactingPolygon)
 	{
 
-
-		ImGui::Text("object Type:");
+		Corner.y += UI_DrawText("object Type:", Corner, 0.35f).y * -1.0f - step;
 		const char* str;
 		if (RedactorObject == 0)str = "Circle";
 		if (RedactorObject == 1)str = "Quad";
 		if (RedactorObject == 2)str = "Polygon";
 		if (RedactorObject == 3)str = "Point";
-		ImGui::SliderInt(str, &RedactorObject, 0, 3);
+
+		Corner.y += UI_SliderInt(&RedactorObject, str, Corner, 0,3).y * -1.0f - step;
+
 
 		if (RedactorObject == 0)
 		{
-			ImGui::DragFloat("Radius", &radius, 0.1f, 0);
-			ImGui::Text("if holding Shift, drag mouse to change raduis");
+			Corner.y += UI_Drag(&radius, "Radius", Corner, 0.1f).y * -1.0f - step;
+			Corner.y += UI_DrawText("if holding Shift, drag mouse to change raduis", Corner, 0.35f).y * -1.0f - step;
 		}
 		if (RedactorObject == 1)
 		{
-			ImGui::DragFloat2("Size", size, 1.0f, 0);
-			ImGui::Text("if holding Shift, drag mouse to change size");
+
+			Corner.y += UI_DrawText("Size", Corner, 0.35f).y * -1.0f - step;
+			float xsize = UI_Drag(&size[0], "x", Corner + glm::vec2(xsize, 0.0f), 0.01f, {40.0f,15.0f}).x * 0.5f;
+			Corner.y += UI_Drag(&size[1], "y", Corner + glm::vec2(xsize, 0.0f), 0.01f, {40.0f,15.0f}).y * -1.0f - step;
+			
+			Corner.y += UI_DrawText("if holding Shift, drag mouse to change size", Corner, 0.35f).y * -1.0f - step;
 		}
 		if (RedactorObject == 2)
 		{
-			ImGui::DragFloat("Radius ish", &radius, 0.1f, 0);
+			Corner.y += UI_Drag(&radius, "Radius ish", Corner, 0.1f).y * -1.0f - step;
 		}
 		if (RedactorObject == 3)
 		{
-			ImGui::DragInt("Id", &Id, 0.1f, 0);
+			Corner.y += UI_DragInt(&Id, "Id", Corner, 0.1f).y * -1.0f - step;
 		}
-		ImGui::Checkbox("Lighted", &Lighted);
+		Corner.y += UI_CheckBox(&Lighted, "Lighted", Corner).y * -1.0f - step;
 
 
 		if (JustPressedLMB && keys[GLFW_KEY_LEFT_SHIFT])
@@ -1529,38 +1668,28 @@ void On_Update()
 		}
 	}
 
-
-	if (ImGui::Button("ParticlesWindow"))
-		ShowParticlesWindow = !ShowParticlesWindow;
-
-	if (ImGui::Button("LightSourcesWindow"))
-		ShowLightSourcesWindow = !ShowLightSourcesWindow;
-
-	if (ImGui::Button("TexturesWindow"))
-		ShowTexturesWindow = !ShowTexturesWindow;
-	if (ImGui::Button("NormalMapsWindow"))
-		ShowNormalMapsWindow = !ShowNormalMapsWindow;
-
-	if (ImGui::Button("SceneSettingsWindow"))
+	b = false;
+	Corner.y += UI_CheckBox(&b, "SceneSettingsWindow", Corner).y * -1.0f - step;
+	if (b)
 		SettingsWindow = !SettingsWindow;
 
 
-	if (ImGui::Button("ShadersWindow"))
-		ShowShadersWindow = !ShowShadersWindow;
-
-	if (ImGui::Button("Recompile Main Shaders"))
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Recompile Main Shaders", Corner).y * -1.0f - step;
+	if (b)
 		PreLoadShaders();
-	ImGui::End();
 
-
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Textures", Corner).y * -1.0f - step;
+	Corner.x += 30.0f;
+	if (b)
+		ShowTexturesWindow = !ShowTexturesWindow;
 	if (ShowTexturesWindow)
 	{
-		ImGui::Begin("Textures:");
-		ImGui::Text("texture/path/... - load;");
-		ImGui::InputText("Texture path:", TexturePath, 128);
 
-
-		if (ImGui::Button("Create New Texture"))
+		b = false;
+		Corner.y += UI_CheckBox(&b, "Create New Texture", Corner).y * -1.0f - step;
+		if (b)
 		{
 			std::string s = "New Texture";
 
@@ -1581,11 +1710,14 @@ void On_Update()
 			Map.Textures.push_back(tex);
 		}
 
-		ImGui::Text("Textures:");
+		Corner.y += UI_DrawText("Textures:", Corner, 0.35f).y * -1.0f - step;
 		for (int i = 0; i < Map.Textures.size(); i++)
 		{
-			if (ImGui::Button(Map.Textures[i].FileName.c_str()))
+			b = false;
+			Corner.y += UI_CheckBox(&b, Map.Textures[i].FileName.c_str(), Corner).y * -1.0f - step;
+			if (b)
 			{
+			
 				CurrentTexture = &Map.Textures[i];
 
 				grabbedBall = NULL;
@@ -1602,34 +1734,37 @@ void On_Update()
 				CurrentShader = NULL;
 			}
 		}
-		ImGui::End();
 	}
+	Corner.x -= 30.0f;
+
+	b = false;
+	Corner.y += UI_CheckBox(&b, "NormalMaps", Corner).y * -1.0f - step;
+	Corner.x += 30.0f;
+	if (b)
+		ShowNormalMapsWindow = !ShowNormalMapsWindow;
 	if (ShowNormalMapsWindow)
 	{
-		ImGui::Begin("NormalMaps:");
-		ImGui::Text("texture/path/...");
-		ImGui::InputText("Texture path:", TexturePath, 128);
 
+		Corner.y += UI_DrawText("File name:", Corner, 0.35f).y * -1.0f - step;
+		Corner.y += UI_TextBox(&TexturePath,  Corner,&Texteditcurspos,&textedit).y * -1.0f - step;
+		b = false;
+		Corner.y += UI_CheckBox(&b, "LoadTexture", Corner).y * -1.0f - step;
 
-		if (ImGui::Button("LoadTexture"))
+		if (b)
 		{
-			std::string s = "";
-			for (int i = 0; i < 128; i++)
-			{
-				if (TexturePath[i] != ' ')
-					s += TexturePath[i];
-			}
-			tex.FileName = s;
+			tex.FileName = TexturePath;
 			tex.id = Map.NormalMaps.size();
 			tex.Load();
 			if (tex.texture != NULL)
 				Map.NormalMaps.push_back(tex);
 		}
 
-		ImGui::Text("NormalMaps:");
+		Corner.y += UI_DrawText("NormalMaps:", Corner, 0.35f).y * -1.0f - step;
 		for (int i = 0; i < Map.NormalMaps.size(); i++)
 		{
-			if (ImGui::Button(Map.NormalMaps[i].FileName.c_str()))
+			b = false;
+			Corner.y += UI_CheckBox(&b, Map.NormalMaps[i].FileName.c_str(), Corner).y * -1.0f - step;
+			if (b)
 			{
 				CurrentTexture = &Map.NormalMaps[i];
 
@@ -1647,36 +1782,32 @@ void On_Update()
 				CurrentShader = NULL;
 			}
 		}
-		ImGui::End();
 	}
+	Corner.x -= 30.0f;
+
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Particles", Corner).y * -1.0f - step;
+	Corner.x += 30.0f;
+	if (b)
+		ShowParticlesWindow = !ShowParticlesWindow;
 	if (ShowParticlesWindow)
 	{
-		ImGui::Begin("Particles:");
-		ImGui::InputText("Particle Emitter Name:", ParticleEmitterCharName, 256);
-		if (ImGui::Button("Add"))
+		Corner.y += UI_DrawText("Name:", Corner, 0.35f).y * -1.0f - step;
+		Corner.y += UI_TextBox(&ParticleEmitterName, Corner, &Texteditcurspos, &textedit).y * -1.0f - step;
+		b = false;
+		Corner.y += UI_CheckBox(&b, "Add", Corner).y * -1.0f - step;
+		if (b)
 		{
-			int EndOfName = -1;
-			for (int i = 255; i >= 0; i--)
-				if (ParticleEmitterCharName[i] != char() && ParticleEmitterCharName[i] != ' ' && EndOfName < 0)
-					EndOfName = i;
-
-
-			std::string nm;
-			if (EndOfName > 0)
-				for (int i = 0; i <= EndOfName; i++)
-					nm += ParticleEmitterCharName[i];
-			else if (EndOfName == 0)
-				nm += ParticleEmitterCharName[0];
-			else
-				std::cerr << "ERROR: WRONG NAME";
-			pt.Name = nm;
+			pt.Name = ParticleEmitterName;
 			Map.ParticleEmiters.push_back(pt);
 		}
 
-		ImGui::Text("Particles:");
+		Corner.y += UI_DrawText("Particles:", Corner, 0.35f).y * -1.0f - step;
 		for (int i = 0; i < Map.ParticleEmiters.size(); i++)
 		{
-			if (ImGui::Button(Map.ParticleEmiters[i].Name.c_str()))
+			b = false;
+			Corner.y += UI_CheckBox(&b, Map.ParticleEmiters[i].Name.c_str(), Corner).y * -1.0f - step;
+			if (b)
 			{
 				CurrentParticleEmiter = &Map.ParticleEmiters[i];
 
@@ -1695,39 +1826,34 @@ void On_Update()
 				CurrentTexture = NULL;
 			}
 		}
-		ImGui::End();
 	}
+	Corner.x -= 30.0f;
+
+	b = false;
+	Corner.y += UI_CheckBox(&b, "LightSources", Corner).y * -1.0f - step;
+	Corner.x += 30.0f;
+	if (b)
+		ShowLightSourcesWindow = !ShowLightSourcesWindow;
 	if (ShowLightSourcesWindow)
 	{
-		ImGui::Begin("LightSources:");
-
-		ImGui::InputText("LightSource Name:", LightSourceCharName, 256);
-		if (ImGui::Button("Add"))
+		Corner.y += UI_DrawText("Name:", Corner, 0.35f).y * -1.0f - step;
+		Corner.y += UI_TextBox(&LightSourceName, Corner, &Texteditcurspos, &textedit).y * -1.0f - step;
+		b = false;
+		Corner.y += UI_CheckBox(&b, "Add", Corner).y * -1.0f - step;
+		if (b)
 		{
 			LightSource ls;
-			int EndOfName = -1;
-			for (int i = 255; i >= 0; i--)
-				if (LightSourceCharName[i] != char() && LightSourceCharName[i] != ' ' && EndOfName < 0)
-					EndOfName = i;
-
-
-			std::string nm = "";
-			if (EndOfName > 0)
-				for (int i = 0; i <= EndOfName; i++)
-					nm += LightSourceCharName[i];
-			else if (EndOfName == 0)
-				nm += LightSourceCharName[0];
-			else
-				nm = "LightSource" + std::to_string(Map.LightSources.size());
-			ls.name = nm;
+			ls.name = LightSourceName;
 			Map.LightSources.push_back(ls);
 		}
 
 
-		ImGui::Text("LightSources:");
+		Corner.y += UI_DrawText("LightSources:", Corner, 0.35f).y * -1.0f - step;
 		for (int i = 0; i < Map.LightSources.size(); i++)
 		{
-			if (ImGui::Button(Map.LightSources[i].name.c_str()))
+			b = false;
+			Corner.y += UI_CheckBox(&b, Map.LightSources[i].name.c_str(), Corner).y * -1.0f - step;
+			if (b)
 			{
 				CurrentLightSource = &Map.LightSources[i];
 
@@ -1747,39 +1873,34 @@ void On_Update()
 		}
 
 
-		ImGui::End();
 	}
+	Corner.x -= 30.0f;
+
+	b = false;
+	Corner.y += UI_CheckBox(&b, "Shaders", Corner).y * -1.0f - step;
+	Corner.x += 30.0f;
+	if (b)
+		ShowShadersWindow = !ShowShadersWindow;
 	if (ShowShadersWindow)
 	{
-		ImGui::Begin("Shaders:");
 
-		ImGui::InputText("New shader Name:", NewShaderCharArray, 256);
-		if (ImGui::Button("Add"))
+		Corner.y += UI_DrawText("New shader Name:", Corner, 0.35f).y * -1.0f - step;
+		Corner.y += UI_TextBox(&NewShaderArray, Corner, &Texteditcurspos, &textedit).y * -1.0f - step;
+		b = false;
+		Corner.y += UI_CheckBox(&b, "Add", Corner).y * -1.0f - step;
+		if (b)
 		{
 			Shader ls;
-			int EndOfName = -1;
-			for (int i = 255; i >= 0; i--)
-				if (NewShaderCharArray[i] != char() && NewShaderCharArray[i] != ' ' && EndOfName < 0)
-					EndOfName = i;
-
-
-			std::string nm = "";
-			if (EndOfName > 0)
-				for (int i = 0; i <= EndOfName; i++)
-					nm += NewShaderCharArray[i];
-			else if (EndOfName == 0)
-				nm += NewShaderCharArray[0];
-			else
-				nm = "Shader " + std::to_string(Map.Shaders.size());
-			ls.Name = nm;
+			ls.Name = NewShaderArray;
 			Map.Shaders.push_back(ls);
 		}
 
 
-		ImGui::Text("Shaders:");
 		for (int i = 0; i < Map.Shaders.size(); i++)
 		{
-			if (ImGui::Button(Map.Shaders[i].Name.c_str()))
+			b = false;
+			Corner.y += UI_CheckBox(&b, Map.Shaders[i].Name.c_str(), Corner).y * -1.0f - step;
+			if (b)
 			{
 				CurrentShader = &Map.Shaders[i];
 
@@ -1799,8 +1920,45 @@ void On_Update()
 		}
 
 
-		ImGui::End();
 	}
+	Corner.x -= 30.0f;
+
+
+	if (HEIGHT * 0.5f < abs(Corner.y - step * 2.0f + CameraPosition.y))
+	{
+		if (ProjectWindowScroll > 0.0f)
+			ProjectWindowScroll = 0.0f;
+		else if (ProjectWindowScroll - HEIGHT * 0.3f < Corner.y)
+			ProjectWindowScroll = Corner.y + HEIGHT * 0.3f;
+	}
+	else
+		ProjectWindowScroll = 0.0f;
+
+	GetWindow(ProjectWindowID)->End();
+
+
+	GetWindow(SceneWindowID)->Use();
+
+
+	if (Holdingkey[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
+	if (Holdingkey[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;
+	if (Holdingkey[GLFW_KEY_A]) CameraPosition.x -= delta / CameraScale.x * 600.0f;
+	if (Holdingkey[GLFW_KEY_D]) CameraPosition.x += delta / CameraScale.x * 600.0f;
+
+
+
+	AqueredCameraScale *= 1.0f + scrollmovement * 0.1f;
+	CameraScale += (AqueredCameraScale - CameraScale) * 0.25f * 0.017f * 60.0f;
+
+
+	if (JustPressedbutton[GLFW_MOUSE_BUTTON_MIDDLE])
+		PrevMousePos = MousePosition;
+
+	glm::vec2 dif = glm::vec2(0.0f);
+	if (buttons[GLFW_MOUSE_BUTTON_MIDDLE])
+		dif = PrevMousePos - MousePosition;
+	CameraPosition += dif;
+	MousePosition += dif;
 
 
 	//GrabTool
@@ -1809,19 +1967,6 @@ void On_Update()
 		if (JustPressedLMB)
 		{
 			PrevMousePosition = MousePosition;
-			grabbedBall = NULL;
-			grabbedCube = NULL;
-			grabbedPolygon = NULL;
-			grabbedPoint = NULL;
-
-			SelectedBall= NULL;
-			SelectedCube= NULL;
-			SelectedPolygon = NULL;
-			SelectedPoint = NULL;
-			CurrentParticleEmiter = NULL;
-			CurrentLightSource = NULL;
-			CurrentShader = NULL;
-			CurrentTexture = NULL;
 			
 			grabbedType = -1;
 			grabbed = false;
@@ -1945,8 +2090,14 @@ void On_Update()
 			}
 
 		}
-		if (ReleasedLMB && PrevMousePosition == MousePosition)
+		if (ReleasedLMB && sqrlength(PrevMousePosition - MousePosition)<2.0f)
 		{
+
+			SelectedBall = NULL;
+			SelectedCube = NULL;
+			SelectedPolygon = NULL;
+			SelectedPoint = NULL;
+
 			if (grabbedBall != NULL && grabbed && grabbedType == 0)
 				SelectedBall = grabbedBall;
 
@@ -1959,12 +2110,24 @@ void On_Update()
 			if (grabbedPoint != NULL && grabbed && grabbedType == 3)
 				SelectedPoint = grabbedPoint;
 
+
+			grabbedBall = NULL;
+			grabbedCube = NULL;
+			grabbedPolygon = NULL;
+			grabbedPoint = NULL;
+
+			CurrentParticleEmiter = NULL;
+			CurrentLightSource = NULL;
+			CurrentShader = NULL;
+			CurrentTexture = NULL;
+
 			grabbedBall = NULL;
 			grabbedCube = NULL;
 			grabbedPolygon = NULL;
 			grabbedPoint = NULL;
 			grabbedType = -1;
 			grabbed = false;
+
 		}
 		else if (buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition && keys[GLFW_KEY_LEFT_CONTROL])
 		{
@@ -1986,6 +2149,31 @@ void On_Update()
 		Map.Shaders[i].UpdateUniforms();
 	for (int i = 0; i < Map.points.size(); i++)
 		DrawCircle(Map.points[i].position, 25, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+	if (RedactingParticlesEmiter)
+	{
+		for (int i = 0; i < CurrentParticleEmiter->SpheresOfInfluence.size(); i++)
+			DrawCircle(CurrentParticleEmiter->SpheresOfInfluence[i].position, CurrentParticleEmiter->SpheresOfInfluence[i].r, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
+
+		for (int i = 0; i < CurrentParticleEmiter->EmitionCircles.size(); i++)
+			DrawCircle(CurrentParticleEmiter->EmitionCircles[i].position, CurrentParticleEmiter->EmitionCircles[i].r, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
+
+		for (int i = 0; i < CurrentParticleEmiter->LightSpheres.size(); i++)
+			DrawCircle(CurrentParticleEmiter->LightSpheres[i].position, CurrentParticleEmiter->LightSpheres[i].r, glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
+
+		for (int i = 0; i < CurrentParticleEmiter->CubesOfInfluence.size(); i++)
+			DrawCube(CurrentParticleEmiter->CubesOfInfluence[i].position, CurrentParticleEmiter->CubesOfInfluence[i].scale, 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
+
+		for (int i = 0; i < CurrentParticleEmiter->EmitionCubes.size(); i++)
+			DrawCube(CurrentParticleEmiter->EmitionCubes[i].position, CurrentParticleEmiter->EmitionCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
+
+		for (int i = 0; i < CurrentParticleEmiter->LightCubes.size(); i++)
+			DrawCube(CurrentParticleEmiter->LightCubes[i].position, CurrentParticleEmiter->LightCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
+
+		for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
+			DrawCircle(CurrentParticleEmiter->EmitionPoints[i].position, 10, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+
 	GetWindow(SceneWindowID)->End();
 
 	//for (int i = 0; i < Windows.size(); i++)
