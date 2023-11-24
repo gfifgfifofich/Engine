@@ -5,10 +5,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 {
 	threadcount = std::thread::hardware_concurrency();
 
-	unsigned int DownScaleBuffers[6];
+	unsigned int DownScaleBuffers[8];
 
+	glm::ivec2 DownScaleBufferSizes[9];
 
-	float bloomLevels[6] = { 1.0f,0.85f,0.45f,0.45f,0.45f,0.25f };
 	BackgroundColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	scrpos = glm::vec2(0, 0);
@@ -145,15 +145,22 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 
 	// downscale frame buffer and textures
-	unsigned int downscaleFBO[6];
-	glGenFramebuffers(6, downscaleFBO);
-	for (int i = 0; i < 6; i++)
+	unsigned int downscaleFBO[8];
+	glGenFramebuffers(8, downscaleFBO);
+
+	float scalefactor = 0.75f;
+
+	for (int i = 0; i < 8; i++)
 	{
 
 		glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i]);
 		glGenTextures(1, &DownScaleBuffers[i]);
 		glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)), 0, GL_RGBA, GL_FLOAT, NULL);
+
+		DownScaleBufferSizes[i].x = WIDTH * scalefactor;
+		DownScaleBufferSizes[i].y = HEIGHT * scalefactor;
+		scalefactor *= 0.65f;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -163,6 +170,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 	}
 
+	DownScaleBufferSizes[8].x = WIDTH * scalefactor;
+	DownScaleBufferSizes[8].y = HEIGHT * scalefactor;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
@@ -470,9 +479,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 		glBindVertexArray(ScreenVAO);
 		UseShader(DownsampleBlur);
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			glViewport(0, 0, WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
+			glViewport(0, 0, DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y);
 			glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i]);
 
 			//input texture
@@ -481,7 +490,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			glUniform1i(glGetUniformLocation(DownsampleBlur, "srcTexture"), 0);
 
 
-			glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), WIDTH / (pow(2.0f, i + 1)), HEIGHT / (pow(2.0f, i + 1)));
+			glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y);
 
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -493,9 +502,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		glBindVertexArray(ScreenVAO);
 		UseShader(UpsampleBlur);
 		glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
-		for (int i = 5; i > 0; i--)
+		for (int i = 7; i > 0; i--)
 		{
-			glViewport(0, 0, WIDTH / (pow(2.0f, i)), HEIGHT / (pow(2.0f, i)));
+			glViewport(0, 0, DownScaleBufferSizes[i-1].x, DownScaleBufferSizes[i-1].y);
 			glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i - 1]);
 
 			//input texture
@@ -509,6 +518,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 			glUniform1i(glGetUniformLocation(UpsampleBlur, "PrevTexture"), 1);
 
 			glUniform1f(glGetUniformLocation(UpsampleBlur, "weight"), bloomLevels[i]);
+			if( i-1==0)
+				glUniform1f(glGetUniformLocation(UpsampleBlur, "prewweight"), bloomLevels[0]);
+			else
+				glUniform1f(glGetUniformLocation(UpsampleBlur, "prewweight"), 1.0f);
 
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 

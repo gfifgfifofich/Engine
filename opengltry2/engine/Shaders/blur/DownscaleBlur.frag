@@ -15,6 +15,8 @@ in vec2 TexCoords;
 
 out vec4 FragColor;
 vec3 downsample;
+
+
 void main()
 {
     vec2 srcTexelSize = 1.0 / srcResolution;

@@ -10,6 +10,7 @@ uniform sampler2D srcTexture;
 uniform sampler2D PrevTexture;
 uniform float filterRadius;
 uniform float weight;
+uniform float prewweight;
 
 in vec2 TexCoords;
 vec3 upsample;
@@ -50,6 +51,6 @@ void main()
     upsample *= 1.0 / 16.0;
     
 
-    FragColor = vec4(upsample*weight+ texture(PrevTexture,TexCoords).rgb,1.0f);
+    FragColor = vec4(upsample*weight+ texture(PrevTexture,TexCoords).rgb * prewweight,1.0f);
     //FragColor = vec4(1.0f,1.0f,1.0f,1.0f);
 }

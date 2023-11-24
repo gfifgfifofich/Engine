@@ -122,8 +122,6 @@ float LightVolume = 0.005f;
 
 
 
-int Texteditcurspos = 0;
-bool textedit = false;
 
 void ShowParticleObjectRedactorWindow(ParticleEmiter* PE,int type,int i)
 {
@@ -969,7 +967,7 @@ void ShowRedactorWindow(Texture* Texture)
 
 
 
-	Corner.y += UI_TextBox(&CurrentTexture->FileName,Corner,&Texteditcurspos,&textedit,-1).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentTexture->FileName,Corner,-1).y * -1.0f - step;
 
 
 
@@ -1104,15 +1102,15 @@ void ShowRedactorWindow(Shader* shader)
 
 
 	Corner.y += UI_DrawText("Name: ", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_TextBox(&CurrentShader->Name, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->Name, Corner, -1).y * -1.0f - step;
 
 
 	Corner.y += UI_DrawText("Vertex path: ", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_TextBox(&CurrentShader->VertexPath, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->VertexPath, Corner, -1).y * -1.0f - step;
 
 
 	Corner.y += UI_DrawText("Fragment path: ", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_TextBox(&CurrentShader->FragmentPath, Corner, &Texteditcurspos, &textedit, -1).y * -1.0f - step;
+	Corner.y += UI_TextBox(&CurrentShader->FragmentPath, Corner, -1).y * -1.0f - step;
 
 	bool b = false;
 	Corner.y += UI_buttonOnlyON(&b,"Load", Corner).y * -1.0f - step;
@@ -1349,7 +1347,7 @@ void On_Update()
 
 	GetWindow(ConsoleWindowID)->Use();
 
-	ConsoleWindowScroll += scrollmovement * 10.0f;
+	ConsoleWindowScroll += scrollmovement * 50.0f;
 	CameraPosition.y += (ConsoleWindowScroll - CameraPosition.y) * 0.25f;
 
 	Corner = { WIDTH * -0.5f , HEIGHT * 0.5f - CameraPosition.y };
@@ -1358,15 +1356,17 @@ void On_Update()
 	if (CurrentRedactingParticleObjectType > -1 && CurrentRedactingParticleObject > -1)
 		ShowParticleObjectRedactorWindow(CurrentParticleEmiter, CurrentRedactingParticleObjectType, CurrentRedactingParticleObject);
 
-	if (HEIGHT * 0.5f < abs(Corner.y - step * 2.0f + CameraPosition.y))
+
+	if (HEIGHT * 0.5f < abs(Corner.y + CameraPosition.y))
 	{
 		if (ConsoleWindowScroll > 0.0f)
 			ConsoleWindowScroll = 0.0f;
-		else if (ConsoleWindowScroll - HEIGHT * 0.3f < Corner.y)
-			ConsoleWindowScroll = Corner.y + HEIGHT * 0.3f;
+		else if (ConsoleWindowScroll < (Corner.y + CameraPosition.y))
+			ConsoleWindowScroll = (Corner.y + CameraPosition.y);
 	}
 	else
 		ConsoleWindowScroll = 0.0f;
+
 	//Corner = { WIDTH * -0.5f, HEIGHT * 0.5f, };
 	//Corner += glm::vec2(20.0f, -25.0f);
 
@@ -1381,7 +1381,7 @@ void On_Update()
 	GetWindow(InspectorWindowID)->Use();
 
 
-	InspectorWindowScroll += scrollmovement * 10.0f;
+	InspectorWindowScroll += scrollmovement * 50.0f;
 	CameraPosition.y += (InspectorWindowScroll - CameraPosition.y) * 0.25f;
 
 	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f - CameraPosition.y };
@@ -1414,12 +1414,12 @@ void On_Update()
 		ShowRedactorWindow(SelectedPolygon);
 
 
-	if (HEIGHT * 0.5f < abs(Corner.y - step * 2.0f + CameraPosition.y))
+	if (HEIGHT * 0.5f < abs(Corner.y + CameraPosition.y))
 	{
 		if (InspectorWindowScroll > 0.0f)
 			InspectorWindowScroll = 0.0f;
-		else if (InspectorWindowScroll - HEIGHT * 0.3f < Corner.y)
-			InspectorWindowScroll = Corner.y + HEIGHT * 0.3f;
+		else if (InspectorWindowScroll < (Corner.y + CameraPosition.y))
+			InspectorWindowScroll = (Corner.y + CameraPosition.y);
 	}
 	else
 		InspectorWindowScroll = 0.0f;
@@ -1432,14 +1432,15 @@ void On_Update()
 	GetWindow(ProjectWindowID)->Use();
 
 
-	ProjectWindowScroll += scrollmovement * 10.0f;
+
+
+	ProjectWindowScroll += scrollmovement * 50.0f;
 	CameraPosition.y += (ProjectWindowScroll - CameraPosition.y) * 0.25f;
 
 	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f - CameraPosition.y };
 	Corner += glm::vec2(20.0f, -25.0f);
 
-	UI_DrawCircle(LastJustPressedLMBScrMousePos, 5);
-
+	
 
 	//if (Test[0])
 	//	DirectionalLight = 1.0f;
@@ -1448,18 +1449,32 @@ void On_Update()
 
 
 
+	Corner.y += UI_Drag(&bloomLevels[0],"bloom 0", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[1],"bloom 1", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[2],"bloom 2", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[3],"bloom 3", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[4],"bloom 4", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[5],"bloom 5", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[6],"bloom 6", Corner, 0.35f).y * -1.0f - step;
+	Corner.y += UI_Drag(&bloomLevels[7],"bloom 7", Corner, 0.35f).y * -1.0f - step;
 
 
 	Corner.y += UI_DrawText("Tools", Corner, 0.35f).y * -1.0f - step;
 
 	std::string s = "CameraPosition X = ";
-	s += CameraPosition.x;
-	s += CameraPosition.y;
+	s += std::to_string(w->w_CameraPosition.x);
+	for (int i = 0; i < 4;i++)s.pop_back();
+	s += ";  Y = ";
+	s += std::to_string(w->w_CameraPosition.y);
+	for (int i = 0; i < 4; i++)s.pop_back();
 	Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
 
 	s = "CameraScale X =";
-	s += CameraScale.x;
-	s += CameraScale.y;
+	s += std::to_string(w->w_CameraScale.x);
+	for (int i = 0; i < 4; i++)s.pop_back();
+	s += ";  Y = ";
+	s += std::to_string(w->w_CameraScale.y);
+	for (int i = 0; i < 4; i++)s.pop_back();
 	Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
 
 	bool b = false;
@@ -1513,7 +1528,7 @@ void On_Update()
 
 
 	Corner.y += UI_DrawText("Save file:", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_TextBox(&MapFileName, Corner,&Texteditcurspos,&textedit,128).y * -1.0f - step;
+	Corner.y += UI_TextBox(&MapFileName, Corner,128).y * -1.0f - step;
 	b = false;
 	Corner.y += UI_CheckBox(&b, "Save", Corner).y * -1.0f - step;
 
@@ -1673,6 +1688,12 @@ void On_Update()
 	if (b)
 		SettingsWindow = !SettingsWindow;
 
+	if (SettingsWindow)
+	{
+		Corner.y += UI_Slider(&w->w_AmbientLight, "Ambient light", Corner).y * -1.0f - step;
+		Corner.y += UI_Slider(&w->w_DirectionalLight, "Directional light", Corner).y * -1.0f - step;
+
+	}
 
 	b = false;
 	Corner.y += UI_CheckBox(&b, "Recompile Main Shaders", Corner).y * -1.0f - step;
@@ -1746,7 +1767,7 @@ void On_Update()
 	{
 
 		Corner.y += UI_DrawText("File name:", Corner, 0.35f).y * -1.0f - step;
-		Corner.y += UI_TextBox(&TexturePath,  Corner,&Texteditcurspos,&textedit).y * -1.0f - step;
+		Corner.y += UI_TextBox(&TexturePath,  Corner).y * -1.0f - step;
 		b = false;
 		Corner.y += UI_CheckBox(&b, "LoadTexture", Corner).y * -1.0f - step;
 
@@ -1793,7 +1814,7 @@ void On_Update()
 	if (ShowParticlesWindow)
 	{
 		Corner.y += UI_DrawText("Name:", Corner, 0.35f).y * -1.0f - step;
-		Corner.y += UI_TextBox(&ParticleEmitterName, Corner, &Texteditcurspos, &textedit).y * -1.0f - step;
+		Corner.y += UI_TextBox(&ParticleEmitterName, Corner).y * -1.0f - step;
 		b = false;
 		Corner.y += UI_CheckBox(&b, "Add", Corner).y * -1.0f - step;
 		if (b)
@@ -1837,7 +1858,7 @@ void On_Update()
 	if (ShowLightSourcesWindow)
 	{
 		Corner.y += UI_DrawText("Name:", Corner, 0.35f).y * -1.0f - step;
-		Corner.y += UI_TextBox(&LightSourceName, Corner, &Texteditcurspos, &textedit).y * -1.0f - step;
+		Corner.y += UI_TextBox(&LightSourceName, Corner).y * -1.0f - step;
 		b = false;
 		Corner.y += UI_CheckBox(&b, "Add", Corner).y * -1.0f - step;
 		if (b)
@@ -1885,7 +1906,7 @@ void On_Update()
 	{
 
 		Corner.y += UI_DrawText("New shader Name:", Corner, 0.35f).y * -1.0f - step;
-		Corner.y += UI_TextBox(&NewShaderArray, Corner, &Texteditcurspos, &textedit).y * -1.0f - step;
+		Corner.y += UI_TextBox(&NewShaderArray, Corner).y * -1.0f - step;
 		b = false;
 		Corner.y += UI_CheckBox(&b, "Add", Corner).y * -1.0f - step;
 		if (b)
@@ -1924,12 +1945,12 @@ void On_Update()
 	Corner.x -= 30.0f;
 
 
-	if (HEIGHT * 0.5f < abs(Corner.y - step * 2.0f + CameraPosition.y))
+	if (HEIGHT * 0.5f < abs(Corner.y  + CameraPosition.y))
 	{
 		if (ProjectWindowScroll > 0.0f)
 			ProjectWindowScroll = 0.0f;
-		else if (ProjectWindowScroll - HEIGHT * 0.3f < Corner.y)
-			ProjectWindowScroll = Corner.y + HEIGHT * 0.3f;
+		else if (ProjectWindowScroll < (Corner.y + CameraPosition.y))
+			ProjectWindowScroll = (Corner.y + CameraPosition.y);
 	}
 	else
 		ProjectWindowScroll = 0.0f;

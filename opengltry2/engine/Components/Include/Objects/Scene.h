@@ -27,7 +27,7 @@ public:
 	void SaveAs(std::string filename);
 	void LoadFrom(std::string filename);
 	void Rescale(glm::vec2 scale, int Z_Index = 0);
-	void Draw();
+	void Draw(float dt = 0.017f);
 	void DeleteNormalMaps();
 	void DeleteTextures();
 	void ReloadTextures();

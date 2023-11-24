@@ -43,7 +43,7 @@ extern bool TextEditMode;// disables keyboard key inputs, only TextFromKeyboard,
 
 extern GLFWwindow* window;
 
-
+extern float bloomLevels[8];
 
 extern GLfloat lastX;
 extern GLfloat lastY;

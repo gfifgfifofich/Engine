@@ -76,6 +76,7 @@ bool TextEditMode = false;// disables keyboard key inputs, only TextFromKeyboard
 
 GLFWwindow* window;
 
+float bloomLevels[8] = { 1.0f,0.9f,0.8f,0.7f,0.6f,0.6f,0.6f,0.6f };
 
 
 GLfloat lastX;

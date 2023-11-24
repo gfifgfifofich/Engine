@@ -386,6 +386,7 @@ glm::vec2 UI_DrawTextOnPlate(std::string text, glm::vec2 position, GLfloat scale
 	UI_DrawCube(position + scl * 0.50f, scl * 0.6f, 0.0f, platecolor,false,NULL, Z_Index -1, Additive);
 	return scl * 0.6f;
 }
+
 //UI returns size of object
 glm::vec2 UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, float scale, float textScale , glm::vec4 colorON , glm::vec4 ColorOFF, int Z_Index , bool Additive )
 {
@@ -695,37 +696,38 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 }
 
 
+int TextBoxcursorPosition = 0;
 //UI returns size of object
-glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int* cursorPosition, bool* edit, int maxTextSize, glm::vec2 scale, float TextScale, glm::vec4 Backcolor, glm::vec4 Textcolor, int Z_Index , bool Additive)
+glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int maxTextSize, glm::vec2 scale, float TextScale, glm::vec4 Backcolor, glm::vec4 Textcolor, int Z_Index , bool Additive)
 {
 
 
 
 
-
+	bool edit = false;
 	glm::vec2 dif = LastJustPressedLMBMousePos;
 	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
 		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y)
 	{
 
-		*edit = true;
+		edit = true;
 		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
-			*cursorPosition = (*text).size();
+			TextBoxcursorPosition = (*text).size();
 	}
 	else
-		*edit = false;
+		edit = false;
 
 	if ((ScreenMousePosition.x - scrPosition.x) > 0 && (ScreenMousePosition.x - scrPosition.x) < scale.x &&
 		(ScreenMousePosition.y - scrPosition.y) > -10 && (ScreenMousePosition.y - scrPosition.y) < scale.y)
-		if(bJustReleasedbutton[GLFW_MOUSE_BUTTON_1])
-			*edit = false;
+		if (bJustReleasedbutton[GLFW_MOUSE_BUTTON_1])
+			edit = false;
 
 	if (bJustPressedkey[GLFW_KEY_ENTER] || bJustPressedkey[GLFW_KEY_ESCAPE])
-		*edit = false;
+		edit = false;
 
 	glm::vec2 Testsize = getTextSize(*text, TextScale);
 
-	if (*edit)
+	if (edit)
 	{
 
 
@@ -733,23 +735,23 @@ glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int* cursorPosit
 
 
 		if (bJustPressedkey[GLFW_KEY_LEFT])
-			*cursorPosition -= 1;
-		if (bJustPressedkey[GLFW_KEY_RIGHT] )
-			*cursorPosition += 1;
+			TextBoxcursorPosition -= 1;
+		if (bJustPressedkey[GLFW_KEY_RIGHT])
+			TextBoxcursorPosition += 1;
 
 
-		if (*cursorPosition <= -1)
-			*cursorPosition = -1;
-		else if (*cursorPosition > text->size() - 1)
-			*cursorPosition = text->size() - 1;
+		if (TextBoxcursorPosition <= -1)
+			TextBoxcursorPosition = -1;
+		else if (TextBoxcursorPosition > text->size() - 1)
+			TextBoxcursorPosition = text->size() - 1;
 
 		bool CursorProcessed = false;
-		if (*cursorPosition == -1 && !CursorProcessed)
+		if (TextBoxcursorPosition == -1 && !CursorProcessed)
 		{
 			if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + tmptext.size() <= maxTextSize || maxTextSize < 0))
 			{
 				tmptext += TextFromKeyboard;
-				*cursorPosition += TextFromKeyboard.size();
+				TextBoxcursorPosition += TextFromKeyboard.size();
 			}
 			CursorProcessed = true;
 			UI_DrawCube(scrPosition, glm::vec2(2.0f, scale.y * 0.9f), 0.0f, Textcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), false, NULL, Z_Index + 10);
@@ -761,12 +763,12 @@ glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int* cursorPosit
 			if (bJustPressedkey[GLFW_KEY_BACKSPACE] && tmptext.size() > 0)
 			{
 				tmptext.pop_back();
-				*cursorPosition -= 1;
+				TextBoxcursorPosition -= 1;
 			}
 			else if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + tmptext.size() <= maxTextSize || maxTextSize < 0))
 			{
 				tmptext += TextFromKeyboard;
-				*cursorPosition += TextFromKeyboard.size();
+				TextBoxcursorPosition += TextFromKeyboard.size();
 			}
 			UI_DrawCube(scrPosition + glm::vec2(0.0f, 0.0f), glm::vec2(2.0f, scale.y * 0.9f), 0.0f, Textcolor + glm::vec4(0.1f, 0.1f, 0.1f, 0.0f), false, NULL, Z_Index + 10);
 			CursorProcessed = true;
@@ -774,19 +776,19 @@ glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int* cursorPosit
 		else
 			for (int i = 0; i < text->size(); i++)
 			{
-				if (i == *cursorPosition && !CursorProcessed)
+				if (i == TextBoxcursorPosition && !CursorProcessed)
 				{
 
 
-					if (bJustPressedkey[GLFW_KEY_BACKSPACE] && text->size() > 0 && *cursorPosition >= 0)
+					if (bJustPressedkey[GLFW_KEY_BACKSPACE] && text->size() > 0 && TextBoxcursorPosition >= 0)
 					{
-						*cursorPosition -= 1;
+						TextBoxcursorPosition -= 1;
 					}
 					else if (TextFromKeyboard.size() > 0 && (TextFromKeyboard.size() + tmptext.size() <= maxTextSize || maxTextSize < 0))
 					{
 						tmptext += (*text)[i];
 						tmptext += TextFromKeyboard;
-						*cursorPosition += TextFromKeyboard.size();
+						TextBoxcursorPosition += TextFromKeyboard.size();
 					}
 					else
 						tmptext += (*text)[i];

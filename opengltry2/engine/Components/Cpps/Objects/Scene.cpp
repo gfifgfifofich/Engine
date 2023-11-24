@@ -989,7 +989,7 @@ void Scene::Rescale(glm::vec2 scale, int Z_Index)
 		}
 	}
 
-void Scene::Draw()
+void Scene::Draw(float dt)
 {
 
 	for (int i = 0; i < Shaders.size(); i++)
@@ -1087,7 +1087,7 @@ void Scene::Draw()
 			ParticleEmiters[i].NormalMap = NM;
 		}
 
-		ParticleEmiters[i].Process(delta);
+		ParticleEmiters[i].Process(dt);
 	}
 
 

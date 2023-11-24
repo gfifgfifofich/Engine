@@ -13,8 +13,8 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objec
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects.h(13,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Libraries\include\freetype\config\ftheader.h(180,1): warning C4005: FT_FREETYPE_H: изменение макроопределения
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Text.h(4,1): message : см. предыдущее определение "FT_FREETYPE_H"
-C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(182,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(183,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Engine.h(184,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objects\Softbody.h(59,31): warning C4244: -=: преобразование "float" в "T", возможна потеря данных
           with
           [
@@ -25,69 +25,33 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Include\Objec
           [
               T=int
           ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(428,102): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(431,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(434,123): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(592,90): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(609,112): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(788,83): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(789,89): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(825,9): warning C4551: в вызове функции отсутствует список аргументов
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(861,102): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(884,96): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(891,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(898,102): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(930,96): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(937,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(944,102): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1456,21): warning C4244: аргумент: преобразование "T" в "_Elem", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              _Elem=char
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1457,21): warning C4244: аргумент: преобразование "T" в "_Elem", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              _Elem=char
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1461,18): warning C4244: аргумент: преобразование "T" в "_Elem", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              _Elem=char
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1462,18): warning C4244: аргумент: преобразование "T" в "_Elem", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-          and
-          [
-              _Elem=char
-          ]
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1482,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1484,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1612,46): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1622,46): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1633,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1641,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1706,30): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1756,32): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(426,102): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(429,111): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(432,123): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(590,90): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(607,112): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(786,83): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(787,89): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(823,9): warning C4551: в вызове функции отсутствует список аргументов
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(859,102): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(882,96): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(889,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(896,102): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(928,96): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(935,93): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(942,102): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1497,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1499,12): warning C4244: +=: преобразование "double" в "unsigned int", возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1627,46): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1637,46): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1648,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1656,49): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1727,30): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1777,32): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
   Создание кода
-C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1586): warning C4700: использована неинициализированная локальная переменная "xsize"
-  1 of 4429 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+C:\Users\gfif\source\repos\opengltry2\opengltry2\MapTest.cpp(1601): warning C4700: использована неинициализированная локальная переменная "xsize"
+  1 of 4431 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     38 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
