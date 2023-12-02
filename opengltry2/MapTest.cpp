@@ -1187,6 +1187,9 @@ void On_Create()
 	GetWindow(0)->backgroundColor = EditorColor;
 
 
+	std::cout << GetWindow(0);
+
+
 	SceneWindowID = CreateWindow();
 	Window* w = GetWindow(SceneWindowID);
 	w->Init({ 1280,720 });

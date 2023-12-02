@@ -148,7 +148,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 	unsigned int downscaleFBO[8];
 	glGenFramebuffers(8, downscaleFBO);
 
-	float scalefactor = 0.5f;
+	float scalefactor = 0.75f;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -501,7 +501,7 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 		glBindVertexArray(ScreenVAO);
 		UseShader(UpsampleBlur);
-		glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 1.0f);
+		glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
 		for (int i = 7; i > 0; i--)
 		{
 			glViewport(0, 0, DownScaleBufferSizes[i-1].x, DownScaleBufferSizes[i-1].y);

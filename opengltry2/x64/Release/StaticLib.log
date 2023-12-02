@@ -1,0 +1,3 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: промежуточный каталог (x64\Release\) содержит файлы, которые используются совместно с другим проектом (Engine.vcxproj, opengltry2.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+OpenAL32.lib(OpenAL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR уже определен в opengl32.lib(OPENGL32.dll); второе определение пропущено
+  StaticLib.vcxproj -> C:\Users\gfif\source\repos\opengltry2\x64\Release\StaticLib.lib
