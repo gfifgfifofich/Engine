@@ -11,7 +11,7 @@ For now its just a Visual studio solution project. Will be reconfigured to use a
 - CPU Particle system (up to 500k particles at 60FPS on my pc)
 - All sorts of functions for UI.
 - Neural network class for no reason.
-Scene class that can store all sorts of data about a scene. (For now can only use already implemented objects, like quads, polygons, particles, textures etc.)
+- Scene class that can store all sorts of data about a scene. (For now can only use already implemented objects, like quads, polygons, particles, textures etc.)
 Scene redactor preview:
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/opengltry2/Textures/Redactor%20preview%20.png)
 
