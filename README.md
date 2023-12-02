@@ -26,32 +26,5 @@ Scene redactor preview:
 [OpenAL](https://github.com/kcat/openal-soft), 
 [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h), 
 
-
-
-in case of need to rebuild libraries:
-
-Libraries/lib should contain:
-	freetype.lib
-	glew32s.lib
-	glfw3.lib
-	OpenAL32.lib
-	sndfile.lib
- 
-Libraries/Include should contain folowing directories:
-	AL (from openAL),
-	freetype (from freetype),
-	GL (from glew),
-	glad (from glad),
-	GLFW (from GLFW),
-	glm (from GLM),
-	stb (that contains stb_image.h)
-	
- and files:
-	ft2build.h
-	sndfile.h
-	sndfile.hh
-
-
-OpenAL32.dll in directory "Engine/opengltry2", or any other way of connectin a dll.
 	
 
