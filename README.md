@@ -5,9 +5,8 @@ For now its just a Visual studio solution project. Will be reconfigured to use a
 
 ## features
 - most of collision types
-- Z-Index layered drawing
-- Lighting
 - physics (springs, struts, ropes)
+- Lighting and postprocessing
 - CPU Particle system (up to 500k particles at 60FPS on my pc)
 - All sorts of functions for UI.
 - Neural network class for no reason.
