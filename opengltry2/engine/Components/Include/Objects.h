@@ -7,7 +7,3 @@
 #include "Objects/VerletObject.h";
 #include "Objects/NeuralNetwork.h";
 
-
-#include "Objects/Bodies.h";
-#include "Objects/Graph.h";
-#include "Objects/Particle.h";

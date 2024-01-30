@@ -3,7 +3,6 @@
 
 #include "engine/Components/Engine.h"
 
-
 polygon poly;
 
 	
@@ -14,40 +13,42 @@ polygon poly;
 	glm::ivec3 tmpIndex = glm::ivec3(-1);
 	int indexCreationState = 0;
 
+	polygonData pd;
 
 
 	void On_Create() 
 	{
+		poly.Data = &pd;
 
+		LoadTexture("Screenshot_1.png", &poly.Texture);
+		LoadTexture("11normal.png", &poly.NormalMap);
 	}
 	void On_Update() 
 	{
 
+		DrawLight(MousePosition, { 2500,2500 }, { 100.0f,10.0f,0.5f,1.0f });
 
 		ImGui::Begin("Polygon Tools");
 		if (ImGui::Button("Save as polygon.pol"))
 		{
-			poly.SaveAs("polygon.pol");
+			poly.Data->SaveAs("polygon.pol");
 		}
 		if (ImGui::Button("load polygon.pol"))
 		{
-			poly.Load("polygon.pol");
+			poly.Data->Load("polygon.pol");
 			poly.Update_MidlePos();
 			poly.Update_Shape();
 		}
 
-		if (ImGui::Button("Pushback color"))
-		{
-			poly.colors.push_back(glm::vec4((rand() % 100 / 50.0f), (rand() % 100 / 50.0f), (rand() % 100 / 50.0f), 1.0f));
-		}
+		
 		if (ImGui::Button("Clear"))
 		{
 			poly.triangles.clear();
-			poly.indexes.clear();
-			poly.Rawpoints.clear();
-			poly.colors.clear();
-			poly.TexturePoints.clear();
-			poly.state = 0;
+			poly.Data->indexes.clear();
+			poly.Data->Rawpoints.clear();
+			poly.Data->TexturePoints.clear();
+			poly.Data->state = 0;
+			poly.Update_Shape();
 		}
 
 		ImGui::Text("hold ctrl to interact with points");
@@ -68,21 +69,25 @@ polygon poly;
 
 		if (ImGui::Button("cut") || keys[GLFW_KEY_SPACE])
 		{
-			poly.state = 0;
+			poly.Data->state = 0;
 		}
 
 
 		if (keys[GLFW_KEY_LEFT_ALT])
 		{
 
-			for (int i = 0; i < poly.Rawpoints.size(); i++)
-				DrawCircle(poly.Rawpoints[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+			for (int i = 0; i < poly.Data->Rawpoints.size(); i++)
+				DrawCircle(poly.Data->Rawpoints[i], 10, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 
 
 			if (JustPressedLMB)
 			{
-				poly.add_Point(MousePosition, true);
+				poly.Data->add_Point(MousePosition, true);
+				poly.Update_Shape();
+				for (int i = 0; i < poly.Data->indexes.size(); i++)
+				{
+				}
 			}
 		}
 
@@ -92,11 +97,11 @@ polygon poly;
 			{
 				bool gr = false;
 
-				for (int i = 0; i < poly.Rawpoints.size(); i++)
+				for (int i = 0; i < poly.Data->Rawpoints.size(); i++)
 				{
 					if (!gr)
 					{
-						float distance = sqrlength(poly.Rawpoints[i] - MousePosition);
+						float distance = sqrlength(poly.Data->Rawpoints[i] - MousePosition);
 
 						if (distance < 100)
 						{
@@ -106,66 +111,33 @@ polygon poly;
 						}
 					}
 				}
-				for (int i = 0; i < poly.MiscPoints.size(); i++)
-				{
-					if (!gr)
-					{
-						float distance = sqrlength(glm::vec2(poly.MiscPoints[i].x, poly.MiscPoints[i].y) - MousePosition);
-
-						if (distance < 100)
-						{
-							grabbedpoint = i;
-							grabbedMisc = true;
-							gr = true;
-						}
-					}
-				}
+				
 			}
 			if (ReleasedLMB)grabbedpoint = -1;
 
-			if (grabbedpoint >= 0 && grabbedpoint < poly.Rawpoints.size() && !grabbedMisc)
-				poly.Rawpoints[grabbedpoint] = MousePosition;
-
-			if (grabbedpoint >= 0 && grabbedpoint < poly.MiscPoints.size() && grabbedMisc)
+			if (grabbedpoint >= 0 && grabbedpoint < poly.Data->Rawpoints.size() && !grabbedMisc)
 			{
-				poly.MiscPoints[grabbedpoint].x = MousePosition.x;
-				poly.MiscPoints[grabbedpoint].y = MousePosition.y;
+				poly.Data->Rawpoints[grabbedpoint] = MousePosition;
+			
+				poly.Update_Shape();
+				poly.Data->Update();
 			}
-			for (int i = 0; i < poly.MiscPoints.size(); i++)
-			{
-				glm::vec4 color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-				if ((int)poly.MiscPoints[i].z % 2 == 0)
-					color.x = poly.MiscPoints[i].z * 0.25f;
+			
 
-				if ((int)poly.MiscPoints[i].z % 3 == 0)
-					color.y = poly.MiscPoints[i].z * 0.25f;
-
-				if ((int)poly.MiscPoints[i].z % 4 == 0)
-					color.z = poly.MiscPoints[i].z * 0.25f;
-				if ((int)poly.MiscPoints[i].z % 4 != 0 && (int)poly.MiscPoints[i].z % 3 != 0 && (int)poly.MiscPoints[i].z % 2 != 0)
-				{
-					color.x = poly.MiscPoints[i].z * 0.25f;
-					color.z = poly.MiscPoints[i].z * 0.25f;
-					color.y = poly.MiscPoints[i].z * 0.25f;
-				}
-				DrawCircle(glm::vec2(poly.MiscPoints[i].x, poly.MiscPoints[i].y), 10, color);
-			}
-
-			for (int i = 0; i < poly.Rawpoints.size(); i++)
-				DrawCircle(poly.Rawpoints[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-			poly.Update_Shape();
+			for (int i = 0; i < poly.Data->Rawpoints.size(); i++)
+				DrawCircle(poly.Data->Rawpoints[i], 10, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		}
 
-		if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly.Rawpoints.size() > 0)
+		if (!keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_LEFT_SHIFT] && poly.Data->Rawpoints.size() > 0)
 		{
 
 			if (JustPressedLMB)
 			{
 				int copycheck = indexCreationState;
-				for (int i = 0; i < poly.Rawpoints.size(); i++)
+				for (int i = 0; i < poly.Data->Rawpoints.size(); i++)
 				{
 
-					float distance = sqrlength(poly.Rawpoints[i] - MousePosition);
+					float distance = sqrlength(poly.Data->Rawpoints[i] - MousePosition);
 
 					if (distance < 100 && indexCreationState == copycheck)
 					{
@@ -185,7 +157,7 @@ polygon poly;
 							indexCreationState = 0;
 
 							if (tmpIndex.x != -1 && tmpIndex.z != -1 && tmpIndex.y != -1)
-								poly.indexes.push_back(tmpIndex);
+								poly.Data->indexes.push_back(tmpIndex);
 							else std::cout << "failed to add index";
 							tmpIndex.x = -1;
 							tmpIndex.y = -1;
@@ -194,10 +166,10 @@ polygon poly;
 					}
 				}
 			}
-			for (int i = 0; i < poly.Rawpoints.size(); i++)
+			for (int i = 0; i < poly.Data->Rawpoints.size(); i++)
 			{
 
-				DrawCircle(poly.Rawpoints[i], 10, glm::vec4(
+				DrawCircle(poly.Data->Rawpoints[i], 10, glm::vec4(
 					i == tmpIndex.x ? 1.0f : 0.0f,
 					i == tmpIndex.y ? 1.0f : 0.0f,
 					i == tmpIndex.z ? 1.0f : 0.0f,
@@ -208,7 +180,9 @@ polygon poly;
 
 		poly.Update_Shape();
 
-		poly.DrawTriangles();
+		//poly.DrawTriangles();
+
+		DrawPolygon(poly);
 	
 	}
 

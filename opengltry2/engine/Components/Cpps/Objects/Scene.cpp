@@ -2,557 +2,565 @@
 #include "../../Include/Helper.h"
 #include "../../Include/Drawing.h"
 #include "../../Include/Objects.h"
+#include "../../Include/Objects/Particle.h"
 #include "../../Include/Objects/Scene.h"
 
 void Scene::SaveAs(std::string filename)
 {
 
-		std::ofstream SaveFile(filename);
-		for (int i = 0; i < balls.size(); i++)
+	std::ofstream SaveFile(filename);
+	for (int i = 0; i < balls.size(); i++)
+	{
+		SaveFile << "b";
+		SaveFile << std::to_string(balls[i].position.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].position.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].r);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].rotation);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].Textureid);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].NormalMapId);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].Collision_Level);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].Collision_Mask);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].color.r);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].color.g);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].color.b);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].color.a);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].lighted);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].Z_Index);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].id);
+		SaveFile << " ";
+		SaveFile << std::to_string(balls[i].Shaderid);
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < cubes.size(); i++)
+	{
+		SaveFile << "c";
+		SaveFile << std::to_string(cubes[i].position.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].position.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].width);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].height);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].Textureid);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].NormalMapId);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].Collision_Level);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].Collision_Mask);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].color.r);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].color.g);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].color.b);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].color.a);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].lighted);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].Z_Index);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].id);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].Shaderid);
+		SaveFile << " ";
+		SaveFile << std::to_string(cubes[i].Rotation);
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < points.size(); i++)
+	{
+		SaveFile << "p";
+		SaveFile << std::to_string(points[i].position.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(points[i].position.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(points[i].id);
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < Textures.size(); i++)
+	{
+		SaveFile << "t";
+		SaveFile << std::to_string(Textures[i].id);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Type);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Size);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color1.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color1.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color1.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color1.w);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color2.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color2.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color2.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Gradient_Color2.w);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Noize_Frequency);
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].Noize_Layers);
+		SaveFile << " ";
+		SaveFile << Textures[i].FileName;
+		SaveFile << " ";
+		SaveFile << std::to_string(Textures[i].filter);
+		SaveFile << " ";
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < Shaders.size(); i++)
+	{
+
+		SaveFile << "SH";
+		SaveFile << std::to_string(Shaders[i].id);
+		SaveFile << " ";
+		SaveFile << Shaders[i].Name;
+		SaveFile << " ";
+		SaveFile << Shaders[i].FragmentPath;
+		SaveFile << " ";
+		SaveFile << Shaders[i].VertexPath;
+		SaveFile << "\n";
+
+		for (int a = 0; a < Shaders[i].Uniforms.size(); a++)
 		{
-			SaveFile << "b";
-			SaveFile << std::to_string(balls[i].position.x);
+			SaveFile << "U";
+			SaveFile << Shaders[i].Uniforms[a].name;
 			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].position.y);
+			SaveFile << std::to_string(Shaders[i].Uniforms[a].type);
 			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].r);
+			SaveFile << Shaders[i].Uniforms[a].TypeName;
 			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].rotation);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].Textureid);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].NormalMapId);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].Collision_Level);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].Collision_Mask);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].color.r);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].color.g);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].color.b);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].color.a);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].lighted);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].Z_Index);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].id);
-			SaveFile << " ";
-			SaveFile << std::to_string(balls[i].Shaderid);
+			SaveFile << std::to_string(Shaders[i].Uniforms[a].type_id);
 			SaveFile << "\n";
 		}
-		for (int i = 0; i < cubes.size(); i++)
+		for (int a = 0; a < Shaders[i].uniformfloat.size(); a++)
 		{
-			SaveFile << "c";
-			SaveFile << std::to_string(cubes[i].position.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].position.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].width);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].height);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].Textureid);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].NormalMapId);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].Collision_Level);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].Collision_Mask);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].color.r);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].color.g);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].color.b);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].color.a);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].lighted);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].Z_Index);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].id);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].Shaderid);
-			SaveFile << " ";
-			SaveFile << std::to_string(cubes[i].Rotation);
+			SaveFile << "F";
+			SaveFile << std::to_string(Shaders[i].uniformfloat[a]);
 			SaveFile << "\n";
 		}
-		for (int i = 0; i < points.size(); i++)
+		for (int a = 0; a < Shaders[i].uniformint.size(); a++)
+		{
+			SaveFile << "I";
+			SaveFile << std::to_string(Shaders[i].uniformint[a]);
+			SaveFile << "\n";
+		}
+		for (int a = 0; a < Shaders[i].uniformvec2.size(); a++)
+		{
+			SaveFile << "V2";
+			SaveFile << std::to_string(Shaders[i].uniformvec2[a].x);
+			SaveFile << " ";
+			SaveFile << std::to_string(Shaders[i].uniformvec2[a].y);
+			SaveFile << "\n";
+		}
+		for (int a = 0; a < Shaders[i].uniformvec3.size(); a++)
+		{
+			SaveFile << "V3";
+			SaveFile << std::to_string(Shaders[i].uniformvec3[a].x);
+			SaveFile << " ";
+			SaveFile << std::to_string(Shaders[i].uniformvec3[a].y);
+			SaveFile << " ";
+			SaveFile << std::to_string(Shaders[i].uniformvec3[a].z);
+			SaveFile << "\n";
+		}
+		for (int a = 0; a < Shaders[i].uniformvec4.size(); a++)
+		{
+			SaveFile << "V4";
+			SaveFile << std::to_string(Shaders[i].uniformvec4[a].x);
+			SaveFile << " ";
+			SaveFile << std::to_string(Shaders[i].uniformvec4[a].y);
+			SaveFile << " ";
+			SaveFile << std::to_string(Shaders[i].uniformvec4[a].z);
+			SaveFile << " ";
+			SaveFile << std::to_string(Shaders[i].uniformvec4[a].w);
+			SaveFile << "\n";
+		}
+		for (int a = 0; a < Shaders[i].uniformTextures.size(); a++)
+		{
+			SaveFile << "T";
+			SaveFile << std::to_string(Shaders[i].MapTextures[a]);
+			SaveFile << "\n";
+		}
+		SaveFile << "E\n";
+
+	}
+
+	for (int i = 0; i < NormalMaps.size(); i++)
+	{
+		SaveFile << "N";
+		SaveFile << std::to_string(NormalMaps[i].id);
+		SaveFile << " ";
+		SaveFile << std::to_string(NormalMaps[i].Type);
+		SaveFile << " ";
+		SaveFile << NormalMaps[i].FileName;
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < polygonMeshes.size(); i++)
+	{
+		SaveFile << "PM ";
+		SaveFile << polygonMeshes[i].Name << " ";
+		SaveFile << polygonMeshes[i].FilePath << "\n";
+		for (int p = 0; p < polygonMeshes[i].Rawpoints.size(); p++)
 		{
 			SaveFile << "p";
-			SaveFile << std::to_string(points[i].position.x);
+			SaveFile << std::to_string(polygonMeshes[i].Rawpoints[p].x);
 			SaveFile << " ";
-			SaveFile << std::to_string(points[i].position.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(points[i].id);
+			SaveFile << std::to_string(polygonMeshes[i].Rawpoints[p].y);
 			SaveFile << "\n";
 		}
-		for (int i = 0; i < Textures.size(); i++)
+		for (int p = 0; p < polygonMeshes[i].indexes.size(); p++)
+		{
+			SaveFile << "i";
+			SaveFile << std::to_string(polygonMeshes[i].indexes[p].x);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygonMeshes[i].indexes[p].y);
+			SaveFile << " ";
+			SaveFile << std::to_string(polygonMeshes[i].indexes[p].z);
+			SaveFile << "\n";
+		}
+		for (int p = 0; p < polygonMeshes[i].TexturePoints.size(); p++)
 		{
 			SaveFile << "t";
-			SaveFile << std::to_string(Textures[i].id);
+			SaveFile << std::to_string(polygonMeshes[i].TexturePoints[p].x);
 			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Type);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Size);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color1.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color1.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color1.z);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color1.w);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color2.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color2.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color2.z);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Gradient_Color2.w);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Noize_Frequency);
-			SaveFile << " ";
-			SaveFile << std::to_string(Textures[i].Noize_Layers);
-			SaveFile << " ";
-			SaveFile << Textures[i].FileName;
+			SaveFile << std::to_string(polygonMeshes[i].TexturePoints[p].y);
 			SaveFile << "\n";
 		}
-		for (int i = 0; i < Shaders.size(); i++)
+
+		SaveFile << "E";
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		SaveFile << "P";
+		SaveFile << std::to_string(polygons[i].MeshID);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Textureid);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].NormalMapId);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Collision_Level);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Collision_Mask);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].color.r);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].color.g);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].color.b);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].color.a);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].lighted);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Z_Index);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].id);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Position.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Position.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Scale.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Scale.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Rotation);
+		SaveFile << " ";
+		SaveFile << std::to_string(polygons[i].Additive);
+		SaveFile << "\n";
+	}
+
+	for (int i = 0; i < ParticleEmiters.size(); i++)
+	{
+		SaveFile << "e";
+		SaveFile << std::to_string(ParticleEmiters[i].InitialRotation);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].RotationAcceleration);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].RotationDamper);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].RotationRandomness);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].RotationVelocity);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].VelocityDamper);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].InitialOrbitalVelocity);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].OrbitalVelocityRandomness);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].lifetime);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].lifetimeRandomness);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].lighted);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].influenced);
+		SaveFile << " ";
+		SaveFile << ParticleEmiters[i].Type;
+		SaveFile << " ";
+		SaveFile << ParticleEmiters[i].Name;
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].Z_Index);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].id);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].NormalMapid);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].Additive);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].DrawToNormalMap);
+		SaveFile << "\n";
+
+
+		SaveFile << "V";
+		SaveFile << std::to_string(ParticleEmiters[i].acceleration.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].acceleration.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].InitialVelocity.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].InitialVelocity.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.w);
+		SaveFile << "\n";
+
+		SaveFile << "S";
+		SaveFile << std::to_string(ParticleEmiters[i].StartSize.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].StartSize.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].EndSize.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].EndSize.y);
+		SaveFile << "\n";
+
+		SaveFile << "C";
+		SaveFile << std::to_string(ParticleEmiters[i].StartColor.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].StartColor.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].StartColor.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].StartColor.w);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].EndColor.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].EndColor.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].EndColor.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(ParticleEmiters[i].EndColor.w);
+		SaveFile << "\n";
+		
+		SaveFile << "t";
+		SaveFile << std::to_string(ParticleEmiters[i].Textureid);
+		SaveFile << "\n";
+		
+		for (int p = 0; p < ParticleEmiters[i].SpheresOfInfluence.size(); p++)
 		{
-
-			SaveFile << "SH";
-			SaveFile << std::to_string(Shaders[i].id);
+			SaveFile << "SI";
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].position.x);
 			SaveFile << " ";
-			SaveFile << Shaders[i].Name;
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].position.y);
 			SaveFile << " ";
-			SaveFile << Shaders[i].FragmentPath;
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].velocity.x);
 			SaveFile << " ";
-			SaveFile << Shaders[i].VertexPath;
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].velocity.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].r);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].attractive);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].attractionStrength);
 			SaveFile << "\n";
-
-			for (int a = 0; a < Shaders[i].Uniforms.size(); a++)
-			{
-				SaveFile << "U";
-				SaveFile << Shaders[i].Uniforms[a].name;
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].Uniforms[a].type);
-				SaveFile << " ";
-				SaveFile << Shaders[i].Uniforms[a].TypeName;
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].Uniforms[a].type_id);
-				SaveFile << "\n";
-			}
-			for (int a = 0; a < Shaders[i].uniformfloat.size(); a++)
-			{
-				SaveFile << "F";
-				SaveFile << std::to_string(Shaders[i].uniformfloat[a]);
-				SaveFile << "\n";
-			}
-			for (int a = 0; a < Shaders[i].uniformint.size(); a++)
-			{
-				SaveFile << "I";
-				SaveFile << std::to_string(Shaders[i].uniformint[a]);
-				SaveFile << "\n";
-			}
-			for (int a = 0; a < Shaders[i].uniformvec2.size(); a++)
-			{
-				SaveFile << "V2";
-				SaveFile << std::to_string(Shaders[i].uniformvec2[a].x);
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].uniformvec2[a].y);
-				SaveFile << "\n";
-			}
-			for (int a = 0; a < Shaders[i].uniformvec3.size(); a++)
-			{
-				SaveFile << "V3";
-				SaveFile << std::to_string(Shaders[i].uniformvec3[a].x);
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].uniformvec3[a].y);
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].uniformvec3[a].z);
-				SaveFile << "\n";
-			}
-			for (int a = 0; a < Shaders[i].uniformvec4.size(); a++)
-			{
-				SaveFile << "V4";
-				SaveFile << std::to_string(Shaders[i].uniformvec4[a].x);
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].uniformvec4[a].y);
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].uniformvec4[a].z);
-				SaveFile << " ";
-				SaveFile << std::to_string(Shaders[i].uniformvec4[a].w);
-				SaveFile << "\n";
-			}
-			for (int a = 0; a < Shaders[i].uniformTextures.size(); a++)
-			{
-				SaveFile << "T";
-				SaveFile << std::to_string(Shaders[i].MapTextures[a]);
-				SaveFile << "\n";
-			}
-			SaveFile << "E\n";
-
 		}
-		for (int i = 0; i < NormalMaps.size(); i++)
+		for (int p = 0; p < ParticleEmiters[i].CubesOfInfluence.size(); p++)
 		{
-			SaveFile << "N";
-			SaveFile << std::to_string(NormalMaps[i].id);
+			SaveFile << "CI";
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].position.x);
 			SaveFile << " ";
-			SaveFile << std::to_string(NormalMaps[i].Type);
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].position.y);
 			SaveFile << " ";
-			SaveFile << NormalMaps[i].FileName;
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].velocity.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].velocity.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].scale.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].scale.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].attractive);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].attractionStrength);
 			SaveFile << "\n";
 		}
-		for (int i = 0; i < polygons.size(); i++)
+		for (int p = 0; p < ParticleEmiters[i].EmitionPoints.size(); p++)
 		{
-			SaveFile << "P";
-			SaveFile << std::to_string(polygons[i].Textureid);
+			SaveFile << "EP";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].position.x);
 			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].NormalMapId);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].position.y);
 			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Collision_Level);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].velocity.x);
 			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Collision_Mask);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].velocity.y);
 			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].colors[0].r);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].amount);
 			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].colors[0].g);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].colors[0].b);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].colors[0].a);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].lighted);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Z_Index);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].id);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Position.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Position.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Scale.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Scale.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(polygons[i].Rotation);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].tick);
 			SaveFile << "\n";
-			for (int p = 0; p < polygons[i].Rawpoints.size(); p++)
-			{
-				SaveFile << "p";
-				SaveFile << std::to_string(polygons[i].Rawpoints[p].x);
-				SaveFile << " ";
-				SaveFile << std::to_string(polygons[i].Rawpoints[p].y);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < polygons[i].indexes.size(); p++)
-			{
-				SaveFile << "i";
-				SaveFile << std::to_string(polygons[i].indexes[p].x);
-				SaveFile << " ";
-				SaveFile << std::to_string(polygons[i].indexes[p].y);
-				SaveFile << " ";
-				SaveFile << std::to_string(polygons[i].indexes[p].z);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < polygons[i].TexturePoints.size(); p++)
-			{
-				SaveFile << "t";
-				SaveFile << std::to_string(polygons[i].TexturePoints[p].x);
-				SaveFile << " ";
-				SaveFile << std::to_string(polygons[i].TexturePoints[p].y);
-				SaveFile << "\n";
-			}
-			SaveFile << "E";
-			SaveFile << "\n";
-
 		}
-		for (int i = 0; i < ParticleEmiters.size(); i++)
+		for (int p = 0; p < ParticleEmiters[i].EmitionCircles.size(); p++)
 		{
-			SaveFile << "e";
-			SaveFile << std::to_string(ParticleEmiters[i].InitialRotation);
+			SaveFile << "ES";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].position.x);
 			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].RotationAcceleration);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].position.y);
 			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].RotationDamper);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].velocity.x);
 			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].RotationRandomness);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].velocity.y);
 			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].RotationVelocity);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].r);
 			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].VelocityDamper);
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].amount);
 			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].InitialOrbitalVelocity);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].OrbitalVelocityRandomness);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].lifetime);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].lifetimeRandomness);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].lighted);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].influenced);
-			SaveFile << " ";
-			SaveFile << ParticleEmiters[i].Type;
-			SaveFile << " ";
-			SaveFile << ParticleEmiters[i].Name;
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].Z_Index);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].id);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].NormalMapid);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].Additive);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].DrawToNormalMap);
-			SaveFile << "\n";
-
-
-			SaveFile << "V";
-			SaveFile << std::to_string(ParticleEmiters[i].acceleration.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].acceleration.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].InitialVelocity.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].InitialVelocity.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.z);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].VelocityRandomness.w);
-			SaveFile << "\n";
-
-			SaveFile << "S";
-			SaveFile << std::to_string(ParticleEmiters[i].StartSize.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].StartSize.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].EndSize.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].EndSize.y);
-			SaveFile << "\n";
-
-			SaveFile << "C";
-			SaveFile << std::to_string(ParticleEmiters[i].StartColor.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].StartColor.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].StartColor.z);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].StartColor.w);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].EndColor.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].EndColor.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].EndColor.z);
-			SaveFile << " ";
-			SaveFile << std::to_string(ParticleEmiters[i].EndColor.w);
-			SaveFile << "\n";
-			for (int p = 0; p < ParticleEmiters[i].Textureids.size(); p++)
-			{
-				SaveFile << "t";
-				SaveFile << std::to_string(ParticleEmiters[i].Textureids[p]);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].SpheresOfInfluence.size(); p++)
-			{
-				SaveFile << "SI";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].velocity.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].velocity.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].r);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].attractive);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].SpheresOfInfluence[p].attractionStrength);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].CubesOfInfluence.size(); p++)
-			{
-				SaveFile << "CI";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].velocity.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].velocity.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].scale.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].scale.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].attractive);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].CubesOfInfluence[p].attractionStrength);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].EmitionPoints.size(); p++)
-			{
-				SaveFile << "EP";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].velocity.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].velocity.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].amount);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionPoints[p].tick);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].EmitionCircles.size(); p++)
-			{
-				SaveFile << "ES";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].velocity.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].velocity.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].r);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].amount);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].tick);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].EmitionCubes.size(); p++)
-			{
-				SaveFile << "EC";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].velocity.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].velocity.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].scale.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].scale.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].amount);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].tick);
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].LightSpheres.size(); p++)
-			{
-				SaveFile << "LS";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].r);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.r);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.g);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.b);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.a);
-				SaveFile << " ";
-				SaveFile << "\n";
-			}
-			for (int p = 0; p < ParticleEmiters[i].LightCubes.size(); p++)
-			{
-				SaveFile << "LC";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].position.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].position.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].scale.x);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].scale.y);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.r);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.g);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.b);
-				SaveFile << " ";
-				SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.a);
-				SaveFile << " ";
-				SaveFile << "\n";
-			}
-			SaveFile << "E";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCircles[p].tick);
 			SaveFile << "\n";
 		}
-		for (int i = 0; i < LightSources.size(); i++)
+		for (int p = 0; p < ParticleEmiters[i].EmitionCubes.size(); p++)
+		{
+			SaveFile << "EC";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].position.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].position.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].velocity.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].velocity.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].scale.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].scale.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].amount);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].EmitionCubes[p].tick);
+			SaveFile << "\n";
+		}
+		for (int p = 0; p < ParticleEmiters[i].LightSpheres.size(); p++)
 		{
 			SaveFile << "LS";
-			SaveFile << std::to_string(LightSources[i].position.x);
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].position.x);
 			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].position.y);
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].position.y);
 			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].position.z);
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].r);
 			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].scale.x);
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.r);
 			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].scale.y);
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.g);
 			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].volume);
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.b);
 			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].color.x);
-			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].color.y);
-			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].color.z);
-			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].color.w);
-			SaveFile << " ";
-			SaveFile << std::to_string(LightSources[i].TextureId);
-			SaveFile << " ";
-			SaveFile << LightSources[i].name;
+			SaveFile << std::to_string(ParticleEmiters[i].LightSpheres[p].Color.a);
 			SaveFile << " ";
 			SaveFile << "\n";
 		}
-
-
-
-
-		/*float a = 10;
-		char* b = new char[sizeof(a)];
-		memcpy(b, (const void*)&a, sizeof(a));
-
-
-
-
-		SaveFile << "F2 ";
-		for (int i = 0; i < sizeof(a); i++)
-			SaveFile << b[i];
-		for (int i = 0; i < sizeof(a); i++)
-			SaveFile << b[i];
-		SaveFile << "\n";*/
-
-		SaveFile.close();
+		for (int p = 0; p < ParticleEmiters[i].LightCubes.size(); p++)
+		{
+			SaveFile << "LC";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].position.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].position.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].scale.x);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].scale.y);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.r);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.g);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.b);
+			SaveFile << " ";
+			SaveFile << std::to_string(ParticleEmiters[i].LightCubes[p].Color.a);
+			SaveFile << " ";
+			SaveFile << "\n";
+		}
+		SaveFile << "E";
+		SaveFile << "\n";
 	}
+
+	for (int i = 0; i < LightSources.size(); i++)
+	{
+		SaveFile << "LS";
+		SaveFile << std::to_string(LightSources[i].position.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].position.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].position.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].scale.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].scale.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].volume);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].color.x);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].color.y);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].color.z);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].color.w);
+		SaveFile << " ";
+		SaveFile << std::to_string(LightSources[i].TextureId);
+		SaveFile << " ";
+		SaveFile << LightSources[i].name;
+		SaveFile << " ";
+		SaveFile << "\n";
+	}
+
+
+
+
+	SaveFile.close();
+}
 
 void Scene::LoadFrom(std::string filename)
 {
@@ -564,6 +572,11 @@ void Scene::LoadFrom(std::string filename)
 		NormalMaps.clear();
 		points.clear();
 		polygons.clear();
+		for (int i = 0; i < polygonMeshes.size(); i++)
+		{
+			polygonMeshes[i].~polygonData();
+		}
+		polygonMeshes.clear();
 		ParticleEmiters.clear();
 		LightSources.clear();
 		for (int i = 0; i < Shaders.size(); i++)
@@ -577,6 +590,7 @@ void Scene::LoadFrom(std::string filename)
 		bool readingParticle = false;
 		bool readingShader = false;
 		polygon pol;
+		polygonData pold;
 		ParticleEmiter part;
 		Shader shade;
 
@@ -635,7 +649,7 @@ void Scene::LoadFrom(std::string filename)
 				s >> junk >> tex.id >> tex.Type >> tex.Size
 					>> tex.Gradient_Color1.x >> tex.Gradient_Color1.y >> tex.Gradient_Color1.z >> tex.Gradient_Color1.w
 					>> tex.Gradient_Color2.x >> tex.Gradient_Color2.y >> tex.Gradient_Color2.z >> tex.Gradient_Color2.w
-					>> tex.Noize_Frequency >> tex.Noize_Layers >> tex.FileName;
+					>> tex.Noize_Frequency >> tex.Noize_Layers  >> tex.FileName >> tex.filter;
 				tex.texture = NULL;
 				tex.Load();
 				Textures.push_back(tex);
@@ -665,17 +679,34 @@ void Scene::LoadFrom(std::string filename)
 				s >> junk >> junk >> ls.position.x >> ls.position.y >> ls.position.z >> ls.scale.x >> ls.scale.y >> ls.volume >> ls.color.r >> ls.color.g >> ls.color.b >> ls.color.a >> ls.TextureId >> ls.name;
 				LightSources.push_back(ls);
 			}
-
-			else if (line[0] == 'P' && !readingParticle && !readingShader)
+			else if (line[0] == 'P' && line[1] == 'M' && !readingParticle && !readingShader)
 			{
+				s >> junk >> junk >> pold.Name >> pold.FilePath;
 				readingPoly = true;
-				s >> junk >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >>
-					pol.colors[0].r >> pol.colors[0].g >> pol.colors[0].b >> pol.colors[0].a >> 
-					pol.lighted >> pol.Z_Index >> pol.id >>
-					pol.Position.x >> pol.Position.y>> 
-					pol.Scale.x >> pol.Scale.y >>
-					pol.Rotation;
 			}
+			else if (line[0] == 'P'  && line[1] != 'M' && !readingPoly && !readingParticle && !readingShader)
+			{
+				s >> junk >> pol.MeshID >> pol.Textureid >> pol.NormalMapId >> pol.Collision_Level >> pol.Collision_Mask >>
+					pol.color.r >> pol.color.g >> pol.color.b >> pol.color.a >>
+					pol.lighted >> pol.Z_Index >> pol.id >>
+					pol.Position.x >> pol.Position.y >>
+					pol.Scale.x >> pol.Scale.y >>
+					pol.Rotation >> pol.Additive;
+
+				if (pol.MeshID < polygonMeshes.size())
+					pol.Data = &polygonMeshes[pol.MeshID];
+				else
+					pol.Data = NULL;
+
+				if(polygonMeshes.size()==0)
+					pol.Data = NULL;
+
+				pol.Update_Shape();
+				polygons.push_back(pol);
+				polygon pp;
+				pol = pp;
+			}
+			
 
 			else if (line[0] == 'e' && !readingPoly && !readingShader)
 			{
@@ -696,14 +727,14 @@ void Scene::LoadFrom(std::string filename)
 
 					glm::vec2 pnt;
 					s >> junk >> pnt.x >> pnt.y;
-					pol.Rawpoints.push_back(pnt);
+					pold.Rawpoints.push_back(pnt);
 				}
 				else if (line[0] == 'i')
 				{
 
 					glm::ivec3 ind;
 					s >> junk >> ind.x >> ind.y >> ind.z;
-					pol.indexes.push_back(ind);
+					pold.indexes.push_back(ind);
 
 				}
 				else if (line[0] == 't')
@@ -711,16 +742,15 @@ void Scene::LoadFrom(std::string filename)
 
 					glm::vec2 pnt;
 					s >> junk >> pnt.x >> pnt.y;
-					pol.TexturePoints.push_back(pnt);
+					pold.TexturePoints.push_back(pnt);
 				}
 				else if (line[0] == 'E')
 				{
 					readingPoly = false;
-					pol.Update_MidlePos();
-					pol.Update_Shape();
-					polygons.push_back(pol);
-					polygon pp;
-					pol = pp;
+					pold.Update();
+					polygonMeshes.push_back(pold);
+					polygonData pd;
+					pold = pd;
 				}
 			}
 			if (readingParticle)
@@ -743,7 +773,7 @@ void Scene::LoadFrom(std::string filename)
 				{
 					int id;
 					s >> junk >> id;
-					part.Textureids.push_back(id);
+					part.Textureid = id;
 				}
 				else if (line[0] == 'S' && line[1] == 'I')
 				{
@@ -827,10 +857,7 @@ void Scene::LoadFrom(std::string filename)
 				{
 					readingParticle = false;
 
-					part.textures.clear();
-					for (int i = 0; i < part.Textureids.size(); i++)
-						part.textures.push_back(Textures[part.Textureids[i]].texture);
-
+					part.material.Texture = Textures[part.Textureid].texture;
 					ParticleEmiters.push_back(part);
 					ParticleEmiter pt;
 					part = pt;
@@ -1063,16 +1090,19 @@ void Scene::Draw(float dt)
 	for (int i = 0; i < polygons.size(); i++)
 	{
 
-		if (polygons[i].Textureid == -1)
-		{
-			polygons[i].Texture = NULL;
-			polygons[i].DrawTriangles();
-		}
+		if (polygons[i].NormalMapId == -1)
+			polygons[i].NormalMap = NULL;
 		else
-		{
+			polygons[i].NormalMap = NormalMaps[polygons[i].NormalMapId].texture;
+
+		if (polygons[i].Textureid == -1)
+			polygons[i].Texture = NULL;
+		else
 			polygons[i].Texture = Textures[polygons[i].Textureid].texture;
-			polygons[i].DrawTriangles();
-		}
+		DrawPolygon(&polygons[i], polygons[i].Z_Index, polygons[i].Additive);
+		//polygons[i].DrawTrianglesOutlines();
+		//polygons[i].DrawTriangles();
+
 	}
 	for (int i = 0; i < ParticleEmiters.size(); i++)
 	{
@@ -1084,7 +1114,8 @@ void Scene::Draw(float dt)
 			else if(ParticleEmiters[i].NormalMapid == -1) NM = CubeNormalMapTexture;
 			else if(ParticleEmiters[i].NormalMapid == -2) NM = BallNormalMapTexture;
 
-			ParticleEmiters[i].NormalMap = NM;
+			ParticleEmiters[i].material.NormalMap = NM;
+			ParticleEmiters[i].material.Texture = Textures[ParticleEmiters[i].Textureid].texture;
 		}
 
 		ParticleEmiters[i].Process(dt);

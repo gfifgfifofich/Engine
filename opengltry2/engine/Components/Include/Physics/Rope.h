@@ -12,6 +12,7 @@ public:
 
 	float width = 1.0f;
 	unsigned int Texture = NULL;
+	unsigned int NormalMap = NULL;
 
 	glm::vec2 Force = { 0.0f,0.0f };
 	glm::vec4 color = glm::vec4(1.0f);

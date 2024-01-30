@@ -110,12 +110,13 @@ public:
 
 	std::string Type = "QUAD";// QUAD, LINE, CIRCLE, TEXTURED ( for QUAD & TEXTURED - Size(width,height), Line - Size(length,width), Circle - Size(r,nothing))
 
-	std::vector<unsigned int> textures;
-
-	unsigned int NormalMap = NULL;
-
-	std::vector<int> Textureids;
+	int Textureid = -1;
 	int NormalMapid = -1;
+	Material material;
+	
+	
+	int TQA = -1;
+	
 	bool influenced = false;
 	std::vector<influenceSphere> SpheresOfInfluence;
 	std::vector<influenceCube> CubesOfInfluence;
@@ -139,14 +140,12 @@ public:
 	bool ShowWindow = false;
 
 	int start = 0;
-	std::vector <int> TextureStarts;
 	int Normastart = 0;
 	int threadcount = std::thread::hardware_concurrency();
 	float delta = 0.017f;
 
 	int SceneLayerIndex = -1;
 	int NormalMapIndex = -1;
-	int TextureIndex = -1;
 
 	int AddSpheresOfInfluence(glm::vec2 position, float r, glm::vec2 velocity, bool Attractive = false, float AttractionStrength = 1.0f);
 	int AddCubeOfInfluence(glm::vec2 position, glm::vec2 scale, glm::vec2 velocity, bool Attractive = false, float AttractionStrength = 1.0f);

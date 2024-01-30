@@ -3,9 +3,8 @@
 #include "../Include/Drawing.h"
 #include "../Include/Text.h"
 
-void LoadFont(const char* font)
+void LoadFont(const char* font,int size)
 {
-	LoadShader(&TextShader, "engine/Shaders/Quad/TexturedQuad.vert", "engine/Shaders/Text.frag");
 
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
@@ -14,14 +13,18 @@ void LoadFont(const char* font)
 	if (FT_New_Face(ft, font, 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-	FT_Set_Pixel_Sizes(face, 0, 48);
+	FT_Set_Pixel_Sizes(face, 0, size);
 
 
 	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
 		std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 
+	for (auto c : Characters)
+	{
+		glDeleteTextures(1,&c.second.TextureID);
 
-
+	}
+	Characters.clear();
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 

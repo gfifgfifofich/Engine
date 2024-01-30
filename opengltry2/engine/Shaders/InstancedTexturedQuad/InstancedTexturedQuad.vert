@@ -1,14 +1,16 @@
 #version 330 core
 layout (location = 0) in vec4 aPos;
-layout (location = 1) in vec4 aColor;
+layout (location = 1) in float rotation;
 layout (location = 2) in vec4 aPosScale;
-layout (location = 3) in float rotation;
+layout (location = 3) in vec4 aColor;
 
 
 out vec2 TexCoords;
 out vec4 Color;
 
+uniform bool flipY = false;
 uniform float aspect;
+uniform bool flipX = false;
 void main()
 {
 	vec4 pos = vec4(aPos.xy,0.0f,1.0f);
@@ -24,8 +26,16 @@ void main()
 
     pos.x *=aspect;
 
-	gl_Position =  pos;
+	gl_Position = pos;
 	Color = aColor;
-	TexCoords.x = aPos.z;
-	TexCoords.y = 1.0f - aPos.w;
+
+    if(!flipX)
+	    TexCoords.x = aPos.z;
+	else
+        TexCoords.x = 1.0f - aPos.z;
+
+     if(flipY)
+	    TexCoords.y = aPos.w;
+	else
+        TexCoords.y = 1.0f - aPos.w;
 }  

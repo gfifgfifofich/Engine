@@ -18,13 +18,13 @@ glm::vec3 listenerPos = { 0.0,0.0,0.0 };
 glm::vec3 listenerVel = { 0.0,0.0,0.0 };
 ALfloat listenerOri[] = { 0.0,0.0,1.0, 0.0,-1.0,0.0 };
 
-glm::vec3 soundscale = { 1.0f,1.0f ,1.0f};
-glm::vec3 soundSpeedscale = { 1.0f,1.0f ,1.0f};
+glm::vec3 soundscale = { 1.0f,1.0f ,1.0f };
+glm::vec3 soundSpeedscale = { 1.0f,1.0f ,1.0f };
 void AL_init()
 {
 
-	ALfloat lpos[] = { listenerPos.x, listenerPos.y, listenerPos.y};
-	ALfloat lvel[] = { listenerVel.x, listenerVel.y, listenerVel.y};
+	ALfloat lpos[] = { listenerPos.x, listenerPos.y, listenerPos.y };
+	ALfloat lvel[] = { listenerVel.x, listenerVel.y, listenerVel.y };
 
 	alListenerfv(AL_POSITION, lpos);
 	alListenerfv(AL_VELOCITY, lvel);
@@ -42,14 +42,40 @@ void AL_init()
 
 }
 
+void AL_Reload()
+{
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(Context);
+	if (Device) {
+		Context = alcCreateContext(Device, NULL);
+		alcMakeContextCurrent(Context);
+	}
+
+	contextMadeCurrent = alcMakeContextCurrent(Context);
+	if (!contextMadeCurrent)
+		std::cerr << "Sound Error" << "\n";
+}
+
+void  AL_Destroy()
+{
+	for (int i = 0; i < sources.size(); i++)
+	{
+		alSourceStop(*sources[i]);
+		alDeleteSources(1, sources[i]);
+	}
+	alcCloseDevice(Device);
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(Context);
+}
+
 void UpdateListenerPosition()
 {
 
 	listenerPos.x = CameraPosition.x / WIDTH;
 	listenerPos.y = CameraPosition.y / HEIGHT;
 
-	ALfloat lpos[] = { listenerPos.x * soundscale.x, listenerPos.y * soundscale.y, listenerPos.z * soundscale .z};
-	ALfloat lvel[] = { listenerVel.x * soundSpeedscale.x, listenerVel.y * soundSpeedscale.y, listenerVel.z * soundSpeedscale.z};
+	ALfloat lpos[] = { listenerPos.x * soundscale.x, listenerPos.y * soundscale.y, listenerPos.z * soundscale.z };
+	ALfloat lvel[] = { listenerVel.x * soundSpeedscale.x, listenerVel.y * soundSpeedscale.y, listenerVel.z * soundSpeedscale.z };
 
 	alListenerfv(AL_POSITION, lpos);
 	alListenerfv(AL_VELOCITY, lvel);
@@ -138,7 +164,7 @@ void StopSource(unsigned int* source)
 bool SourcePlaying(unsigned int* source)
 {
 	int playing;
-	alGetSourcei(*source, AL_SOURCE_STATE,&playing);
+	alGetSourcei(*source, AL_SOURCE_STATE, &playing);
 	return playing == AL_PLAYING;
 }
 
@@ -165,22 +191,22 @@ void DeleteSource(unsigned int* source)
 
 void PlaySound(unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f)
 {
-		unsigned int src;
+	unsigned int src;
 
-		alGenSources(1, &src);
-		alSourcef(src, AL_GAIN, 1.0f);
-		alSourcef(src, AL_PITCH, 1.0f);
-		alSource3f(src, AL_POSITION, 0.0f, 0.0f, 0.0f);
-		alSource3f(src, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-		alSourcei(src, AL_LOOPING, AL_FALSE); 
+	alGenSources(1, &src);
+	alSourcef(src, AL_GAIN, 1.0f);
+	alSourcef(src, AL_PITCH, 1.0f);
+	alSource3f(src, AL_POSITION, 0.0f, 0.0f, 0.0f);
+	alSource3f(src, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+	alSourcei(src, AL_LOOPING, AL_FALSE);
 
-		soundsArray.push_back(src);
-		SetSourcePosition(&soundsArray[soundsArray.size() - 1], position);
-		SetSourceSound(&soundsArray[soundsArray.size() - 1], sound);
-		SetSourceGain(&soundsArray[soundsArray.size() - 1], gain);
-		SetSourcePitch(&soundsArray[soundsArray.size() - 1], pitch);
-		PlaySource(&soundsArray[soundsArray.size() - 1]);
-	
+	soundsArray.push_back(src);
+	SetSourcePosition(&soundsArray[soundsArray.size() - 1], position);
+	SetSourceSound(&soundsArray[soundsArray.size() - 1], sound);
+	SetSourceGain(&soundsArray[soundsArray.size() - 1], gain);
+	SetSourcePitch(&soundsArray[soundsArray.size() - 1], pitch);
+	PlaySource(&soundsArray[soundsArray.size() - 1]);
+
 
 
 }
@@ -190,24 +216,24 @@ void PlaySound(unsigned int* dst, unsigned int* sound, glm::vec2 position, float
 		std::cout << "asdasd";
 		dst = new unsigned int;
 	}
-		if (*dst == NULL)
-		{
+	if (*dst == NULL)
+	{
 
-			alGenSources(1,dst);
+		alGenSources(1, dst);
 
-			alSourcef(*dst, AL_GAIN, 1.0f);
-			alSourcef(*dst, AL_PITCH, 1.0f);
-			alSource3f(*dst, AL_POSITION, 0.0f, 0.0f, 0.0f);
-			alSource3f(*dst, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-			alSourcei(*dst, AL_LOOPING, AL_FALSE); 
-			soundsArray2.push_back(dst);
-		}
-		SetSourcePosition(dst, position);
-		SetSourceSound(dst, sound);
-		SetSourceGain(dst, gain);
-		SetSourcePitch(dst, pitch);
-		PlaySource(dst);
-	
+		alSourcef(*dst, AL_GAIN, 1.0f);
+		alSourcef(*dst, AL_PITCH, 1.0f);
+		alSource3f(*dst, AL_POSITION, 0.0f, 0.0f, 0.0f);
+		alSource3f(*dst, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+		alSourcei(*dst, AL_LOOPING, AL_FALSE);
+		soundsArray2.push_back(dst);
+	}
+	SetSourcePosition(dst, position);
+	SetSourceSound(dst, sound);
+	SetSourceGain(dst, gain);
+	SetSourcePitch(dst, pitch);
+	PlaySource(dst);
+
 }
 void PlaySound(unsigned int** dst, unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f)
 {
@@ -233,18 +259,6 @@ void PlaySound(unsigned int** dst, unsigned int* sound, glm::vec2 position, floa
 	PlaySource(*dst);
 
 }
-void  AL_Destroy()
-{
-	for (int i = 0; i < sources.size(); i++)
-	{
-		alSourceStop(*sources[i]);
-		alDeleteSources(1, sources[i]);
-	}
-	alcCloseDevice(Device);
-	alcMakeContextCurrent(nullptr);
-	alcDestroyContext(Context);
-}
-
 void ProcessAL()
 {
 	for (int i = 0; i < soundsArray.size(); i++)
@@ -253,7 +267,7 @@ void ProcessAL()
 		while (del && i < soundsArray.size())
 		{
 			del = false;
-			if (!SourcePlaying(&soundsArray[i]) || soundsArray[i] == 0 )
+			if (!SourcePlaying(&soundsArray[i]) || soundsArray[i] == 0)
 			{
 				del = true;
 
@@ -288,7 +302,7 @@ void ProcessAL()
 				soundsArray2[i] = soundsArray2[soundsArray2.size() - 1];
 				soundsArray2.pop_back();
 			}
-			
+
 		}
 	}
 }

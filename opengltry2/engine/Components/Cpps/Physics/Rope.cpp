@@ -95,12 +95,12 @@ void DecorativeRope::Draw(int Z_Index)
 	rope[4].position = b2->position;
 	if (Texture == NULL)
 	{
-		for (int i = 0; i < 5; i++)
-			DrawCircle(rope[i].position, width, color, true, BallNormalMapTexture, Z_Index - 1);
+		/*for (int i = 0; i < 5; i++)
+			DrawCircle(rope[i].position, width, color, true, BallNormalMapTexture, Z_Index - 1);*/
 		for (int i = 1; i < 5; i++)
-			DrawLine(rope[i].position, rope[i - 1].position, width, color, true, CubeNormalMapTexture, Z_Index);
+			DrawLine(rope[i].position, rope[i - 1].position, width, color, true, NormalMap, Z_Index);
 	}
 	else
 		for (int i = 1; i < 5; i++)
-			DrawTexturedLine(Texture, rope[i].position, rope[i - 1].position, width, color, CubeNormalMapTexture, Z_Index);
+			DrawTexturedLine(Texture, rope[i].position, rope[i - 1].position, width, color, NormalMap, Z_Index);
 }

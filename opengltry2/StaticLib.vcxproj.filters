@@ -1454,6 +1454,9 @@
     <ClCompile Include="engine\Libraries\include\imgui\imgui_widgets.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\SaveToFile.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\Libraries\include\glm\detail\func_common.inl">

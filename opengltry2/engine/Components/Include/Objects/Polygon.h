@@ -37,7 +37,37 @@ public:
 	void DrawNormals();
 };
 
+struct polygonData
+{
+	glm::vec2 RawmidlePosition = { 0.0f,0.0f };
+	std::vector <glm::vec2> Rawpoints;
+	std::vector <glm::vec2> TexturePoints;
+	std::vector <glm::ivec3> indexes;
 
+	std::vector<GLuint> indices;
+	std::vector<GLfloat> data;
+
+	unsigned int VAO;
+	unsigned int VBO;
+
+	std::string Name;//
+	std::string FilePath;//
+
+	int state = 0;
+	void add_Point(glm::vec2 point, bool addindex);
+	void SaveAs(std::string name);
+	void Load(std::string name);
+	void Update();
+	~polygonData()
+	{
+		if (VAO != NULL)
+			glDeleteVertexArrays(1, &VAO);
+
+		if (VBO != NULL)
+			glDeleteBuffers(1, &VBO);
+
+	}
+};
 // Should be defined clockwise
 class polygon
 {
@@ -47,6 +77,7 @@ public:
 	int NormalMapId = -1;
 	int id = -1;
 	int Z_Index = 0;
+	bool Additive = false;
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels
@@ -54,17 +85,14 @@ public:
 	float bounciness = 1.0f;
 	std::vector <Triangle> triangles;
 
-	std::vector <glm::vec4> colors = { {1.0f,1.0f,1.0f,1.0f} }; // one - for whole poly, two or more for random color, colors_amount=triangles_amount foreach
+	glm::vec4 color = {1.0f,1.0f,1.0f,1.0f};
 
 
 	//glm::vec2 position = glm::vec2(0.0f);
-
-	std::vector <glm::vec2> Rawpoints;
+	polygonData* Data;
+	int MeshID = -1;
 	std::vector < glm::vec2> Transofromedpoints;
-	std::vector <glm::vec2> TexturePoints;
-	std::vector <glm::ivec3> indexes;
 
-	glm::vec2 RawmidlePosition = { 0.0f,0.0f };
 	glm::vec2 midlePosition = { 0.0f,0.0f };
 
 	glm::vec2 Position = { 0.0f,0.0f };
@@ -81,26 +109,16 @@ public:
 	glm::vec2 Scale = { 1.0f,1.0f };
 
 	unsigned int Texture;
+	unsigned int NormalMap;
 
-	// leftover ofter i tried to make a map for a game using only polygon class
-	std::vector <glm::vec4> MiscPoints;
-
-
-
-	int state = 0;
 
 
 	void Process(float dt);
 
-	void add_Point(glm::vec2 point, bool addindex = false);
 
 	void Update_MidlePos();
 	void Update_Shape();
 
-	void SaveAs(std::string name);
-
-
-	void Load(std::string name);
 
 
 

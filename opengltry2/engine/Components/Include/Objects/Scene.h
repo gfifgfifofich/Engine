@@ -15,6 +15,7 @@ public:
 	
 
 	std::vector<polygon> polygons;
+	std::vector<polygonData> polygonMeshes;
 	std::vector<cube> cubes;
 	std::vector<ball> balls;
 	std::vector<miscPoint> points;

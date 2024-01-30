@@ -3,6 +3,7 @@
 #include "../Include/Drawing.h"
 #include "../Include/Text.h"
 #include "../Include/Objects.h"
+#include "../Include/Collisions/CircleToQuad.h"
 #define UI_Implementation
 #include "../Include/UI.h"
 
@@ -25,17 +26,17 @@ void UI_NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMa
 		int TQA = -1;
 
 		for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-			if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap && SceneLayers[SLI].NormalMaps[i].Texture2 == Texture)
+			if (SceneLayers[SLI].NormalMaps[i].Material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].Material.Texture == Texture)
 				TQA = i;
 
 		if (TQA == -1)
 		{
 			TexturedQuadArray NewTQA;
-			NewTQA.Texture = NormalMap;
-			NewTQA.Texture2 = Texture;
+			NewTQA.Material.NormalMap = NormalMap;
+			NewTQA.Material.Texture = Texture;
 			SceneLayers[SLI].NormalMaps.push_back(NewTQA);
 			for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-				if (SceneLayers[SLI].NormalMaps[i].Texture == NormalMap && SceneLayers[SLI].NormalMaps[i].Texture2 == Texture)
+				if (SceneLayers[SLI].NormalMaps[i].Material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].Material.Texture == Texture)
 					TQA = i;
 		}
 
@@ -68,50 +69,14 @@ void UI_NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMa
 		}
 	}
 }
-void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color, int Z_Index, unsigned int NormalMap, bool Additive)
-{
 
-	if (NormalMap != NULL)
-		UI_NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
-
-	float aspx = ScreenDivisorX;
-	float aspy = ScreenDivisorY;
-
-	position *= glm::vec2(aspx, aspy);
-	scale *= glm::vec2(aspx, aspy);
-
-
-	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
-
-
-	int TQA = -1;
-
-	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
-		if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
-			TQA = i;
-	if (TQA == -1)
-	{
-		TexturedQuadArray NewTQA;
-		NewTQA.Texture = texture;
-		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
-		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
-			if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
-				TQA = i;
-	}
-	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
-	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
-	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
-
-}
-void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float rotation, int Z_Index, unsigned int NormalMap, bool Additive)
+void UI_DrawQuadWithMaterial(cube c, Material material, float rotation, glm::vec4 color, int Z_Index, bool Additive)
 {
 
 
 	glm::vec2 position = c.position;
 	glm::vec2 scale = glm::vec2(c.width, c.height);
 
-	if (NormalMap != NULL)
-		UI_NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
 	float aspx = ScreenDivisorX;
 	float aspy = ScreenDivisorY;
 
@@ -124,15 +89,15 @@ void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float ro
 	int TQA = -1;
 
 	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
-		if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+		if (SceneLayers[SLI].TexturedQuads[i].Material == material)
 			TQA = i;
 	if (TQA == -1)
 	{
 		TexturedQuadArray NewTQA;
-		NewTQA.Texture = texture;
+		NewTQA.Material = material;
 		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
 		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
-			if (SceneLayers[SLI].TexturedQuads[i].Texture == texture)
+			if (SceneLayers[SLI].TexturedQuads[i].Material == material)
 				TQA = i;
 	}
 	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
@@ -142,10 +107,10 @@ void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float ro
 
 
 }
-void UI_DrawFlippedTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color, int Z_Index, unsigned int NormalMap, bool Additive)
+void UI_DrawQuadWithMaterial(glm::vec2 position, glm::vec2 scale, Material material, float rotation, glm::vec4 color, int Z_Index, bool Additive)
 {
-	if (NormalMap != NULL)
-		NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
+
+
 	float aspx = ScreenDivisorX;
 	float aspy = ScreenDivisorY;
 
@@ -158,21 +123,108 @@ void UI_DrawFlippedTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned in
 
 	int TQA = -1;
 
-	for (int i = 0; i < SceneLayers[SLI].FlippedTexturedQuads.size(); i++)
-		if (SceneLayers[SLI].FlippedTexturedQuads[i].Texture == texture)
+	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+		if (SceneLayers[SLI].TexturedQuads[i].Material == material)
 			TQA = i;
 	if (TQA == -1)
 	{
 		TexturedQuadArray NewTQA;
-		NewTQA.Texture = texture;
-		SceneLayers[SLI].FlippedTexturedQuads.push_back(NewTQA);
-		for (int i = 0; i < SceneLayers[SLI].FlippedTexturedQuads.size(); i++)
-			if (SceneLayers[SLI].FlippedTexturedQuads[i].Texture == texture)
+		NewTQA.Material = material;
+		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+			if (SceneLayers[SLI].TexturedQuads[i].Material == material)
 				TQA = i;
 	}
-	SceneLayers[SLI].FlippedTexturedQuads[TQA].Quadcolors.push_back(color);
-	SceneLayers[SLI].FlippedTexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
-	SceneLayers[SLI].FlippedTexturedQuads[TQA].QuadRotations.push_back(rotation);
+
+	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+
+}
+
+void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color,  int Z_Index, unsigned int NormalMap, bool Additive, bool flipX, bool flipY )
+{
+
+	float aspx = ScreenDivisorX;
+	float aspy = ScreenDivisorY;
+
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
+
+
+	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+
+
+	Material m;
+	m.Texture = texture;
+	m.NormalMap = NormalMap;
+	m.Specular = 0;
+	m.Reflective = 0;
+	m.ZMap = 0;
+	m.flipX = flipX;
+	m.flipY = flipY;
+	int TQA = -1;
+
+	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+		if (SceneLayers[SLI].TexturedQuads[i].Material == m)
+			TQA = i;
+	if (TQA == -1)
+	{
+		TexturedQuadArray NewTQA;
+		NewTQA.Material = m;
+		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+			if (SceneLayers[SLI].TexturedQuads[i].Material == m)
+				TQA = i;
+	}
+	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+
+}
+void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float rotation, int Z_Index, unsigned int NormalMap, bool Additive, bool flipX, bool flipY)
+{
+
+
+	glm::vec2 position = c.position;
+	glm::vec2 scale = glm::vec2(c.width, c.height);
+
+	float aspx = ScreenDivisorX;
+	float aspy = ScreenDivisorY;
+
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);
+
+
+	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+
+	Material m;
+	m.Texture = texture;
+	m.NormalMap = NormalMap;
+	m.Specular = 0;
+	m.Reflective = 0;
+	m.ZMap = 0;
+	m.flipX = flipX;
+	m.flipY = flipY;
+	int TQA = -1;
+
+	for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+		if (SceneLayers[SLI].TexturedQuads[i].Material == m)
+			TQA = i;
+	if (TQA == -1)
+	{
+		TexturedQuadArray NewTQA;
+		NewTQA.Material = m;
+		SceneLayers[SLI].TexturedQuads.push_back(NewTQA);
+		for (int i = 0; i < SceneLayers[SLI].TexturedQuads.size(); i++)
+			if (SceneLayers[SLI].TexturedQuads[i].Material == m)
+				TQA = i;
+	}
+	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+
+
 
 }
 void UI_DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width, glm::vec4 color, unsigned int NormalMap, int Z_Index)
@@ -396,11 +448,13 @@ glm::vec2 UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, floa
 	float r = scale  * 1.25;
 
 	float cs = scale;
+	bool hover = false;
 	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r)
 	{
 		cs *= 1.1f;
 		if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
 			*param = !*param;
+		hover = true;
 	}
 	float TextScale = textScale;
 	glm::vec2 textOffset = glm::vec2(30.0f , -20.0f  * TextScale);
@@ -408,7 +462,7 @@ glm::vec2 UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, floa
 
 
 
-	if (*param)
+	if (*param || (buttons[GLFW_MOUSE_BUTTON_1] && hover))
 	{
 		UI_DrawCube(scrPosition, { cs , cs }, 0.0f, colorON, false, 0, Z_Index, Additive);
 		UI_DrawText(text, scrPosition + textOffset, TextScale, colorON, Z_Index, Additive);
@@ -434,11 +488,13 @@ glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, 
 	scrPosition.x += scale;
 
 	float r = scale  * 1.25;
+	bool hover = false;
 	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r)
 	{
 		scale *= 1.1f;
 		if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
 			*param = true;
+		hover = true;
 	}
 	float TextScale = textScale;
 	glm::vec2 textOffset = glm::vec2(30.0f , -20.0f * TextScale);
@@ -446,7 +502,7 @@ glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, 
 
 
 
-	if (*param)
+	if (*param || (buttons[GLFW_MOUSE_BUTTON_1] && hover))
 	{
 		UI_DrawCube(scrPosition, { scale , scale }, 0.0f, colorON, false, 0, Z_Index, Additive);
 		UI_DrawText(text, scrPosition + textOffset, TextScale, colorON, Z_Index, Additive);
@@ -468,8 +524,9 @@ glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, 
 glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, float min, float max, glm::vec2 scale, float TextScale, glm::vec4 Lcolor, glm::vec4 Bcolor, int Z_Index, bool Additive)
 {
 
-
+	//scrPosition.y += scale.y;
 	UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + scale.x, scrPosition.y),  scale.y, Lcolor, false, NULL, Z_Index);
+
 
 	float range = max - min;
 
@@ -481,15 +538,13 @@ glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, floa
 	if (stage > 1.0f)stage = 1.0f;
 	glm::vec2 bpos = { stage * scale.x + scrPosition.x,scrPosition.y };
 	float bsize = 1.0f;
-	glm::vec2 dif = LastJustPressedLMBScrMousePos;
-	if (/*dif.x >= scrPosition.x &&            dif.x <=scrPosition.x + sLength*/ /*&&
-		dif.y>scrPosition.y - 10 * scale &&  dif.y < scrPosition.y + 10 * scale*/
+	glm::vec2 mp = LastJustPressedLMBScrMousePos;
 
-		(dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
-		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y
 
+	if (
+		(mp.x - scrPosition.x) > 0 && (mp.x - scrPosition.x) < scale.x &&
+		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
 		)
-
 	{
 		bsize *= 1.1f;
 		if (buttons[GLFW_MOUSE_BUTTON_1] && GetWindow(window_id)->active)
@@ -516,7 +571,9 @@ glm::vec2  UI_Slider(float* param, const char* text, glm::vec2 scrPosition, floa
 	glm::vec2 Testsize = getTextSize(text, TextScale);
 
 	glm::vec2 textOffset = glm::vec2(scale.x + Testsize.y, -scale.y * 0.5f);
-	UI_DrawText(text, scrPosition + textOffset, TextScale);
+
+	
+	UI_DrawText(text, scrPosition - glm::vec2(-textOffset.x, Testsize.y * 0.5f), TextScale,Bcolor, Z_Index);
 
 
 	Testsize.x += textOffset.x ;
@@ -542,15 +599,13 @@ glm::vec2  UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int
 	if (stage > 1.0f)stage = 1.0f;
 	glm::vec2 bpos = { stage * scale.x + scrPosition.x,scrPosition.y };
 	float bsize = 1.0f;
-	glm::vec2 dif = LastJustPressedLMBScrMousePos;
-	if (/*dif.x >= scrPosition.x &&            dif.x <=scrPosition.x + sLength*/ /*&&
-		dif.y>scrPosition.y - 10 * scale &&  dif.y < scrPosition.y + 10 * scale*/
+	glm::vec2 mp = LastJustPressedLMBScrMousePos;
 
-		(dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
-		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y
 
+	if (
+		(mp.x - scrPosition.x) > 0 && (mp.x - scrPosition.x) < scale.x &&
+		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
 		)
-
 	{
 		bsize *= 1.1f;
 		if (buttons[GLFW_MOUSE_BUTTON_1] && GetWindow(window_id)->active)
@@ -577,7 +632,7 @@ glm::vec2  UI_SliderInt(int* param, const char* text, glm::vec2 scrPosition, int
 	glm::vec2 Testsize = getTextSize(text, TextScale);
 
 	glm::vec2 textOffset = glm::vec2(scale.x + Testsize.y , -scale.y * 0.5f);
-	UI_DrawText(text, scrPosition + textOffset, TextScale);
+	UI_DrawText(text, scrPosition + textOffset, TextScale, Bcolor, Z_Index);
 
 
 	Testsize.x += textOffset.x;
@@ -599,9 +654,12 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 	if (keys[GLFW_KEY_LEFT_ALT])
 		speed *= 0.1f;
 
-	glm::vec2 dif = LastJustPressedLMBScrMousePos;
-	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
-		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y
+	glm::vec2 mp = LastJustPressedLMBScrMousePos;
+
+
+	if (
+		(mp.x - scrPosition.x) > 0 && (mp.x - scrPosition.x) < scale.x &&
+		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
 		)
 	{
 
@@ -627,13 +685,13 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 	number.pop_back();
 	number.pop_back();
 
-	UI_DrawText(number, scrPosition + glm::vec2(scale.x*0.5f - getTextSize(number, TextScale).x * 0.5f,-scale.y *0.5f) , TextScale, Textcolor);
+	UI_DrawText(number, scrPosition + glm::vec2(scale.x*0.5f - getTextSize(number, TextScale).x * 0.5f,-scale.y *0.5f) , TextScale, Textcolor,Z_Index);
 
 
 	glm::vec2 Testsize = getTextSize(text, TextScale);
 
 	glm::vec2 textOffset = glm::vec2(scale.x + Testsize.y , -scale.y * 0.5f);
-	UI_DrawText(text, scrPosition + textOffset, TextScale);
+	UI_DrawText(text, scrPosition + textOffset, TextScale, Textcolor, Z_Index);
 
 
 	Testsize.x += textOffset.x;
@@ -656,9 +714,12 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 	if (keys[GLFW_KEY_LEFT_ALT])
 		speed *= 0.1f;
 
-	glm::vec2 dif = LastJustPressedLMBScrMousePos;
-	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
-		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y
+	glm::vec2 mp = LastJustPressedLMBScrMousePos;
+
+
+	if (
+		(mp.x - scrPosition.x) > 0 && (mp.x - scrPosition.x) < scale.x &&
+		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
 		)
 	{
 
@@ -680,13 +741,13 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 
 	std::string number = std::to_string(*param);
 
-	UI_DrawText(number, scrPosition + glm::vec2(scale.x * 0.5f - getTextSize(number, TextScale).x * 0.5f, -scale.y * 0.5f), TextScale, Textcolor);
+	UI_DrawText(number, scrPosition + glm::vec2(scale.x * 0.5f - getTextSize(number, TextScale).x * 0.5f, -scale.y * 0.5f), TextScale,  Textcolor, Z_Index);
 
 
 	glm::vec2 Testsize = getTextSize(text, TextScale);
 
 	glm::vec2 textOffset = glm::vec2(scale.x + Testsize.y , -scale.y * 0.5f);
-	UI_DrawText(text, scrPosition + textOffset, TextScale);
+	UI_DrawText(text, scrPosition + textOffset, TextScale, Textcolor, Z_Index);
 
 
 	Testsize.x += textOffset.x;
@@ -701,13 +762,36 @@ int TextBoxcursorPosition = 0;
 glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int maxTextSize, glm::vec2 scale, float TextScale, glm::vec4 Backcolor, glm::vec4 Textcolor, int Z_Index , bool Additive)
 {
 
-
+	glm::vec2 Testsize = getTextSize(*text, TextScale);
 
 
 	bool edit = false;
-	glm::vec2 dif = LastJustPressedLMBMousePos;
-	if ((dif.x - scrPosition.x) > 0 && (dif.x - scrPosition.x) < scale.x &&
-		(dif.y - scrPosition.y) > -10 && (dif.y - scrPosition.y) < scale.y)
+
+
+	glm::vec2 mp = ScreenMousePosition;
+
+
+	if (
+		(mp.x - scrPosition.x) > 0 && (mp.x - scrPosition.x) < scale.x &&
+		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
+		)
+		if (bJustReleasedbutton[GLFW_MOUSE_BUTTON_1])
+		{
+			edit = false;
+			LastJustPressedLMBScrMousePos = { 0.0f,0.0f };
+		}
+	if (bJustPressedkey[GLFW_KEY_ENTER] || bJustPressedkey[GLFW_KEY_ESCAPE])
+	{
+		edit = false;
+		LastJustPressedLMBScrMousePos = { 0.0f,0.0f };
+	}
+	mp = LastJustPressedLMBScrMousePos;
+
+
+	if (
+		(mp.x - scrPosition.x) > 0 && (mp.x - scrPosition.x) < scale.x &&
+		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
+		)
 	{
 
 		edit = true;
@@ -716,22 +800,13 @@ glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int maxTextSize,
 	}
 	else
 		edit = false;
-
-	if ((ScreenMousePosition.x - scrPosition.x) > 0 && (ScreenMousePosition.x - scrPosition.x) < scale.x &&
-		(ScreenMousePosition.y - scrPosition.y) > -10 && (ScreenMousePosition.y - scrPosition.y) < scale.y)
-		if (bJustReleasedbutton[GLFW_MOUSE_BUTTON_1])
-			edit = false;
-
-	if (bJustPressedkey[GLFW_KEY_ENTER] || bJustPressedkey[GLFW_KEY_ESCAPE])
-		edit = false;
-
-	glm::vec2 Testsize = getTextSize(*text, TextScale);
-
 	if (edit)
 	{
 
-
 		std::string tmptext = "";
+		
+		std::cout << TextFromKeyboard;;
+
 
 
 		if (bJustPressedkey[GLFW_KEY_LEFT])
@@ -823,7 +898,7 @@ glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int maxTextSize,
 		UI_DrawText(*text, scrPosition - glm::vec2(0.0f, Testsize.y * 0.5f), TextScale, Textcolor, Z_Index, Additive);
 		UI_DrawLine(scrPosition, glm::vec2(scrPosition.x + scale.x, scrPosition.y), scale.y, Backcolor, false, NULL, Z_Index);
 	}
-	Testsize.x += scale.x;
+	Testsize.x += Testsize.x >scale.x? Testsize.x: scale.x;
 	Testsize.y = scale.y > Testsize.y ? scale.y : Testsize.y;
 	return Testsize * 2.0f;
 }

@@ -150,6 +150,12 @@
     <ClCompile Include="engine\Components\Cpps\UI.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="engine\Components\Include\SaveToFile.h">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Components\Cpps\SaveToFile.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
     <ClCompile Include="MapTest.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>

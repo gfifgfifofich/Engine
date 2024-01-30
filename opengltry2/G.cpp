@@ -85,6 +85,14 @@ void On_Update()
 	ImGui::SliderInt("amount", &amount, 0, 1000);
 	ImGui::SliderFloat("Lifetime", &Sparker.lifetime, 0, 10);
 	ImGui::Checkbox("Additive", &Sparker.Additive);
+	ImGui::SliderFloat("bloom1", &bloomLevels[0], 0, 1);
+	ImGui::SliderFloat("bloom2", &bloomLevels[1], 0, 1);
+	ImGui::SliderFloat("bloom3", &bloomLevels[2], 0, 1);
+	ImGui::SliderFloat("bloom4", &bloomLevels[3], 0, 1);
+	ImGui::SliderFloat("bloom5", &bloomLevels[4], 0, 1);
+	ImGui::SliderFloat("bloom6", &bloomLevels[5], 0, 1);
+	ImGui::SliderFloat("bloom7", &bloomLevels[6], 0, 1);
+	ImGui::SliderFloat("bloom8", &bloomLevels[7], 0, 1);
 
 	ImGui::DragFloat("AttractionStrength", &Sparker.SpheresOfInfluence[mouseSphere].attractionStrength);
 	ImGui::DragFloat("SphereRadius", &Sparker.SpheresOfInfluence[mouseSphere].r);

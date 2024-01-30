@@ -617,6 +617,7 @@
     <ClCompile Include="engine\Components\Cpps\Physics\Rope.cpp" />
     <ClCompile Include="engine\Components\Cpps\Physics\Spring.cpp" />
     <ClCompile Include="engine\Components\Cpps\Physics\Strut.cpp" />
+    <ClCompile Include="engine\Components\Cpps\SaveToFile.cpp" />
     <ClCompile Include="engine\Components\Cpps\Shader.cpp" />
     <ClCompile Include="engine\Components\Cpps\Text.cpp" />
     <ClCompile Include="engine\Components\Cpps\UI.cpp" />

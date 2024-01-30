@@ -21,6 +21,7 @@ C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\Objects\
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\Physics\Rope.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\Rope.obj
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\Physics\Spring.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\Spring.obj
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\Physics\Strut.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\Strut.obj
+C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\SaveToFile.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\SaveToFile.obj
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\Shader.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\Shader.obj
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\Text.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\Text.obj
 C:\Users\gfif\source\repos\opengltry2\opengltry2\engine\Components\Cpps\UI.cpp;C:\Users\gfif\source\repos\opengltry2\opengltry2\x64\Release\UI.obj

@@ -26,8 +26,6 @@ void main()
 	vec4 LightColor = texture(Texture, TexCoords).rgba * color;    
 	vec4 BaseCol = texture(BaseColor, scrSpace).rgba;
 
-
-
 	scrSpace.x /=aspect;
 
 	scrSpace /= CameraScale;
@@ -40,7 +38,9 @@ void main()
 	Col = clamp(dot(rel.xyz,SurfaceNormal.xyz),0.0f,1.0f)*LightColor *BaseCol;
 
 	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor *BaseCol;
-	FragColor =  Col + volume*LightColor;
+
+	Col = Col.rgba + volume*LightColor.rgba;
+	FragColor = vec4(Col.rgb,min(Col.a,1.0f)) ;
 
 
 }

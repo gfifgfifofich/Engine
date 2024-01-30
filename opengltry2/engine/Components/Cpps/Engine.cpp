@@ -1,8 +1,11 @@
 #define EngineMainModule
 #include "../Engine.h"
 
+
+
 void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 {
+
 	threadcount = std::thread::hardware_concurrency();
 
 	unsigned int DownScaleBuffers[8];
@@ -94,7 +97,6 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		 1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	glGenVertexArrays(1, &ScreenVAO);
 	glGenVertexArrays(1, &ScreenVAO);
 	glGenBuffers(1, &ScreenVBO);
 	glBindVertexArray(ScreenVAO);
@@ -349,8 +351,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 	Windows[0].Use();
 
-	GenNormalMapTexture(&BallNormalMapTexture, 1000, 2);
-	GenNormalMapTexture(&CubeNormalMapTexture, 1000, 0);
+	GenNormalMapTexture(&BallNormalMapTexture, 1000, 0);
+	GenNormalMapTexture(&CubeNormalMapTexture, 1000, 1);
 	GenLightSphereTexture(&LightSphereTexture, 100);
 
 	GenPrimitiveTexture(&FlatColorCircleTexture, 400, ROUND);
@@ -477,59 +479,63 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		DetachShader();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		glBindVertexArray(ScreenVAO);
-		UseShader(DownsampleBlur);
-		for (int i = 0; i < 8; i++)
+		if (bloom) 
 		{
-			glViewport(0, 0, DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y);
-			glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i]);
+			glBindVertexArray(ScreenVAO);
+			UseShader(DownsampleBlur);
+			for (int i = 0; i < 8; i++)
+			{
+				glViewport(0, 0, DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y);
+				glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i]);
 
-			//input texture
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, i == 0 ? blurColorbuffers[0] : DownScaleBuffers[i - 1]);
-			glUniform1i(glGetUniformLocation(DownsampleBlur, "srcTexture"), 0);
+				//input texture
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, i == 0 ? blurColorbuffers[0] : DownScaleBuffers[i - 1]);
+				glUniform1i(glGetUniformLocation(DownsampleBlur, "srcTexture"), 0);
 
 
-			glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y);
+				glUniform2f(glGetUniformLocation(DownsampleBlur, "srcResolution"), DownScaleBufferSizes[i].x, DownScaleBufferSizes[i].y);
 
-			glDrawArrays(GL_TRIANGLES, 0, 6);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
 
+			}
+
+
+			DetachShader();
+
+			glBindVertexArray(ScreenVAO);
+			UseShader(UpsampleBlur);
+			glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
+			for (int i = 7; i > 0; i--)
+			{
+				glViewport(0, 0, DownScaleBufferSizes[i - 1].x, DownScaleBufferSizes[i - 1].y);
+				glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i - 1]);
+
+				//input texture
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i]);
+				glUniform1i(glGetUniformLocation(UpsampleBlur, "srcTexture"), 0);
+
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i - 1]);
+				glUniform1i(glGetUniformLocation(UpsampleBlur, "PrevTexture"), 1);
+
+				glUniform1f(glGetUniformLocation(UpsampleBlur, "weight"), bloomLevels[i]);
+				if (i - 1 == 0)
+					glUniform1f(glGetUniformLocation(UpsampleBlur, "prewweight"), bloomLevels[0]);
+				else
+					glUniform1f(glGetUniformLocation(UpsampleBlur, "prewweight"), 1.0f);
+
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			}
+			DetachShader();
 		}
-
-
-		DetachShader();
-
-		glBindVertexArray(ScreenVAO);
-		UseShader(UpsampleBlur);
-		glUniform1f(glGetUniformLocation(UpsampleBlur, "filterRadius"), 10.0f);
-		for (int i = 7; i > 0; i--)
-		{
-			glViewport(0, 0, DownScaleBufferSizes[i-1].x, DownScaleBufferSizes[i-1].y);
-			glBindFramebuffer(GL_FRAMEBUFFER, downscaleFBO[i - 1]);
-
-			//input texture
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i]);
-			glUniform1i(glGetUniformLocation(UpsampleBlur, "srcTexture"), 0);
-
-
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, DownScaleBuffers[i - 1]);
-			glUniform1i(glGetUniformLocation(UpsampleBlur, "PrevTexture"), 1);
-
-			glUniform1f(glGetUniformLocation(UpsampleBlur, "weight"), bloomLevels[i]);
-			if( i-1==0)
-				glUniform1f(glGetUniformLocation(UpsampleBlur, "prewweight"), bloomLevels[0]);
-			else
-				glUniform1f(glGetUniformLocation(UpsampleBlur, "prewweight"), 1.0f);
-
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		}
-		DetachShader();
 		glViewport(0, 0, WIDTH, HEIGHT);
 
 
+		glBindVertexArray(ScreenVAO);
 		glBindFramebuffer(GL_FRAMEBUFFER, blurFBO[0]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		UseShader(ScrShade);
@@ -554,9 +560,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 		unsigned int fm = blurColorbuffers[0];
 
-		//Clearing windows that are marked to autoclear
-		for (int i = Windows.size() - 1; i >= 0; i--)
-			if (Windows[i].Autoclear) Windows[i].Clear(Windows[i].backgroundColor);
+		////Clearing windows that are marked to autoclear
+		//for (int i = Windows.size() - 1; i >= 0; i--)
+		//	if (Windows[i].Autoclear) Windows[i].Clear(Windows[i].backgroundColor);
 
 		UseShader(Chromatic);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -577,9 +583,9 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 
 		if (!loop)
 			std::cout << "Post processing applyied\n";
-
-		delta = (clock() - lt) * 0.001f;
-		lt = clock();
+		
+		delta = (glfwGetTime() - lt) ;
+		lt = glfwGetTime();
 		if (bfpsHardLock)
 			if (1000.0f / ifpsHardLock - delta * 1000 > 0)
 				_sleep(1000.0f / ifpsHardLock - delta * 1000);
@@ -608,8 +614,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)

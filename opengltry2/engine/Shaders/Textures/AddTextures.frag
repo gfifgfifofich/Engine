@@ -10,5 +10,9 @@ uniform vec2 proportions = vec2(1.0f,1.0f);
 
 void main()
 {
-	FragColor = vec4(texture(Texture1,TexCoords).rgb*proportions.x+texture(Texture2,TexCoords).rgb*proportions.y,1.0f);
+	vec4 t1 = texture(Texture1,TexCoords).rgba;
+	vec4 t2 = texture(Texture2,TexCoords).rgba;
+
+
+	FragColor = vec4(t1.rgb*proportions.x+t2.rgb*proportions.y,(min(t2.a + t1.a,1.0f)));
 }

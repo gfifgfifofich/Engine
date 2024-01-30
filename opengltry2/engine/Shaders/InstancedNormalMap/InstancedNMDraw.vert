@@ -9,6 +9,7 @@ out float Angle;
 
 uniform float aspect;
 uniform bool flipY = false;
+uniform bool flipX = false;
 void main()
 {
     vec4 pos = vec4(aPos.xy,0.0f,1.0f);
@@ -26,16 +27,15 @@ void main()
 	gl_Position =  pos;
 	Angle = angle;
 	
-	if(!flipY)
-	{
+	if(!flipX)
 		TexCoords.x = aPos.z;
-		TexCoords.y = aPos.w;
-	}
 	else
-	{
-		TexCoords.x = aPos.z;
+		TexCoords.x = 1.0f - aPos.z;
+
+	if(!flipY)
+		TexCoords.y = aPos.w;
+	else
 		TexCoords.y = 1.0f-aPos.w;
-	}
 	
 	
 }  

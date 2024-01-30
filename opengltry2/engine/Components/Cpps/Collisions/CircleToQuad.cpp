@@ -126,17 +126,50 @@ bool BtCCollisionCheck(ball b, cube c)
 
 	if (posdifference.x > c.width)
 		posdifference.x = c.width;
-	else if (posdifference.x < -c.width)
+	if (posdifference.x < -c.width)
 		posdifference.x = -c.width;
 
 	if (posdifference.y > c.height)
 		posdifference.y = c.height;
-	else if (posdifference.y < -c.height)
+	if (posdifference.y < -c.height)
 		posdifference.y = -c.height;
 
 	glm::vec2 distvec = (c.position - posdifference) - b.position;
 	float dist = distvec.x * distvec.x + distvec.y * distvec.y;
 	if (dist < b.r * b.r)
+		return true;
+	return false;
+}
+bool BtCCollisionCheck(ball* b, cube c)
+{
+
+
+	glm::vec2 posdifference = c.position - b->position;
+
+	if (posdifference.x > c.width)
+		posdifference.x = c.width;
+	if (posdifference.x < -c.width)
+		posdifference.x = -c.width;
+
+	if (posdifference.y > c.height)
+		posdifference.y = c.height;
+	if (posdifference.y < -c.height)
+		posdifference.y = -c.height;
+
+	glm::vec2 distvec = (c.position - posdifference) - b->position;
+	float dist = distvec.x * distvec.x + distvec.y * distvec.y;
+	if (dist < b->r * b->r)
+		return true;
+	return false;
+}
+bool CubeContainsBall(ball* b, cube c)
+{
+	if (
+		b->position.x - b->r > c.position.x - c.width &&
+		b->position.x + b->r < c.position.x + c.width &&
+		b->position.y - b->r > c.position.y - c.height &&
+		b->position.y + b->r < c.position.y + c.height
+		)
 		return true;
 	return false;
 }
