@@ -9,8 +9,6 @@ cd build
 cmake ../
 cmake --build ./
 ```
-This will build executable in Release (-O3).
-
 VS Project directory contains a project for VS, but it may not run on some PC's. Cmake is preferable 
 
 ## features
