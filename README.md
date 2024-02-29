@@ -1,7 +1,17 @@
+
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/VS%20project/opengltry2/Textures/Cool%20picture.png)
 
-## booting up project
-For now its just a Visual studio solution project. Will be reconfigured to use a build system later
+## Build
+
+```bash
+mkdir build
+cd build
+cmake ../
+cmake --build ./
+```
+This will build executable in Release (-O3).
+
+VS Project directory contains a project for VS, but it may not run on some PC's. Cmake is preferable 
 
 ## features
 - most of collision types
