@@ -1,4 +1,4 @@
-![github3](https://github.com/gfifgfifofich/Engine/blob/main/opengltry2/Textures/Cool%20picture.png)
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/VS%20project/opengltry2/Textures/Cool%20picture.png)
 
 ## booting up project
 For now its just a Visual studio solution project. Will be reconfigured to use a build system later
@@ -12,7 +12,7 @@ For now its just a Visual studio solution project. Will be reconfigured to use a
 - Neural network class for no reason.
 - Scene class that can store all sorts of data about a scene. (For now can only use already implemented objects, like quads, polygons, particles, textures etc.)
 Scene redactor preview:
-![github3](https://github.com/gfifgfifofich/Engine/blob/main/opengltry2/Textures/Redactor%20preview%20.png)
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/VS%20project/opengltry2/Textures/Redactor%20preview%20.png)
 
 
 ## libraries
