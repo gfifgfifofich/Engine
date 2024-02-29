@@ -10,7 +10,7 @@ cmake ../
 cmake --build ./
 ```
 VS Project directory contains a project for VS, but it may not run on some PC's. Cmake is preferable 
-
+Linux version is highly untested.
 ## features
 - most of collision types
 - physics (springs, struts, ropes)
