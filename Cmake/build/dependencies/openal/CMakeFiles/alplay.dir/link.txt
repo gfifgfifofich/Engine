@@ -1,0 +1,1 @@
+/usr/bin/clang -O3 -DNDEBUG CMakeFiles/alplay.dir/examples/alplay.c.o -o alplay  -Wl,-rpath,/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal: -pthread /usr/lib/libsndfile.so libal-excommon.a libopenal.so.1.23.1 -lrt

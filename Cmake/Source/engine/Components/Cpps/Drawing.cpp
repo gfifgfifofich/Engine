@@ -237,7 +237,7 @@ void  Window::Clear(glm::vec4 Color)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glClearColor(Color.r, Color.g, Color.b, Color.a);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	
 	
@@ -985,7 +985,7 @@ void Window::_Draw()
 
 
 		}
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_ONE, GL_ZERO);
 		DetachShader();
 
 
@@ -1386,7 +1386,7 @@ void DrawBall(ball b, glm::vec4 Color1 , glm::vec4 Color2 , bool Lighted, unsign
 
 void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount)
 {
-	if (*texture != NULL)
+	if (*texture != NULL && glIsTexture(*texture))
 	{
 		glDeleteTextures(1, texture);
 		*texture = NULL;
@@ -1398,34 +1398,34 @@ void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
 	int ImageW, ImageH, nrChannels;
-	unsigned char* Texture = stbi_load(filename, &ImageW, &ImageH, &nrChannels, chanelsAmount);
-
-	if (Texture)
+	unsigned char* TextureData = stbi_load(filename, &ImageW, &ImageH, &nrChannels, chanelsAmount);
+	if (TextureData)
 	{
 		if (chanelsAmount == 1)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_R, ImageW, ImageH, 0, GL_R, GL_UNSIGNED_BYTE, Texture);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_R, ImageW, ImageH, 0, GL_R, GL_UNSIGNED_BYTE, TextureData);
 
 		if (chanelsAmount == 2)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, ImageW, ImageH, 0, GL_RG, GL_UNSIGNED_BYTE, Texture);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, ImageW, ImageH, 0, GL_RG, GL_UNSIGNED_BYTE, TextureData);
 
 		if (chanelsAmount == 3)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ImageW, ImageH, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ImageW, ImageH, 0, GL_RGB, GL_UNSIGNED_BYTE, TextureData);
 
 		if (chanelsAmount == 4)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageW, ImageH, 0, GL_RGBA, GL_UNSIGNED_BYTE, Texture);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageW, ImageH, 0, GL_RGBA, GL_UNSIGNED_BYTE, TextureData);
 
 
 		glGenerateMipmap(GL_TEXTURE_2D);
+		
 	}
 	else
 	{
+		std::cout << "Failed to load texture: "<< filename << std::endl;
 		glDeleteTextures(1, texture);
 		*texture = NULL;
-		std::cout << "Failed to load texture" << std::endl;
 	}
-	stbi_image_free(Texture);
+
+	free(TextureData);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
@@ -1777,7 +1777,7 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 
 void Texture::Load()
 {
-	if (texture != NULL)
+	if (texture != NULL && glIsTexture(texture))
 		Delete();
 	if (Type == 0)
 		LoadTexture(FileName.c_str(), &texture);
@@ -1795,12 +1795,18 @@ void Texture::Load()
 		GenPrimitiveTexture(&texture, Size,ROUND,filter);
 	else if (Type == 7)
 		GenPrimitiveTexture(&texture, Size, SQUERE, filter);
+	else if (Type == 8)
+		texture = BallNormalMapTexture;
+	else if (Type == 9)
+		texture = CubeNormalMapTexture;
 	if (texture == NULL)
 		std::cout << "Failed to load texture:  " << FileName.c_str() << std::endl;
 }
 void Texture::Delete()
 {
-	glDeleteTextures(1, &texture);
+	if(texture!=NULL && glIsTexture(texture) && texture != BallNormalMapTexture&& texture != CubeNormalMapTexture)
+		glDeleteTextures(1, &texture);
+		
 	texture = NULL;
 }
 
@@ -2021,6 +2027,14 @@ void DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float wi
 	glm::vec2 dif = p1 - p2;
 	float length = sqrt(dif.x * dif.x + dif.y * dif.y) * 0.5f;
 	DrawTexturedQuad(midpos, glm::vec2(width, length), Texture, rotation, color, Z_Index, NormalMap, flipX, flipY);
+}
+void DrawLineWithMaterial(Material mater, glm::vec2 p1, glm::vec2 p2, float width, glm::vec4 color,int Z_Index, bool Additive)
+{
+	glm::vec2 midpos = (p2 + p1) / 2.0f;
+	float rotation = get_angle_between_points(p1, p2);
+	glm::vec2 dif = p1 - p2;
+	float length = sqrt(dif.x * dif.x + dif.y * dif.y) * 0.5f;
+	DrawQuadWithMaterial(midpos, glm::vec2(width, length),mater,rotation,color, Z_Index, NormalMap);
 }
 
 void DrawTriangle(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, glm::vec4 color)

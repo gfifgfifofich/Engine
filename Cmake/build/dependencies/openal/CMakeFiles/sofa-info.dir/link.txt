@@ -1,0 +1,1 @@
+/usr/bin/clang++ -Wall -Wextra -O3 "CMakeFiles/sofa-info.dir/utils/sofa-info.cpp.o" -o sofa-info  -pthread libsofa-support.a -pthread libalcommon.a /usr/lib/libmysofa.so /usr/lib/libz.so -lm

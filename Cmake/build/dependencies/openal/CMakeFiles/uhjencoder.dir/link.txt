@@ -1,0 +1,1 @@
+/usr/bin/clang++ -Wall -Wextra -O3 CMakeFiles/uhjencoder.dir/utils/uhjencoder.cpp.o -o uhjencoder  libalcommon.a -pthread /usr/lib/libsndfile.so

@@ -1,0 +1,1 @@
+/usr/bin/clang -fPIC -O3 -DNDEBUG -shared -Wl,-soname,libGLEW.so.2.2 -o ../../../../lib/libGLEW.so.2.2.0 CMakeFiles/glew.dir/__/__/src/glew.c.o  -lOpenGL -lGLX -lGLU -lSM -lICE -lX11 -lXext

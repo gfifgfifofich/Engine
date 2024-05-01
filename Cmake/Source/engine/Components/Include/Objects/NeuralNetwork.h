@@ -4,7 +4,7 @@ class NeuralNetwork
 {
 public:
 
-
+	bool Created = false;
 	float* outputs;
 	float* inputs;
 
@@ -51,17 +51,21 @@ public:
 	// Uses Cost() to minimize the diviation between outputs array and NN.outputs . Method - finite difirences. For more variety see CustomLearn()
 	void learn(float rate, float* input, float* output, int amount);
 
+	//Setups nn for future learning. After the learning iteration compleated, call ApplyLearning
+	void SetupLearing();
+	void ApplyLearing(float cost);
+	
+	//Copies itself into other nn;
+	void CopyInto(NeuralNetwork* target);
+	//Copies itself into other nn;
+	void CopyIntoWithGradient(NeuralNetwork* target);
 
 	void ApplyGrad();
 	void DeApplyGrad();
 
-	//// unimplemented, use to make a custom NN learning scenario
-	//virtual float CustomCost() { std::cout << "Warning: use of un-overrided function CustomCost in NeuralNetwork\n"; };
-
 	// unimplemented, use to make a custom NN learning behaviour
 	std::vector<NeuralNetwork*> DataStorage;
-	virtual void Customlearn(float Costfunc(NeuralNetwork*), float Learnrate, bool finitediff = false);
-
+	
 	// Draws NN structure, all weights(lines) and biases(circles)
 	void Draw(glm::vec2 position = glm::vec2(0.0f), float weigthScale = 1.0f, float NeuronScale = 1.0f, glm::vec2 scale = glm::vec2(1.0f));
 

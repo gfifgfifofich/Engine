@@ -1,0 +1,1 @@
+/usr/bin/clang -O3 -DNDEBUG CMakeFiles/alloopback.dir/examples/alloopback.c.o -o alloopback  -Wl,-rpath,/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal: -pthread /usr/lib/libSDL2-2.0.so.0.3000.2 libal-excommon.a -lm libopenal.so.1.23.1 -lrt

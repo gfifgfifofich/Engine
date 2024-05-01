@@ -1,0 +1,5 @@
+-I/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/src
+-I/usr/include
+-o
+/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal/utils/alsoft-config/moc_mainwindow.cpp
+/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/utils/alsoft-config/mainwindow.h

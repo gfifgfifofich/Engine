@@ -4,6 +4,6 @@
 #include "BallToLine.h"
 #include "BallToPolygon.h"
 #include "CircleToQuad.h"
-glm::vec2 CastRayToQuad(Ray* r, cube c);
-glm::vec2 CastRayToBall(Ray* r, ball b);
-glm::vec2 CastRayToTriangle(Ray* r, Triangle t);
+bool CastRayToQuad(Ray* r, cube c);
+bool CastRayToBall(Ray* r, ball b);
+bool CastRayToTriangle(Ray* r, Triangle t);

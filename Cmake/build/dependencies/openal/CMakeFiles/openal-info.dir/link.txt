@@ -1,0 +1,1 @@
+/usr/bin/clang -O3 -DNDEBUG "CMakeFiles/openal-info.dir/utils/openal-info.c.o" -o openal-info  -Wl,-rpath,/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal: -pthread libopenal.so.1.23.1

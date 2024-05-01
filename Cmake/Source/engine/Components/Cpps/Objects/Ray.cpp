@@ -22,11 +22,11 @@ Ray::Ray(glm::vec2 position, glm::vec2 direction, float length, int steps)
 		this->length = length;
 		this->Steps = Steps;
 
-		Update();
 		normalize();
+		Update();
 	}
 Ray::Ray()
 	{
-		Update();
 		normalize();
+		Update();
 	}

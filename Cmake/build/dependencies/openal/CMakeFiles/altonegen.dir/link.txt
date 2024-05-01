@@ -1,0 +1,1 @@
+/usr/bin/clang -O3 -DNDEBUG CMakeFiles/altonegen.dir/examples/altonegen.c.o -o altonegen  -Wl,-rpath,/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal: -pthread -lm libal-excommon.a libopenal.so.1.23.1 -lrt

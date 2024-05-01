@@ -1,0 +1,152 @@
+BallRock_0000000000
+{
+	Additive 0
+	Bounciness 0.000000
+	Class 3
+	Collision_layer 0
+	Color 1.000000 1.000000 1.000000 1.000000
+	ID 0
+	Material No_Material
+	Name BallRock
+	Position -35.556263 -0.035204
+	Radius 1.000000
+	Rotation 0.000000
+	Roughness 0.000000
+	Scale 1.000000 1.000000
+	Type 1
+	Z_Index -175
+	invertX 0
+	invertY 0
+}
+CubeTexture_0000000000
+{
+	Class 1
+	ID 0
+	Name CubeTexture
+	Type 0
+	texture_FileName 
+	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
+	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
+	texture_Noize_Frequency 10.000000
+	texture_Noize_Layers 3
+	texture_Size 100.000000
+	texture_Type 7
+	texture_filter 0
+}
+Floor_0000000001
+{
+	Additive 0
+	Bounciness 0.000000
+	Class 4
+	Collision_layer 0
+	Color 1.000000 1.000000 1.000000 1.000000
+	Height 6.000000
+	ID 0
+	Material No_Material
+	Name Floor
+	Position 0.009037 -6.003588
+	Rotation 0.000000
+	Roughness 0.000000
+	Scale 150.009995 6.000000
+	Type 1
+	Width 150.000000
+	Z_Index -89
+	invertX 0
+	invertY 0
+}
+LS_0000000002
+{
+	Class 6
+	Color 1.000000 1.000000 1.000000 1.000001
+	Depth 0.000000
+	ID 0
+	Name LS
+	Position -6.129173 6.533851
+	Rotation 0.000000
+	Scale 21.999998 18.499998
+	Texture No_texture
+	Type 1
+	Volume 0.000000
+	Z_Index -235
+	invertX 0
+	invertY 0
+}
+Node_0000000003
+{
+	Additive 0
+	Class 1
+	Color 0.030000 0.030000 0.030000 1.000000
+	ID 0
+	Material No_Material
+	Name Node
+	Position 67.657936 6.024837
+	Rotation 0.000000
+	Scale 60.000000 8.400000
+	Type 1
+	Z_Index -1377
+	invertX 0
+	invertY 0
+}
+Node_0000000004
+{
+	Additive 0
+	Bounciness 0.000000
+	Class 4
+	Collision_layer 0
+	Color 1.005000 1.006000 1.005000 1.000000
+	Height 1.000000
+	ID 0
+	Material No_Material
+	Name Node
+	Position 7.999834 13.003710
+	Rotation 0.000000
+	Roughness 0.000000
+	Scale 0.400000 1.000000
+	Type 1
+	Width 0.400000
+	Z_Index 0
+	invertX 0
+	invertY 0
+}
+Node_0000000005
+{
+	Additive 0
+	Bounciness 0.000000
+	Class 4
+	Collision_layer 0
+	Color 1.000000 1.000000 1.000000 1.000000
+	Height 1.000000
+	ID 0
+	Material No_Material
+	Name Node
+	Position 67.605118 14.970873
+	Rotation 0.000000
+	Roughness 0.000000
+	Scale 60.001995 1.000000
+	Type 1
+	Width 60.000000
+	Z_Index 0
+	invertX 0
+	invertY 0
+}
+Node_0000000006
+{
+	Additive 0
+	Bounciness 0.000000
+	Class 4
+	Collision_layer 0
+	Color 1.000000 1.000000 1.000000 1.000000
+	Height 1.000000
+	ID 0
+	Material No_Material
+	Name Node
+	Position 46.591339 13.004557
+	Rotation 0.000000
+	Roughness 0.000000
+	Scale 1.000000 1.000000
+	Type 1
+	Width 1.000000
+	Z_Index 0
+	invertX 0
+	invertY 0
+}

@@ -1,0 +1,2 @@
+/usr/bin/llvm-ar qc ../../../../lib/libGLEW.a CMakeFiles/glew_s.dir/__/__/src/glew.c.o
+/usr/bin/llvm-ranlib ../../../../lib/libGLEW.a

@@ -1,0 +1,24 @@
+# Hashes of file build rules.
+79f49f99b6794e77db57548e53224289 dependencies/GLFW/CMakeFiles/uninstall
+0a83ba83226db8c41fa655f45d137e91 dependencies/GLFW/src/CMakeFiles/update_mappings
+73aa35aa24150e4f3511e8965973d693 dependencies/GLFW/src/fractional-scale-v1-client-protocol-code.h
+73de3b8784fd6631114a5117c052911b dependencies/GLFW/src/fractional-scale-v1-client-protocol.h
+fa9c6b5f727c73bc82beef2f3ac9fb18 dependencies/GLFW/src/idle-inhibit-unstable-v1-client-protocol-code.h
+c9e312092c3b7663e40a9ca26a34bf6f dependencies/GLFW/src/idle-inhibit-unstable-v1-client-protocol.h
+7a1775c27e972a981d804c3e10c70fe9 dependencies/GLFW/src/pointer-constraints-unstable-v1-client-protocol-code.h
+fa77f8be456c03bd0f980ef91429daac dependencies/GLFW/src/pointer-constraints-unstable-v1-client-protocol.h
+ab8e838c8376540332a5dc839ec51d67 dependencies/GLFW/src/relative-pointer-unstable-v1-client-protocol-code.h
+97b42acad0eb775971dfc514abe91180 dependencies/GLFW/src/relative-pointer-unstable-v1-client-protocol.h
+a3f08b2e4263f11dd842f26a3ea13a3b dependencies/GLFW/src/viewporter-client-protocol-code.h
+8cb4bdffcdec9ae4d0327455e20759d4 dependencies/GLFW/src/viewporter-client-protocol.h
+f6fdf5c99a882ef09d49d5a983b700c9 dependencies/GLFW/src/wayland-client-protocol-code.h
+f2f54ad8812bd65fc5cfdf1618f2d7bd dependencies/GLFW/src/wayland-client-protocol.h
+6af0bf5d0584f50a4dcef9ee9c5d0717 dependencies/GLFW/src/xdg-activation-v1-client-protocol-code.h
+7624affe937c6b56fadbabc3b2c51d8a dependencies/GLFW/src/xdg-activation-v1-client-protocol.h
+0504928d88d54777240cdb983626dd5f dependencies/GLFW/src/xdg-decoration-unstable-v1-client-protocol-code.h
+ca306a32a73ba7a284a52c3d447c5121 dependencies/GLFW/src/xdg-decoration-unstable-v1-client-protocol.h
+05842ec404066683b5bd4be4bbdf72bd dependencies/GLFW/src/xdg-shell-client-protocol-code.h
+7f948e97ce3c238347d7435e1d7d045f dependencies/GLFW/src/xdg-shell-client-protocol.h
+f8c024e92584dd5de6ce8d38fa1391e9 dependencies/openal/default_hrtf.txt
+97583ad36a39b61c5187c0fd2c2c51f0 dependencies/openal/utils/alsoft-config/moc_mainwindow.cpp
+a5ea66c9a66898f01a772c7197a4df8e dependencies/openal/utils/alsoft-config/ui_mainwindow.h

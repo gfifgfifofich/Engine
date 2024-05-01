@@ -3,7 +3,7 @@
 
 #include "../../Include/Collisions/RayCastToShapes.h"
 
-glm::vec2 CastRayToQuad(Ray* r, cube c)
+bool CastRayToQuad(Ray* r, cube c)
 {
 	glm::vec2 CollisionPosition = r->position;
 
@@ -51,8 +51,11 @@ glm::vec2 CastRayToQuad(Ray* r, cube c)
 			{
 				CollisionPosition = CollisionPosition + r->direction * step * (float)(i);
 				if (sqrlength(r->position - CollisionPosition) < sqrlength(r->position - r->ClosestPoint))
+				{
 					r->ClosestPoint = CollisionPosition;
-				return  CollisionPosition;
+					return true;
+				}
+			return false;
 			}
 			else
 			{
@@ -63,10 +66,13 @@ glm::vec2 CastRayToQuad(Ray* r, cube c)
 		}
 	}
 	if (sqrlength(r->position - CollisionPosition) < sqrlength(r->position - r->ClosestPoint))
-		r->ClosestPoint = CollisionPosition;
-	return CollisionPosition;
+		{
+			r->ClosestPoint = CollisionPosition;
+			return true;
+		}
+	return false;
 }
-glm::vec2 CastRayToBall(Ray* r, ball b)
+bool CastRayToBall(Ray* r, ball b)
 {
 	glm::vec2 CollisionPosition = r->position;
 
@@ -93,7 +99,8 @@ glm::vec2 CastRayToBall(Ray* r, ball b)
 	if (BalltoPointCollisionCheck(b, r->position))
 	{
 		pass = false;
-		CollisionPosition = r->position;
+		r->ClosestPoint = r->position;
+		return true;
 	}
 	if (pass)
 	{
@@ -115,8 +122,11 @@ glm::vec2 CastRayToBall(Ray* r, ball b)
 			{
 				CollisionPosition = CollisionPosition + r->direction * step * (float)(i);
 				if (sqrlength(r->position - CollisionPosition) < sqrlength(r->position - r->ClosestPoint))
+				{
 					r->ClosestPoint = CollisionPosition;
-				return  CollisionPosition;
+					return true;
+				}
+				return false;
 			}
 			else
 			{
@@ -128,10 +138,13 @@ glm::vec2 CastRayToBall(Ray* r, ball b)
 	}
 
 	if (sqrlength(r->position - CollisionPosition) < sqrlength(r->position - r->ClosestPoint))
-		r->ClosestPoint = CollisionPosition;
-	return CollisionPosition;
+		{
+			r->ClosestPoint = CollisionPosition;
+			return true;
+		}
+	return false;
 }
-glm::vec2 CastRayToTriangle(Ray* r, Triangle t)
+bool CastRayToTriangle(Ray* r, Triangle t)
 {
 	glm::vec2 CollisionPosition = r->position;
 
@@ -154,8 +167,11 @@ glm::vec2 CastRayToTriangle(Ray* r, Triangle t)
 		{
 			CollisionPosition = CollisionPosition + r->direction * step * (float)(i);
 			if (sqrlength(r->position - CollisionPosition) < sqrlength(r->position - r->ClosestPoint))
+			{
 				r->ClosestPoint = CollisionPosition;
-			return  CollisionPosition;
+				return true;
+			}
+			return false;
 		}
 		else
 		{
@@ -165,6 +181,9 @@ glm::vec2 CastRayToTriangle(Ray* r, Triangle t)
 		}
 	}
 	if (sqrlength(r->position - CollisionPosition) < sqrlength(r->position - r->ClosestPoint))
-		r->ClosestPoint = CollisionPosition;
-	return CollisionPosition;
+		{
+			r->ClosestPoint = CollisionPosition;
+			return true;
+		}
+	return false;
 }

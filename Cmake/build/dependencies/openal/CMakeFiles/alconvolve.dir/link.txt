@@ -1,0 +1,1 @@
+/usr/bin/clang++ -Wall -Wextra -O3 CMakeFiles/alconvolve.dir/examples/alconvolve.c.o -o alconvolve  -Wl,-rpath,/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal -pthread libalcommon.a /usr/lib/libsndfile.so libal-excommon.a libopenal.so.1.23.1 -lrt

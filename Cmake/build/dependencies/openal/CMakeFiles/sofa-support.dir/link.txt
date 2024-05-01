@@ -1,0 +1,2 @@
+/usr/bin/llvm-ar qc libsofa-support.a "CMakeFiles/sofa-support.dir/utils/sofa-support.cpp.o"
+/usr/bin/llvm-ranlib libsofa-support.a
