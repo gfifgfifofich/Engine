@@ -1,12 +1,10 @@
 #include "../Redactor.h"
 
 
-char MapFileNameChars[128];
 //std::string MapFileName =  "Maps/MenuScene.sav";
 //std::string MapFileName =  "Maps/base.sav";
 //std::string MapFileName =  "Maps/Background.sav";
 //std::string MapFileName =  "../../HEAT/Maps/base.sav";
-std::string MapFileName =  "./Map.sav";
 
 //std::string MapFileName = "Maps/Shadertest.sav";
 /*

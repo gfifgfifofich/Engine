@@ -14,7 +14,7 @@ Anim_Pulse_0000000000
 	Type 0
 	backforth 1
 	paramName Position
-	t 0.518041
+	t 0.464398
 }
 Asset_0000000001
 {
@@ -216,7 +216,7 @@ LS_0000000004
 	Depth 0.020000
 	ID 0
 	Name LS
-	Position -138.567459 88.264008
+	Position -60.336060 76.957870
 	Rotation 0.000000
 	Scale 485.009521 255.575531
 	Texture No_texture
@@ -331,15 +331,15 @@ Noize_0000000010
 }
 PNCS_0000000009
 {
-	AttractionStrength 3.400000
+	AttractionStrength 2.800000
 	Attractive 1
 	Class 7
 	ID 0
 	Name PNCS
 	ParticleAsset Sparks
 	ParticleObjectType 7
-	Position 204.625687 134.863876
-	Radius 70.008064
+	Position 202.866180 132.118439
+	Radius 60.008064
 	Type 1
 	velocity 0.099916 -0.010002
 }
@@ -351,7 +351,7 @@ PartLight_0000000010
 	Name PartLight
 	ParticleAsset FogPart
 	ParticleObjectType 5
-	Position -186.982330 73.417923
+	Position -124.332703 76.677528
 	Radius 77.000000
 	Type 1
 }

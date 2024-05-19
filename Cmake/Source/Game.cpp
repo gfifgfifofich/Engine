@@ -25,10 +25,10 @@ public:
 
 void PreReady()
 {
+    
     NodeConstructors.insert({8,[](){ return (Node*)new CustomNode();}});
     NodeConstructorNames.insert({8,"Customstussdsdsd"});
 }
-
 void Ready()
 {
 
