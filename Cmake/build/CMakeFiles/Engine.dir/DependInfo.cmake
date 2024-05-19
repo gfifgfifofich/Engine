@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/MapTest.cpp" "CMakeFiles/Engine.dir/Source/MapTest.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/MapTest.cpp.o.d"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/Game.cpp" "CMakeFiles/Engine.dir/Source/Game.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/Game.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToBall.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToLine.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToLine.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToLine.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToPolygon.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToPolygon.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToPolygon.cpp.o.d"
@@ -20,6 +20,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Math.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Math.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Math.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Ball.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ball.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ball.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Bodies.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.o.d"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Graph.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Line.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o.d"
@@ -32,6 +33,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Rope.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Spring.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Strut.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o.d"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/SaveToFile.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o.d"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o" "gcc" "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o.d"

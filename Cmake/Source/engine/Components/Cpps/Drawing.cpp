@@ -1517,7 +1517,7 @@ void fLoadTextureFromData(unsigned int* texture, int width, int height, float* D
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq , int shape )
 {
 	//std::cout << "ImputTexture ID  " << *texture1;
-	if (*texture1 != NULL)
+	if (*texture1 != NULL && glIsTexture(*texture1))
 	{
 		//std::cout << "DELETED " << *texture1 << "\n";
 		glDeleteTextures(1, texture1);
@@ -1552,6 +1552,10 @@ void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq ,
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[1]);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[0]);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	for (int i = 0; i < Layers; i++)
 	{
@@ -1587,10 +1591,10 @@ void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq ,
 
 	}
 	//unsigned int tmp = *texture1;
-	*texture1 = textures[0];
-	//texture2 = tmp;
 	glDeleteFramebuffers(2, framebuffer);
 	glDeleteTextures(1, &textures[1]);
+	*texture1 = textures[0];
+	//texture2 = tmp;
 	//std::cout << "	ExitTexture ID  " << *texture1 << "\n\n";
 
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -1629,10 +1633,10 @@ void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape,bool filter
 
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
-
 	UseShader(GenPrimitiveTextureShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	int i = 0;
 	if (shape == ROUND)
@@ -1680,6 +1684,7 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape )
 	UseShader(GenNormalMapShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	glUniform1i(glGetUniformLocation(GenNormalMapShader, "Type"), shape);
 
@@ -1721,6 +1726,7 @@ void GenLightSphereTexture(unsigned int* texture1, int Size)
 	UseShader(GenLightSphereShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	glBindVertexArray(ScreenVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1758,6 +1764,7 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 	UseShader(GradientGenShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	glUniform4f(glGetUniformLocation(GradientGenShader, "Color1"), Color1.x, Color1.y, Color1.z, Color1.w);
 	glUniform4f(glGetUniformLocation(GradientGenShader, "Color2"), Color2.x, Color2.y, Color2.z, Color2.w);

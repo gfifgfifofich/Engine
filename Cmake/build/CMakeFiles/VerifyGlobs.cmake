@@ -34,6 +34,7 @@ set(OLD_GLOB
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Math.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Ball.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Bodies.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Graph.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Line.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp"
@@ -46,6 +47,7 @@ set(OLD_GLOB
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Rope.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Spring.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Strut.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/SaveToFile.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp"
@@ -59,7 +61,7 @@ endif()
 # source at CMakeLists.txt:53 (file)
 file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/*.cpp")
 set(OLD_GLOB
-  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/MapTest.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/Game.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToBall.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToLine.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToPolygon.cpp"
@@ -71,6 +73,7 @@ set(OLD_GLOB
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Math.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Ball.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Bodies.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Graph.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Line.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp"
@@ -83,6 +86,7 @@ set(OLD_GLOB
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Rope.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Spring.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Strut.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/SaveToFile.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp"

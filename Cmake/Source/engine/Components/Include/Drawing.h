@@ -354,16 +354,9 @@ public:
 };
 
 
-#ifndef DRAWINGIMPLEMENTATION
-extern
-#endif
-Window* CurrentWindow;
+inline Window* CurrentWindow;
 
-#ifndef DRAWINGIMPLEMENTATION
-extern
-#endif
-
-std::vector<Window> Windows;
+inline std::vector<Window> Windows;
 
 void SortSceneLayers();
 int FindSceneLayer(int Z_Index, bool Additive);

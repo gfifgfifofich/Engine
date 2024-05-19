@@ -84,5 +84,6 @@
         "valarray": "cpp",
         "variant": "cpp",
         "*.ipp": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

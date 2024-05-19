@@ -1,4 +1,4 @@
-#include "engine/Components/Engine.h"
+#include "../Redactor.h"
 
 
 char MapFileNameChars[128];
@@ -6,7 +6,7 @@ char MapFileNameChars[128];
 //std::string MapFileName =  "Maps/base.sav";
 //std::string MapFileName =  "Maps/Background.sav";
 //std::string MapFileName =  "../../HEAT/Maps/base.sav";
-std::string MapFileName =  "./ECStests.sav";
+std::string MapFileName =  "./Map.sav";
 
 //std::string MapFileName = "Maps/Shadertest.sav";
 /*
@@ -47,21 +47,15 @@ std::string TexturePath;
 
 
 glm::vec2 PrevMousePosition = { 0.0f,0.0f };
+glm::vec2 PrevDifference = { 0.0f,0.0f };
 glm::vec2 Corner = { 0.0f,0.0f };
 
 glm::ivec3 tmpIndex = glm::ivec3(-1);
 int indexCreationState = 0;
+float Simulation_speed = 1.0f;
+bool Running = false;
+bool Paused = false;
 
-
-
-bool ShowPolygonTools = false;
-bool ShowPolygonPositions = false;
-bool ShowPolygonTexturePositions = false;
-bool RedactingParticlesEmiter = false;
-bool RedactingScene = false;
-bool GrabSelectTool = true;
-bool RedactingPolygon = false;
-bool AddRedact = false;
 
 int NewObjectId = 0;
 int NewAssetId = 1;
@@ -79,12 +73,6 @@ bool Lighted = false;
 
 int noizeiterator = 0;
 
-bool ShowParticles = false;
-bool ShowLightSources = false;
-bool ShowTextures = false;
-bool ShowNormalMaps = false;
-bool ShowShaders = false;
-bool ShowMeshes = false;
 
 polygonData DefaultTriangle;
 
@@ -1361,16 +1349,23 @@ float ProjectWindowMaxScroll = 0.0f;
 float ConsoleWindowMaxScroll = 0.0f;
 
 glm::vec4 EditorColor = { 0.025f,0.025f,0.025f,1.0f };
+glm::vec4 SceneBackgroundColor = { 0.0f,0.0f,0.0f,0.0f };
 
 bool Test[10];
 bool sTestb[10];
 int sTesti[10];
 int TestWindowID = -1;
 
-
-
 Shader sh;
 
+int ProjectWindowSelection = 0;// [0]-nodes, [1]-settings;
+int AssetWindowSelection = 0;// [0]-assets, [1]-EventGraph, [2]-animation; 
+int SceneWindowSelection = 0;// [0]-View, [1]-NormalMaps, [2]-Lightingmap, [3]-Collisionmap; 
+int InspectorWindowSelection = 0;// placeholder 
+
+std::string ProjectWindowSelectionNames[2] = {"Nodes","Settings"};// [0]-nodes, [1]-settings;
+std::string AssetWindowSelectionNames[3]= {"Assets","EventGraph","Animation"};// [0]-assets, [1]-EventGraph, [2]-animation; 
+std::string InspectorWindowSelectionNames[3]= {"Properties","none","none"};// placeholder 
 
 
 
@@ -1378,8 +1373,8 @@ Shader sh;
 
 void On_Create()
 {
-
-
+	_FillVectorsOfNodesAndAssets();
+	PreReady();
 
 	sh.FragmentPath = "engine/z1ShaderTests/Bald.frag";
 	sh.VertexPath = "engine/z1ShaderTests/default.vert";
@@ -1401,32 +1396,27 @@ void On_Create()
 	Window* w = GetWindow(SceneWindowID);
 	w->Init({ 1280,720 });
 	w->Position = { 0.0f,w->ViewportSize.y * 0.2f };
-	w->backgroundColor = { 0.0f,0.0f,0.0f,0.0f };
 
 	InspectorWindowID = CreateWindow();
 	Window* iw = GetWindow(InspectorWindowID);
 	iw->Init({ ((WIDTH - 1280) * 0.5f),HEIGHT });
 	iw->Position = { w->ViewportSize.x * 0.5f + iw->ViewportSize.x * 0.5f,0.0f };
-	iw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
 
 	ProjectWindowID = CreateWindow();
 	Window* pw = GetWindow(ProjectWindowID);
 	pw->Init({ ((WIDTH - 1280) * 0.5f),HEIGHT });
 	pw->Position = { -w->ViewportSize.x * 0.5f - pw->ViewportSize.x * 0.5f,0.0f };
-	pw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
 
 	ConsoleWindowID = CreateWindow();
 	Window* cw = GetWindow(ConsoleWindowID);
 	cw->Init({ 1280,HEIGHT - 720 });
 	cw->Position = { 0.0f,w->Position.y - w->ViewportSize.y * 0.5f };
-	cw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
 
 
 	TestWindowID = CreateWindow();
 	Window* tw = GetWindow(TestWindowID);
 	tw->Init({ 300,300 });
 	tw->Position = { 0.0f,w->Position.y - w->ViewportSize.y * 0.5f };
-	tw->backgroundColor = { 0.0f,0.0f,0.0f,0.0f };
 
 
 	
@@ -1434,9 +1424,10 @@ void On_Create()
 	Window* kw = GetWindow(KastylID);
 	kw->Init({ 300,300 });
 	kw->Position = MousePosition;
-	kw->backgroundColor = { 0.0f,0.0f,0.0f,0.0f };
 	kw->AutoDraw = false;
 	kw->Autoclear = false;
+
+	
 
 	w->RecalculateSize();
 
@@ -1456,6 +1447,8 @@ void On_Create()
 	//Map.Assets.push_back(new TextureObject());
 	//Map.Assets.push_back(new MaterialObject());
 
+	GameScene = &Map;
+	Ready();
 }
 
 glm::vec2 AqueredCameraScale = glm::vec2(1.0f);
@@ -1537,7 +1530,7 @@ void On_Update()
 		cw->Scale.x = (leftx - rightx) / cw->ViewportSize.x;
 
 		w->Scale.x = (leftx - rightx) / w->ViewportSize.x;
-		w->Scale.y = (maxy - miny) / w->ViewportSize.y;
+		w->Scale.y = (maxy - miny - 25.0f) / w->ViewportSize.y ;
 	}
 	if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1] && grebbedAnyWindow || initialsizecalc)
 	{
@@ -1564,6 +1557,7 @@ void On_Update()
 		pw->RecalculateSize();
 		cw->RecalculateSize();
 		w->RecalculateSize();
+
 		/*
 		std::cout << "w" << w->ViewportSize.x << "  " << w->ViewportSize.y<<"\n";
 		std::cout << "cw" << cw->ViewportSize.x << "  " << cw->ViewportSize.y<<"\n";
@@ -1585,9 +1579,26 @@ void On_Update()
 	cw->Draw(1003);
 
 	w->Position.x = (rightx + leftx) * 0.5f;
-	w->Position.y = (maxy + miny) * 0.5f;
-	w->Draw(1000);
+	w->Position.y = (maxy + miny) * 0.5f - 35.0f;
 
+	switch (SceneWindowSelection)
+	{
+	case 0:
+		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->Texture, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		break;
+	case 1:
+		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->NormalMapColorBuffer, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		break;
+	case 2:
+		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->LightColorBuffer, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		break;
+	case 3:
+		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->Texture, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		break;
+	
+	default:
+		break;
+	}
 
 
 	/*
@@ -1600,13 +1611,14 @@ void On_Update()
 
 	float step = 20.0f;
 
+	float xstep = 0.0f;
+	float bSizeX = (pw->ViewportSize.x - step * 3.0f) / 2.0f;// 2 buttons = 3 steps  s bbb s bbb s
+	bool b = false;
 	GetWindow(ConsoleWindowID)->Use();
-
 
 	ConsoleWindowScroll += scrollmovement * 50.0f;
 	CameraPosition.y += (ConsoleWindowScroll - CameraPosition.y) * 0.25f;
 
-	
 	glm::vec2 dif = glm::vec2(0.0f);
 	if (buttons[GLFW_MOUSE_BUTTON_MIDDLE] && !JustPressedbutton[GLFW_MOUSE_BUTTON_MIDDLE] && MMBJustPressedWindow[0])
 		dif = PrevMousePos - MousePosition;
@@ -1626,61 +1638,91 @@ void On_Update()
 	Corner = { WIDTH * -0.5f , HEIGHT * 0.5f - CameraPosition.y };
 	Corner += glm::vec2(20.0f, -25.0f);
 
+	xstep = 0.0f;
+	bSizeX = (cw->ViewportSize.x - step * 4.0f) / 3.0f;// 3 buttons = 4 steps  s bbb s bbb s bbb s
+	if(bSizeX>150.0f) bSizeX = 150.0f;
+	if(bSizeX<50.0f) bSizeX = 50.0f;
+	b=AssetWindowSelection == 0;
+	xstep += UI_button(&b,"Assets", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		AssetWindowSelection =0;
+	b=AssetWindowSelection == 1;
+	xstep += UI_button(&b,"Event Graph", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		AssetWindowSelection =1;
+	b=AssetWindowSelection == 2;
+	Corner.y += UI_button(&b,"Animation", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).y * -1.0f - step;
+	if (b)
+		AssetWindowSelection =2;
+
+
+	xstep = 0.0f;
+	switch (AssetWindowSelection)
+	{
+	case 0:
+		{
+		float size = 100;
+		int AssetStep = 20.0f;
+		int MaxAmountRow = cw->ViewportSize.x/(size + AssetStep)-1; 	
+		int counterX = 0;
+		float AssetstepX = 0.0f;
+
+
+		AssetstepX +=UI_SliderInt(&NewAssetId,"Asset id",Corner + glm::vec2(AssetstepX,0.0f),1,AssetConstructorNames.size()-1).x *0.5f + AssetStep;
+
+		AssetstepX+= UI_DrawText(AssetConstructorNames[NewAssetId], Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
+
+		b = false;
+		Corner.y += UI_button(&b,"Create", Corner + glm::vec2(AssetstepX,0.0f)).y *-1.0f - AssetStep*2.0f;
+		if(b)
+		{
+			Map.Assets.push_back(AssetConstructors[NewAssetId]());
+		}
+
+		AssetstepX = 0.0f;
+		for(int i=0;i<Map.Assets.size();i++)
+		{
+			
+			if(counterX>=MaxAmountRow)
+			{
+				AssetstepX =0.0f;
+				counterX = 0;
+			}
+			counterX++;
+			b = false;
+			
+			Map.Assets[i]->DrawPreview(Corner + glm::vec2(AssetstepX + size*0.5f + 10.0f,0.0f),{size*0.5f,size*0.5f});
+			glm::vec2 UIObjSize = UI_button(&b, "", Corner + glm::vec2(AssetstepX,0.0f),{size+20.0f,size+20.0f},0.35f,glm::vec4(0.9f),glm::vec4(0.1f),glm::vec4(0.0f));
+			UI_DrawText(Map.Assets[i]->Name.c_str(), Corner + glm::vec2(AssetstepX,UIObjSize.y*-0.5f - step*0.5f), 0.35f).x + AssetStep;
+			//
+
+			if(counterX<MaxAmountRow)
+				AssetstepX += UIObjSize.x + AssetStep;
+			else
+				Corner.y += UIObjSize.y *-1.0f - step;
+			if(b)
+			{
+				SelectedNode = NULL;
+				SelectedNodeID = -1;
+				SelectedAsset = Map.Assets[i];
+				SelectedAssetID=i;
+			}
+			
+		}
+		}
+		break;
+	
+	default:
+		break;
+	}
+
+	
+
 	// if (CurrentRedactingParticleObjectType > -1 && CurrentRedactingParticleObject > -1)
 	// 	ShowParticleObjectRedactorWindow(CurrentParticleEmiter, CurrentRedactingParticleObjectType, CurrentRedactingParticleObject);
 
 
-	float size = 100;
-	int AssetStep = 20.0f;
-	int MaxAmountRow = cw->ViewportSize.x/(size + AssetStep)-1; 	
-	int counterX = 0;
-	float AssetstepX = 0.0f;
-
-
-	AssetstepX +=UI_SliderInt(&NewAssetId,"Asset id",Corner + glm::vec2(AssetstepX,0.0f),1,3).x *0.5f + AssetStep;
-
-	if (NewAssetId == AssetType::ASSET)AssetstepX += UI_DrawText("ASSET", Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
-	else if (NewAssetId == AssetType::TEXTUREOBJECT)AssetstepX += UI_DrawText("TEXTUREOBJECT", Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
-	else if (NewAssetId == AssetType::MATERIALOBJECT)AssetstepX+= UI_DrawText("MATERIALOBJECT", Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
-	else if (NewAssetId == AssetType::PARTICLEASSET)AssetstepX+= UI_DrawText("PARTICLEOBJECT", Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
-
-	bool b = false;
-	Corner.y += UI_button(&b,"Create", Corner + glm::vec2(AssetstepX,0.0f)).y *-1.0f - AssetStep*2.0f;
-	if(b)
-	{
-		Map.Assets.push_back(CreateNewAssetByClassId(NewAssetId));
-	}
-
-	AssetstepX = 0.0f;
-	for(int i=0;i<Map.Assets.size();i++)
-	{
-		
-		if(counterX>=MaxAmountRow)
-		{
-			AssetstepX =0.0f;
-			counterX = 0;
-		}
-		counterX++;
-		b = false;
-		
-		Map.Assets[i]->DrawPreview(Corner + glm::vec2(AssetstepX + size*0.5f + 10.0f,0.0f),{size*0.5f,size*0.5f});
-		glm::vec2 UIObjSize = UI_button(&b, "", Corner + glm::vec2(AssetstepX,0.0f),{size+20.0f,size+20.0f},0.35f,glm::vec4(0.9f),glm::vec4(0.1f),glm::vec4(0.0f));
-		UI_DrawText(Map.Assets[i]->Name.c_str(), Corner + glm::vec2(AssetstepX,UIObjSize.y*-0.5f - step*0.5f), 0.35f).x + AssetStep;
-		//
-
-		if(counterX<MaxAmountRow)
-			AssetstepX += UIObjSize.x + AssetStep;
-		else
-			Corner.y += UIObjSize.y *-1.0f - step;
-		if(b)
-		{
-			SelectedNode = NULL;
-			SelectedNodeID = -1;
-			SelectedAsset = Map.Assets[i];
-			SelectedAssetID=i;
-		}
-		
-	}
+	
 	b = false;
 	
 
@@ -1816,124 +1858,154 @@ void On_Update()
 	//Corner.y += UI_Drag(&bloomLevels[5],"bloom 5", Corner, 0.35f).y * -1.0f - step;
 	//Corner.y += UI_Drag(&bloomLevels[6],"bloom 6", Corner, 0.35f).y * -1.0f - step;
 	//Corner.y += UI_Drag(&bloomLevels[7],"bloom 7", Corner, 0.35f).y * -1.0f - step;
-
-
-	Corner.y += UI_DrawText("Tools", Corner, 0.35f).y * -1.0f - step;
-
-	std::string s = "CameraPosition X = ";
-	s += std::to_string(w->w_CameraPosition.x);
-	for (int i = 0; i < 4;i++)s.pop_back();
-	s += ";  Y = ";
-	s += std::to_string(w->w_CameraPosition.y);
-	for (int i = 0; i < 4; i++)s.pop_back();
-	Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
-
-	s = "CameraScale X =";
-	s += std::to_string(w->w_CameraScale.x);
-	for (int i = 0; i < 4; i++)s.pop_back();
-	s += ";  Y = ";
-	s += std::to_string(w->w_CameraScale.y);
-	for (int i = 0; i < 4; i++)s.pop_back();
-	Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
-
-	Corner.y += UI_DrawText(std::to_string(1.0f/delta), Corner, 0.35f).y * -1.0f - step;
-
-	b = false;
-	Corner.y += UI_button(&b, "Reset Camera", Corner).y * -1.0f - step;
-
+	xstep = 0.0f;
+	bSizeX = (pw->ViewportSize.x - step * 3.0f) / 2.0f;// 2 buttons = 3 steps  s bbb s bbb s
+	if(bSizeX>150.0f) bSizeX = 150.0f;
+	if(bSizeX<50.0f) bSizeX = 50.0f;
+	b=ProjectWindowSelection == 0;
+	xstep += UI_button(&b,"Nodes", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
 	if (b)
-	{
-		w->w_CameraPosition = { 0.0f,0.0f };
-		//w->w_CameraScale = { 1.0f,1.0f };
-		AqueredCameraScale = { 1.0f,1.0f };
-	}
+		ProjectWindowSelection =0;
+	b=ProjectWindowSelection == 1;
+	Corner.y += UI_button(&b,"Settings", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).y * -1.0f - step;
+	if (b)
+		ProjectWindowSelection =1;
 
 
-
-	Corner.y += UI_DrawText("Save file:", Corner, 0.35f).y * -1.0f - step;
-	Corner.y += UI_TextBox(&MapFileName, Corner,128).y * -1.0f - step;
-	b = false;
-	Corner.y += UI_button(&b, "Save", Corner).y * -1.0f - step;
-
-	if (b || keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_S])
-		Map.SaveAs(MapFileName);
-	
-	b = false;
-	Corner.y += UI_button(&b, "Load", Corner).y * -1.0f - step;
+	xstep = 0.0f;
 	bool cleanSelection = false;
-	if (b)
+	switch (ProjectWindowSelection)
 	{
-
-		Map.LoadFrom(MapFileName);
-		SelectedNode = NULL;
-		SelectedNodeID = -1;
-		SelectedAsset =NULL;
-		SelectedAssetID=-1;
-		
-	}
-
-	if (RedactingParticlesEmiter)Corner.y += UI_DrawText("RedactingParticlesEmiter", Corner, 0.35f).y * -1.0f - step;
-	else if (RedactingPolygon)Corner.y += UI_DrawText("RedactingPolygon", Corner, 0.35f).y * -1.0f - step;
-	else if (RedactingScene)Corner.y += UI_DrawText("RedactingScene", Corner, 0.35f).y * -1.0f - step;
-	else if (GrabSelectTool)Corner.y += UI_DrawText("GrabSelectTool", Corner, 0.35f).y * -1.0f - step;
-	b = false;
-
-	Corner.y += UI_CheckBox(&Map.DrawCollisions, "Draw Debug", Corner).y * -1.0f - step;
-	Corner.y += UI_CheckBox(&Map.DrawRegularScene, "Draw regular ViewPort", Corner).y * -1.0f - step;
-
-	if (b && !RedactingParticlesEmiter && !RedactingPolygon)
-	{
-		RedactingScene = !RedactingScene;
-		GrabSelectTool = !GrabSelectTool;
-		if (RedactingScene && GrabSelectTool || !RedactingScene && !GrabSelectTool)
+	case 0:
 		{
-			GrabSelectTool = true;
-			RedactingScene = false;
+			//Add stuff Tool
+			Corner.y += UI_SliderInt(&NewObjectId,"Spawn id",Corner,0,NodeConstructorNames.size()-1).y * -1.0f - step;
+
+			// if (NewObjectId == NodeType::NODE)Corner.y +=  UI_DrawText("NODE", Corner, 0.35f).y * -1.0f- step;
+			// else if (NewObjectId == NodeType::OBJECT)Corner.y += UI_DrawText("OBJECT", Corner, 0.35f).y * -1.0f- step;
+			// else if (NewObjectId == NodeType::COLLISIONOBJECT)Corner.y +=  UI_DrawText("COLLISIONOBJECT", Corner, 0.35f).y* -1.0f - step;
+			// else if (NewObjectId == NodeType::LIGHTSOURCEOBJECT)Corner.y +=  UI_DrawText("LIGHTSOURCEOBJECT", Corner, 0.35f).y * -1.0f- step;
+			// else if (NewObjectId == NodeType::CO_BALL)Corner.y +=  UI_DrawText("CO_BALL", Corner, 0.35f).y * -1.0f- step;
+			// else if (NewObjectId == NodeType::CO_CUBE)Corner.y +=  UI_DrawText("CO_CUBE", Corner, 0.35f).y * -1.0f- step;
+			// else if (NewObjectId == NodeType::CO_POLYGON)Corner.y +=  UI_DrawText("CO_POLYGON", Corner, 0.35f).y * -1.0f - step;
+			// else if (NewObjectId == NodeType::PARTICLEOBJECT)
+			Corner.y +=  UI_DrawText(NodeConstructorNames[NewObjectId], Corner, 0.35f).y * -1.0f - step;
+			b = false;
+			Corner.y += UI_button(&b, "Spawn", Corner).y * -1.0f - step;
+			if(b)
+			{
+				Node* NewSpawnedNode = NodeConstructors[NewObjectId]();
+				NewSpawnedNode->position = w->w_CameraPosition;
+				Map.Nodes.push_back(NewSpawnedNode);
+			}
+
+			for(int i=0;i<Map.Nodes.size();i++)
+			{
+				b = false;
+				Corner.y += UI_button(&b, Map.Nodes[i]->Name.c_str(), Corner).y * -1.0f - step;
+				if(b)
+				{
+					SelectedNode = Map.Nodes[i];
+					SelectedNodeID = i;
+					SelectedAsset =NULL;
+					SelectedAssetID=-1;
+				}
+			}
 		}
-	}
-
-	//Add stuff Tool
-	Corner.y += UI_SliderInt(&NewObjectId,"Spawn id",Corner,0,7).y * -1.0f - step;
+	break;
 	
-	if (NewObjectId == NodeType::NODE)Corner.y +=  UI_DrawText("NODE", Corner, 0.35f).y * -1.0f- step;
-	else if (NewObjectId == NodeType::OBJECT)Corner.y += UI_DrawText("OBJECT", Corner, 0.35f).y * -1.0f- step;
-	else if (NewObjectId == NodeType::COLLISIONOBJECT)Corner.y +=  UI_DrawText("COLLISIONOBJECT", Corner, 0.35f).y* -1.0f - step;
-	else if (NewObjectId == NodeType::LIGHTSOURCEOBJECT)Corner.y +=  UI_DrawText("LIGHTSOURCEOBJECT", Corner, 0.35f).y * -1.0f- step;
-	else if (NewObjectId == NodeType::CO_BALL)Corner.y +=  UI_DrawText("CO_BALL", Corner, 0.35f).y * -1.0f- step;
-	else if (NewObjectId == NodeType::CO_CUBE)Corner.y +=  UI_DrawText("CO_CUBE", Corner, 0.35f).y * -1.0f- step;
-	else if (NewObjectId == NodeType::CO_POLYGON)Corner.y +=  UI_DrawText("CO_POLYGON", Corner, 0.35f).y * -1.0f - step;
-	else if (NewObjectId == NodeType::PARTICLEOBJECT)Corner.y +=  UI_DrawText("PARTICLEOBJECT", Corner, 0.35f).y * -1.0f - step;
-	b = false;
-	Corner.y += UI_button(&b, "Spawn", Corner).y * -1.0f - step;
-	if(b)
+	case 1:
 	{
-		Node* NewSpawnedNode = CreateNewNodeByClassId(NewObjectId);
-		NewSpawnedNode->position = w->w_CameraPosition;
-		Map.Nodes.push_back(NewSpawnedNode);
-	}
 
-	
+		std::string s = "CameraPosition X = ";
+		s += std::to_string(w->w_CameraPosition.x);
+		for (int i = 0; i < 4;i++)s.pop_back();
+		s += ";  Y = ";
+		s += std::to_string(w->w_CameraPosition.y);
+		for (int i = 0; i < 4; i++)s.pop_back();
+		Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
 
-	
+		s = "CameraScale X =";
+		s += std::to_string(w->w_CameraScale.x);
+		for (int i = 0; i < 4; i++)s.pop_back();
+		s += ";  Y = ";
+		s += std::to_string(w->w_CameraScale.y);
+		for (int i = 0; i < 4; i++)s.pop_back();
+		Corner.y += UI_DrawText(s, Corner, 0.35f).y * -1.0f - step;
 
+		Corner.y += UI_DrawText(std::to_string(1.0f/delta), Corner, 0.35f).y * -1.0f - step;
 
-	Corner.y += UI_Slider(&w->w_AmbientLight, "Ambient light", Corner).y * -1.0f - step;
-	Corner.y += UI_Slider(&w->w_DirectionalLight, "Directional light", Corner).y * -1.0f - step;
-
-	//Nodes of Scene
-
-	for(int i=0;i<Map.Nodes.size();i++)
-	{
 		b = false;
-		Corner.y += UI_button(&b, Map.Nodes[i]->Name.c_str(), Corner).y * -1.0f - step;
-		if(b)
+		Corner.y += UI_button(&b, "Reset Camera", Corner).y * -1.0f - step;
+
+		if (b)
 		{
-			SelectedNode = Map.Nodes[i];
-			SelectedNodeID = i;
+			w->w_CameraPosition = { 0.0f,0.0f };
+			//w->w_CameraScale = { 1.0f,1.0f };
+			AqueredCameraScale = { 1.0f,1.0f };
+		}
+
+
+
+		Corner.y += UI_DrawText("Save file:", Corner, 0.35f).y * -1.0f - step;
+		Corner.y += UI_TextBox(&MapFileName, Corner,128).y * -1.0f - step;
+		b = false;
+		Corner.y += UI_button(&b, "Save", Corner).y * -1.0f - step;
+
+		if (b || keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_S])
+			Map.SaveAs(MapFileName);
+		
+		b = false;
+		Corner.y += UI_button(&b, "Load", Corner).y * -1.0f - step;
+		if (b)
+		{
+
+			Map.LoadFrom(MapFileName);
+			SelectedNode = NULL;
+			SelectedNodeID = -1;
 			SelectedAsset =NULL;
 			SelectedAssetID=-1;
+			
 		}
+
+		
+		
+
+		
+
+		
+		Corner.y += UI_DrawText("EditorColor", Corner , 0.35f).y * -1.0f - step;
+		float xsize = 0.0f;
+		xsize = UI_Drag(&EditorColor.x, "r", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&EditorColor.y, "g", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&EditorColor.z, "b", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&EditorColor.w, "a", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+		xsize = 0.0f;	
+		Corner.y += UI_DrawText("SceneBackgroundColor", Corner , 0.35f).y * -1.0f - step;
+		xsize = UI_Drag(&SceneBackgroundColor.x, "r", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&SceneBackgroundColor.y, "g", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		xsize += UI_Drag(&SceneBackgroundColor.z, "b", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).x * 0.5f;
+		Corner.y += UI_Drag(&SceneBackgroundColor.w, "a", Corner  + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
+		xsize = 0.0f;
+
+
+		Corner.y += UI_Slider(&w->w_AmbientLight, "Ambient light", Corner).y * -1.0f - step;
+		Corner.y += UI_Slider(&w->w_DirectionalLight, "Directional light", Corner).y * -1.0f - step;
+		Corner.y += UI_Slider(&Simulation_speed, "Simulation speed", Corner,0.0f,2.0f).y * -1.0f - step;
 	}
+		break;
+	
+	default:
+		break;
+	}
+	
+	iw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
+	pw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
+	cw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
+	w->backgroundColor = SceneBackgroundColor;
+	GetWindow(0)->backgroundColor = EditorColor;
+	//Nodes of Scene
+
 
 
 	b = false;
@@ -1953,8 +2025,86 @@ void On_Update()
 	GetWindow(ProjectWindowID)->End();
 
 
-	GetWindow(SceneWindowID)->Use();
+	Corner.y = w->Position.y + (w->ViewportSize.y*0.5f) * w->Scale.y + 50.0f*0.5f;
+	Corner.x =  w->Position.x - (w->ViewportSize.x*0.5f) * w->Scale.x;
+	xstep = 0.0f;
+	int Scenebuttoncount = 7;
+	if(Running)
+		Scenebuttoncount+=1;
+	bSizeX = (cw->ViewportSize.x - step * (Scenebuttoncount+1)) / (float)Scenebuttoncount;// 3 buttons = 4 steps  s bbb s bbb s bbb s
+	if(bSizeX>150.0f) bSizeX = 150.0f;
+	if(bSizeX<50.0f) bSizeX = 50.0f;
+	b=SceneWindowSelection == 0;
+	xstep += UI_button(&b,"Viewport", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		SceneWindowSelection =0;
+	b=SceneWindowSelection == 1;
+	xstep += UI_button(&b,"NormalMaps", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		SceneWindowSelection =1;
+	b=SceneWindowSelection == 2;
+	xstep += UI_button(&b,"LightMap", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		SceneWindowSelection =2;
+	b=SceneWindowSelection == 3;
+	xstep += UI_button(&b,"Collisionmap", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		SceneWindowSelection =3;
+	
+	b=false;
+	if(!Running)
+	{
+		b=false;
+		xstep += UI_button(&b,"Run", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+		if(b)
+		{
+			Running = true;
+			Paused = false;
+			Map.SaveAs("PreRunSave.sav");
 
+		}
+	}
+	else
+	{
+		b=false;
+		xstep += UI_button(&b,"Stop", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+		if(b)
+		{
+			Running = false;
+			Paused = false;
+			cleanSelection =true;
+			Map.LoadFrom("PreRunSave.sav");
+		}
+		b=false;
+
+		xstep += UI_button(&b,"StopWithSave", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+		if(b)
+		{
+			Running = false;
+			Paused = false;
+		}
+	}
+	
+	std::string pauseunpause = "Pause";
+	if(Paused)	pauseunpause = "Continue";
+
+	b=false;
+	Corner.y += UI_button(&b,pauseunpause.c_str(), Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).y * -1.0f - step;
+	if(b)
+		Paused = !Paused;
+		
+	
+	Map.DrawCollisions = SceneWindowSelection == 3;
+	Map.DrawRegularScene = !Map.DrawCollisions;
+
+	GetWindow(SceneWindowID)->Use();
+	if(cleanSelection)
+	{
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		SelectedAsset =NULL;
+		SelectedAssetID=-1;
+	}
 	//DrawCube(MousePosition, { 100.0f,100.0f }, 0.0f, {1.0f,1.0f,1.0f,1.0f}, true, NegativeNormalMapTexture);
 
 	AqueredCameraScale *= 1.0f + scrollmovement * 0.1f;
@@ -1977,95 +2127,17 @@ void On_Update()
 			MMBJustPressedWindow[3]=true;
 		}
 
-	if (Holdingkey[GLFW_KEY_W]) CameraPosition.y += delta / CameraScale.y * 600.0f;
-	if (Holdingkey[GLFW_KEY_S]) CameraPosition.y -= delta / CameraScale.y * 600.0f;
-	if (Holdingkey[GLFW_KEY_A]) CameraPosition.x -= delta / CameraScale.x * 600.0f;
-	if (Holdingkey[GLFW_KEY_D]) CameraPosition.x += delta / CameraScale.x * 600.0f;
-
-	/*
-	//Add stuff again
-	if (!RedactingParticlesEmiter && RedactingScene && !GrabSelectTool && !RedactingPolygon)
-	{
-		if (JustPressedLMB && keys[GLFW_KEY_LEFT_SHIFT])
-		{
-			std::cout << "\n" << Map.points.size() << "\n";
-			if (RedactorObject == 0)
-			{
-				ball b;
-				b.position = LastJustPressedLMBMousePos;
-				b.r = radius;
-				b.lighted = Lighted;
-				Map.balls.push_back(b);
-				CurrentRedactorObject = Map.balls.size() - 1;
-			}
-			if (RedactorObject == 1)
-			{
-				cube c;
-				c.width = size[0];
-				c.height = size[1];
-				c.position = LastJustPressedLMBMousePos;
-				c.lighted = Lighted;
-				Map.cubes.push_back(c);
-				CurrentRedactorObject = Map.cubes.size() - 1;
-			}
-			if (RedactorObject == 2)
-			{
-				polygon p;
-				p.Data = &DefaultTriangle;
-				p.lighted = Lighted;
-				p.Position = LastJustPressedLMBMousePos;
-				Map.polygons.push_back(p);
-				CurrentRedactorObject = Map.polygons.size() - 1;
-			}
-			if (RedactorObject == 3)
-			{
-				Node p;
-				p.id = Id;
-				p.position = LastJustPressedLMBMousePos;
-				Map.points.push_back(p);
-				CurrentRedactorObject = Map.points.size() - 1;
-			}
-		}
-		else if (buttons[GLFW_MOUSE_BUTTON_1] && keys[GLFW_KEY_LEFT_SHIFT] && LastJustPressedLMBMousePos != MousePosition)
-		{
-			if (RedactorObject == 0)
-			{
-				float rar = length(MousePosition - LastJustPressedLMBMousePos);
-				Map.balls[CurrentRedactorObject].r = rar;
-			}
-			if (RedactorObject == 1)
-			{
-				if ((MousePosition - LastJustPressedLMBMousePos).x != 0.0f && (MousePosition - LastJustPressedLMBMousePos).y != 0.0f)
-				{
-					Map.cubes[CurrentRedactorObject].width = abs((MousePosition.x - LastJustPressedLMBMousePos.x)) * 0.5f;
-					Map.cubes[CurrentRedactorObject].height = abs((MousePosition.y - LastJustPressedLMBMousePos.y)) * 0.5f;
-				}
-				Map.cubes[CurrentRedactorObject].position = (MousePosition + LastJustPressedLMBMousePos) * 0.5f;
-			}
-			if (RedactorObject == 2)
-			{
-				float rar = length(MousePosition - LastJustPressedLMBMousePos);
-				Map.polygons[CurrentRedactorObject].Scale = glm::vec2(abs((MousePosition.x - LastJustPressedLMBMousePos.x)) * 0.5f, abs((MousePosition.y - LastJustPressedLMBMousePos.y)) * 0.5f);
-				Map.polygons[CurrentRedactorObject].Update_Shape();
-			}
-		}
-
-	}
-	*/
 	
 
 	// grab/select tool
-	if (!RedactingParticlesEmiter && !RedactingScene && GrabSelectTool && !RedactingPolygon)
+	if (w->active)
 	{
 		if (JustPressedLMB)
 		{
+			PrevDifference *=0.0f;
 			PrevMousePosition = MousePosition;
 			grabbed = false;
 			
-			SelectedNode = NULL;
-			SelectedNodeID = -1;
-			SelectedAsset =NULL;
-			SelectedAssetID=-1;
 			for (int i = 0; i < Map.Nodes.size(); i++)
 			{
 				bool mousetouched = Map.Nodes[i]->SelectionCheck(MousePosition);
@@ -2083,7 +2155,7 @@ void On_Update()
 			}
 
 		}
-		if (ReleasedLMB && sqrlength(PrevMousePosition - MousePosition)<2.0f)
+		if (ReleasedLMB && sqrlength(PrevMousePosition - MousePosition)<2.0f && !keys[GLFW_KEY_LEFT_ALT])
 		{
 			SelectedNode = GrabbedNode;
 			SelectedNodeID = GrabbedNodeID; 
@@ -2093,10 +2165,66 @@ void On_Update()
 			
 
 		}
-		else if (buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition && keys[GLFW_KEY_LEFT_CONTROL])
+		
+		if(GrabbedNode != NULL && grabbed && PrevMousePosition != MousePosition && keys[GLFW_KEY_LEFT_CONTROL])
 		{
-			if (GrabbedNode != NULL && grabbed )
-				GrabbedNode->position = MousePosition;
+			GrabbedNode->position -=PrevDifference;
+			PrevDifference = (MousePosition - PrevMousePosition);
+			GrabbedNode->position +=PrevDifference;
+
+		}
+		if(SelectedNode!=NULL && SelectedNodeID>=0)
+		{
+			//Resize
+			if(buttons[GLFW_MOUSE_BUTTON_1] && keys[GLFW_KEY_LEFT_ALT])
+			{
+				if(SelectedNode->type >= NodeType::OBJECT && SelectedNode->type <= NodeType::LIGHTSOURCEOBJECT)
+				{
+					Object* tmpobj= (Object*)SelectedNode;
+					tmpobj->Scale -= PrevDifference;
+				}
+				else if(SelectedNode->type == NodeType::PARTICLEOBJECT )
+				{
+					ParticleObject* tmpobj= (ParticleObject*)SelectedNode;
+					tmpobj->scale -= PrevDifference;
+					tmpobj->r -= length(PrevDifference);
+				}
+				//SelectedNode -= PrevDifference;
+				SelectedNode->OnResize(PrevDifference,MousePosition, PrevMousePosition);
+				PrevDifference = (MousePosition - PrevMousePosition);
+				if(SelectedNode->type >= NodeType::OBJECT && SelectedNode->type <= NodeType::LIGHTSOURCEOBJECT)
+				{
+					Object* tmpobj= (Object*)SelectedNode;
+					tmpobj->Scale += PrevDifference;
+				}
+				else if(SelectedNode->type == NodeType::PARTICLEOBJECT )
+				{
+					ParticleObject* tmpobj= (ParticleObject*)SelectedNode;
+					tmpobj->scale += PrevDifference;
+					tmpobj->r += length(PrevDifference);
+				}
+			}
+
+			//Duplicate
+			if(JustPressedkey[GLFW_KEY_D] && keys[GLFW_KEY_LEFT_CONTROL])
+			{
+				Node* NewNode = NodeConstructors[SelectedNode->type]();
+				if(NewNode!=NULL)
+				{
+					//for subtypes to sync
+					for(int i=0;i<2;i++)
+					{
+						std::vector<UI_DataPack> uidp = NewNode->GetUIData();
+						std::vector<UI_DataPack> uidp2 = SelectedNode->GetUIData();
+						for(int i=0;i<uidp.size();i++)
+						{
+							uidp2[i].CopyInto(&uidp[i]);
+						}
+					}
+					Map.Nodes.push_back(NewNode);
+				}
+				
+			}
 		}
 
 		if(ReleasedLMB)
@@ -2204,7 +2332,17 @@ void On_Update()
 		}
 	}
 	*/
-	Map.Draw();
+	
+
+	GameScene = &Map;
+	Map.Update();
+
+	if(!Paused && Running)
+	{
+		Map.Process(delta * Simulation_speed);
+		Process(delta * Simulation_speed);
+	}
+	Map.Draw(delta * Simulation_speed);
 
 	// for (int i = 0; i < Map.Shaders.size(); i++)
 	// 	Map.Shaders[i].UpdateUniforms();
@@ -2229,6 +2367,7 @@ int main()
 	initEngine("Redactor", 1920,1050,false);
 	//app.init("Redactor",1920,1080,true);
 	Map.SaveAs(MapFileName + ".back");
+	Destroy();
 	return 0;
 }
 

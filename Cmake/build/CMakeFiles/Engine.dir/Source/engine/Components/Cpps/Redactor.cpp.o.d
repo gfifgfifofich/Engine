@@ -1,8 +1,8 @@
-CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/SaveToFile.cpp \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/SaveToFile.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Engine.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Helper.h \
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o: \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Redactor.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Engine.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Helper.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/glm/../GL/glew.h \
   /usr/lib/clang/17/include/stddef.h \
   /usr/lib/clang/17/include/__stddef_max_align_t.h \
@@ -515,23 +515,23 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/glm/../glm/gtc/type_ptr.inl \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/glm/../stb/stb_image.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/stdlib.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Mathematics.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Shader.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Drawing.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Ball.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Quad.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Polygon.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Line.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/BallToLine.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/Ball.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/Quad.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/Line.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/Polygon.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/Ray.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/VerletObject.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/../Objects/NeuralNetwork.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/../Collisions/BallToBall.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Mathematics.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Shader.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Drawing.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Ball.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Quad.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Polygon.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Line.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/BallToLine.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/Ball.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/Quad.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/Line.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/Polygon.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/Ray.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/VerletObject.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/../Objects/NeuralNetwork.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/../Collisions/BallToBall.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/map \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/stl_tree.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/ext/aligned_buffer.h \
@@ -539,20 +539,20 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/stl_map.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/stl_multimap.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/erase_if.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/BallToBall.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/BallToLine.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/BallToPolygon.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/../Objects.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/CircleToQuad.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/QuadToQuad.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Collisions/RayCastToShapes.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Physics.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Physics/Rope.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Physics/Spring.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Physics/Strut.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Text.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/BallToBall.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/BallToLine.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/BallToPolygon.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/../Objects.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/CircleToQuad.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/QuadToQuad.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Collisions/RayCastToShapes.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Physics.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Physics/Rope.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Physics/Spring.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Physics/Strut.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Text.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/glm/../ft2build.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/config/ftheader.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/freetype.h \
@@ -569,14 +569,14 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/fterrors.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/ftmoderr.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/fterrdef.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/UI.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Bodies.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Graph.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/UI.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Bodies.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Graph.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/list \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/stl_list.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/allocated_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/bits/list.tcc \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Particle.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Particle.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/thread \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/stop_token \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/atomic \
@@ -794,7 +794,8 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/pstl/numeric_fwd.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/pstl/glue_numeric_impl.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/13.2.1/../../../../include/c++/13.2.1/pstl/glue_memory_impl.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/ECS.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/Scene.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/Objects/SoftBody.h \
-  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Include/SaveToFile.h
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/ECS.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/Scene.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/Objects/SoftBody.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/SaveToFile.h \
+  /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/../Include/../Engine.h

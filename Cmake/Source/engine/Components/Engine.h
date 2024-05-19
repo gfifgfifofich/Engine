@@ -182,6 +182,7 @@ glm::vec4 AmbientColor = glm::vec4(1.0f);
 #include "Include/Objects/Graph.h";
 #include "Include/Objects/Particle.h";
 
+#include "Include/Objects/ECS.h"
 
 #include "Include/Objects/Scene.h";
 #include "Include/Objects/SoftBody.h";

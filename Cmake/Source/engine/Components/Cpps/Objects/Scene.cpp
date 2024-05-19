@@ -5,6 +5,7 @@
 #include "../../Include/Objects/Particle.h"
 #include "../../Include/UI.h"
 #include "../../Include/Collisions.h"
+#include "../../Include/Objects/ECS.h"
 #include "../../Include/Objects/Scene.h"
 #include "../../Include/SaveToFile.h"
 
@@ -195,6 +196,9 @@ void Scene::LoadFrom(std::string filename)
 	Collision_polygons.clear();
 	Collision_cubes.clear();
 	Collision_balls.clear();
+	AvailableTextures.clear();
+	AvailableMaterials.clear();
+	AvailableParticleAssets.clear();
 	firstframe = true;
 	DataStorage ds;
 	ds.Load(filename);
@@ -212,7 +216,7 @@ void Scene::LoadFrom(std::string filename)
 
 			int type =-1;
 
-			NewNode = CreateNewNodeByClassId(ds.GetPropertyAsInt(Item.first,"Class"));
+			NewNode = NodeConstructors[ds.GetPropertyAsInt(Item.first,"Class")]();
 			if(NewNode == NULL)
 			{
 				std::cout<<"Error loading Node: " << Item.first;
@@ -301,7 +305,7 @@ void Scene::LoadFrom(std::string filename)
 
 			int type =-1;
 
-			NewAsset = CreateNewAssetByClassId(ds.GetPropertyAsInt(Item.first,"Class"));
+			NewAsset = AssetConstructors[ds.GetPropertyAsInt(Item.first,"Class")]();
 			if(NewAsset == NULL)
 			{
 				std::cout<<"Error loading Asset: " << Item.first;
@@ -380,8 +384,6 @@ void Scene::LoadFrom(std::string filename)
 		}
 	}	
 }
-
-
 void Scene::Rescale(glm::vec2 scale, int Z_Index)
 {
 	//for (int i = 0; i < points.size(); i++)
@@ -476,8 +478,8 @@ void Scene::Rescale(glm::vec2 scale, int Z_Index)
 		// }
 }
 
-void Scene::Draw(float dt)
-{
+void Scene::Update()
+{	
 	if(firstframe)
 	{
 		firstframe = false;
@@ -486,17 +488,10 @@ void Scene::Draw(float dt)
 		for(int i=0;i<Assets.size();i++)
 			Assets[i]->Ready();
 	}
-
-	// for (int i = 0; i < Shaders.size(); i++)
-	// {
-	// 	UseShader(Shaders[i].program);
-	// 	SetShader1f(&Shaders[i].program, "en_Time", clock() * 0.001f);
-	// 	Shaders[i].UpdateUniforms();
-	// 	DetachShader();
-	// }
 	int ii =0;
 	AvailableTextures.clear();
 	AvailableMaterials.clear();
+	AvailableParticleAssets.clear();
 	while(ii<Assets.size())
 	{
 		if(Assets[ii]->framesUntillDeletion <=0)
@@ -529,11 +524,7 @@ void Scene::Draw(float dt)
 			ii++;
 		}
 	}
-
-			
-	for(int i=0;i<Assets.size();i++)
-		Assets[i]->Process(dt);
-
+	
 
 	ii =0;
 	while(ii<Nodes.size())
@@ -549,10 +540,50 @@ void Scene::Draw(float dt)
 
 			if(Nodes[ii]->Delete)
 				Nodes[ii]->framesUntillDeletion--;
-
+			for(int a =0;a<Nodes[ii]->UsedAssets.size();a++)
+			{
+				if((*Nodes[ii]->UsedAssets[a])!=NULL)
+					if((*Nodes[ii]->UsedAssets[a])->Delete)
+						(*Nodes[ii]->UsedAssets[a]) = NULL;
+			}
+			Nodes[ii]->PreProcess();
 			ii++;
 		}
 	}
+}
+
+void Scene::Draw(float dt)
+{
+	for(int i=0;i<Nodes.size();i++)
+	{
+		if(DrawRegularScene)
+		{
+			Nodes[i]->DrawProcess(dt);	
+			Nodes[i]->Draw();
+		}
+		if(DrawCollisions)
+		{
+			Nodes[i]->DebugDraw();
+		}
+	}
+	for(int i=0;i<Assets.size();i++)
+	{
+		if(DrawRegularScene)
+			Assets[i]->DrawProcess(dt);	
+	}
+}
+void Scene::Process(float dt)
+{
+	SceneInProcess = this;
+	
+
+	for(int i=0;i<Assets.size();i++)
+	{
+		Assets[i]->Process(dt);
+		if(DrawCollisions)
+			Assets[i]->DebugProcess(dt);
+	}
+	
 
 	Collision_balls.clear();
 	Collision_cubes.clear();
@@ -580,16 +611,12 @@ void Scene::Draw(float dt)
 
 		Nodes[i]->Process(dt);
 		
-		if(DrawRegularScene)
-			Nodes[i]->Draw();
 		if(DrawCollisions)
-		{
 			Nodes[i]->DebugProcess(dt);
-			Nodes[i]->DebugDraw();
-		}
+		
 	}
 
-	
+	SceneInProcess = NULL;
 }
 void Scene::DeleteNormalMaps()
 {

@@ -465,7 +465,7 @@ glm::vec2 UI_CheckBox(bool* param, const char* text, glm::vec2 scrPosition, floa
 
 	float cs = scale;
 	bool hover = false;
-	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r)
+	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r && GetWindow(window_id)->active)
 	{
 		cs *= 1.1f;
 		if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
@@ -505,7 +505,7 @@ glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, 
 
 	float r = scale * 1.25;
 	bool hover = false;
-	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r)
+	if (sqrlength(ScreenMousePosition - scrPosition) <= r * r && GetWindow(window_id)->active)
 	{
 		scale *= 1.1f;
 		if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
@@ -539,7 +539,6 @@ glm::vec2 UI_buttonOnlyON(bool* param, const char* text, glm::vec2 scrPosition, 
 //UI returns size of object
 glm::vec2 UI_button(bool* param, const char* text, glm::vec2 scrPosition, glm::vec2 scale, float textScale, glm::vec4 TextColorAdder, glm::vec4 ColorON, glm::vec4 ColorOFF, int Z_Index, bool Additive)
 {
-
 	glm::vec2 mp = ScreenMousePosition;
 
 	glm::vec2 pos = scrPosition;
@@ -548,12 +547,13 @@ glm::vec2 UI_button(bool* param, const char* text, glm::vec2 scrPosition, glm::v
 	if ((mp.x - pos.x) > 0 && (mp.x - pos.x) < scale.x &&
 		mp.y > pos.y - scale.y*0.5f && mp.y < pos.y + scale.y * 0.5f)
 	{
-		if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
-			*param = true;
-		else
-			*param = false;
-
+		if(GetWindow(window_id)->active){
+			if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
+				*param = true;
+			else
+				*param = false;
 		hover = true;
+		}
 	}
 	pos = scrPosition + glm::vec2(scale.x * 0.5f, 0.0f);
 
@@ -730,7 +730,7 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
 		)
 	{
-
+		if(GetWindow(window_id)->active){
 		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
 		{
 			Dragging = true;
@@ -738,6 +738,7 @@ glm::vec2  UI_Drag(float* param, const char* text, glm::vec2 scrPosition, float 
 		}
 		if (Dragging)
 			*param = fDragBuff + (ScreenMousePosition.x - LastJustPressedLMBScrMousePos.x) * speed;
+		}
 	}
 	if (!buttons[GLFW_MOUSE_BUTTON_1])
 	{
@@ -790,7 +791,7 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 		mp.y > scrPosition.y - scale.y && mp.y < scrPosition.y + scale.y
 		)
 	{
-
+		if(GetWindow(window_id)->active){
 		if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
 		{
 			Dragging = true;
@@ -798,6 +799,7 @@ glm::vec2  UI_DragInt(int* param, const char* text, glm::vec2 scrPosition, float
 		}
 		if (Dragging)
 			*param = iDragBuff + (ScreenMousePosition.x - LastJustPressedLMBScrMousePos.x) * speed;
+		}
 	}
 	if (!buttons[GLFW_MOUSE_BUTTON_1])
 	{
@@ -868,7 +870,7 @@ glm::vec2  UI_TextBox(std::string* text, glm::vec2 scrPosition, int maxTextSize,
 	}
 	else
 		edit = false;
-	if (edit)
+	if (edit && GetWindow(window_id)->active)
 	{
 
 		std::string tmptext = "";

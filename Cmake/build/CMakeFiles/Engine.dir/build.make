@@ -69,19 +69,19 @@ include CMakeFiles/Engine.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Engine.dir/flags.make
 
-CMakeFiles/Engine.dir/Source/MapTest.cpp.o: CMakeFiles/Engine.dir/flags.make
-CMakeFiles/Engine.dir/Source/MapTest.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/MapTest.cpp
-CMakeFiles/Engine.dir/Source/MapTest.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Engine.dir/Source/MapTest.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/MapTest.cpp.o -MF CMakeFiles/Engine.dir/Source/MapTest.cpp.o.d -o CMakeFiles/Engine.dir/Source/MapTest.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/MapTest.cpp
+CMakeFiles/Engine.dir/Source/Game.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/Source/Game.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/Game.cpp
+CMakeFiles/Engine.dir/Source/Game.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Engine.dir/Source/Game.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/Game.cpp.o -MF CMakeFiles/Engine.dir/Source/Game.cpp.o.d -o CMakeFiles/Engine.dir/Source/Game.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/Game.cpp
 
-CMakeFiles/Engine.dir/Source/MapTest.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/Source/MapTest.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/MapTest.cpp > CMakeFiles/Engine.dir/Source/MapTest.cpp.i
+CMakeFiles/Engine.dir/Source/Game.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/Source/Game.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/Game.cpp > CMakeFiles/Engine.dir/Source/Game.cpp.i
 
-CMakeFiles/Engine.dir/Source/MapTest.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/Source/MapTest.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/MapTest.cpp -o CMakeFiles/Engine.dir/Source/MapTest.cpp.s
+CMakeFiles/Engine.dir/Source/Game.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/Source/Game.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/Game.cpp -o CMakeFiles/Engine.dir/Source/Game.cpp.s
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Collisions/BallToBall.cpp
@@ -237,10 +237,24 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.s: cmake_
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Bodies.cpp -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.s
 
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp
+
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp > CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.i
+
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/ECS.cpp -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.s
+
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Graph.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Graph.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.i: cmake_force
@@ -254,7 +268,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.s: cmake_f
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Line.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Line.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.s: cmake_fo
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.s:
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Particle.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Particle.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.i: cmake_force
@@ -296,7 +310,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Particle.cpp.s: cmak
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Polygon.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Polygon.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.i: cmake_force
@@ -310,7 +324,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Polygon.cpp.s: cmake
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Ray.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Ray.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.i: cmake_force
@@ -324,7 +338,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ray.cpp.s: cmake_for
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Scene.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/Scene.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.i: cmake_force
@@ -338,7 +352,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Scene.cpp.s: cmake_f
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/SoftBody.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/SoftBody.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.i: cmake_force
@@ -352,7 +366,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/SoftBody.cpp.s: cmak
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/VerletObject.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Objects/VerletObject.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.i: cmake_force
@@ -366,7 +380,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject.cpp.s: 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Rope.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Rope.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.i: cmake_force
@@ -380,7 +394,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.s: cmake_fo
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Spring.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Spring.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.i: cmake_force
@@ -394,7 +408,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.s: cmake_
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Strut.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Strut.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.i: cmake_force
@@ -405,10 +419,24 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.s: cmake_f
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Physics/Strut.cpp -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.s
 
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o: CMakeFiles/Engine.dir/flags.make
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp
+
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp > CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.i
+
+CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Redactor.cpp -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.s
+
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/SaveToFile.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/SaveToFile.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.i: cmake_force
@@ -422,7 +450,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.s: cmake_forc
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.i: cmake_force
@@ -436,7 +464,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.s: cmake_force
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.i: cmake_force
@@ -450,7 +478,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.s: cmake_force
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/UI.cpp
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o -MF CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o.d -o CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/UI.cpp
 
 CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.i: cmake_force
@@ -464,7 +492,7 @@ CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.i: cmake_force
@@ -478,7 +506,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_draw.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_draw.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.i: cmake_force
@@ -492,7 +520,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui_draw.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_widgets.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_widgets.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.i: cmake_force
@@ -506,7 +534,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui_widgets.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_tables.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_tables.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.i: cmake_force
@@ -520,7 +548,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui_tables.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_demo.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_demo.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.i: cmake_force
@@ -534,7 +562,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_impl_glfw.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_impl_glfw.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.i: cmake_force
@@ -548,7 +576,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_glfw.cpp.s: cmake_force
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o: CMakeFiles/Engine.dir/flags.make
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_impl_opengl3.cpp
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o: CMakeFiles/Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o -MF CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o.d -o CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/imgui/imgui_impl_opengl3.cpp
 
 CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.i: cmake_force
@@ -561,7 +589,7 @@ CMakeFiles/Engine.dir/dependencies/imgui/imgui_impl_opengl3.cpp.s: cmake_force
 
 # Object files for target Engine
 Engine_OBJECTS = \
-"CMakeFiles/Engine.dir/Source/MapTest.cpp.o" \
+"CMakeFiles/Engine.dir/Source/Game.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToLine.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToPolygon.cpp.o" \
@@ -573,6 +601,7 @@ Engine_OBJECTS = \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Math.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ball.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.o" \
+"CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o" \
@@ -585,6 +614,7 @@ Engine_OBJECTS = \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o" \
+"CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o" \
 "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o" \
@@ -600,7 +630,7 @@ Engine_OBJECTS = \
 # External object files for target Engine
 Engine_EXTERNAL_OBJECTS =
 
-Engine: CMakeFiles/Engine.dir/Source/MapTest.cpp.o
+Engine: CMakeFiles/Engine.dir/Source/Game.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToLine.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Collisions/BallToPolygon.cpp.o
@@ -612,6 +642,7 @@ Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Engine.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Math.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Ball.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.o
+Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Graph.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Line.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/NeuralNetwork.cpp.o
@@ -624,6 +655,7 @@ Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/VerletObject
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Rope.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Spring.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.o
+Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/SaveToFile.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Shader.cpp.o
 Engine: CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o
@@ -663,7 +695,7 @@ Engine: /usr/lib/libpng.so
 Engine: /usr/lib/libharfbuzz.so
 Engine: /usr/lib/libbrotlidec.so
 Engine: CMakeFiles/Engine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Linking CXX executable Engine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Linking CXX executable Engine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Engine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

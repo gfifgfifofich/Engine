@@ -191,7 +191,7 @@ FogPart_0000000007
 	Additive 0
 	Class 3
 	DrawToNormalMap 0
-	EndColor 1.000002 0.700000 1.009999 3.679999
+	EndColor 1.000002 0.700000 1.009999 0.300000
 	EndSize 48.399994 41.199997
 	ID 0
 	InitialOrbitalVelocity 0.000000
@@ -205,7 +205,7 @@ FogPart_0000000007
 	RotationDamper 0.000000
 	RotationRandomness 1.000000
 	RotationVelocity 0.000000
-	StartColor 1.000003 0.020004 1.000003 3.890000
+	StartColor 1.000003 0.020004 1.000003 0.520000
 	StartSize 0.000000 0.000000
 	Type 0
 	VelocityDamper 3.800000
@@ -339,9 +339,9 @@ Noize_0000000010
 	texture_FileName 
 	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
 	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
-	texture_Noize_Frequency 7.929999
+	texture_Noize_Frequency 5.630000
 	texture_Noize_Layers 3
-	texture_Size 64.000000
+	texture_Size 68.000000
 	texture_Type 1
 	texture_filter 0
 }
@@ -367,7 +367,7 @@ PartLight_0000000011
 	Name PartLight
 	ParticleAsset FogPart
 	ParticleObjectType 5
-	Position -146.666672 56.735817
+	Position -200.243805 79.083275
 	Radius 77.000000
 	Type 1
 }

@@ -611,29 +611,29 @@ alsoft-config/fast:
 	$(MAKE) $(MAKESILENT) -f dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/build.make dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/build
 .PHONY : alsoft-config/fast
 
-Source/MapTest.o: Source/MapTest.cpp.o
-.PHONY : Source/MapTest.o
+Source/Game.o: Source/Game.cpp.o
+.PHONY : Source/Game.o
 
 # target to build an object file
-Source/MapTest.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/MapTest.cpp.o
-.PHONY : Source/MapTest.cpp.o
+Source/Game.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/Game.cpp.o
+.PHONY : Source/Game.cpp.o
 
-Source/MapTest.i: Source/MapTest.cpp.i
-.PHONY : Source/MapTest.i
+Source/Game.i: Source/Game.cpp.i
+.PHONY : Source/Game.i
 
 # target to preprocess a source file
-Source/MapTest.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/MapTest.cpp.i
-.PHONY : Source/MapTest.cpp.i
+Source/Game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/Game.cpp.i
+.PHONY : Source/Game.cpp.i
 
-Source/MapTest.s: Source/MapTest.cpp.s
-.PHONY : Source/MapTest.s
+Source/Game.s: Source/Game.cpp.s
+.PHONY : Source/Game.s
 
 # target to generate assembly for a file
-Source/MapTest.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/MapTest.cpp.s
-.PHONY : Source/MapTest.cpp.s
+Source/Game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/Game.cpp.s
+.PHONY : Source/Game.cpp.s
 
 Source/engine/Components/Cpps/Collisions/BallToBall.o: Source/engine/Components/Cpps/Collisions/BallToBall.cpp.o
 .PHONY : Source/engine/Components/Cpps/Collisions/BallToBall.o
@@ -898,6 +898,30 @@ Source/engine/Components/Cpps/Objects/Bodies.s: Source/engine/Components/Cpps/Ob
 Source/engine/Components/Cpps/Objects/Bodies.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/Bodies.cpp.s
 .PHONY : Source/engine/Components/Cpps/Objects/Bodies.cpp.s
+
+Source/engine/Components/Cpps/Objects/ECS.o: Source/engine/Components/Cpps/Objects/ECS.cpp.o
+.PHONY : Source/engine/Components/Cpps/Objects/ECS.o
+
+# target to build an object file
+Source/engine/Components/Cpps/Objects/ECS.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.o
+.PHONY : Source/engine/Components/Cpps/Objects/ECS.cpp.o
+
+Source/engine/Components/Cpps/Objects/ECS.i: Source/engine/Components/Cpps/Objects/ECS.cpp.i
+.PHONY : Source/engine/Components/Cpps/Objects/ECS.i
+
+# target to preprocess a source file
+Source/engine/Components/Cpps/Objects/ECS.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.i
+.PHONY : Source/engine/Components/Cpps/Objects/ECS.cpp.i
+
+Source/engine/Components/Cpps/Objects/ECS.s: Source/engine/Components/Cpps/Objects/ECS.cpp.s
+.PHONY : Source/engine/Components/Cpps/Objects/ECS.s
+
+# target to generate assembly for a file
+Source/engine/Components/Cpps/Objects/ECS.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Objects/ECS.cpp.s
+.PHONY : Source/engine/Components/Cpps/Objects/ECS.cpp.s
 
 Source/engine/Components/Cpps/Objects/Graph.o: Source/engine/Components/Cpps/Objects/Graph.cpp.o
 .PHONY : Source/engine/Components/Cpps/Objects/Graph.o
@@ -1186,6 +1210,30 @@ Source/engine/Components/Cpps/Physics/Strut.s: Source/engine/Components/Cpps/Phy
 Source/engine/Components/Cpps/Physics/Strut.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Physics/Strut.cpp.s
 .PHONY : Source/engine/Components/Cpps/Physics/Strut.cpp.s
+
+Source/engine/Components/Cpps/Redactor.o: Source/engine/Components/Cpps/Redactor.cpp.o
+.PHONY : Source/engine/Components/Cpps/Redactor.o
+
+# target to build an object file
+Source/engine/Components/Cpps/Redactor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.o
+.PHONY : Source/engine/Components/Cpps/Redactor.cpp.o
+
+Source/engine/Components/Cpps/Redactor.i: Source/engine/Components/Cpps/Redactor.cpp.i
+.PHONY : Source/engine/Components/Cpps/Redactor.i
+
+# target to preprocess a source file
+Source/engine/Components/Cpps/Redactor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.i
+.PHONY : Source/engine/Components/Cpps/Redactor.cpp.i
+
+Source/engine/Components/Cpps/Redactor.s: Source/engine/Components/Cpps/Redactor.cpp.s
+.PHONY : Source/engine/Components/Cpps/Redactor.s
+
+# target to generate assembly for a file
+Source/engine/Components/Cpps/Redactor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Redactor.cpp.s
+.PHONY : Source/engine/Components/Cpps/Redactor.cpp.s
 
 Source/engine/Components/Cpps/SaveToFile.o: Source/engine/Components/Cpps/SaveToFile.cpp.o
 .PHONY : Source/engine/Components/Cpps/SaveToFile.o
@@ -1498,9 +1546,9 @@ help:
 	@echo "... uhjdecoder"
 	@echo "... uhjencoder"
 	@echo "... visualinfo"
-	@echo "... Source/MapTest.o"
-	@echo "... Source/MapTest.i"
-	@echo "... Source/MapTest.s"
+	@echo "... Source/Game.o"
+	@echo "... Source/Game.i"
+	@echo "... Source/Game.s"
 	@echo "... Source/engine/Components/Cpps/Collisions/BallToBall.o"
 	@echo "... Source/engine/Components/Cpps/Collisions/BallToBall.i"
 	@echo "... Source/engine/Components/Cpps/Collisions/BallToBall.s"
@@ -1534,6 +1582,9 @@ help:
 	@echo "... Source/engine/Components/Cpps/Objects/Bodies.o"
 	@echo "... Source/engine/Components/Cpps/Objects/Bodies.i"
 	@echo "... Source/engine/Components/Cpps/Objects/Bodies.s"
+	@echo "... Source/engine/Components/Cpps/Objects/ECS.o"
+	@echo "... Source/engine/Components/Cpps/Objects/ECS.i"
+	@echo "... Source/engine/Components/Cpps/Objects/ECS.s"
 	@echo "... Source/engine/Components/Cpps/Objects/Graph.o"
 	@echo "... Source/engine/Components/Cpps/Objects/Graph.i"
 	@echo "... Source/engine/Components/Cpps/Objects/Graph.s"
@@ -1570,6 +1621,9 @@ help:
 	@echo "... Source/engine/Components/Cpps/Physics/Strut.o"
 	@echo "... Source/engine/Components/Cpps/Physics/Strut.i"
 	@echo "... Source/engine/Components/Cpps/Physics/Strut.s"
+	@echo "... Source/engine/Components/Cpps/Redactor.o"
+	@echo "... Source/engine/Components/Cpps/Redactor.i"
+	@echo "... Source/engine/Components/Cpps/Redactor.s"
 	@echo "... Source/engine/Components/Cpps/SaveToFile.o"
 	@echo "... Source/engine/Components/Cpps/SaveToFile.i"
 	@echo "... Source/engine/Components/Cpps/SaveToFile.s"
