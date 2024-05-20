@@ -37,14 +37,15 @@
 	Corner.y += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].w, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
 */
 
+int InspectorWindowID;
+int ProjectWindowID;
+int ConsoleWindowID;
 
-Scene Map;
 Texture tex;
 
 std::string TexturePath;
 
 
-glm::vec2 PrevMousePosition = { 0.0f,0.0f };
 glm::vec2 PrevDifference = { 0.0f,0.0f };
 glm::vec2 Corner = { 0.0f,0.0f };
 
@@ -1330,10 +1331,6 @@ void ShowRedactorWindow(Shader* shader)
 
 */
 
-int SceneWindowID;
-int InspectorWindowID;
-int ProjectWindowID;
-int ConsoleWindowID;
 int KastylID;
 
 float SceneWindowScroll = 0.0f;
@@ -1445,11 +1442,12 @@ void On_Create()
 	//Map.Assets.push_back(new TextureObject());
 	//Map.Assets.push_back(new MaterialObject());
 
+	w->Use();
 	GameScene = &Map;
 	Ready();
+	w->End();
 }
 
-glm::vec2 AqueredCameraScale = glm::vec2(1.0f);
 glm::vec2 PrevMousePos = glm::vec2(0.0f);
 bool MMBJustPressedWindow[4];
 
@@ -2340,7 +2338,8 @@ void On_Update()
 		Map.Process(delta * Simulation_speed);
 		Process(delta * Simulation_speed);
 	}
-	Map.Draw(delta * Simulation_speed);
+	if(Paused || !Running)
+		Map.Draw(delta * Simulation_speed);
 
 	// for (int i = 0; i < Map.Shaders.size(); i++)
 	// 	Map.Shaders[i].UpdateUniforms();
