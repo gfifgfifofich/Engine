@@ -14,9 +14,10 @@ inline std::vector<std::string> NodeNames;
 
 inline std::string MapFileName =  "./Scenes/Map.sav";
 
-void Ready();
 void PreReady();
+void Ready();
 void Process(float dt);
+void Rescale(int NewWidth,int NewHeight);
 void Destroy();
 
 

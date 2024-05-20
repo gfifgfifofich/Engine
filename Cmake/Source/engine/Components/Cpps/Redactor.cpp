@@ -1553,7 +1553,7 @@ void On_Update()
 		pw->RecalculateSize();
 		cw->RecalculateSize();
 		w->RecalculateSize();
-
+		Rescale(w->ViewportSize.x,w->ViewportSize.y);
 		/*
 		std::cout << "w" << w->ViewportSize.x << "  " << w->ViewportSize.y<<"\n";
 		std::cout << "cw" << cw->ViewportSize.x << "  " << cw->ViewportSize.y<<"\n";
