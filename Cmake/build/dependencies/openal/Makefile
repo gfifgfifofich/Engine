@@ -1388,6 +1388,30 @@ alc/backends/pulseaudio.cpp.s:
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build && $(MAKE) $(MAKESILENT) -f dependencies/openal/CMakeFiles/OpenAL.dir/build.make dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pulseaudio.cpp.s
 .PHONY : alc/backends/pulseaudio.cpp.s
 
+alc/backends/sndio.o: alc/backends/sndio.cpp.o
+.PHONY : alc/backends/sndio.o
+
+# target to build an object file
+alc/backends/sndio.cpp.o:
+	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build && $(MAKE) $(MAKESILENT) -f dependencies/openal/CMakeFiles/OpenAL.dir/build.make dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o
+.PHONY : alc/backends/sndio.cpp.o
+
+alc/backends/sndio.i: alc/backends/sndio.cpp.i
+.PHONY : alc/backends/sndio.i
+
+# target to preprocess a source file
+alc/backends/sndio.cpp.i:
+	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build && $(MAKE) $(MAKESILENT) -f dependencies/openal/CMakeFiles/OpenAL.dir/build.make dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.i
+.PHONY : alc/backends/sndio.cpp.i
+
+alc/backends/sndio.s: alc/backends/sndio.cpp.s
+.PHONY : alc/backends/sndio.s
+
+# target to generate assembly for a file
+alc/backends/sndio.cpp.s:
+	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build && $(MAKE) $(MAKESILENT) -f dependencies/openal/CMakeFiles/OpenAL.dir/build.make dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.s
+.PHONY : alc/backends/sndio.cpp.s
+
 alc/backends/wave.o: alc/backends/wave.cpp.o
 .PHONY : alc/backends/wave.o
 
@@ -3529,6 +3553,9 @@ help:
 	@echo "... alc/backends/pulseaudio.o"
 	@echo "... alc/backends/pulseaudio.i"
 	@echo "... alc/backends/pulseaudio.s"
+	@echo "... alc/backends/sndio.o"
+	@echo "... alc/backends/sndio.i"
+	@echo "... alc/backends/sndio.s"
 	@echo "... alc/backends/wave.o"
 	@echo "... alc/backends/wave.i"
 	@echo "... alc/backends/wave.s"

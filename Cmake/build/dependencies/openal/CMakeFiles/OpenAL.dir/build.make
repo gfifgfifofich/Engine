@@ -830,10 +830,24 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/oss.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenAL.dir/alc/backends/oss.cpp.s"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/oss.cpp -o CMakeFiles/OpenAL.dir/alc/backends/oss.cpp.s
 
+dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
+dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/sndio.cpp
+dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o"
+	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o -MF CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o.d -o CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/sndio.cpp
+
+dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.i"
+	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/sndio.cpp > CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.i
+
+dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.s"
+	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/sndio.cpp -o CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.s
+
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/jack.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o -MF CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o.d -o CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/jack.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.i: cmake_force
@@ -847,7 +861,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/portaudio.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o -MF CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o.d -o CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/portaudio.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.i: cmake_force
@@ -861,7 +875,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.s: cmake_fo
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/wave.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o -MF CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o.d -o CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/alc/backends/wave.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.i: cmake_force
@@ -875,7 +889,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/ambdec.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.o -MF CMakeFiles/OpenAL.dir/core/ambdec.cpp.o.d -o CMakeFiles/OpenAL.dir/core/ambdec.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/ambdec.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.i: cmake_force
@@ -889,7 +903,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/ambdec.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/ambidefs.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o -MF CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o.d -o CMakeFiles/OpenAL.dir/core/ambidefs.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/ambidefs.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.i: cmake_force
@@ -903,7 +917,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/ambidefs.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/bformatdec.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o -MF CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o.d -o CMakeFiles/OpenAL.dir/core/bformatdec.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/bformatdec.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.i: cmake_force
@@ -917,7 +931,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/bformatdec.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/bs2b.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.o -MF CMakeFiles/OpenAL.dir/core/bs2b.cpp.o.d -o CMakeFiles/OpenAL.dir/core/bs2b.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/bs2b.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.i: cmake_force
@@ -931,7 +945,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/bs2b.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/bsinc_tables.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o -MF CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o.d -o CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/bsinc_tables.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.i: cmake_force
@@ -945,7 +959,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/bsinc_tables.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/buffer_storage.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o -MF CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o.d -o CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/buffer_storage.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.i: cmake_force
@@ -959,7 +973,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/buffer_storage.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/context.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.o -MF CMakeFiles/OpenAL.dir/core/context.cpp.o.d -o CMakeFiles/OpenAL.dir/core/context.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/context.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.i: cmake_force
@@ -973,7 +987,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/context.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/converter.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.o -MF CMakeFiles/OpenAL.dir/core/converter.cpp.o.d -o CMakeFiles/OpenAL.dir/core/converter.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/converter.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.i: cmake_force
@@ -987,7 +1001,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/converter.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/cpu_caps.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o -MF CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o.d -o CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/cpu_caps.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.i: cmake_force
@@ -1001,7 +1015,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/cpu_caps.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/cubic_tables.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o -MF CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o.d -o CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/cubic_tables.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.i: cmake_force
@@ -1015,7 +1029,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/cubic_tables.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/devformat.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.o -MF CMakeFiles/OpenAL.dir/core/devformat.cpp.o.d -o CMakeFiles/OpenAL.dir/core/devformat.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/devformat.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.i: cmake_force
@@ -1029,7 +1043,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/devformat.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/device.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.o -MF CMakeFiles/OpenAL.dir/core/device.cpp.o.d -o CMakeFiles/OpenAL.dir/core/device.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/device.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.i: cmake_force
@@ -1043,7 +1057,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/device.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/effectslot.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.o -MF CMakeFiles/OpenAL.dir/core/effectslot.cpp.o.d -o CMakeFiles/OpenAL.dir/core/effectslot.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/effectslot.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.i: cmake_force
@@ -1057,7 +1071,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/effectslot.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/except.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o -MF CMakeFiles/OpenAL.dir/core/except.cpp.o.d -o CMakeFiles/OpenAL.dir/core/except.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/except.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.i: cmake_force
@@ -1071,7 +1085,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/filters/biquad.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o -MF CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o.d -o CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/filters/biquad.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.i: cmake_force
@@ -1085,7 +1099,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/biquad.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/filters/nfc.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o -MF CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o.d -o CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/filters/nfc.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.i: cmake_force
@@ -1099,7 +1113,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/nfc.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/filters/splitter.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o -MF CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o.d -o CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/filters/splitter.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.i: cmake_force
@@ -1113,7 +1127,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/filters/splitter.cpp.s: cmake_for
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/fmt_traits.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o -MF CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o.d -o CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/fmt_traits.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.i: cmake_force
@@ -1127,7 +1141,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/fmt_traits.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/fpu_ctrl.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o -MF CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o.d -o CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/fpu_ctrl.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.i: cmake_force
@@ -1141,7 +1155,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/fpu_ctrl.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/helpers.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.o -MF CMakeFiles/OpenAL.dir/core/helpers.cpp.o.d -o CMakeFiles/OpenAL.dir/core/helpers.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/helpers.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.i: cmake_force
@@ -1155,7 +1169,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/helpers.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/hrtf.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.o -MF CMakeFiles/OpenAL.dir/core/hrtf.cpp.o.d -o CMakeFiles/OpenAL.dir/core/hrtf.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/hrtf.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.i: cmake_force
@@ -1169,7 +1183,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/hrtf.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/logging.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o -MF CMakeFiles/OpenAL.dir/core/logging.cpp.o.d -o CMakeFiles/OpenAL.dir/core/logging.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/logging.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.i: cmake_force
@@ -1183,7 +1197,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mastering.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.o -MF CMakeFiles/OpenAL.dir/core/mastering.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mastering.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mastering.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.i: cmake_force
@@ -1197,7 +1211,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/mastering.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.o -MF CMakeFiles/OpenAL.dir/core/mixer.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mixer.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.i: cmake_force
@@ -1211,7 +1225,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/uhjfilter.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o -MF CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o.d -o CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/uhjfilter.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.i: cmake_force
@@ -1225,7 +1239,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/uhjfilter.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/uiddefs.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o -MF CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o.d -o CMakeFiles/OpenAL.dir/core/uiddefs.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/uiddefs.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.i: cmake_force
@@ -1239,7 +1253,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/uiddefs.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/voice.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.o -MF CMakeFiles/OpenAL.dir/core/voice.cpp.o.d -o CMakeFiles/OpenAL.dir/core/voice.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/voice.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.i: cmake_force
@@ -1253,7 +1267,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/voice.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/dbus_wrap.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o -MF CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o.d -o CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/dbus_wrap.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.i: cmake_force
@@ -1267,7 +1281,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/dbus_wrap.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/rtkit.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.o -MF CMakeFiles/OpenAL.dir/core/rtkit.cpp.o.d -o CMakeFiles/OpenAL.dir/core/rtkit.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/rtkit.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.i: cmake_force
@@ -1281,7 +1295,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/rtkit.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_c.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o -MF CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_c.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.i: cmake_force
@@ -1295,7 +1309,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_c.cpp.s: cmake_force
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o -MF CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.i: cmake_force
@@ -1309,7 +1323,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse.cpp.s: cmake_forc
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse2.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o -MF CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse2.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.i: cmake_force
@@ -1323,7 +1337,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse2.cpp.s: cmake_for
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse3.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o -MF CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse3.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.i: cmake_force
@@ -1337,7 +1351,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse3.cpp.s: cmake_for
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/flags.make
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o: /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse41.cpp
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o: dependencies/openal/CMakeFiles/OpenAL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_93) "Building CXX object dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && /usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o -MF CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o.d -o CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o -c /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/mixer/mixer_sse41.cpp
 
 dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.i: cmake_force
@@ -1404,6 +1418,7 @@ OpenAL_OBJECTS = \
 "CMakeFiles/OpenAL.dir/alc/backends/pulseaudio.cpp.o" \
 "CMakeFiles/OpenAL.dir/alc/backends/alsa.cpp.o" \
 "CMakeFiles/OpenAL.dir/alc/backends/oss.cpp.o" \
+"CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o" \
 "CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o" \
 "CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o" \
 "CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o" \
@@ -1499,6 +1514,7 @@ dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.d
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pulseaudio.cpp.o
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/alsa.cpp.o
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/oss.cpp.o
+dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/jack.cpp.o
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o
@@ -1538,8 +1554,9 @@ dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.d
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/core/mixer/mixer_sse41.cpp.o
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/build.make
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/libalcommon.a
+dependencies/openal/libopenal.so.1.23.1: /usr/lib/libsndio.so
 dependencies/openal/libopenal.so.1.23.1: dependencies/openal/CMakeFiles/OpenAL.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_93) "Linking CXX shared library libopenal.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_94) "Linking CXX shared library libopenal.so"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OpenAL.dir/link.txt --verbose=$(VERBOSE)
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal && $(CMAKE_COMMAND) -E cmake_symlink_library libopenal.so.1.23.1 libopenal.so.1 libopenal.so
 

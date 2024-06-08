@@ -1,2 +1,2 @@
-/usr/bin/llvm-ar qc libstb_image.a CMakeFiles/stb_image.dir/stb_image_impl.c.o
-/usr/bin/llvm-ranlib libstb_image.a
+/usr/bin/ar qc libstb_image.a CMakeFiles/stb_image.dir/stb_image_impl.c.o
+/usr/bin/ranlib libstb_image.a

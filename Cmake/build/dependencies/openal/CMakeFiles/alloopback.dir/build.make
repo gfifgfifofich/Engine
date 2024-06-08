@@ -92,7 +92,7 @@ alloopback_EXTERNAL_OBJECTS =
 
 dependencies/openal/alloopback: dependencies/openal/CMakeFiles/alloopback.dir/examples/alloopback.c.o
 dependencies/openal/alloopback: dependencies/openal/CMakeFiles/alloopback.dir/build.make
-dependencies/openal/alloopback: /usr/lib/libSDL2-2.0.so.0.3000.2
+dependencies/openal/alloopback: /usr/lib/libSDL2-2.0.so.0.3000.3
 dependencies/openal/alloopback: dependencies/openal/libal-excommon.a
 dependencies/openal/alloopback: dependencies/openal/libopenal.so.1.23.1
 dependencies/openal/alloopback: dependencies/openal/CMakeFiles/alloopback.dir/link.txt

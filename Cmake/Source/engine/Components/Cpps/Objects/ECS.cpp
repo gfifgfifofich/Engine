@@ -6,6 +6,7 @@
 #include "../../Include/Objects/Particle.h"
 #include "../../Include/UI.h"
 #include "../../Include/Collisions.h"
+#include "../../Include/sounds.h"
 #include "../../Include/Objects/ECS.h"
 #include "../../Include/Objects/Scene.h"
 
@@ -23,7 +24,7 @@ TextureObject::TextureObject()
 }
 TextureObject::~TextureObject() 
 {
-	texture.Delete();
+	UnLoad();
 }
 MaterialObject::MaterialObject()
 {
@@ -44,6 +45,15 @@ AnimationGraph::AnimationGraph()
 {
 	type =AssetType::ANIMATIONGRAPH;
 	Name = "AnimationGraph";
+}
+SoundAsset::SoundAsset()
+{
+	type =AssetType::SOUNDASSET;
+	Name = "SoundAsset";
+}
+SoundAsset::~SoundAsset()
+{
+	UnLoad();
 }
 
 UI_DataPack Asset::GetUIDataAsset()
@@ -66,6 +76,8 @@ std::vector<UI_DataPack> Asset::GetUIData()
 	return data;
 }
 void Asset::CustomUIDraw(glm::vec2* Corner, float Xstep,float step) {};
+void Asset::Load() {};
+void Asset::UnLoad() {};
 void Asset::Ready() {};
 void Asset::Process(float dt) {};
 void Asset::DebugProcess(float dt) {};
@@ -94,10 +106,14 @@ std::vector<UI_DataPack> TextureObject::GetUIData()
 	data.push_back(GetUIDataTextureObject());
 	return data;
 }
-void TextureObject::Ready() 
+void TextureObject::Load() 
 {
 	texture.Load();
 }
+void TextureObject::UnLoad() 
+{
+	texture.Delete();
+};
 void TextureObject::DrawPreview(glm::vec2 ui_position, glm::vec2 size) 
 {
 	if(texture.texture !=NULL && glIsTexture(texture.texture))
@@ -267,7 +283,9 @@ void ParticleAsset::DrawProcess(float dt)
 		pe.material.Texture=NULL;
 		pe.material.NormalMap=NULL;
 	}
+	
 	pe.Process(dt);
+
 	pe.CaptureSpheres.clear();
 	pe.SpheresOfInfluence.clear();
 	pe.CubesOfInfluence.clear();
@@ -278,6 +296,49 @@ void ParticleAsset::DrawProcess(float dt)
 	pe.LightCubes.clear();
 };
 void ParticleAsset::DrawPreview(glm::vec2 ui_position, glm::vec2 size)
+{
+	UI_DrawCircle(ui_position,size.x,glm::vec4(1.0f),false,NULL,-100);
+}
+
+void SoundAsset::Load()
+{
+	if(Sound>=0)
+		UnLoad();
+	Sound = LoadSound(SoundName.c_str());
+}
+void SoundAsset::UnLoad()
+{
+	if(Sound<0)
+		DeleteSound(&Sound);
+}
+void SoundAsset::DrawProcess(float dt)
+{
+	if(PrevSoundName!=SoundName)
+	{
+		Load();
+		PrevSoundName = SoundName;
+	}
+}
+UI_DataPack SoundAsset::GetUIDataSoundAsset()
+{
+	UI_DataPack uidp;
+	uidp.name = "Sound";
+	uidp.textdata.push_back(&SoundName);
+	uidp.textdatanames.push_back("FileName");	
+
+
+	return uidp;
+}
+std::vector<UI_DataPack> SoundAsset::GetUIData()
+{
+
+	std::vector<UI_DataPack> data;
+	data.push_back(GetUIDataAsset());
+	data.push_back(GetUIDataSoundAsset());
+	
+	return data;
+}
+void SoundAsset::DrawPreview(glm::vec2 ui_position, glm::vec2 size)
 {
 	UI_DrawCircle(ui_position,size.x,glm::vec4(1.0f),false,NULL,-100);
 }
@@ -477,6 +538,9 @@ Node::Node()
 	type = NodeType::NODE;
 	Name = "Node";
 }
+Node::~Node()
+{
+}
 void Object::ObjectPreconstructor()
 {
 	UsedAssets.push_back((Asset**)&Mater);
@@ -526,6 +590,23 @@ ParticleObject::ParticleObject()
 	Name = "ParticleObject";
 	UsedAssets.push_back((Asset**)&partAsset);
 }
+SoundSource::SoundSource()
+{
+	type = NodeType::SOUNDSOURCE;
+	Name = "SoundSource";
+	UsedAssets.push_back((Asset**)&sound);
+}
+SoundSource::~SoundSource()
+{
+	if(soundSource>=0)
+	{
+		StopSource(&soundSource);
+		DeleteSource(&soundSource);
+	} 
+}
+
+
+
 
 
 UI_DataPack Node::GetUIDataNode()
@@ -552,6 +633,8 @@ void Node::CustomUIDraw(glm::vec2* Corner, float Xstep,float step) {};
 void Node::Ready() {};
 void Node::PreProcess() {};
 void Node::Process(float dt) {};
+void Node::MTPreProcess() {};
+void Node::MTProcess(float dt) {};
 void Node::DrawProcess(float dt) {};
 void Node::DebugProcess(float dt) {};
 void Node::Draw() {};
@@ -591,7 +674,7 @@ void Object::ObjectUpdateMaterial()
 	if(!texexists)
 		Mater = NULL;
 }
-void Object::PreProcess() 
+void Object::MTPreProcess()
 {
 	ObjectUpdateMaterial();
 }
@@ -657,7 +740,7 @@ void Object::DebugDraw()
 void LightSourceObject::Ready()
 {
 }
-void LightSourceObject::PreProcess()
+void LightSourceObject::MTPreProcess()
 {
 	bool texexists = false;
 	for(auto tex : AvailableTextures)
@@ -741,12 +824,13 @@ std::vector<UI_DataPack> CollisionObject::GetUIData()
 void CO_Ball::Ready()
 {
 }
-void CO_Ball::PreProcess()
+void CO_Ball::MTPreProcess()
 {
 	ObjectUpdateMaterial();
 	b.position = position;
+	b.bounciness = 0.0f;
+	b.roughness = 0.0f;
 }
-
 UI_DataPack CO_Ball::GetUIDataCO_Ball()
 {
 	UI_DataPack uidp;
@@ -793,7 +877,7 @@ bool CO_Ball::SelectionCheck(glm::vec2 point)
 void CO_Cube::Ready()
 {
 }
-void CO_Cube::PreProcess()
+void CO_Cube::MTPreProcess()
 {
 	ObjectUpdateMaterial();
 	c.position = position;
@@ -1150,3 +1234,195 @@ void ParticleObject::DebugDraw()
 }
 
 
+UI_DataPack SoundSource::GetUIDataSoundSource()
+{
+	UI_DataPack uidp;
+	uidp.name = "SoundSource";
+	uidp.textdata.push_back(&SoundAssetName);
+	uidp.textdatanames.push_back("SoundAsset");	
+
+	uidp.bdata.push_back(&Looping);
+	uidp.bdatanames.push_back("Looping");
+
+	uidp.bdata.push_back(&CamRelative);
+	uidp.bdatanames.push_back("CamRelative");
+
+
+	uidp.fdata.push_back(&gain);
+	uidp.fdatanames.push_back("Gain");
+
+	uidp.fdata.push_back(&pitch);
+	uidp.fdatanames.push_back("Pitch");
+	
+	uidp.v2data.push_back(&velocity);
+	uidp.v2datanames.push_back("Velocity");
+
+	uidp.fdata.push_back(&HalfVolumeDist);
+	uidp.fdatanames.push_back("HalfVolumeDist");
+
+	uidp.fdata.push_back(&RollOff);
+	uidp.fdatanames.push_back("RollOff");
+
+	uidp.fdata.push_back(&MaxDist);
+	uidp.fdatanames.push_back("MaxDist");
+
+	
+
+	return uidp;
+}
+std::vector<UI_DataPack> SoundSource::GetUIData()
+{
+	std::vector<UI_DataPack> data;
+	data.push_back(GetUIDataNode());
+	data.push_back(GetUIDataSoundSource());
+	return data;
+}
+void SoundSource::CustomUIDraw(glm::vec2* Corner, float Xstep,float step)
+{
+	bool b = false;
+	Corner->y += UI_button(&b ,"PlayOnce", *Corner + glm::vec2(Xstep,0.0f)).y * -1.0f - step;
+	if(b)
+	{
+		if(soundSource>=0)
+		{
+			PlaySource(&soundSource);
+			//PlaySound(&sound->Sound,{0.0f,0.0f});
+		}
+	}
+	b = false;
+	Corner->y += UI_button(&b ,"Reload", *Corner + glm::vec2(Xstep,0.0f)).y * -1.0f - step;
+	if(b)
+	{
+		if(soundSource>=0)
+		{
+			DeleteSource(&soundSource);
+			GenSource(&soundSource);
+			SetSourceSound(&soundSource,&sound->Sound);
+		}
+	}
+}
+void SoundSource::MTPreProcess()
+{	
+	bool texexists = false;
+	for(auto tex : AvailableSoundAssets)
+	{
+		
+		if(tex->Name == SoundAssetName && !texexists && !tex->Delete)
+		{
+			sound = tex;
+			texexists=true;
+			break;
+		}
+	}
+
+	if(!texexists)
+	{
+		sound = NULL;
+		soundid = -1;
+		prevsound = -1;
+		changedSound = true;
+		return;
+	}
+
+	changedSound = prevsound != sound->Sound;
+	prevsound =sound->Sound; 
+	soundid = sound->Sound;
+	if(prevposition != position)
+	{
+		prevposition = position;
+		SetSourcePosition(&soundSource,position);
+	}
+	if(prevgain != gain)
+	{
+		prevgain = gain;
+		SetSourceGain(&soundSource,gain);
+	}
+	if(prevpitch != pitch)
+	{
+		prevpitch = pitch;
+		SetSourcePitch(&soundSource,pitch);
+	}
+	if(prevLooping != Looping)
+	{
+		prevLooping = Looping;
+		SetSourceLooping(&soundSource,Looping);
+	}
+	if(prevvelocity != velocity)
+	{
+		prevvelocity = velocity;
+		SetSourceVelocity(&soundSource,{velocity,0.0f});
+	}
+	alGetSourcef(soundSource,AL_SEC_OFFSET,&Time);
+
+	if(HalfVolumeDist != prevHalfVolumeDist)
+	{
+		prevHalfVolumeDist = HalfVolumeDist;
+		SetSourceRefDist(&soundSource, HalfVolumeDist);
+	}
+	if(RollOff != prevRollOff)
+	{
+		prevRollOff = RollOff;
+		SetSourceRollOff(&soundSource, RollOff);
+	}
+	if(MaxDist != prevMaxDist)
+	{
+		prevMaxDist = MaxDist;
+		SetSourceMaxDistance(&soundSource, MaxDist);
+	}
+	if(CamRelative != prevCamRelative)
+	{
+		prevCamRelative = CamRelative;
+		SetSourceRelative(&soundSource,CamRelative);
+	}
+
+}
+void SoundSource::PreProcess()
+{
+	if(sound==NULL)
+	{
+		if(soundSource>=0)
+		{
+			DeleteSource(&soundSource);
+			soundSource = -1;
+			soundid = -1;
+		}
+		return;
+	}
+
+	if(soundSource<0)
+		GenSource(&soundSource);
+
+	if(changedSound)
+	{
+		if(soundSource<0)
+			DeleteSource(&soundSource);
+		GenSource(&soundSource);
+		SetSourceSound(&soundSource,&sound->Sound);
+		prevposition = position;
+		SetSourcePosition(&soundSource,position);
+		prevgain = gain;
+		SetSourceGain(&soundSource,gain);
+		prevpitch = pitch;
+		SetSourcePitch(&soundSource,pitch);
+		prevLooping = Looping;
+		SetSourceLooping(&soundSource,Looping);
+		prevvelocity = velocity;
+		SetSourceVelocity(&soundSource,{velocity,0.0f});
+		prevHalfVolumeDist = HalfVolumeDist;
+		SetSourceRefDist(&soundSource, HalfVolumeDist);
+		prevRollOff = RollOff;
+		SetSourceMaxDistance(&soundSource, RollOff);
+		prevMaxDist = MaxDist;
+		SetSourceRollOff(&soundSource, MaxDist);
+		prevCamRelative = CamRelative;
+		SetSourceRelative(&soundSource,CamRelative);
+	}
+	
+
+
+}
+void SoundSource::DebugDraw()
+{
+
+	DrawCircle(position,1.0f,{0.0f,2.0f,0.0f,1.0f});
+}

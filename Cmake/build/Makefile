@@ -1331,6 +1331,30 @@ Source/engine/Components/Cpps/UI.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.s
 .PHONY : Source/engine/Components/Cpps/UI.cpp.s
 
+Source/engine/Components/Cpps/sounds.o: Source/engine/Components/Cpps/sounds.cpp.o
+.PHONY : Source/engine/Components/Cpps/sounds.o
+
+# target to build an object file
+Source/engine/Components/Cpps/sounds.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/sounds.cpp.o
+.PHONY : Source/engine/Components/Cpps/sounds.cpp.o
+
+Source/engine/Components/Cpps/sounds.i: Source/engine/Components/Cpps/sounds.cpp.i
+.PHONY : Source/engine/Components/Cpps/sounds.i
+
+# target to preprocess a source file
+Source/engine/Components/Cpps/sounds.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/sounds.cpp.i
+.PHONY : Source/engine/Components/Cpps/sounds.cpp.i
+
+Source/engine/Components/Cpps/sounds.s: Source/engine/Components/Cpps/sounds.cpp.s
+.PHONY : Source/engine/Components/Cpps/sounds.s
+
+# target to generate assembly for a file
+Source/engine/Components/Cpps/sounds.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Engine.dir/build.make CMakeFiles/Engine.dir/Source/engine/Components/Cpps/sounds.cpp.s
+.PHONY : Source/engine/Components/Cpps/sounds.cpp.s
+
 dependencies/imgui/imgui.o: dependencies/imgui/imgui.cpp.o
 .PHONY : dependencies/imgui/imgui.o
 
@@ -1636,6 +1660,9 @@ help:
 	@echo "... Source/engine/Components/Cpps/UI.o"
 	@echo "... Source/engine/Components/Cpps/UI.i"
 	@echo "... Source/engine/Components/Cpps/UI.s"
+	@echo "... Source/engine/Components/Cpps/sounds.o"
+	@echo "... Source/engine/Components/Cpps/sounds.i"
+	@echo "... Source/engine/Components/Cpps/sounds.s"
 	@echo "... dependencies/imgui/imgui.o"
 	@echo "... dependencies/imgui/imgui.i"
 	@echo "... dependencies/imgui/imgui.s"

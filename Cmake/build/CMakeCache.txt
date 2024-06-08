@@ -261,10 +261,10 @@ BZIP2_LIBRARY_DEBUG:FILEPATH=BZIP2_LIBRARY_DEBUG-NOTFOUND
 BZIP2_LIBRARY_RELEASE:FILEPATH=/usr/lib/libbz2.so
 
 //Path to a program.
-CMAKE_ADDR2LINE:FILEPATH=/usr/bin/llvm-addr2line
+CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 
 //Path to a program.
-CMAKE_AR:FILEPATH=/usr/bin/llvm-ar
+CMAKE_AR:FILEPATH=/usr/bin/ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
@@ -274,13 +274,13 @@ CMAKE_BUILD_TYPE:STRING=
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //LLVM archiver
-CMAKE_CXX_COMPILER_AR:FILEPATH=/usr/bin/llvm-ar
+CMAKE_CXX_COMPILER_AR:FILEPATH=CMAKE_CXX_COMPILER_AR-NOTFOUND
 
 //`clang-scan-deps` dependency scanner
 CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS:FILEPATH=/usr/bin/clang-scan-deps
 
 //Generate index for LLVM archive
-CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/usr/bin/llvm-ranlib
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=CMAKE_CXX_COMPILER_RANLIB-NOTFOUND
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -298,13 +298,13 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //LLVM archiver
-CMAKE_C_COMPILER_AR:FILEPATH=/usr/bin/llvm-ar
+CMAKE_C_COMPILER_AR:FILEPATH=CMAKE_C_COMPILER_AR-NOTFOUND
 
 //`clang-scan-deps` dependency scanner
 CMAKE_C_COMPILER_CLANG_SCAN_DEPS:FILEPATH=/usr/bin/clang-scan-deps
 
 //Generate index for LLVM archive
-CMAKE_C_COMPILER_RANLIB:FILEPATH=/usr/bin/llvm-ranlib
+CMAKE_C_COMPILER_RANLIB:FILEPATH=CMAKE_C_COMPILER_RANLIB-NOTFOUND
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -325,7 +325,7 @@ CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 CMAKE_DEBUG_POSTFIX:STRING=
 
 //Path to a program.
-CMAKE_DLLTOOL:FILEPATH=/usr/bin/llvm-dlltool
+CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
 
 //Flags used by the linker during all build types.
 CMAKE_EXE_LINKER_FLAGS:STRING=
@@ -426,13 +426,13 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=/usr/bin/llvm-nm
+CMAKE_NM:FILEPATH=/usr/bin/nm
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=/usr/bin/llvm-objcopy
+CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=/usr/bin/llvm-objdump
+CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -459,10 +459,10 @@ CMAKE_PROJECT_VERSION_PATCH:STATIC=0
 CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //Path to a program.
-CMAKE_RANLIB:FILEPATH=/usr/bin/llvm-ranlib
+CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
 
 //Path to a program.
-CMAKE_READELF:FILEPATH=/usr/bin/llvm-readelf
+CMAKE_READELF:FILEPATH=/usr/bin/readelf
 
 //Flags used by the linker during the creation of shared libraries
 // during all build types.
@@ -512,7 +512,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=/usr/bin/llvm-strip
+CMAKE_STRIP:FILEPATH=/usr/bin/strip
 
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
@@ -826,10 +826,10 @@ SNDFILE_INCLUDE_DIR:PATH=/usr/include
 SNDFILE_LIBRARY:FILEPATH=/usr/lib/libsndfile.so
 
 //The SoundIO include directory
-SOUNDIO_INCLUDE_DIR:PATH=SOUNDIO_INCLUDE_DIR-NOTFOUND
+SOUNDIO_INCLUDE_DIR:PATH=/usr/include
 
 //The SoundIO library
-SOUNDIO_LIBRARY:FILEPATH=SOUNDIO_LIBRARY-NOTFOUND
+SOUNDIO_LIBRARY:FILEPATH=/usr/lib/libsndio.so
 
 //Value Computed by CMake
 STB_IMAGE_BINARY_DIR:STATIC=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/stb_image
@@ -1099,10 +1099,10 @@ X11_xcb_dri3_INCLUDE_PATH:PATH=/usr/include
 X11_xcb_dri3_LIB:FILEPATH=/usr/lib/libxcb-dri3.so
 
 //Path to a file.
-X11_xcb_errors_INCLUDE_PATH:PATH=X11_xcb_errors_INCLUDE_PATH-NOTFOUND
+X11_xcb_errors_INCLUDE_PATH:PATH=/usr/include
 
 //Path to a library.
-X11_xcb_errors_LIB:FILEPATH=X11_xcb_errors_LIB-NOTFOUND
+X11_xcb_errors_LIB:FILEPATH=/usr/lib/libxcb-errors.so
 
 //Path to a file.
 X11_xcb_ewmh_INCLUDE_PATH:PATH=/usr/include
@@ -1440,7 +1440,7 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=29
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=3
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -1653,9 +1653,9 @@ FIND_PACKAGE_MESSAGE_DETAILS_BrotliDec:INTERNAL=[/usr/include][/usr/lib/libbrotl
 //Details about finding FFmpeg
 FIND_PACKAGE_MESSAGE_DETAILS_FFmpeg:INTERNAL=[/usr/lib/libavformat.so;/usr/lib/libavcodec.so;/usr/lib/libavutil.so;/usr/lib/libswscale.so;/usr/lib/libswresample.so;/usr/lib/libz.so][/usr/include][/usr/lib/libavformat.so][/usr/include][/usr/lib/libavcodec.so][/usr/include][/usr/lib/libavutil.so][/usr/include][/usr/lib/libswscale.so][/usr/include][/usr/lib/libswresample.so][/usr/include][v()]
 //Details about finding Git
-FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.44.0()]
+FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.45.1()]
 //Details about finding HarfBuzz
-FIND_PACKAGE_MESSAGE_DETAILS_HarfBuzz:INTERNAL=[/usr/include/harfbuzz][/usr/lib/libharfbuzz.so][ON][v8.4.0(2.0.0)]
+FIND_PACKAGE_MESSAGE_DETAILS_HarfBuzz:INTERNAL=[/usr/include/harfbuzz][/usr/lib/libharfbuzz.so][ON][v8.5.0(2.0.0)]
 //Details about finding JACK
 FIND_PACKAGE_MESSAGE_DETAILS_JACK:INTERNAL=[/usr/lib/libjack.so][/usr/include][v()]
 //Details about finding MySOFA
@@ -1674,6 +1674,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_PortAudio:INTERNAL=[/usr/lib/libportaudio.so][/usr/
 FIND_PACKAGE_MESSAGE_DETAILS_PulseAudio:INTERNAL=[/usr/lib/libpulse.so][/usr/include][v17.0.0()]
 //Details about finding SndFile
 FIND_PACKAGE_MESSAGE_DETAILS_SndFile:INTERNAL=[/usr/lib/libsndfile.so][/usr/include][v()]
+//Details about finding SoundIO
+FIND_PACKAGE_MESSAGE_DETAILS_SoundIO:INTERNAL=[/usr/lib/libsndio.so][/usr/include][v()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding X11
@@ -2093,7 +2095,7 @@ PC_HARFBUZZ_STATIC_LIBS:INTERNAL=
 PC_HARFBUZZ_STATIC_LIBS_L:INTERNAL=
 PC_HARFBUZZ_STATIC_LIBS_OTHER:INTERNAL=
 PC_HARFBUZZ_STATIC_LIBS_PATHS:INTERNAL=
-PC_HARFBUZZ_VERSION:INTERNAL=8.4.0
+PC_HARFBUZZ_VERSION:INTERNAL=8.5.0
 PC_HARFBUZZ_harfbuzz_INCLUDEDIR:INTERNAL=
 PC_HARFBUZZ_harfbuzz_LIBDIR:INTERNAL=
 PC_HARFBUZZ_harfbuzz_PREFIX:INTERNAL=
@@ -2233,7 +2235,7 @@ PIPEWIRE_STATIC_LIBS:INTERNAL=
 PIPEWIRE_STATIC_LIBS_L:INTERNAL=
 PIPEWIRE_STATIC_LIBS_OTHER:INTERNAL=
 PIPEWIRE_STATIC_LIBS_PATHS:INTERNAL=
-PIPEWIRE_VERSION:INTERNAL=1.0.5
+PIPEWIRE_VERSION:INTERNAL=1.0.6
 PIPEWIRE_libpipewire-0.3_INCLUDEDIR:INTERNAL=
 PIPEWIRE_libpipewire-0.3_LIBDIR:INTERNAL=
 PIPEWIRE_libpipewire-0.3_PREFIX:INTERNAL=

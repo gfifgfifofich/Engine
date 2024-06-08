@@ -1550,6 +1550,7 @@ void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq ,
 
 	bool even = false;
 	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, Size, Size);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[1]);
@@ -1631,6 +1632,7 @@ void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape,bool filter
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
 
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 	UseShader(GenPrimitiveTextureShader);
@@ -1678,6 +1680,7 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape )
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
 
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 
@@ -1720,6 +1723,7 @@ void GenLightSphereTexture(unsigned int* texture1, int Size)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 
@@ -1758,6 +1762,7 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glViewport(0, 0, Size, Size);
 

@@ -14,7 +14,7 @@ Anim_Pulse_0000000000
 	Type 0
 	backforth 1
 	paramName Position
-	t 0.464398
+	t 0.078644
 }
 Asset_0000000001
 {
@@ -23,7 +23,7 @@ Asset_0000000001
 	Name Asset
 	Type 0
 	texture_FileName 
-	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
+	texture_Gradient_Color1 4.692422 1.000000 1.000000 1.000000
 	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
 	texture_Noize_Frequency 10.000000
 	texture_Noize_Layers 3
@@ -157,7 +157,7 @@ Floor_0000000003
 	Color 1.000000 1.000000 1.000000 1.000000
 	Height 12.000000
 	ID 0
-	Material no
+	Material 
 	Name Floor
 	Position -30.988621 -23.207428
 	Rotation 0.000000
@@ -175,7 +175,7 @@ FogPart_0000000007
 	Additive 0
 	Class 3
 	DrawToNormalMap 0
-	EndColor 1.000002 0.700000 1.009999 -0.000001
+	EndColor 1.000002 0.700000 1.009999 0.004804
 	EndSize 48.399994 41.199997
 	ID 0
 	InitialOrbitalVelocity 0.000000
@@ -189,14 +189,14 @@ FogPart_0000000007
 	RotationDamper 0.000000
 	RotationRandomness 1.000000
 	RotationVelocity 0.000000
-	StartColor 1.000003 0.020004 1.000003 0.840000
+	StartColor 1.000003 0.020004 1.000003 3.440821
 	StartSize 0.000000 0.000000
 	Type 0
 	VelocityDamper 3.800000
 	VelocityRandomness -0.990000 6.130000 -1.040000 1.400000
 	Z_Index -1
 	influenced 1
-	lifetime 10.000000
+	lifetime 15.137502
 	lifetimeRandomness 0.020000
 	lighted 1
 }
@@ -216,7 +216,7 @@ LS_0000000004
 	Depth 0.020000
 	ID 0
 	Name LS
-	Position -60.336060 76.957870
+	Position -74.350266 70.902184
 	Rotation 0.000000
 	Scale 485.009521 255.575531
 	Texture No_texture
@@ -323,9 +323,9 @@ Noize_0000000010
 	texture_FileName 
 	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
 	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
-	texture_Noize_Frequency 7.929999
-	texture_Noize_Layers 3
-	texture_Size 64.000000
+	texture_Noize_Frequency 5.008593
+	texture_Noize_Layers 6
+	texture_Size 200.000000
 	texture_Type 1
 	texture_filter 0
 }
@@ -338,7 +338,7 @@ PNCS_0000000009
 	Name PNCS
 	ParticleAsset Sparks
 	ParticleObjectType 7
-	Position 202.866180 132.118439
+	Position 190.213455 112.375534
 	Radius 60.008064
 	Type 1
 	velocity 0.099916 -0.010002
@@ -351,11 +351,33 @@ PartLight_0000000010
 	Name PartLight
 	ParticleAsset FogPart
 	ParticleObjectType 5
-	Position -124.332703 76.677528
+	Position -111.081100 54.571369
 	Radius 77.000000
 	Type 1
 }
-Sparks_0000000011
+SoundSource_0000000011
+{
+	Class 8
+	Gain 2.416484
+	ID 0
+	Looping 0
+	Name SoundSource
+	Pitch 0.251406
+	Position 19.253651 -6.424344
+	SoundAsset Sound
+	Type 1
+	Velocity 0.005617 0.007706
+	Z_Index 717
+}
+Sound_0000000011
+{
+	Class 5
+	FileName ./Sounds/yepp.wav
+	ID 0
+	Name Sound
+	Type 0
+}
+Sparks_0000000012
 {
 	Acceleration 0.000000 0.000000
 	Additive 1
@@ -367,7 +389,7 @@ Sparks_0000000011
 	InitialOrbitalVelocity 0.199997
 	InitialRotation 0.000000
 	InitialVelocity 0.000000 0.000000
-	Material 
+	Material CirMat
 	Name Sparks
 	OrbitalVelocityRandomness 2.200000
 	ParticleEmiterType LINE
@@ -386,7 +408,7 @@ Sparks_0000000011
 	lifetimeRandomness 0.800000
 	lighted 0
 }
-particleNode_0000000011
+particleNode_0000000012
 {
 	Class 7
 	ID 0
@@ -400,7 +422,7 @@ particleNode_0000000011
 	tick 0.016992
 	velocity -0.009996 0.000000
 }
-particleNode_0000000012
+particleNode_0000000013
 {
 	Class 7
 	ID 0

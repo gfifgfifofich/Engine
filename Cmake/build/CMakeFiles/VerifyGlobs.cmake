@@ -52,6 +52,7 @@ set(OLD_GLOB
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/UI.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/sounds.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
@@ -91,6 +92,7 @@ set(OLD_GLOB
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Shader.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/Text.cpp"
   "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/UI.cpp"
+  "/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/Source/engine/Components/Cpps/sounds.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

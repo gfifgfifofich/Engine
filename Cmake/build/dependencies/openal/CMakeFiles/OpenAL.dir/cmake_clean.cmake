@@ -76,6 +76,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenAL.dir/alc/backends/portaudio.cpp.o.d"
   "CMakeFiles/OpenAL.dir/alc/backends/pulseaudio.cpp.o"
   "CMakeFiles/OpenAL.dir/alc/backends/pulseaudio.cpp.o.d"
+  "CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o"
+  "CMakeFiles/OpenAL.dir/alc/backends/sndio.cpp.o.d"
   "CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o"
   "CMakeFiles/OpenAL.dir/alc/backends/wave.cpp.o.d"
   "CMakeFiles/OpenAL.dir/alc/context.cpp.o"

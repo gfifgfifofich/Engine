@@ -26,8 +26,8 @@ public:
 void PreReady()
 {
     
-    NodeConstructors.insert({8,[](){ return (Node*)new CustomNode();}});
-    NodeConstructorNames.insert({8,"Customstussdsdsd"});
+    NodeConstructors.insert({9,[](){ return (Node*)new CustomNode();}});
+    NodeConstructorNames.insert({9,"Customstussdsdsd"});
 }
 void Ready()
 {
@@ -35,6 +35,11 @@ void Ready()
 }
 
 void Process(float dt)
+{
+    GameScene->Draw();
+}
+
+void Rescale(int newWindth,int newHeight)
 {
 
 }

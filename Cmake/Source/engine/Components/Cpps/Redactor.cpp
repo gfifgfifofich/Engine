@@ -1,5 +1,9 @@
 #include "../Redactor.h"
+#include <thread>
+#include <condition_variable>
+#include <mutex>
 
+#include "../Include/sounds.h"
 
 //std::string MapFileName =  "Maps/MenuScene.sav";
 //std::string MapFileName =  "Maps/base.sav";
@@ -37,6 +41,90 @@
 	Corner.y += UI_Drag(&CurrentShader->uniformvec4[CurrentShader->Uniforms[i].type_id].w, "a", Corner + glm::vec2(xsize, 0.0f), 0.01f, { 40.0f,15.0f }).y * -1.0f - step;
 */
 
+
+
+bool _Scenethreads_stop;
+
+std::thread* _Scenethreads;
+std::condition_variable* _SceneConVars;
+std::mutex* _SceneMutexes;
+std::vector<int> _ScenethreadsStates;// 1 waiting | 0 working | -1 done
+   
+
+void _Scenethead_Process(int thr);
+void _StartScenethread(int t);
+void _StartScenethreads();
+void _DeleteScenethreads();
+void _mt_SceneProcess(int thr);
+
+void _Scenethead_Process(int thr)
+{
+	std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
+	_SceneConVars[thr].wait(lm);
+	_ScenethreadsStates[thr] = 0;
+	if(GameScene!=NULL)
+		_mt_SceneProcess(thr);
+	_ScenethreadsStates[thr]=1;
+}
+
+
+void _StartScenethread(int t)
+{
+	while(!_Scenethreads_stop)
+	{
+		_Scenethead_Process(t);
+	}
+	_ScenethreadsStates[t]=-1;
+}
+
+void _StartScenethreads()
+{
+	_Scenethreads_stop = false;
+	_SceneMutexes = new std::mutex[threadcount];
+	_SceneConVars = new std::condition_variable[threadcount];
+	_Scenethreads = new std::thread[threadcount];
+
+	for(int i=0;i<threadcount;i++)
+	{
+		_Scenethreads[i] = std::thread(_StartScenethread,i);
+		_ScenethreadsStates.push_back(1);
+	}
+}
+
+
+
+void _DeleteScenethreads()
+{
+	_Scenethreads_stop = true;
+	
+	for(int thr = 0;thr<threadcount;thr++)
+	{
+		_Scenethreads[thr].~thread();
+	}
+}
+
+bool Running = false;
+bool Paused = false;
+
+void _mt_SceneProcess(int thr)
+{
+	int step = GameScene->Nodes.size() / threadcount;
+	int begin = thr * step;
+	int end = (thr + 1) * step;
+	if (thr == 0)
+		begin =0;
+
+	if (thr == threadcount)
+		end = GameScene->Nodes.size() ;
+
+	for (int i = begin; i < end; i++)
+	{
+		GameScene->Nodes[i]->MTPreProcess();
+		if(!Paused && Running)
+			GameScene->Nodes[i]->MTProcess(GameScene->dt);
+	}
+}
+
 int InspectorWindowID;
 int ProjectWindowID;
 int ConsoleWindowID;
@@ -52,8 +140,6 @@ glm::vec2 Corner = { 0.0f,0.0f };
 glm::ivec3 tmpIndex = glm::ivec3(-1);
 int indexCreationState = 0;
 float Simulation_speed = 1.0f;
-bool Running = false;
-bool Paused = false;
 
 
 int NewObjectId = 0;
@@ -1428,7 +1514,7 @@ void On_Create()
 
 
 	sTesti[0] = 0;
-
+	Map.LoadAssets = true;
 	Map.LoadFrom(MapFileName);
 
 	
@@ -1446,6 +1532,7 @@ void On_Create()
 	GameScene = &Map;
 	Ready();
 	w->End();
+	AL_init();
 }
 
 glm::vec2 PrevMousePos = glm::vec2(0.0f);
@@ -1462,6 +1549,9 @@ std::string sTest[10];
 
 void On_Update()
 {
+	ProcessAL();
+
+
 	Window* w = GetWindow(SceneWindowID);
 	Window* iw = GetWindow(InspectorWindowID);
 	Window* pw = GetWindow(ProjectWindowID);
@@ -1575,7 +1665,7 @@ void On_Update()
 	cw->Draw(1003);
 
 	w->Position.x = (rightx + leftx) * 0.5f;
-	w->Position.y = (maxy + miny) * 0.5f - 35.0f;
+	w->Position.y = (maxy + miny) * 0.5f - 25.0f;
 
 	switch (SceneWindowSelection)
 	{
@@ -2236,105 +2326,65 @@ void On_Update()
 		GrabbedNodeID = -1;
 		grabbed = false;		
 	}
-	/*
-	if (RedactingParticlesEmiter  && CurrentParticleEmiter!=NULL )
-	{
-		for (int i = 0; i < CurrentParticleEmiter->SpheresOfInfluence.size(); i++)
-			DrawCircle(CurrentParticleEmiter->SpheresOfInfluence[i].position, CurrentParticleEmiter->SpheresOfInfluence[i].r, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->EmitionCircles.size(); i++)
-			DrawCircle(CurrentParticleEmiter->EmitionCircles[i].position, CurrentParticleEmiter->EmitionCircles[i].r, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->LightSpheres.size(); i++)
-			DrawCircle(CurrentParticleEmiter->LightSpheres[i].position, CurrentParticleEmiter->LightSpheres[i].r, glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->CubesOfInfluence.size(); i++)
-			DrawCube(CurrentParticleEmiter->CubesOfInfluence[i].position, CurrentParticleEmiter->CubesOfInfluence[i].scale, 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->EmitionCubes.size(); i++)
-			DrawCube(CurrentParticleEmiter->EmitionCubes[i].position, CurrentParticleEmiter->EmitionCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->LightCubes.size(); i++)
-			DrawCube(CurrentParticleEmiter->LightCubes[i].position, CurrentParticleEmiter->LightCubes[i].scale, 0.0f, glm::vec4(1.0f, 1.0f, 0.0f, 0.2f));
-
-		for (int i = 0; i < CurrentParticleEmiter->EmitionPoints.size(); i++)
-			DrawCircle(CurrentParticleEmiter->EmitionPoints[i].position, 10, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-		if (AddRedact  && ParticleObject != -1)
-		{
-			if (keys[GLFW_KEY_LEFT_SHIFT] && JustPressedLMB)
-			{
-				PrevMousePosition = MousePosition;
-				if (ParticleObject == 0)
-					CurrentParticleObject = CurrentParticleEmiter->AddSpheresOfInfluence(MousePosition, radius, { vel[0],vel[1] }, attracticve, AttractionForce);
-
-				if (ParticleObject == 1)
-					CurrentParticleObject = CurrentParticleEmiter->AddCubeOfInfluence(MousePosition, { size[0],size[1] }, { vel[0],vel[1] }, attracticve, AttractionForce);
-
-				if (ParticleObject == 2)
-					CurrentParticleObject = CurrentParticleEmiter->AddPointEmiter(MousePosition, { vel[0],vel[1] }, amount, tick);
-
-				if (ParticleObject == 3)
-					CurrentParticleObject = CurrentParticleEmiter->AddCircleEmiter(MousePosition, { vel[0],vel[1] }, radius, amount, tick);
-
-				if (ParticleObject == 4)
-					CurrentParticleObject = CurrentParticleEmiter->AddCubeEmiter(MousePosition, { size[0],size[1] }, { vel[0], vel[1] }, amount, tick);
-
-				if (ParticleObject == 5)
-					CurrentParticleObject = CurrentParticleEmiter->AddLightSphere(MousePosition, radius, { LightColor[0] ,LightColor[1] ,LightColor[2] ,LightColor[3] });
-
-				if (ParticleObject == 6)
-					CurrentParticleObject = CurrentParticleEmiter->AddLightCube(MousePosition, { size[0],size[1] }, { LightColor[0] ,LightColor[1] ,LightColor[2] ,LightColor[3] });
-
-			}
-			if (keys[GLFW_KEY_LEFT_SHIFT] && buttons[GLFW_MOUSE_BUTTON_1] && PrevMousePosition != MousePosition && CurrentParticleObject != -1)
-			{
-
-				if (ParticleObject == 0)
-					CurrentParticleEmiter->SpheresOfInfluence[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
-
-				if (ParticleObject == 1)
-				{
-					if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
-						CurrentParticleEmiter->CubesOfInfluence[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
-
-					CurrentParticleEmiter->CubesOfInfluence[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
-				}
-				if (ParticleObject == 2)
-					CurrentParticleEmiter->EmitionPoints[CurrentParticleObject].velocity = MousePosition - PrevMousePosition;
-
-				if (ParticleObject == 3)
-					CurrentParticleEmiter->EmitionCircles[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
-
-				if (ParticleObject == 4)
-				{
-					if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
-						CurrentParticleEmiter->EmitionCubes[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
-
-					CurrentParticleEmiter->EmitionCubes[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
-				}
-				if (ParticleObject == 5)
-					CurrentParticleEmiter->LightSpheres[CurrentParticleObject].r = length(MousePosition - PrevMousePosition);
-
-				if (ParticleObject == 6)
-				{
-					if ((MousePosition - PrevMousePosition).x != 0.0f && (MousePosition - PrevMousePosition).y != 0.0f)
-						CurrentParticleEmiter->LightCubes[CurrentParticleObject].scale = abs((MousePosition - PrevMousePosition)) * 0.5f;
-
-					CurrentParticleEmiter->LightCubes[CurrentParticleObject].position = (MousePosition + PrevMousePosition) * 0.5f;
-
-				}
-			}
-		}
-	}
-	*/
 	
-
 	GameScene = &Map;
+	Map.dt = delta * Simulation_speed;
+
+	
+	//listenerVel = { Entities[0]->CP.midvel.x ,Entities[0]->CP.midvel.y ,1.0f };
+	listenerPos.z = 1.0f / (CameraScale.x);
+	
+	UpdateListenerPosition();
 	Map.Update();
+	std::vector <int> iter;
+	iter.resize(threadcount);
+	
+	for (int i = 0; i < threadcount; i++)
+		iter[i] = i;
+	
+	
+	if (Map.Nodes.size() > 1000)
+	{
+		for(auto thr : iter)
+		{
+			std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
+			_SceneConVars[thr].notify_one();
+		}
+	
+		bool wait = true;
+		bool err = false;
+		while(wait)
+		{
+			wait = false;
+			for(int thr = 0;thr<threadcount;thr++)
+				{
+					if(_ScenethreadsStates[thr] == 0)
+						wait = true;
+					if(_ScenethreadsStates[thr] ==-1)
+						{
+							err = true;
+							break;
+						}
+				}
+			if(err)
+				break;
+		}
+		if(err)
+			std::cout<<"   Missing threads in Scene mt process";
+	}
+	else
+	{
+		int buf = threadcount;
+		threadcount=1;
+		_mt_SceneProcess(0);
+		threadcount = buf;
+	
+	}
 
 	if(!Paused && Running)
 	{
+		
+	
 		Map.Process(delta * Simulation_speed);
 		Process(delta * Simulation_speed);
 	}
@@ -2361,9 +2411,12 @@ void On_Update()
 int main()
 {
 	//initEngine();
-	initEngine("Redactor", 1920,1050,false);
-	//app.init("Redactor",1920,1080,true);
+	//initEngine("Redactor", 1920,1000,false);
+	_StartScenethreads();
+	initEngine("Redactor",1920,1080,true);
 	Map.SaveAs(MapFileName + ".back");
+	AL_Destroy();
+	_DeleteScenethreads();
 	Destroy();
 	return 0;
 }

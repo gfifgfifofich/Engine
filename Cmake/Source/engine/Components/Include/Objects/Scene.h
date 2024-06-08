@@ -6,7 +6,9 @@ class Scene
 public:
 	bool DrawCollisions = true;
 	bool DrawRegularScene = true;
+	bool LoadAssets = true;
 	
+	float dt = 0.017f;
 
 	std::vector<polygon*> Collision_polygons;
 	std::vector<cube*> Collision_cubes;

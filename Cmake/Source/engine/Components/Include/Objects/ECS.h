@@ -17,7 +17,8 @@
 				MovementSphere - TODO (Probably connected to movement through AnimationGraph?)
 				CaptureShapes
 				...
-
+		SoundSource
+		
 	
 	All assets are in one map, referenced by pointers.
 	when asset is marked for deletion, all pointers = NULL, next frame, asset is deleted
@@ -27,6 +28,7 @@
 			Albedo
 			NormalMap
 			...
+		Sound
 		Material
 		ParticleEmmiter
 		|AnimationGraph? (asset to manipulate some properties of items over time)
@@ -229,6 +231,7 @@ enum NodeType
 	CO_POLYGON = 5,
 	LIGHTSOURCEOBJECT = 6,
 	PARTICLEOBJECT = 7,
+	SOUNDSOURCE = 8,
 
 };
 enum AssetType
@@ -238,6 +241,7 @@ enum AssetType
 	MATERIALOBJECT = 2,
 	PARTICLEASSET = 3,
 	ANIMATIONGRAPH = 4,
+	SOUNDASSET = 5,
 };
 
 
@@ -258,6 +262,8 @@ public:
 	virtual std::vector<UI_DataPack> GetUIData();
 	virtual void CustomUIDraw(glm::vec2* Corner, float Xstep,float step);
 	virtual void Ready();
+	virtual void Load();
+	virtual void UnLoad();
 	virtual void Process(float dt);
 	virtual void DebugProcess(float dt);
 	virtual void DrawPreview(glm::vec2 ui_position, glm::vec2 size);
@@ -279,7 +285,8 @@ public:
 	virtual std::vector<UI_DataPack> GetUIData() override;
 
 
-	virtual void Ready() override;
+	virtual void Load() override;
+	virtual void UnLoad() override;
 	virtual void DrawPreview(glm::vec2 ui_position, glm::vec2 size) override;
 	virtual ~TextureObject() override;
 };
@@ -324,13 +331,32 @@ public:
 	virtual void CustomUIDraw(glm::vec2* Corner, float Xstep,float step);
 	void ObjectUpdateMaterial();
 	virtual void DrawProcess(float dt) override;
-	virtual void DrawPreview(glm::vec2 ui_position, glm::vec2 size);
-
+	virtual void DrawPreview(glm::vec2 ui_position, glm::vec2 size) override;
 
 };
 
 inline std::vector<ParticleAsset*> AvailableParticleAssets;
 
+class SoundAsset : public Asset
+{
+	std::string PrevSoundName="";
+public:
+	unsigned int Sound = -1;
+	std::string SoundName = "";
+
+	SoundAsset();
+	virtual ~SoundAsset() override;
+	UI_DataPack GetUIDataSoundAsset();
+	
+	virtual void Load() override;
+	virtual void UnLoad() override;
+	virtual void DrawProcess(float dt) override;
+	virtual std::vector<UI_DataPack> GetUIData() override;
+	virtual void DrawPreview(glm::vec2 ui_position, glm::vec2 size) override;
+
+};
+
+inline std::vector<SoundAsset*> AvailableSoundAssets;
 
 
 class Node
@@ -352,11 +378,13 @@ public:
 
 
 	Node();
-
+	virtual ~Node();
 	UI_DataPack GetUIDataNode();
 	virtual std::vector<UI_DataPack> GetUIData();
 	virtual void CustomUIDraw(glm::vec2* Corner, float Xstep,float step);
 	virtual void Ready();
+	virtual void MTPreProcess();
+	virtual void MTProcess(float dt);
 	virtual void PreProcess();
 	virtual void Process(float dt);
 	virtual void DrawProcess(float dt);
@@ -385,7 +413,7 @@ public:
 
 	UI_DataPack GetUIDataObject();
 	virtual std::vector<UI_DataPack> GetUIData() override;
-	virtual void PreProcess() override;
+	virtual void MTPreProcess() override;
 	virtual void Draw() override;
 	virtual bool SelectionCheck(glm::vec2 point) override;
 	virtual void DebugDraw() override;
@@ -402,7 +430,7 @@ public:
 
 	LightSourceObject();
 	virtual void Ready() override;
-	virtual void PreProcess() override;
+	virtual void MTPreProcess() override;
 
 	UI_DataPack GetUIDataLightSourceObject();
 	virtual std::vector<UI_DataPack> GetUIData() override;
@@ -431,7 +459,7 @@ public:
 	ball b;
 	CO_Ball();
 	virtual void Ready() override;
-	virtual void PreProcess() override;
+	virtual void MTPreProcess() override;
 
 	UI_DataPack GetUIDataCO_Ball();
 	virtual std::vector<UI_DataPack> GetUIData() override;
@@ -448,7 +476,7 @@ public:
 
 	CO_Cube();
 	virtual void Ready() override;
-	virtual void PreProcess() override;
+	virtual void MTPreProcess() override;
 	UI_DataPack GetUIDataCO_Cube();
 	virtual std::vector<UI_DataPack> GetUIData() override;
 	virtual bool SelectionCheck(glm::vec2 point) override;
@@ -548,6 +576,55 @@ public:
 
 };
 
+class SoundSource : public Node
+{
+	unsigned prevsound = -1;
+	unsigned soundid = -1;
+	bool changedSound = false;
+	bool prevLooping = false;
+	glm::vec2 prevvelocity = {0.0f,0.0f};
+	glm::vec2 prevposition = {0.0f,0.0f};
+	float prevgain = 1.0f;
+	float prevpitch = 1.0f;
+
+	float prevTime = 0.0;
+	float prevHalfVolumeDist = 1.0f; 
+	float prevRollOff = 1.0f;
+	float prevMaxDist = 1.0f;
+	bool prevCamRelative = false;
+
+	/*
+	AL_SEC_OFFSET
+	AL_REFERENCE_DISTANCE
+	AL_ROLLOFF_FACTOR
+	AL_MAX_DISTANCE
+	AL_SOURCE_RELATIVE
+	*/
+public:
+	float Time = 0.0;
+	float HalfVolumeDist = 1.0f; 
+	float RollOff = 1.0f;
+	float MaxDist = 1.0f;
+	bool CamRelative = false;
+	bool ContiniusPlay = false;
+	bool Looping = false;
+	glm::vec2 velocity = {0.0f,0.0f};
+	float gain = 1.0f;
+	float pitch = 1.0f;
+	unsigned int soundSource = -1;
+	SoundAsset* sound = NULL;
+	std::string SoundAssetName = "";
+	SoundSource();
+	virtual ~SoundSource() override; 
+	UI_DataPack GetUIDataSoundSource();
+	virtual std::vector<UI_DataPack> GetUIData() override;
+	virtual void CustomUIDraw(glm::vec2* Corner, float Xstep,float step) override;
+	virtual void MTPreProcess() override;
+	virtual void PreProcess() override;
+	virtual void DebugDraw() override;
+};
+
+
 
 inline std::map<int,Node*(*)()> NodeConstructors;
 inline std::map<int,std::string> NodeConstructorNames;
@@ -581,6 +658,9 @@ inline void _FillVectorsOfNodesAndAssets()
 	NodeConstructors.insert({NodeType::PARTICLEOBJECT,[](){return (Node*)new ParticleObject();}});
 	NodeConstructorNames.insert({NodeType::PARTICLEOBJECT,"ParticleObject"});
 
+	NodeConstructors.insert({NodeType::SOUNDSOURCE,[](){return (Node*)new SoundSource();}});
+	NodeConstructorNames.insert({NodeType::SOUNDSOURCE,"SoundSource"});
+
 
 
 	AssetConstructors.insert({AssetType::ASSET,[](){return new Asset();}});
@@ -597,4 +677,7 @@ inline void _FillVectorsOfNodesAndAssets()
 	
 	AssetConstructors.insert({AssetType::ANIMATIONGRAPH,[](){return (Asset*)new AnimationGraph();}});
 	AssetConstructorNames.insert({AssetType::ANIMATIONGRAPH,"AnimationGraph"});
+
+	AssetConstructors.insert({AssetType::SOUNDASSET,[](){return (Asset*)new SoundAsset();}});
+	AssetConstructorNames.insert({AssetType::SOUNDASSET,"SoundAsset"});
 }

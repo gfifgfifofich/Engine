@@ -38,7 +38,7 @@
 /* #undef HAVE_SOLARIS */
 
 /* Define if we have the SndIO backend */
-/* #undef HAVE_SNDIO */
+#define HAVE_SNDIO
 
 /* Define if we have the WASAPI backend */
 /* #undef HAVE_WASAPI */

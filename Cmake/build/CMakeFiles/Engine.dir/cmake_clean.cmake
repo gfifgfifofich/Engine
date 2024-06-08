@@ -59,6 +59,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/Text.cpp.o.d"
   "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o"
   "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/UI.cpp.o.d"
+  "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/sounds.cpp.o"
+  "CMakeFiles/Engine.dir/Source/engine/Components/Cpps/sounds.cpp.o.d"
   "CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o"
   "CMakeFiles/Engine.dir/dependencies/imgui/imgui.cpp.o.d"
   "CMakeFiles/Engine.dir/dependencies/imgui/imgui_demo.cpp.o"

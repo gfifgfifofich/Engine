@@ -92,7 +92,7 @@ alffplay_EXTERNAL_OBJECTS =
 
 dependencies/openal/alffplay: dependencies/openal/CMakeFiles/alffplay.dir/examples/alffplay.cpp.o
 dependencies/openal/alffplay: dependencies/openal/CMakeFiles/alffplay.dir/build.make
-dependencies/openal/alffplay: /usr/lib/libSDL2-2.0.so.0.3000.2
+dependencies/openal/alffplay: /usr/lib/libSDL2-2.0.so.0.3000.3
 dependencies/openal/alffplay: /usr/lib/libavformat.so
 dependencies/openal/alffplay: /usr/lib/libavcodec.so
 dependencies/openal/alffplay: /usr/lib/libavutil.so
