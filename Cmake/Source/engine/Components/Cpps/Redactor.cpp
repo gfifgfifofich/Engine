@@ -1457,6 +1457,10 @@ void On_Create()
 	_FillVectorsOfNodesAndAssets();
 	PreReady();
 
+	sTesti[0] = 0;
+	Map.LoadAssets = true;
+	Map.LoadFrom(MapFileName);
+
 	sh.FragmentPath = "engine/z1ShaderTests/Bald.frag";
 	sh.VertexPath = "engine/z1ShaderTests/default.vert";
 	sh.Load();
@@ -1513,9 +1517,6 @@ void On_Create()
 	w->RecalculateSize();
 
 
-	sTesti[0] = 0;
-	Map.LoadAssets = true;
-	Map.LoadFrom(MapFileName);
 
 	
 

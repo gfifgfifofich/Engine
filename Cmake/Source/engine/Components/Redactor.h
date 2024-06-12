@@ -12,7 +12,7 @@ inline Scene* GameScene;
 inline std::vector<std::string> AssetNames;
 inline std::vector<std::string> NodeNames;
 
-inline std::string MapFileName =  "./Scenes/Map.sav";
+inline std::string MapFileName =  "./Scenes/BackGround.sav";
 
 void PreReady();
 void Ready();

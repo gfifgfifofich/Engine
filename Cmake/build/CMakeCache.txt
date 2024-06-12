@@ -1440,7 +1440,7 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=29
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=3
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=5
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -1653,7 +1653,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_BrotliDec:INTERNAL=[/usr/include][/usr/lib/libbrotl
 //Details about finding FFmpeg
 FIND_PACKAGE_MESSAGE_DETAILS_FFmpeg:INTERNAL=[/usr/lib/libavformat.so;/usr/lib/libavcodec.so;/usr/lib/libavutil.so;/usr/lib/libswscale.so;/usr/lib/libswresample.so;/usr/lib/libz.so][/usr/include][/usr/lib/libavformat.so][/usr/include][/usr/lib/libavcodec.so][/usr/include][/usr/lib/libavutil.so][/usr/include][/usr/lib/libswscale.so][/usr/include][/usr/lib/libswresample.so][/usr/include][v()]
 //Details about finding Git
-FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.45.1()]
+FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.45.2()]
 //Details about finding HarfBuzz
 FIND_PACKAGE_MESSAGE_DETAILS_HarfBuzz:INTERNAL=[/usr/include/harfbuzz][/usr/lib/libharfbuzz.so][ON][v8.5.0(2.0.0)]
 //Details about finding JACK

@@ -360,14 +360,14 @@ SoundSource_0000000011
 	CamRelative 0
 	Class 8
 	Gain 2.416484
-	HalfVolumeDist 0.853672
+	HalfVolumeDist 0.000000
 	ID 0
 	Looping 0
-	MaxDist 0.443359
+	MaxDist 0.000000
 	Name SoundSource
-	Pitch 0.670000
-	Position -4.286175 -4.977746
-	RollOff 2.000000
+	Pitch 0.251406
+	Position 19.253651 -6.424344
+	RollOff 0.000000
 	SoundAsset Sound
 	Type 1
 	Velocity 0.005617 0.007706

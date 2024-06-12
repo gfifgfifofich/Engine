@@ -183,12 +183,10 @@ void Scene::LoadFrom(std::string filename)
 	for(int i =0;i<Nodes.size();i++)
 	{
 		delete Nodes[i];
-		Nodes[i] = NULL;
 	}
 	for(int i =0;i<Assets.size();i++)
 	{
 		delete Assets[i];
-		Assets[i] = NULL;
 	}
 	Nodes.clear();
 	Assets.clear();

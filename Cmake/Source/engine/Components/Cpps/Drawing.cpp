@@ -1606,8 +1606,12 @@ void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq ,
 }
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape,bool filter )
 {
-
-	glDeleteTextures(1, texture1);
+	if (*texture1 != NULL && glIsTexture(*texture1))
+	{
+		//std::cout << "DELETED " << *texture1 << "\n";
+		glDeleteTextures(1, texture1);
+		*texture1 = NULL;
+	}
 	unsigned int framebuffer, texture2;
 
 	glGenFramebuffers(1, &framebuffer);
@@ -1706,22 +1710,26 @@ void GenNormalMapTexture(unsigned int* texture1, int Size, int shape )
 }
 void GenLightSphereTexture(unsigned int* texture1, int Size)
 {
-
-	glDeleteTextures(1, texture1);
-	unsigned int framebuffer, texture2;
+	if (*texture1 != NULL && glIsTexture(*texture1))
+	{
+		//std::cout << "DELETED " << *texture1 << "\n";
+		glDeleteTextures(1, texture1);
+		*texture1 = NULL;
+	}
+	unsigned int framebuffer;
 
 	glGenFramebuffers(1, &framebuffer);
-	glGenTextures(1, &texture2);
+	glGenTextures(1, texture1);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glBindTexture(GL_TEXTURE_2D, texture2);
+	glBindTexture(GL_TEXTURE_2D, *texture1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture1, 0);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
@@ -1738,29 +1746,32 @@ void GenLightSphereTexture(unsigned int* texture1, int Size)
 
 	glDeleteFramebuffers(1, &framebuffer);
 
-	*texture1 = texture2;
-
-	glViewport(0, 0, WIDTH, HEIGHT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
+	glViewport(0, 0, WIDTH, HEIGHT);
 }
 void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Color2 , int Size )
 {
-	glDeleteTextures(1, texture1);
-	unsigned int framebuffer, texture2;
+	if (*texture1 != NULL && glIsTexture(*texture1))
+	{
+		//std::cout << "DELETED " << *texture1 << "\n";
+		glDeleteTextures(1, texture1);
+		*texture1 = NULL;
+	}
+	unsigned int framebuffer;
 
 	glGenFramebuffers(1, &framebuffer);
-	glGenTextures(1, &texture2);
+	glGenTextures(1, texture1);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glBindTexture(GL_TEXTURE_2D, texture2);
+	glBindTexture(GL_TEXTURE_2D, *texture1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, Size, Size, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture1, 0);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
@@ -1780,11 +1791,10 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 
 	glDeleteFramebuffers(1, &framebuffer);
 
-	*texture1 = texture2;
 
-	glViewport(0, 0, WIDTH, HEIGHT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, CurrentWindow->framebuffer);
+	glViewport(0, 0, WIDTH, HEIGHT);
 }
 
 void Texture::Load()

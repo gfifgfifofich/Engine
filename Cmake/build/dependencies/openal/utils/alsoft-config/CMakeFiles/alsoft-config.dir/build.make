@@ -148,10 +148,10 @@ dependencies/openal/alsoft-config: dependencies/openal/utils/alsoft-config/CMake
 dependencies/openal/alsoft-config: dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/verstr.cpp.o
 dependencies/openal/alsoft-config: dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/moc_mainwindow.cpp.o
 dependencies/openal/alsoft-config: dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/build.make
-dependencies/openal/alsoft-config: /usr/lib/libQt5Widgets.so.5.15.13
+dependencies/openal/alsoft-config: /usr/lib/libQt5Widgets.so.5.15.14
 dependencies/openal/alsoft-config: dependencies/openal/libalcommon.a
-dependencies/openal/alsoft-config: /usr/lib/libQt5Gui.so.5.15.13
-dependencies/openal/alsoft-config: /usr/lib/libQt5Core.so.5.15.13
+dependencies/openal/alsoft-config: /usr/lib/libQt5Gui.so.5.15.14
+dependencies/openal/alsoft-config: /usr/lib/libQt5Core.so.5.15.14
 dependencies/openal/alsoft-config: dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable ../../alsoft-config"
 	cd /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/openal/utils/alsoft-config && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/alsoft-config.dir/link.txt --verbose=$(VERBOSE)
