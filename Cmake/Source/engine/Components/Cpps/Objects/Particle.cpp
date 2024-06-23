@@ -318,42 +318,30 @@ void ParticleEmiter::Process(float dt)
 		SceneLayers[SceneLayerIndex].CirclePosScale.resize(SceneLayers[SceneLayerIndex].CirclePosScale.size() + Particles.size());
 		SceneLayers[SceneLayerIndex].Circlecolors.resize(SceneLayers[SceneLayerIndex].Circlecolors.size() + Particles.size());
 		SceneLayers[SceneLayerIndex].CircleRotations.resize(SceneLayers[SceneLayerIndex].CircleRotations.size() + Particles.size());
+
 		if (DrawToNormalMap)
 		{
-			if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
-			{
-				TQA = -1;
+			TQA = -1;
 
+			for (int i = 0; i < SceneLayers[SceneLayerIndex].NormalMaps.size(); i++)
+				if (SceneLayers[SceneLayerIndex].NormalMaps[i].material.Texture == NormalMap)
+					TQA = i;
+			if (TQA == -1)
+			{
+				TexturedQuadArray NewTQA;
+				NewTQA.material.Texture = NormalMap;
+				SceneLayers[SceneLayerIndex].NormalMaps.push_back(NewTQA);
 				for (int i = 0; i < SceneLayers[SceneLayerIndex].NormalMaps.size(); i++)
 					if (SceneLayers[SceneLayerIndex].NormalMaps[i].material.Texture == NormalMap)
 						TQA = i;
-				if (TQA == -1)
-				{
-					TexturedQuadArray NewTQA;
-					NewTQA.material.Texture = NormalMap;
-					SceneLayers[SceneLayerIndex].NormalMaps.push_back(NewTQA);
-					for (int i = 0; i < SceneLayers[SceneLayerIndex].NormalMaps.size(); i++)
-						if (SceneLayers[SceneLayerIndex].NormalMaps[i].material.Texture == NormalMap)
-							TQA = i;
-				}
-				NormalMapIndex = TQA;
+			}
+			NormalMapIndex = TQA;
 
-				Normastart = SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size();
-				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
-				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
-			}
-			else if (NormalMap == CubeNormalMapTexture)
-			{
-				Normastart = SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size();
-				SceneLayers[SceneLayerIndex].NormalMapCubePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size() + Particles.size());
-				SceneLayers[SceneLayerIndex].NormalMapCubeRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCubeRotations.size() + Particles.size());
-			}
-			else
-			{
-				Normastart = SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size();
-				SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size() + Particles.size());
-				SceneLayers[SceneLayerIndex].NormalMapCircleRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCircleRotations.size() + Particles.size());
-			}
+			Normastart = SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size();
+			SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
+			SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadDepth.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
+			
 
 		}
 	}
@@ -365,8 +353,6 @@ void ParticleEmiter::Process(float dt)
 		SceneLayers[SceneLayerIndex].QuadRotations.resize(SceneLayers[SceneLayerIndex].QuadRotations.size() + Particles.size());
 		if (DrawToNormalMap)
 		{
-			if (NormalMap != CubeNormalMapTexture && NormalMap != BallNormalMapTexture)
-			{
 				TQA = -1;
 
 				for (int i = 0; i < SceneLayers[SceneLayerIndex].NormalMaps.size(); i++)
@@ -386,19 +372,8 @@ void ParticleEmiter::Process(float dt)
 				Normastart = SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size();
 				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
 				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
-			}
-			else if (NormalMap == CubeNormalMapTexture)
-			{
-				Normastart = SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size();
-				SceneLayers[SceneLayerIndex].NormalMapCubePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCubePosScale.size() + Particles.size());
-				SceneLayers[SceneLayerIndex].NormalMapCubeRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCubeRotations.size() + Particles.size());
-			}
-			else
-			{
-				Normastart = SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size();
-				SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.resize(SceneLayers[SceneLayerIndex].NormalMapCirclePosScale.size() + Particles.size());
-				SceneLayers[SceneLayerIndex].NormalMapCircleRotations.resize(SceneLayers[SceneLayerIndex].NormalMapCircleRotations.size() + Particles.size());
-			}
+				SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadDepth.resize(SceneLayers[SceneLayerIndex].NormalMaps[TQA].QuadPosScale.size() + Particles.size());
+			
 
 		}
 	}
@@ -425,6 +400,7 @@ void ParticleEmiter::Process(float dt)
 		SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors.size() + Particles.size());
 		SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale.size() + Particles.size());
 		SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.size() + Particles.size());
+		SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadDepth.resize(SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations.size() + Particles.size());
 
 
 	}
@@ -500,21 +476,11 @@ void ParticleEmiter::Process(float dt)
 			SceneLayers[SceneLayerIndex].Circlecolors[start + i] = Particles[i].color;
 			if (DrawToNormalMap)
 			{
-				if (material.NormalMap != CubeNormalMapTexture && material.NormalMap != BallNormalMapTexture)
-				{
-					SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
-				}
-				else if (material.NormalMap == CubeNormalMapTexture)
-				{
-					SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
-				}
-				else
-				{
-					SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
-				}
+			
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadDepth[Normastart + i] = 0.0f;
+				
 			}
 		}
 		else if (Type == "QUAD")
@@ -532,21 +498,11 @@ void ParticleEmiter::Process(float dt)
 			SceneLayers[SceneLayerIndex].Quadcolors[start + i] = Particles[i].color;
 			if (DrawToNormalMap)
 			{
-				if (material.NormalMap != CubeNormalMapTexture && material.NormalMap != BallNormalMapTexture)
-				{
-					SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
-				}
-				else if (material.NormalMap == CubeNormalMapTexture)
-				{
-					SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = Particles[i].Rotation;
-				}
-				else
-				{
-					SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = Particles[i].Rotation;
-				}
+				
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = Particles[i].Rotation;
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadDepth[Normastart + i] = 0.0f;
+				
 			}
 
 		}
@@ -575,21 +531,10 @@ void ParticleEmiter::Process(float dt)
 
 			if (DrawToNormalMap)
 			{
-				if (material.NormalMap != CubeNormalMapTexture && material.NormalMap != BallNormalMapTexture)
-				{
-					SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, glm::vec2(Particles[i].Size.x, Particles[i].Size.y * length) * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = rotation;
-				}
-				else if (material.NormalMap == CubeNormalMapTexture)
-				{
-					SceneLayers[SceneLayerIndex].NormalMapCubePosScale[Normastart + i] = glm::vec4(position, glm::vec2(Particles[i].Size.x,Particles[i].Size.y * length) * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMapCubeRotations[Normastart + i] = rotation;
-				}
-				else
-				{
-					SceneLayers[SceneLayerIndex].NormalMapCirclePosScale[Normastart + i] = glm::vec4(position, glm::vec2(Particles[i].Size.x, Particles[i].Size.y * length) * glm::vec2(aspx, aspy));
-					SceneLayers[SceneLayerIndex].NormalMapCircleRotations[Normastart + i] = rotation;
-				}
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadPosScale[Normastart + i] = glm::vec4(position, glm::vec2(Particles[i].Size.x, Particles[i].Size.y * length) * glm::vec2(aspx, aspy));
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadRotations[Normastart + i] = rotation;
+				SceneLayers[SceneLayerIndex].NormalMaps[NormalMapIndex].QuadDepth[Normastart + i] = 0.0f;
+				
 			}
 		}
 		else if (Type == "TEXTURED" && material.Texture > 0)
@@ -603,6 +548,7 @@ void ParticleEmiter::Process(float dt)
 			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[start + i] = Particles[i].color;
 			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[start + i] = glm::vec4(position, Particles[i].Size * glm::vec2(aspx, aspy));
 			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[start + i] = Particles[i].Rotation;
+			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadDepth[start + i] = 0.0f;
 
 		}
 		else if (Type == "TEXTUREDLINE" && material.Texture > 0)
@@ -626,6 +572,7 @@ void ParticleEmiter::Process(float dt)
 			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].Quadcolors[start + i] = Particles[i].color;
 			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadPosScale[start + i] = glm::vec4(position, glm::vec2(Particles[i].Size.x, Particles[i].Size.y * length) * glm::vec2(aspx, aspy));
 			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadRotations[start + i] = rotation;
+			SceneLayers[SceneLayerIndex].TexturedQuads[TQA].QuadDepth[start + i] = 0.0f;
 
 
 		}

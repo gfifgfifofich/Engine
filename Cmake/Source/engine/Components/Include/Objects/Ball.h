@@ -29,7 +29,6 @@ public:
 	int id = -1;
 	int type = -1;
 	int Z_Index = 0;
-	unsigned int* Source = NULL;
 	// Level - on which level it is, Mask - with which level it collides
 	int Collision_Level = 0; // -1 - do not collide, >=0 - collision levels
 	int Collision_Mask = 0; // -1 - do not collide, >=0 - collision levels

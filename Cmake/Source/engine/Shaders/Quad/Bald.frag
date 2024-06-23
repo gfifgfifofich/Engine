@@ -14,7 +14,7 @@ void main()
 		FragColor = Color; 
 	else
 	{
-		vec2 v = {1.0f,1.0f};
+		vec2 v = vec2(1.0f);
 
 		if(TexCoords.x>0.5f && TexCoords.y>0.5f)
 		{

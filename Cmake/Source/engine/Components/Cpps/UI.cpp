@@ -26,67 +26,39 @@ void UI_DrawSmoothQuad(glm::vec2 position, glm::vec2 scale, float rotation , glm
 	SceneLayers[SLI].SmoothQuadPosScale.push_back(glm::vec4(position, scale));
 	SceneLayers[SLI].SmoothQuadRotations.push_back(rotation);
 }
-void UI_NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap, float rotation, int Z_Index, unsigned int Texture, bool Additive)
+void UI_NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap, float rotation, int Z_Index, unsigned int Texture, bool Additive, float depth, unsigned int HeightMap)
 {
-	if (NormalMap != BallNormalMapTexture && NormalMap != CubeNormalMapTexture)
+	
+	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
+	float aspx = ScreenDivisorX;
+	float aspy = ScreenDivisorY;	
+	position *= glm::vec2(aspx, aspy);
+	scale *= glm::vec2(aspx, aspy);	
+	
+	int TQA = -1;
+	for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
+		if (SceneLayers[SLI].NormalMaps[i].material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].material.Texture == Texture && SceneLayers[SLI].NormalMaps[i].material.HeightMap == HeightMap)
+			TQA = i;
+	if (TQA == -1)
 	{
-
-		int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
-		float aspx = ScreenDivisorX;
-		float aspy = ScreenDivisorY;
-
-		position *= glm::vec2(aspx, aspy);
-		scale *= glm::vec2(aspx, aspy);
-
-
-		int TQA = -1;
-
+		TexturedQuadArray NewTQA;
+		NewTQA.material.NormalMap = NormalMap;
+		NewTQA.material.Texture = Texture;
+		NewTQA.material.HeightMap = HeightMap;
+		SceneLayers[SLI].NormalMaps.push_back(NewTQA);
 		for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-			if (SceneLayers[SLI].NormalMaps[i].material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].material.Texture == Texture)
+			if (SceneLayers[SLI].NormalMaps[i].material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].material.Texture == Texture && SceneLayers[SLI].NormalMaps[i].material.HeightMap == HeightMap)
 				TQA = i;
-
-		if (TQA == -1)
-		{
-			TexturedQuadArray NewTQA;
-			NewTQA.material.NormalMap = NormalMap;
-			NewTQA.material.Texture = Texture;
-			SceneLayers[SLI].NormalMaps.push_back(NewTQA);
-			for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
-				if (SceneLayers[SLI].NormalMaps[i].material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].material.Texture == Texture)
-					TQA = i;
-		}
-
-		SceneLayers[SLI].NormalMaps[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
-		SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
-
-
 	}
-	else
-	{
-		float aspx = ScreenDivisorX;
-		float aspy = ScreenDivisorY;
-
-		position *= glm::vec2(aspx, aspy);
-		scale *= glm::vec2(aspx, aspy);
+	SceneLayers[SLI].NormalMaps[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
+	SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
+	SceneLayers[SLI].NormalMaps[TQA].QuadRotations.push_back(rotation);
+	SceneLayers[SLI].NormalMaps[TQA].QuadDepth.push_back(depth);
 
 
-
-		int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
-
-		if (NormalMap == BallNormalMapTexture)
-		{
-			SceneLayers[SLI].NormalMapCircleRotations.push_back(rotation);
-			SceneLayers[SLI].NormalMapCirclePosScale.push_back(glm::vec4(position, scale));
-		}
-		else
-		{
-			SceneLayers[SLI].NormalMapCubeRotations.push_back(rotation);
-			SceneLayers[SLI].NormalMapCubePosScale.push_back(glm::vec4(position, scale));
-		}
-	}
 }
 
-void UI_DrawQuadWithMaterial(cube c, Material material, float rotation, glm::vec4 color,bool flipY, int Z_Index, bool Additive)
+void UI_DrawQuadWithMaterial(cube c, Material material, float rotation, glm::vec4 color,bool flipY, int Z_Index, bool Additive, float depth)
 {
 
 
@@ -119,11 +91,12 @@ void UI_DrawQuadWithMaterial(cube c, Material material, float rotation, glm::vec
 	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
 	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
 	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadDepth.push_back(depth);
 
 
 
 }
-void UI_DrawQuadWithMaterial(glm::vec2 position, glm::vec2 scale, Material material, float rotation, glm::vec4 color,bool flipY, int Z_Index, bool Additive)
+void UI_DrawQuadWithMaterial(glm::vec2 position, glm::vec2 scale, Material material, float rotation, glm::vec4 color,bool flipY, int Z_Index, bool Additive , float depth)
 {
 
 
@@ -155,10 +128,11 @@ void UI_DrawQuadWithMaterial(glm::vec2 position, glm::vec2 scale, Material mater
 	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
 	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
 	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadDepth.push_back(depth);
 
 }
 
-void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color,  int Z_Index, unsigned int NormalMap, bool Additive, bool flipX, bool flipY )
+void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int texture, float rotation, glm::vec4 color,  int Z_Index, unsigned int NormalMap, bool Additive, bool flipX, bool flipY , float depth, unsigned int HeightMap)
 {
 
 	float aspx = ScreenDivisorX;
@@ -176,7 +150,7 @@ void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int textu
 	m.NormalMap = NormalMap;
 	m.Specular = 0;
 	m.Reflective = 0;
-	m.ZMap = 0;
+	m.HeightMap = HeightMap;
 	m.flipX = flipX;
 	m.flipY = flipY;
 	int TQA = -1;
@@ -196,9 +170,10 @@ void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int textu
 	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
 	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
 	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadDepth.push_back(depth);
 
 }
-void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float rotation, int Z_Index, unsigned int NormalMap, bool Additive, bool flipX, bool flipY)
+void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float rotation, int Z_Index, unsigned int NormalMap, bool Additive, bool flipX, bool flipY, float depth, unsigned int HeightMap)
 {
 
 
@@ -219,7 +194,7 @@ void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float ro
 	m.NormalMap = NormalMap;
 	m.Specular = 0;
 	m.Reflective = 0;
-	m.ZMap = 0;
+	m.HeightMap = HeightMap;
 	m.flipX = flipX;
 	m.flipY = flipY;
 	int TQA = -1;
@@ -239,17 +214,18 @@ void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float ro
 	SceneLayers[SLI].TexturedQuads[TQA].Quadcolors.push_back(color);
 	SceneLayers[SLI].TexturedQuads[TQA].QuadPosScale.push_back(glm::vec4(position, scale));
 	SceneLayers[SLI].TexturedQuads[TQA].QuadRotations.push_back(rotation);
+	SceneLayers[SLI].TexturedQuads[TQA].QuadDepth.push_back(depth);
 
 
 
 }
-void UI_DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width, glm::vec4 color, unsigned int NormalMap, int Z_Index)
+void UI_DrawTexturedLine(unsigned int Texture, glm::vec2 p1, glm::vec2 p2, float width, glm::vec4 color, unsigned int NormalMap, int Z_Index , float depth, unsigned int HeightMap)
 {
 	glm::vec2 midpos = (p2 + p1) / 2.0f;
 	float rotation = get_angle_between_points(p1, p2);
 	glm::vec2 dif = p1 - p2;
 	float length = sqrt(dif.x * dif.x + dif.y * dif.y) * 0.5f;
-	UI_DrawTexturedQuad(midpos, glm::vec2(width, length), Texture, rotation, color, Z_Index, NormalMap);
+	UI_DrawTexturedQuad(midpos, glm::vec2(width, length), Texture, rotation, color, Z_Index, NormalMap,false,false,false,  depth,  HeightMap);
 }
 void UI_DrawCircle(glm::vec2 position, float r, glm::vec4 color, bool Lighted, unsigned int NormalMap, int Z_Index, bool Additive)
 {

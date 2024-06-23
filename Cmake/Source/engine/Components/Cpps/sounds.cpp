@@ -58,23 +58,34 @@ void DeleteSound(unsigned int* sound)
 void AL_init()
 {
 
+
+	if (Device) {
+		Context = alcCreateContext(Device, NULL);
+		alcMakeContextCurrent(Context);
+	}
+	
+	contextMadeCurrent = alcMakeContextCurrent(Context);
+	if (!contextMadeCurrent)
+		std::cerr << "ERROR: Could not make audio context current" << "\n";
+
+
 	ALfloat lpos[] = { listenerPos.x, listenerPos.y, listenerPos.y };
 	ALfloat lvel[] = { listenerVel.x, listenerVel.y, listenerVel.y };
 
 	alListenerfv(AL_POSITION, lpos);
 	alListenerfv(AL_VELOCITY, lvel);
 	alListenerfv(AL_ORIENTATION, listenerOri);
-
-	if (Device) {
-		Context = alcCreateContext(Device, NULL);
-		alcMakeContextCurrent(Context);
+	ALCint size;
+	alcGetIntegerv( Device, ALC_ATTRIBUTES_SIZE, 1, &size);
+	std::vector<ALCint> attrs(size);
+	alcGetIntegerv( Device, ALC_ALL_ATTRIBUTES, size, &attrs[0] );
+	for(size_t i=0; i<attrs.size(); ++i)
+	{
+	if( attrs[i] == ALC_MONO_SOURCES )
+	{
+		std::cout << "max mono sources: " << attrs[i+1] << std::endl;
 	}
-
-	contextMadeCurrent = alcMakeContextCurrent(Context);
-	if (!contextMadeCurrent)
-		std::cerr << "ERROR: Could not make audio context current" << "\n";
-
-
+	}
 }
 
 void AL_Reload()

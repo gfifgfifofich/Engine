@@ -2,19 +2,19 @@
 // openAL
 #include <AL/alext.h>
 
-inline ALint state = AL_PLAYING;
 inline std::vector <ALuint*> sources;
 inline std::vector <ALuint*> sounds;
 inline std::vector <unsigned int> soundsArray;
 inline std::vector <unsigned int*> soundsArray2;
 inline ALCdevice* Device = alcOpenDevice(NULL);
-inline ALCcontext* Context;
+inline ALCcontext* Context = NULL;
 inline ALCboolean contextMadeCurrent;
 inline glm::vec3 listenerPos = { 0.0,0.0,0.0 };
 inline glm::vec3 listenerVel = { 0.0,0.0,0.0 };
 inline ALfloat listenerOri[] = { 0.0,0.0,1.0, 0.0,-1.0,0.0 };
 inline glm::vec3 soundscale = { 1.0f,1.0f ,1.0f };
 inline glm::vec3 soundSpeedscale = { 1.0f,1.0f ,1.0f };
+
 unsigned int LoadSound(const char* FileName);
 void DeleteSound(unsigned int* sound);
 

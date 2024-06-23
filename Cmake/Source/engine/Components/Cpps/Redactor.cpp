@@ -43,12 +43,12 @@
 
 
 
-bool _Scenethreads_stop;
+inline bool _Scenethreads_stop;
 
-std::thread* _Scenethreads;
-std::condition_variable* _SceneConVars;
-std::mutex* _SceneMutexes;
-std::vector<int> _ScenethreadsStates;// 1 waiting | 0 working | -1 done
+inline std::thread* _Scenethreads;
+inline std::condition_variable* _SceneConVars;
+inline std::mutex* _SceneMutexes;
+inline std::vector<int> _ScenethreadsStates;// 1 waiting | 0 working | -1 done
    
 
 void _Scenethead_Process(int thr);
@@ -83,7 +83,6 @@ void _StartScenethreads()
 	_SceneMutexes = new std::mutex[threadcount];
 	_SceneConVars = new std::condition_variable[threadcount];
 	_Scenethreads = new std::thread[threadcount];
-
 	for(int i=0;i<threadcount;i++)
 	{
 		_Scenethreads[i] = std::thread(_StartScenethread,i);
@@ -96,7 +95,13 @@ void _StartScenethreads()
 void _DeleteScenethreads()
 {
 	_Scenethreads_stop = true;
-	
+
+	for(int i=0;i<threadcount;i++)
+	{
+		std::unique_lock<std::mutex> lm(_SceneMutexes[i]);
+		_SceneConVars[i].notify_one();
+	}
+
 	for(int thr = 0;thr<threadcount;thr++)
 	{
 		_Scenethreads[thr].~thread();
@@ -105,22 +110,25 @@ void _DeleteScenethreads()
 
 bool Running = false;
 bool Paused = false;
-
+bool threadsprepass = false;
+int threadNodestep = 1;
+int threadNodeEnd = 1;
 void _mt_SceneProcess(int thr)
 {
-	int step = GameScene->Nodes.size() / threadcount;
+	int step = threadNodestep;
 	int begin = thr * step;
 	int end = (thr + 1) * step;
 	if (thr == 0)
 		begin =0;
 
-	if (thr == threadcount)
-		end = GameScene->Nodes.size() ;
+	if (thr == threadcount-1)
+		end = threadNodeEnd;
 
 	for (int i = begin; i < end; i++)
 	{
-		GameScene->Nodes[i]->MTPreProcess();
-		if(!Paused && Running)
+		if(threadsprepass)
+			GameScene->Nodes[i]->MTPreProcess();
+		else if(!Paused && Running)
 			GameScene->Nodes[i]->MTProcess(GameScene->dt);
 	}
 }
@@ -128,6 +136,9 @@ void _mt_SceneProcess(int thr)
 int InspectorWindowID;
 int ProjectWindowID;
 int ConsoleWindowID;
+
+unsigned int NormalMapScreen = 0;
+unsigned int HeightMapScreen = 0;
 
 Texture tex;
 
@@ -283,7 +294,7 @@ void ProcessSelectedNodeUI()
 					
 			int typ = datapacks[i].t_texturedata[a]->Type;
 
-			Corner.y += UI_SliderInt(&datapacks[i].t_texturedata[a]->Type, "type", Corner, 0, 9).y * -1.0f - step;
+			Corner.y += UI_SliderInt(&datapacks[i].t_texturedata[a]->Type, "type", Corner, 0, 11).y * -1.0f - step;
 
 			if (datapacks[i].t_texturedata[a]->Type == 0)
 				Corner.y += UI_DrawText("LoadFromName",Corner,0.35f).y * -1.0f - step;
@@ -305,6 +316,10 @@ void ProcessSelectedNodeUI()
 				Corner.y += UI_DrawText("SphereNormalMap", Corner, 0.35f).y * -1.0f - step;
 			if (datapacks[i].t_texturedata[a]->Type == 9)
 				Corner.y += UI_DrawText("QuadNormalMap", Corner, 0.35f).y * -1.0f - step;
+			if (datapacks[i].t_texturedata[a]->Type == 10)
+				Corner.y += UI_DrawText("SphereHeightMap", Corner, 0.35f).y * -1.0f - step;
+			if (datapacks[i].t_texturedata[a]->Type == 11)
+				Corner.y += UI_DrawText("QuadHeightMap", Corner, 0.35f).y * -1.0f - step;
 
 			std::string filter = "Linear/blurry";
 			if (datapacks[i].t_texturedata[a]->filter)
@@ -1452,18 +1467,16 @@ std::string InspectorWindowSelectionNames[3]= {"Properties","none","none"};// pl
 
 
 
+
 void On_Create()
 {
+	
 	_FillVectorsOfNodesAndAssets();
-	PreReady();
 
+	AL_init();
 	sTesti[0] = 0;
 	Map.LoadAssets = true;
 	Map.LoadFrom(MapFileName);
-
-	sh.FragmentPath = "engine/z1ShaderTests/Bald.frag";
-	sh.VertexPath = "engine/z1ShaderTests/default.vert";
-	sh.Load();
 
 	//SetShader2f(&sh.program, "position",MousePosition)
 
@@ -1533,14 +1546,15 @@ void On_Create()
 	GameScene = &Map;
 	Ready();
 	w->End();
-	AL_init();
+	
+	_StartScenethreads();
 }
 
 glm::vec2 PrevMousePos = glm::vec2(0.0f);
 bool MMBJustPressedWindow[4];
 
-bool grebbedWindow[3];// bools for window resizing
-bool grebbedAnyWindow = false;// bools for window resizing
+bool grabbedWindow[3];// bools for window resizing
+bool grabbedAnyWindow = false;// bools for window resizing
 glm::vec2 GrabStartMousePos = { 0.0f,0.0f };
 bool initialsizecalc = true;
 std::string sTest[10];
@@ -1564,42 +1578,42 @@ void On_Update()
 	DrawShaderedQuad({ 0.0f ,0.0f}, { 100,100 }, 0.0f, sh.program);
 	kw->End();*/
 
-	if (!grebbedAnyWindow)
+	if (!grabbedAnyWindow)
 		GrabStartMousePos = MousePosition;
 
 	if (JustPressedbutton[GLFW_MOUSE_BUTTON_1])
 	{
 		if (MousePosition.x > WIDTH * 0.5f - iw->ViewportSize.x - 3 && MousePosition.x < WIDTH * 0.5f - iw->ViewportSize.x + 3)
 		{
-			grebbedWindow[1] = true;
-			grebbedAnyWindow = true;
+			grabbedWindow[1] = true;
+			grabbedAnyWindow = true;
 		}
 		if ((MousePosition.x > pw->ViewportSize.x - 3 - WIDTH * 0.5f) && (MousePosition.x < pw->ViewportSize.x + 3 - WIDTH * 0.5f))
 		{
-			grebbedWindow[0] = true;
-			grebbedAnyWindow = true;
+			grabbedWindow[0] = true;
+			grabbedAnyWindow = true;
 		}
 		if ((MousePosition.y > cw->ViewportSize.y - 3 - HEIGHT * 0.5f) && (MousePosition.y < cw->ViewportSize.y + 3 - HEIGHT * 0.5f))
 		{
-			grebbedWindow[2] = true;
-			grebbedAnyWindow = true;
+			grabbedWindow[2] = true;
+			grabbedAnyWindow = true;
 		}
 		GrabStartMousePos = MousePosition;
 	}
 
-	if (grebbedWindow[0])//project window /// left
+	if (grabbedWindow[0])//project window /// left
 	{
 		pw->Scale.x = 1.0f + (MousePosition.x - GrabStartMousePos.x) / pw->ViewportSize.x;
 		if (pw->Scale.x * pw->ViewportSize.x < 25) pw->Scale.x = 25 / pw->ViewportSize.x;
 		if (pw->Scale.x * pw->ViewportSize.x > WIDTH - 100 - iw->ViewportSize.x) pw->Scale.x = (WIDTH - 100 - iw->ViewportSize.x) / pw->ViewportSize.x;
 	}
-	if (grebbedWindow[1])//inspector window /// right
+	if (grabbedWindow[1])//inspector window /// right
 	{
 		iw->Scale.x = 1.0f + (GrabStartMousePos.x - MousePosition.x) / iw->ViewportSize.x;
 		if (iw->Scale.x * iw->ViewportSize.x < 25) iw->Scale.x = 25 / iw->ViewportSize.x;
 		if (iw->Scale.x * iw->ViewportSize.x > WIDTH - 100 - pw->ViewportSize.x) iw->Scale.x = (WIDTH - 100 - pw->ViewportSize.x) / iw->ViewportSize.x;
 	}
-	if (grebbedWindow[2])//inspector window /// right
+	if (grabbedWindow[2])//inspector window /// right
 	{
 		cw->Scale.y = 1.0f + (MousePosition.y - GrabStartMousePos.y) / cw->ViewportSize.y;
 		if (cw->Scale.y * cw->ViewportSize.y < 25) cw->Scale.y = 25 / cw->ViewportSize.y;
@@ -1612,14 +1626,14 @@ void On_Update()
 
 	float maxy = HEIGHT * 0.5f;
 	float miny = cw->ViewportSize.y * cw->Scale.y - HEIGHT * 0.5f + 2.0f;
-	if (grebbedAnyWindow || initialsizecalc)
+	if (grabbedAnyWindow || initialsizecalc)
 	{
 		cw->Scale.x = (leftx - rightx) / cw->ViewportSize.x;
 
 		w->Scale.x = (leftx - rightx) / w->ViewportSize.x;
 		w->Scale.y = (maxy - miny - 25.0f) / w->ViewportSize.y ;
 	}
-	if (JustReleasedbutton[GLFW_MOUSE_BUTTON_1] && grebbedAnyWindow || initialsizecalc)
+	if ( grabbedAnyWindow || initialsizecalc)
 	{
 
 		w->ViewportSize *= w->Scale;
@@ -1632,10 +1646,6 @@ void On_Update()
 		pw->Scale = { 1.0f,1.0f };
 		cw->Scale = { 1.0f,1.0f };
 
-
-		for (int i = 0; i < 3; i++)
-			grebbedWindow[i] = false;
-		grebbedAnyWindow = false;
 
 
 
@@ -1651,6 +1661,13 @@ void On_Update()
 		std::cout << "iw" << iw->ViewportSize.x << "  " << iw->ViewportSize.y<<"\n";
 		std::cout << "pw" << pw->ViewportSize.x << "  " << pw->ViewportSize.y<<"\n";*/
 		initialsizecalc = false;
+		GrabStartMousePos = MousePosition;
+	}
+	if(JustReleasedbutton[GLFW_MOUSE_BUTTON_1])
+	{
+		for (int i = 0; i < 3; i++)
+			grabbedWindow[i] = false;
+		grabbedAnyWindow = false;
 	}
 
 	//CountourSize
@@ -1671,22 +1688,31 @@ void On_Update()
 	switch (SceneWindowSelection)
 	{
 	case 0:
-		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->Texture, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
-		break;
+		{
+			UI_DrawTexturedQuad(w->Position, w->GetSize(), w->Texture, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		}break;
 	case 1:
-		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->NormalMapColorBuffer, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
-		break;
+		{
+			CopyTexture(w->ViewportSize,&NormalMapScreen,w->NormalMapColorBuffer,1);
+			UI_DrawTexturedQuad(w->Position, w->GetSize(), NormalMapScreen, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		}break;
 	case 2:
-		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->LightColorBuffer, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
-		break;
+		{
+			UI_DrawTexturedQuad(w->Position, w->GetSize(), w->LightColorBuffer, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		}break;
 	case 3:
-		UI_DrawTexturedQuad(w->Position, w->GetSize(), w->Texture, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
-		break;
+		{
+			UI_DrawTexturedQuad(w->Position, w->GetSize(), w->Texture, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		}break;
+	case 4:
+		{
+			CopyTexture(w->ViewportSize,&HeightMapScreen,w->NormalMapColorBuffer,4);
+			UI_DrawTexturedQuad(w->Position, w->GetSize(), HeightMapScreen, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
+		}break;
 	
 	default:
 		break;
 	}
-
 
 	/*
 	kw->Position = MousePosition;
@@ -1756,14 +1782,24 @@ void On_Update()
 
 
 		AssetstepX +=UI_SliderInt(&NewAssetId,"Asset id",Corner + glm::vec2(AssetstepX,0.0f),1,AssetConstructorNames.size()-1).x *0.5f + AssetStep;
-
-		AssetstepX+= UI_DrawText(AssetConstructorNames[NewAssetId], Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
+		int newassetidmapped = -1;
+		int id= 0;
+		for(auto x : AssetConstructorNames)
+		{
+			if(id == NewAssetId)
+			{
+				newassetidmapped = x.first;
+				break;
+			}
+			id++;
+		}
+		AssetstepX+= UI_DrawText(AssetConstructorNames[newassetidmapped], Corner + glm::vec2(AssetstepX,0.0f), 0.35f).x + AssetStep;
 
 		b = false;
 		Corner.y += UI_button(&b,"Create", Corner + glm::vec2(AssetstepX,0.0f)).y *-1.0f - AssetStep*2.0f;
 		if(b)
 		{
-			Map.Assets.push_back(AssetConstructors[NewAssetId]());
+			Map.Assets.push_back(AssetConstructors[newassetidmapped]());
 		}
 
 		AssetstepX = 0.0f;
@@ -1967,21 +2003,32 @@ void On_Update()
 		{
 			//Add stuff Tool
 			Corner.y += UI_SliderInt(&NewObjectId,"Spawn id",Corner,0,NodeConstructorNames.size()-1).y * -1.0f - step;
+			int newobjectidmapped = -1;
+			int id= 0;
+			for(auto x : NodeConstructorNames)
+			{
+				if(id == NewObjectId)
+				{
+					newobjectidmapped = x.first;
+					break;
+				}
+				id++;
+			}
 
 			// if (NewObjectId == NodeType::NODE)Corner.y +=  UI_DrawText("NODE", Corner, 0.35f).y * -1.0f- step;
-			// else if (NewObjectId == NodeType::OBJECT)Corner.y += UI_DrawText("OBJECT", Corner, 0.35f).y * -1.0f- step;
-			// else if (NewObjectId == NodeType::COLLISIONOBJECT)Corner.y +=  UI_DrawText("COLLISIONOBJECT", Corner, 0.35f).y* -1.0f - step;
-			// else if (NewObjectId == NodeType::LIGHTSOURCEOBJECT)Corner.y +=  UI_DrawText("LIGHTSOURCEOBJECT", Corner, 0.35f).y * -1.0f- step;
-			// else if (NewObjectId == NodeType::CO_BALL)Corner.y +=  UI_DrawText("CO_BALL", Corner, 0.35f).y * -1.0f- step;
-			// else if (NewObjectId == NodeType::CO_CUBE)Corner.y +=  UI_DrawText("CO_CUBE", Corner, 0.35f).y * -1.0f- step;
-			// else if (NewObjectId == NodeType::CO_POLYGON)Corner.y +=  UI_DrawText("CO_POLYGON", Corner, 0.35f).y * -1.0f - step;
-			// else if (NewObjectId == NodeType::PARTICLEOBJECT)
-			Corner.y +=  UI_DrawText(NodeConstructorNames[NewObjectId], Corner, 0.35f).y * -1.0f - step;
+			// else if (newobjectidmapped == NodeType::OBJECT)Corner.y += UI_DrawText("OBJECT", Corner, 0.35f).y * -1.0f- step;
+			// else if (newobjectidmapped == NodeType::COLLISIONOBJECT)Corner.y +=  UI_DrawText("COLLISIONOBJECT", Corner, 0.35f).y* -1.0f - step;
+			// else if (newobjectidmapped == NodeType::LIGHTSOURCEOBJECT)Corner.y +=  UI_DrawText("LIGHTSOURCEOBJECT", Corner, 0.35f).y * -1.0f- step;
+			// else if (newobjectidmapped == NodeType::CO_BALL)Corner.y +=  UI_DrawText("CO_BALL", Corner, 0.35f).y * -1.0f- step;
+			// else if (newobjectidmapped == NodeType::CO_CUBE)Corner.y +=  UI_DrawText("CO_CUBE", Corner, 0.35f).y * -1.0f- step;
+			// else if (newobjectidmapped == NodeType::CO_POLYGON)Corner.y +=  UI_DrawText("CO_POLYGON", Corner, 0.35f).y * -1.0f - step;
+			// else if (newobjectidmapped == NodeType::PARTICLEOBJECT)
+			Corner.y +=  UI_DrawText(NodeConstructorNames[newobjectidmapped], Corner, 0.35f).y * -1.0f - step;
 			b = false;
 			Corner.y += UI_button(&b, "Spawn", Corner).y * -1.0f - step;
 			if(b)
 			{
-				Node* NewSpawnedNode = NodeConstructors[NewObjectId]();
+				Node* NewSpawnedNode = NodeConstructors[newobjectidmapped]();
 				NewSpawnedNode->position = w->w_CameraPosition;
 				Map.Nodes.push_back(NewSpawnedNode);
 			}
@@ -2115,10 +2162,10 @@ void On_Update()
 	Corner.y = w->Position.y + (w->ViewportSize.y*0.5f) * w->Scale.y + 50.0f*0.5f;
 	Corner.x =  w->Position.x - (w->ViewportSize.x*0.5f) * w->Scale.x;
 	xstep = 0.0f;
-	int Scenebuttoncount = 7;
+	int Scenebuttoncount = 8;
 	if(Running)
 		Scenebuttoncount+=1;
-	bSizeX = (cw->ViewportSize.x - step * (Scenebuttoncount+1)) / (float)Scenebuttoncount;// 3 buttons = 4 steps  s bbb s bbb s bbb s
+	bSizeX = (cw->ViewportSize.x - step * (Scenebuttoncount+1)) / (float)Scenebuttoncount;// 4 buttons = 5 steps  s bbb s bbb s bbb s
 	if(bSizeX>150.0f) bSizeX = 150.0f;
 	if(bSizeX<50.0f) bSizeX = 50.0f;
 	b=SceneWindowSelection == 0;
@@ -2128,11 +2175,15 @@ void On_Update()
 	b=SceneWindowSelection == 1;
 	xstep += UI_button(&b,"NormalMaps", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
 	if (b)
-		SceneWindowSelection =1;
+		SceneWindowSelection =1;		
 	b=SceneWindowSelection == 2;
 	xstep += UI_button(&b,"LightMap", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
 	if (b)
 		SceneWindowSelection =2;
+	b=SceneWindowSelection == 4;
+	xstep += UI_button(&b,"Height", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
+	if (b)
+		SceneWindowSelection =4;
 	b=SceneWindowSelection == 3;
 	xstep += UI_button(&b,"Collisionmap", Corner + glm::vec2(xstep,0.0f),glm::vec2(bSizeX,35.0f)).x * 1.0f + step;
 	if (b)
@@ -2160,6 +2211,7 @@ void On_Update()
 			Running = false;
 			Paused = false;
 			cleanSelection =true;
+			SceneEnd();
 			Map.LoadFrom("PreRunSave.sav");
 		}
 		b=false;
@@ -2329,29 +2381,31 @@ void On_Update()
 	}
 	
 	GameScene = &Map;
-	Map.dt = delta * Simulation_speed;
+	Map.dt = delta * Simulation_speed /substeps;
 
 	
 	//listenerVel = { Entities[0]->CP.midvel.x ,Entities[0]->CP.midvel.y ,1.0f };
 	listenerPos.z = 1.0f / (CameraScale.x);
-	
-	UpdateListenerPosition();
-	Map.Update();
 	std::vector <int> iter;
 	iter.resize(threadcount);
 	
+	
+	
 	for (int i = 0; i < threadcount; i++)
 		iter[i] = i;
-	
-	
-	if (Map.Nodes.size() > 1000)
+
+	Map.Update();
+	threadNodestep = Map.Nodes.size()/threadcount;
+	threadNodeEnd = Map.Nodes.size();
+	threadsprepass = true;
+	if (Map.Nodes.size() > threadcount)
 	{
 		for(auto thr : iter)
 		{
 			std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
 			_SceneConVars[thr].notify_one();
 		}
-	
+
 		bool wait = true;
 		bool err = false;
 		while(wait)
@@ -2379,21 +2433,65 @@ void On_Update()
 		threadcount=1;
 		_mt_SceneProcess(0);
 		threadcount = buf;
-	
-	}
 
-	if(!Paused && Running)
+	}
+	threadsprepass = false;
+
+	for(int s=0;s<substeps ;s++)
 	{
-		
-	
-		Map.Process(delta * Simulation_speed);
-		Process(delta * Simulation_speed);
-	}
-	if(Paused || !Running)
-		Map.Draw(delta * Simulation_speed);
 
-	// for (int i = 0; i < Map.Shaders.size(); i++)
-	// 	Map.Shaders[i].UpdateUniforms();
+		if (Map.Nodes.size() > threadcount)
+		{
+			for(auto thr : iter)
+			{
+				std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
+				_SceneConVars[thr].notify_one();
+			}
+
+			bool wait = true;
+			bool err = false;
+			while(wait)
+			{
+				wait = false;
+				for(int thr = 0;thr<threadcount;thr++)
+					{
+						if(_ScenethreadsStates[thr] == 0)
+							wait = true;
+						if(_ScenethreadsStates[thr] ==-1)
+							{
+								err = true;
+								break;
+							}
+					}
+				if(err)
+					break;
+			}
+			if(err)
+				std::cout<<"   Missing threads in Scene mt process";
+		}
+		else
+		{
+			int buf = threadcount;
+			threadcount=1;
+			_mt_SceneProcess(0);
+			threadcount = buf;
+
+		}
+
+		if(!Paused && Running)
+		{
+			Map.Process(delta * Simulation_speed / substeps);
+			SubSteppedProcess(delta * Simulation_speed / substeps, s);
+		}
+	}
+	if(!Paused && Running)
+		Process(delta * Simulation_speed / substeps);
+
+	if(Paused || !Running)
+	{
+		UpdateListenerPosition();
+		Map.Draw(delta * Simulation_speed);
+	}
 
 
 	GetWindow(SceneWindowID)->End();
@@ -2413,8 +2511,8 @@ int main()
 {
 	//initEngine();
 	//initEngine("Redactor", 1920,1000,false);
-	_StartScenethreads();
-	initEngine("Redactor",1920,1080,true);
+	PreReady();
+	initEngine("Redactor",s_Resolution.x,s_Resolution.y,s_Fullscreen);
 	Map.SaveAs(MapFileName + ".back");
 	AL_Destroy();
 	_DeleteScenethreads();

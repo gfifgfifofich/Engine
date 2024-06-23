@@ -1,3 +1,65 @@
+Circle_0000000000
+{
+	Class 1
+	ID 0
+	Name Circle
+	Type 0
+	texture_FileName 
+	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
+	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
+	texture_Noize_Frequency 10.000000
+	texture_Noize_Layers 3
+	texture_Size 1000.000000
+	texture_Type 6
+	texture_filter 0
+}
+HM_0000000001
+{
+	Class 1
+	ID 0
+	Name HM
+	Type 0
+	texture_FileName 
+	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
+	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
+	texture_Noize_Frequency 10.000000
+	texture_Noize_Layers 3
+	texture_Size 1000.000000
+	texture_Type 10
+	texture_filter 0
+}
+H_0000000002
+{
+	Class 1
+	ID 0
+	Name H
+	Type 0
+	texture_FileName 
+	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
+	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
+	texture_Noize_Frequency 10.000000
+	texture_Noize_Layers 3
+	texture_Size 177.000000
+	texture_Type 5
+	texture_filter 0
+}
+LightSource_0000000000
+{
+	Class 6
+	Color 1.000000 4.967187 4.883594 3.566406
+	Depth 0.006875
+	ID 0
+	Name LightSource
+	Position -499.139709 71.281921
+	Rotation 0.008750
+	Scale 499.987061 492.290985
+	Texture No_texture
+	Type 1
+	Volume 0.000000
+	Z_Index -255
+	invertX 0
+	invertY 0
+}
 Light_0000000003
 {
 	Class 1
@@ -9,29 +71,46 @@ Light_0000000003
 	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
 	texture_Noize_Frequency 10.000000
 	texture_Noize_Layers 3
-	texture_Size 100.000000
+	texture_Size 1000.000000
 	texture_Type 5
 	texture_filter 0
 }
 M_Fog_0000000004
 {
 	Class 2
+	Height_Map H
 	ID 0
 	Name M_Fog
-	Normal_Map No_texture
+	Normal_Map NM
 	Texture Noize
 	Type 0
 }
-M_Light_0000000000
+M_Light_0000000005
 {
 	Class 2
+	Height_Map 
 	ID 0
 	Name M_Light
-	Normal_Map No_texture
+	Normal_Map NM
 	Texture Light
 	Type 0
 }
-Noize_0000000001
+NM_0000000006
+{
+	Class 1
+	ID 0
+	Name NM
+	Type 0
+	texture_FileName 
+	texture_Gradient_Color1 1.000000 1.000000 1.000000 1.000000
+	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
+	texture_Noize_Frequency 10.000000
+	texture_Noize_Layers 3
+	texture_Size 100.000000
+	texture_Type 8
+	texture_filter 0
+}
+Noize_0000000007
 {
 	Class 1
 	ID 0
@@ -42,41 +121,59 @@ Noize_0000000001
 	texture_Gradient_Color2 1.000000 1.000000 1.000000 0.000000
 	texture_Noize_Frequency 1.979355
 	texture_Noize_Layers 7
-	texture_Size 34.000000
+	texture_Size 1000.000000
 	texture_Type 1
 	texture_filter 0
 }
-Object_0000000000
+Object_0000000001
 {
 	Additive 0
 	Class 1
-	Color 41.901169 3.960936 3.955850 20.142693
+	Color 79.814453 22.147263 17.294910 9.857538
+	Depth -0.083594
 	ID 0
 	Material M_Fog
 	Name Object
 	Position 144.479736 94.149132
 	Rotation 0.000000
-	Scale 146.573883 134.679749
+	Scale 244.859039 239.394592
 	Type 1
 	Z_Index -295
 	invertX 0
 	invertY 0
 }
-ParticleObject_0000000001
+Object_0000000002
+{
+	Additive 0
+	Class 1
+	Color 1.000000 1.000000 1.000000 1.000000
+	Depth 0.000625
+	ID 0
+	Material mat
+	Name Object
+	Position -336.648438 62.304688
+	Rotation 0.000000
+	Scale 155.390625 148.375000
+	Type 1
+	Z_Index 0
+	invertX 0
+	invertY 0
+}
+ParticleObject_0000000003
 {
 	Class 7
 	ID 0
 	Name ParticleObject
 	ParticleAsset Sparks
 	ParticleObjectType 3
-	Position 274.925507 -9.034901
+	Position -0.642029 -30.226265
 	Radius 63.640137
 	Type 1
 	amount 20
 	tick 0.015750
 	velocity -53.935932 -20.668360
 }
-Sparks_0000000002
+Sparks_0000000008
 {
 	Acceleration 0.000000 0.000000
 	Additive 0
@@ -106,4 +203,14 @@ Sparks_0000000002
 	lifetime 20.039845
 	lifetimeRandomness 13.459375
 	lighted 0
+}
+mat_0000000009
+{
+	Class 2
+	Height_Map HM
+	ID 0
+	Name mat
+	Normal_Map NM
+	Texture Circle
+	Type 0
 }

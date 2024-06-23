@@ -14,7 +14,7 @@ void main()
 		FragColor = vec4(1.0f); 
 	else
 	{
-		vec2 v = {1.0f,1.0f};
+		vec2 v = vec2(1.0f);
 
 		if(UV.x>0.5f && UV.y>0.5f)
 		{

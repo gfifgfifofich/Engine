@@ -530,6 +530,10 @@ void Scene::Update()
 	}
 	
 
+
+	Collision_balls.clear();
+	Collision_cubes.clear();
+	Collision_polygons.clear();
 	ii =0;
 	while(ii<Nodes.size())
 	{
@@ -550,6 +554,15 @@ void Scene::Update()
 					if((*Nodes[ii]->UsedAssets[a])->Delete)
 						(*Nodes[ii]->UsedAssets[a]) = NULL;
 			}
+			if(Nodes[ii]->type == NodeType::CO_BALL)
+				Collision_balls.push_back(&((CO_Ball*)Nodes[ii])->b);
+
+			if(Nodes[ii]->type == NodeType::CO_CUBE)
+				Collision_cubes.push_back(&((CO_Cube*)Nodes[ii])->c);
+
+			if(Nodes[ii]->type == NodeType::CO_POLYGON)
+				Collision_polygons.push_back(&((CO_Polygon*)Nodes[ii])->p);
+		
 			Nodes[ii]->PreProcess();
 			ii++;
 		}
@@ -588,22 +601,9 @@ void Scene::Process(float dt)
 			Assets[i]->DebugProcess(dt);
 	}
 	
-
-	Collision_balls.clear();
-	Collision_cubes.clear();
-	Collision_polygons.clear();
 	for(int i=0;i<Nodes.size();i++)
 	{
 
-		if(Nodes[i]->type == NodeType::CO_BALL)
-			Collision_balls.push_back(&((CO_Ball*)Nodes[i])->b);
-
-		if(Nodes[i]->type == NodeType::CO_CUBE)
-			Collision_cubes.push_back(&((CO_Cube*)Nodes[i])->c);
-
-		if(Nodes[i]->type == NodeType::CO_POLYGON)
-			Collision_polygons.push_back(&((CO_Polygon*)Nodes[i])->p);
-		
 
 		for(int a =0;a<Nodes[i]->UsedAssets.size();a++)
 		{

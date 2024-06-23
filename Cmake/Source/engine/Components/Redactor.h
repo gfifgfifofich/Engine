@@ -12,11 +12,18 @@ inline Scene* GameScene;
 inline std::vector<std::string> AssetNames;
 inline std::vector<std::string> NodeNames;
 
-inline std::string MapFileName =  "./Scenes/BackGround.sav";
+inline glm::vec2 s_Resolution = { 1920,1080 };
+inline bool s_Fullscreen = true;
+
+inline int substeps = 10;
+
+inline std::string MapFileName =  "./Scenes/Sun.sav";
 
 void PreReady();
 void Ready();
+void SubSteppedProcess(float dt, int SubStep);
 void Process(float dt);
+void SceneEnd();
 void Rescale(int NewWidth,int NewHeight);
 void Destroy();
 

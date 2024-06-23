@@ -232,7 +232,7 @@ enum NodeType
 	LIGHTSOURCEOBJECT = 6,
 	PARTICLEOBJECT = 7,
 	SOUNDSOURCE = 8,
-
+	LASTNODE=10000
 };
 enum AssetType
 {
@@ -242,6 +242,7 @@ enum AssetType
 	PARTICLEASSET = 3,
 	ANIMATIONGRAPH = 4,
 	SOUNDASSET = 5,
+	LASTASSET =10000
 };
 
 
@@ -276,7 +277,7 @@ public:
 class TextureObject : public Asset
 {
 public:
-
+	int textid = -1;
 	TextureObject();
 
 	Texture texture;
@@ -301,8 +302,10 @@ public:
 	Material mater;
 	TextureObject* Texture = NULL;
 	TextureObject* NormalMap = NULL;
+	TextureObject* HeightMap = NULL;
 	std::string TextureName = "No_texture";
 	std::string NormalMapName = "No_texture";
+	std::string HeightMapName = "No_texture";
 	MaterialObject();
 
 	UI_DataPack GetUIDataMaterialObject();
@@ -401,6 +404,7 @@ public:
 	glm::vec2 Scale = glm::vec2(1.0f);
 	glm::vec4 Color = glm::vec4(1.0f);
 	float rotation = 0.0f;
+	float depth = 0.0f;
 	bool invertX = false;
 	bool invertY = false;
 	bool Additive = false;
@@ -424,7 +428,6 @@ class LightSourceObject : public Object
 {
 public:
 	float volume = 0.0f;
-	float depth = 0.0f;
 	TextureObject* Texture = NULL;
 	std::string TextureName = "No_texture";
 
@@ -578,8 +581,8 @@ public:
 
 class SoundSource : public Node
 {
-	unsigned prevsound = -1;
-	unsigned soundid = -1;
+	unsigned int prevsound = 0;
+	unsigned int soundid = 0;
 	bool changedSound = false;
 	bool prevLooping = false;
 	glm::vec2 prevvelocity = {0.0f,0.0f};
@@ -592,7 +595,7 @@ class SoundSource : public Node
 	float prevRollOff = 1.0f;
 	float prevMaxDist = 1.0f;
 	bool prevCamRelative = false;
-
+	bool wasplaying = false;
 	/*
 	AL_SEC_OFFSET
 	AL_REFERENCE_DISTANCE
@@ -608,12 +611,17 @@ public:
 	bool CamRelative = false;
 	bool ContiniusPlay = false;
 	bool Looping = false;
+	bool Temporary = false;
+	bool NoAsset = true;
+	unsigned int noAssetSound = NULL; 
+
 	glm::vec2 velocity = {0.0f,0.0f};
 	float gain = 1.0f;
 	float pitch = 1.0f;
 	unsigned int soundSource = -1;
 	SoundAsset* sound = NULL;
 	std::string SoundAssetName = "";
+	
 	SoundSource();
 	virtual ~SoundSource() override; 
 	UI_DataPack GetUIDataSoundSource();
@@ -621,6 +629,7 @@ public:
 	virtual void CustomUIDraw(glm::vec2* Corner, float Xstep,float step) override;
 	virtual void MTPreProcess() override;
 	virtual void PreProcess() override;
+	virtual void Play();
 	virtual void DebugDraw() override;
 };
 

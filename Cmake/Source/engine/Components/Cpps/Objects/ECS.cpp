@@ -97,6 +97,9 @@ UI_DataPack TextureObject::GetUIDataTextureObject()
 	uidp.name = "Texture";
 	uidp.t_texturedata.push_back(&texture);
 	uidp.t_texturedatanames.push_back("texture");		
+
+	//uidp.idata.push_back(&textid);
+	//uidp.idatanames.push_back("textureID");		
 	return uidp;
 }
 std::vector<UI_DataPack> TextureObject::GetUIData()
@@ -129,7 +132,10 @@ UI_DataPack MaterialObject::GetUIDataMaterialObject()
 	uidp.texturedata.push_back(&TextureName);
 	uidp.texturedatanames.push_back("Texture");		
 	uidp.texturedata.push_back(&NormalMapName);
-	uidp.texturedatanames.push_back("Normal_Map");		
+	uidp.texturedatanames.push_back("Normal_Map");
+	uidp.texturedata.push_back(&HeightMapName);
+	uidp.texturedatanames.push_back("Height_Map");
+			
 	return uidp;
 }
 std::vector<UI_DataPack> MaterialObject::GetUIData() 
@@ -143,6 +149,7 @@ void MaterialObject::DrawProcess(float dt)
 {
 	bool texexists = false;
 	bool normexists = false;
+	bool heightexists = false;
 	for(auto tex : AvailableTextures)
 	{
 		
@@ -156,19 +163,33 @@ void MaterialObject::DrawProcess(float dt)
 			NormalMap = tex;
 			normexists=true;
 		}
+		if(tex->Name == HeightMapName && !heightexists && !tex->Delete)
+		{
+			HeightMap = tex;
+			heightexists=true;
+		}
 	}
 	if(!texexists)
 		Texture = NULL;
 	if(!normexists)
 		NormalMap = NULL;
+	if(!heightexists)
+		HeightMap = NULL;
+
 	if(Texture!=NULL)
 		mater.Texture = Texture->texture.texture;
 	else
 		mater.Texture = NULL;
+		
 	if(NormalMap!=NULL)
 		mater.NormalMap = NormalMap->texture.texture;
 	else
 		mater.NormalMap = NULL;
+		
+	if(HeightMap!=NULL)
+		mater.HeightMap = HeightMap->texture.texture;
+	else
+		mater.HeightMap = NULL;
 }
 void MaterialObject::DrawPreview(glm::vec2 ui_position, glm::vec2 size)
 {
@@ -686,10 +707,14 @@ UI_DataPack Object::GetUIDataObject()
 	uidp.v2datanames.push_back("Scale");
 	uidp.fdata.push_back(&rotation);
 	uidp.fdatanames.push_back("Rotation");
+	uidp.fdata.push_back(&depth);
+	uidp.fdatanames.push_back("Depth");
 	
 	uidp.colordata.push_back(&Color);
 	uidp.colordatanames.push_back("Color");
 	
+	
+
 	uidp.bdata.push_back(&invertX);
 	uidp.bdatanames.push_back("invertX");
 	uidp.bdata.push_back(&invertY);
@@ -720,7 +745,7 @@ void Object::Draw()
 		m.Texture = FlatColorTexture;
 	if(m.NormalMap == NULL)
 		m.NormalMap = NULL;
-	DrawQuadWithMaterial(position,Scale,m,rotation,Color,Z_Index,Additive);
+	DrawQuadWithMaterial(position,Scale,m,rotation,Color,Z_Index,Additive,depth);
 };
 bool Object::SelectionCheck(glm::vec2 point) 
 {
@@ -762,8 +787,6 @@ UI_DataPack LightSourceObject::GetUIDataLightSourceObject()
 	uidp.fdata.push_back(&volume);
 	uidp.fdatanames.push_back("Volume");
 	
-	uidp.fdata.push_back(&depth);
-	uidp.fdatanames.push_back("Depth");
 	
 	uidp.texturedata.push_back(&TextureName);
 	uidp.texturedatanames.push_back("Texture");
@@ -1247,6 +1270,9 @@ UI_DataPack SoundSource::GetUIDataSoundSource()
 	uidp.bdata.push_back(&CamRelative);
 	uidp.bdatanames.push_back("CamRelative");
 
+	uidp.bdata.push_back(&Temporary);
+	uidp.bdatanames.push_back("Temporary");
+
 
 	uidp.fdata.push_back(&gain);
 	uidp.fdatanames.push_back("Gain");
@@ -1376,9 +1402,48 @@ void SoundSource::MTPreProcess()
 	}
 
 }
+void SoundSource::Play()
+{
+	if(soundSource>0)
+	{
+		StopSource(&soundSource);
+		DeleteSource(&soundSource);
+	}
+
+	GenSource(&soundSource);
+	if(NoAsset && noAssetSound!=NULL)
+		SetSourceSound(&soundSource,&noAssetSound);
+	else if(!NoAsset && sound!=NULL)
+		SetSourceSound(&soundSource,&sound->Sound);
+
+
+	prevposition = position;
+	SetSourcePosition(&soundSource,position);
+	prevgain = gain;
+	SetSourceGain(&soundSource,gain);
+	prevpitch = pitch;
+	SetSourcePitch(&soundSource,pitch);
+	prevLooping = Looping;
+	SetSourceLooping(&soundSource,Looping);
+	prevvelocity = velocity;
+	SetSourceVelocity(&soundSource,{velocity,0.0f});
+	prevHalfVolumeDist = HalfVolumeDist;
+	SetSourceRefDist(&soundSource, HalfVolumeDist);
+	prevRollOff = RollOff;
+	SetSourceMaxDistance(&soundSource, RollOff);
+	prevMaxDist = MaxDist;
+	SetSourceRollOff(&soundSource, MaxDist);
+	prevCamRelative = CamRelative;
+	SetSourceRelative(&soundSource,CamRelative);
+
+	PlaySource(&soundSource);
+
+
+}
+
 void SoundSource::PreProcess()
 {
-	if(sound==NULL)
+	if(!NoAsset && sound==NULL)
 	{
 		if(soundSource>=0)
 		{
@@ -1388,16 +1453,34 @@ void SoundSource::PreProcess()
 		}
 		return;
 	}
+	else
+	{
 
-	if(soundSource<0)
+		if(noAssetSound == NULL)
+		{
+			if(soundSource>=0)
+			{
+				DeleteSource(&soundSource);
+				soundSource = -1;
+				soundid = -1;
+			}
+			return;
+		}		
+
+	}
+
+	if(soundSource ==0)
 		GenSource(&soundSource);
 
 	if(changedSound)
 	{
-		if(soundSource<0)
+		if(soundSource>0)
 			DeleteSource(&soundSource);
 		GenSource(&soundSource);
-		SetSourceSound(&soundSource,&sound->Sound);
+		if(NoAsset && noAssetSound!=NULL)
+			SetSourceSound(&soundSource,&noAssetSound);
+		else if(!NoAsset && sound!=NULL)
+			SetSourceSound(&soundSource,&sound->Sound);
 		prevposition = position;
 		SetSourcePosition(&soundSource,position);
 		prevgain = gain;
@@ -1418,8 +1501,14 @@ void SoundSource::PreProcess()
 		SetSourceRelative(&soundSource,CamRelative);
 	}
 	
+	if(soundSource >0)
+	{
+		if(SourcePlaying(&soundSource))
+			wasplaying = true;
 
-
+		if(Temporary && !SourcePlaying(&soundSource) && wasplaying)
+			Delete=true;
+	}
 }
 void SoundSource::DebugDraw()
 {

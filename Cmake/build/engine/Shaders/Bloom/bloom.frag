@@ -24,9 +24,9 @@ void main()
 		FragColor.g += FragColor.r*0.05f + FragColor.b*0.05f;
 		FragColor.b += FragColor.g*0.05f + FragColor.r*0.05f;
 		
-		Color = vec4(FragColor.rgb, FragColor.a);
+		Color = vec4(FragColor.rgb, 1.0);
 	}
-	else Color = vec4(0.0f,0.0f,0.0f,0.0f);
+	else Color = vec4(0.0f,0.0f,0.0f,1.0f);
 	
 	
 }

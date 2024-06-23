@@ -483,9 +483,10 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		DetachShader();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 		if (bloom) 
 		{
+			
+
 			glBindVertexArray(ScreenVAO);
 			UseShader(DownsampleBlur);
 			for (int i = 0; i < 8; i++)

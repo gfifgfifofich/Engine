@@ -43,6 +43,13 @@ void Rescale(int newWindth,int newHeight)
 {
 
 }
+void SubSteppedProcess(float dt, int s)
+{
+}
+void SceneEnd()
+{
+
+}
 
 void Destroy()
 {

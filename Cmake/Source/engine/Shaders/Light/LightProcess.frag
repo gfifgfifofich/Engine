@@ -22,25 +22,18 @@ void main()
 	Pos.x /= aspect;
 	scrSpace.x =gl_FragCoord.x / scr.x;
 	scrSpace.y =gl_FragCoord.y / scr.y;
-	vec3 SurfaceNormal = texture(NormalMap,scrSpace).rgb;
+	vec4 SurfaceNormal = texture(NormalMap,scrSpace).rgba;
 	vec4 LightColor = texture(Texture, TexCoords).rgba * color;    
 	vec4 BaseCol = texture(BaseColor, scrSpace).rgba;
 
 	scrSpace.x /=aspect;
-
 	scrSpace /= CameraScale;
 	Pos.xy /= CameraScale;
-	vec3 rel = normalize(vec3(Pos.xy-scrSpace,Pos.z));
-
-
+	vec3 rel = normalize(vec3(Pos.xy-scrSpace,-SurfaceNormal.a+Pos.z));
 
 	vec4 Col;
-	Col = clamp(dot(rel.xyz,SurfaceNormal.xyz),0.0f,1.0f)*LightColor *BaseCol;
-
-	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor *BaseCol;
-
+	Col = clamp(dot(rel.xyz,SurfaceNormal.xyz),0.0f,1.0f)*LightColor*BaseCol;
+	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor*BaseCol;
 	Col = Col.rgba + volume*LightColor.rgba;
-	FragColor = vec4(Col.rgb,min(Col.a,1.0f)) ;
-
-
+	FragColor = vec4(Col.rgb,min(Col.a,1.0f));
 }
