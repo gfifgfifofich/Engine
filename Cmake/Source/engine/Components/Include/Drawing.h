@@ -114,7 +114,7 @@ struct LightSource
 {
 	float volume = 0.0f;
 	glm::vec3 position = glm::vec3(0.0f, 0.0, -0.5f);
-	glm::vec2 scale = glm::vec2(0.0f);
+	glm::vec3 scale = glm::vec3(0.0f);
 	float rotation = 0.0f;
 	glm::vec4 color = glm::vec4(0.0f);
 	unsigned int texture = LightSphereTexture;
@@ -389,6 +389,7 @@ void EndOfWindow();
 void PreLoadShaders();
 void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
 void DrawLight(glm::vec3 position, glm::vec2 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
+void DrawLight(glm::vec3 position, glm::vec3 scale, glm::vec4 color, float volume = 0.0f, float rotation = 0.0f, unsigned int texture = LightSphereTexture);
 void NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMap = BallNormalMapTexture, float rotation = 0.0f, int Z_Index = 0, unsigned int Texture = NULL, bool Additive = false, float depth = 0.0f, unsigned int HeightMap = NULL);
 void NormalMapDrawTriangle(
 	glm::vec2 p1,

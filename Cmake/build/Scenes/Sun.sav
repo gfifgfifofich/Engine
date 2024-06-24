@@ -47,18 +47,19 @@ LightSource_0000000000
 {
 	Class 6
 	Color 1.000000 4.967187 4.883594 3.566406
-	Depth 0.006875
+	Depth 55.692810
 	ID 0
 	Name LightSource
-	Position -499.139709 71.281921
+	Position -521.252808 143.491791
 	Rotation 0.008750
-	Scale 499.987061 492.290985
+	Scale 1029.157715 898.460266
 	Texture No_texture
 	Type 1
 	Volume 0.000000
 	Z_Index -255
 	invertX 0
 	invertY 0
+	sizeZ 4.002969
 }
 Light_0000000003
 {
@@ -147,13 +148,64 @@ Object_0000000002
 	Additive 0
 	Class 1
 	Color 1.000000 1.000000 1.000000 1.000000
-	Depth 0.000625
+	Depth -0.502266
 	ID 0
 	Material mat
 	Name Object
-	Position -336.648438 62.304688
+	Position -670.371582 -207.841263
+	Rotation 0.000000
+	Scale 63.559433 61.427032
+	Type 1
+	Z_Index 0
+	invertX 0
+	invertY 0
+}
+Object_0000000004
+{
+	Additive 0
+	Class 1
+	Color 1.000000 1.000000 1.000000 1.000000
+	Depth 0.105313
+	ID 0
+	Material mat
+	Name Object
+	Position -769.179138 173.887878
 	Rotation 0.000000
 	Scale 155.390625 148.375000
+	Type 1
+	Z_Index 1
+	invertX 0
+	invertY 0
+}
+Object_0000000005
+{
+	Additive 0
+	Class 1
+	Color 1.000000 1.000000 1.000000 1.000000
+	Depth 0.607969
+	ID 0
+	Material mat
+	Name Object
+	Position -756.771057 467.521393
+	Rotation 0.000000
+	Scale 239.031860 216.137161
+	Type 1
+	Z_Index 2
+	invertX 0
+	invertY 0
+}
+Object_0000000006
+{
+	Additive 0
+	Class 1
+	Color 1.000000 1.000000 1.000000 1.000000
+	Depth -0.220156
+	ID 0
+	Material mat
+	Name Object
+	Position -741.400574 -63.887009
+	Rotation 0.000000
+	Scale 120.502136 115.102898
 	Type 1
 	Z_Index 0
 	invertX 0
@@ -166,7 +218,7 @@ ParticleObject_0000000003
 	Name ParticleObject
 	ParticleAsset Sparks
 	ParticleObjectType 3
-	Position -0.642029 -30.226265
+	Position 246.947815 -76.886421
 	Radius 63.640137
 	Type 1
 	amount 20

@@ -428,6 +428,7 @@ class LightSourceObject : public Object
 {
 public:
 	float volume = 0.0f;
+	float sizeZ = 1.0f;
 	TextureObject* Texture = NULL;
 	std::string TextureName = "No_texture";
 

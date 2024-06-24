@@ -786,6 +786,8 @@ UI_DataPack LightSourceObject::GetUIDataLightSourceObject()
 	uidp.name = "LightSource";
 	uidp.fdata.push_back(&volume);
 	uidp.fdatanames.push_back("Volume");
+	uidp.fdata.push_back(&sizeZ);
+	uidp.fdatanames.push_back("sizeZ");
 	
 	
 	uidp.texturedata.push_back(&TextureName);
@@ -807,9 +809,9 @@ std::vector<UI_DataPack> LightSourceObject::GetUIData()
 void LightSourceObject::Draw()
 {
 	if(Texture != NULL)
-		DrawLight(glm::vec3(position,depth),Scale,Color,volume,rotation,Texture->texture.texture);
+		DrawLight(glm::vec3(position,depth),glm::vec3(Scale,sizeZ),Color,volume,rotation,Texture->texture.texture);
 	else 
-		DrawLight(glm::vec3(position,depth),Scale,Color,volume,rotation);
+		DrawLight(glm::vec3(position,depth),glm::vec3(Scale,sizeZ),Color,volume,rotation);
 };
 void LightSourceObject::DebugDraw()
 {

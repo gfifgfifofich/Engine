@@ -911,7 +911,8 @@ void Window::_Draw()
 			Apos -= CameraPosition;
 			Apos.x *= aspx;
 			Apos.y *= aspy;
-			LightSources[i].scale *= glm::vec2(aspx, aspy);
+			LightSources[i].scale.x *= aspx;
+			LightSources[i].scale.y *= aspy;
 
 			LightSources[i].position.x -= CameraPosition.x;
 			LightSources[i].position.y -= CameraPosition.y;
@@ -925,6 +926,7 @@ void Window::_Draw()
 			glUniform3f(glGetUniformLocation(LightShader, "position"), LightSources[i].position.x, LightSources[i].position.y, LightSources[i].position.z);
 			glUniform2f(glGetUniformLocation(LightShader, "Aposition"), Apos.x, Apos.y);
 			glUniform2f(glGetUniformLocation(LightShader, "scale"), LightSources[i].scale.x, LightSources[i].scale.y);
+			glUniform1f(glGetUniformLocation(LightShader, "sizeZ"), LightSources[i].scale.z);
 			glUniform2f(glGetUniformLocation(LightShader, "CameraScale"), CameraScale.x, CameraScale.y);
 			glUniform1f(glGetUniformLocation(LightShader, "angle"), LightSources[i].rotation);
 
@@ -1123,7 +1125,7 @@ void DrawLight(glm::vec2 position, glm::vec2 scale, glm::vec4 color, float volum
 	LightSource ls;
 	ls.volume = volume;
 	ls.position = glm::vec3(position, 0.0f);
-	ls.scale = scale;
+	ls.scale = glm::vec3(scale, 1.0f);
 	ls.rotation = rotation;
 	ls.color = color;
 	ls.texture = texture;
@@ -1133,7 +1135,18 @@ void DrawLight(glm::vec3 position, glm::vec2 scale, glm::vec4 color, float volum
 {
 	LightSource ls;
 	ls.volume = volume;
-	ls.position =  glm::vec3(position.x,position.y, position.z*0.01f);
+	ls.position =  glm::vec3(position.x,position.y, position.z);
+	ls.scale = glm::vec3(scale, 1.0f);
+	ls.rotation = rotation;
+	ls.color = color;
+	ls.texture = texture;
+	LightSources.push_back(ls);
+}
+void DrawLight(glm::vec3 position, glm::vec3 scale, glm::vec4 color, float volume, float rotation, unsigned int texture)
+{
+	LightSource ls;
+	ls.volume = volume;
+	ls.position =  glm::vec3(position.x,position.y, position.z);
 	ls.scale = scale;
 	ls.rotation = rotation;
 	ls.color = color;

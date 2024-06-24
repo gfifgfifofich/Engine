@@ -1706,7 +1706,7 @@ void On_Update()
 		}break;
 	case 4:
 		{
-			CopyTexture(w->ViewportSize,&HeightMapScreen,w->NormalMapColorBuffer,4);
+			CopyTexture(w->ViewportSize,&HeightMapScreen,w->NormalMapColorBuffer,5);
 			UI_DrawTexturedQuad(w->Position, w->GetSize(), HeightMapScreen, 0.0f, {1.0f,1.0f,1.0f,1.0f}, 1000, false,false,false,true);
 		}break;
 	
