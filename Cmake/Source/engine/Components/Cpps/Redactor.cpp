@@ -2032,11 +2032,14 @@ void On_Update()
 				NewSpawnedNode->position = w->w_CameraPosition;
 				Map.Nodes.push_back(NewSpawnedNode);
 			}
-
+			
+			Corner.y +=UI_DrawText("Nodes:",Corner,0.45f).y * -1.0f;
 			for(int i=0;i<Map.Nodes.size();i++)
 			{
 				b = false;
-				Corner.y += UI_button(&b, Map.Nodes[i]->Name.c_str(), Corner).y * -1.0f - step;
+				UI_DrawText(Map.Nodes[i]->Name.c_str(),Corner - glm::vec2(0.0f,5.0f),0.35f);
+				UI_DrawCube(Corner + glm::vec2(250*0.5f,0.0f), glm::vec2(250.0f,20.0f) * 0.5f, 0.0f, glm::vec4(0.07f));
+				Corner.y += UI_button(&b, "", Corner,{250,20},0.35f,glm::vec4(0.0f),glm::vec4(0.5f),glm::vec4(0.0f)).y * -1.0f - 0;
 				if(b)
 				{
 					SelectedNode = Map.Nodes[i];
