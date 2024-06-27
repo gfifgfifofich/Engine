@@ -2,6 +2,7 @@
 #include <thread>
 #include <condition_variable>
 #include <mutex>
+#include <latch>
 
 #include "../Include/sounds.h"
 
@@ -42,13 +43,12 @@
 */
 
 
-
 inline bool _Scenethreads_stop;
 
 inline std::thread* _Scenethreads;
 inline std::condition_variable* _SceneConVars;
 inline std::mutex* _SceneMutexes;
-inline std::vector<int> _ScenethreadsStates;// 1 waiting | 0 working | -1 done
+static inline std::atomic<bool>* _ScenethreadsStates;// 1 waiting | 0 working | -1 done/broken
    
 
 void _Scenethead_Process(int thr);
@@ -61,10 +61,10 @@ void _Scenethead_Process(int thr)
 {
 	std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
 	_SceneConVars[thr].wait(lm);
-	_ScenethreadsStates[thr] = 0;
+	
 	if(GameScene!=NULL)
 		_mt_SceneProcess(thr);
-	_ScenethreadsStates[thr]=1;
+	
 }
 
 
@@ -72,9 +72,10 @@ void _StartScenethread(int t)
 {
 	while(!_Scenethreads_stop)
 	{
+		
 		_Scenethead_Process(t);
+		_ScenethreadsStates[t] = 1;
 	}
-	_ScenethreadsStates[t]=-1;
 }
 
 void _StartScenethreads()
@@ -83,13 +84,13 @@ void _StartScenethreads()
 	_SceneMutexes = new std::mutex[threadcount];
 	_SceneConVars = new std::condition_variable[threadcount];
 	_Scenethreads = new std::thread[threadcount];
+	_ScenethreadsStates = new std::atomic<bool>[threadcount];
 	for(int i=0;i<threadcount;i++)
 	{
 		_Scenethreads[i] = std::thread(_StartScenethread,i);
-		_ScenethreadsStates.push_back(1);
+		_ScenethreadsStates[i] = 1;
 	}
 }
-
 
 
 void _DeleteScenethreads()
@@ -2405,30 +2406,31 @@ void On_Update()
 	{
 		for(auto thr : iter)
 		{
+			_ScenethreadsStates[thr] = 0;
 			std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
 			_SceneConVars[thr].notify_one();
 		}
-
 		bool wait = true;
-		bool err = false;
+		float startWaittime = glfwGetTime(); 
 		while(wait)
 		{
 			wait = false;
 			for(int thr = 0;thr<threadcount;thr++)
-				{
-					if(_ScenethreadsStates[thr] == 0)
-						wait = true;
-					if(_ScenethreadsStates[thr] ==-1)
-						{
-							err = true;
-							break;
-						}
+			{
+				if(!_ScenethreadsStates[thr].load())
+					wait = true;
+			}
+			if(glfwGetTime() - startWaittime  > delta*10.0f) // something happend with threads
+			{
+				std::cout<<"something happend with threads\n";
+				for(int thr = 0;thr<threadcount;thr++)
+				{						
+					_SceneConVars[thr].notify_one();
+					_ScenethreadsStates[thr].store(1);
 				}
-			if(err)
 				break;
+			}	
 		}
-		if(err)
-			std::cout<<"   Missing threads in Scene mt process";
 	}
 	else
 	{
@@ -2447,30 +2449,37 @@ void On_Update()
 		{
 			for(auto thr : iter)
 			{
+				_ScenethreadsStates[thr].store(0);
 				std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
 				_SceneConVars[thr].notify_one();
 			}
-
+			//_SceneBarrier.arrive_and_wait();
+			//for(auto thr : iter)
+			//{
+			//	std::unique_lock<std::mutex> lm(_SceneMutexWaiters[thr]);
+			//	_SceneConVarWaiters[thr].wait(lm);		
+			//}
 			bool wait = true;
-			bool err = false;
+			float startWaittime = glfwGetTime(); 
 			while(wait)
 			{
 				wait = false;
 				for(int thr = 0;thr<threadcount;thr++)
-					{
-						if(_ScenethreadsStates[thr] == 0)
-							wait = true;
-						if(_ScenethreadsStates[thr] ==-1)
-							{
-								err = true;
-								break;
-							}
+				{
+					if(!_ScenethreadsStates[thr].load())
+						wait = true;
+				}
+				if(glfwGetTime() - startWaittime > delta*10.0f) // something happend with threads
+				{
+					std::cout<<"\nsomething happend with threads";
+					for(int thr = 0;thr<threadcount;thr++)
+					{						
+						_SceneConVars[thr].notify_one();
+						_ScenethreadsStates[thr].store(1);
 					}
-				if(err)
 					break;
+				}	
 			}
-			if(err)
-				std::cout<<"   Missing threads in Scene mt process";
 		}
 		else
 		{

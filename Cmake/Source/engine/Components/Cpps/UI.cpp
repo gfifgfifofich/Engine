@@ -8,6 +8,25 @@
 #include "../Include/UI.h"
 
 //void UI_NormalMapDraw(position, scale, NormalMap, rotation, Z_Index, texture);
+
+//rotation not implemented, just twise size of object for bound checking
+bool CheckScreenBounds(glm::vec2 position, glm::vec2 scale, float rotation = 0.0f)
+{
+	scale *=2.0f;
+
+	if(position.y - scale.y < HEIGHT * 0.5f)
+		return false;
+	if(position.y + scale.y > HEIGHT * 0.5f)
+		return false;
+	
+	if(position.x - scale.x < WIDTH * 0.5f)
+		return false;
+	if(position.x + scale.x > WIDTH * 0.5f)
+		return false;
+
+	return true;
+}
+
 void UI_DrawSmoothQuad(glm::vec2 position, glm::vec2 scale, float rotation , glm::vec4 color , int Z_Index , bool Additive , bool flipX , bool flipY )
 {
 	float aspx = ScreenDivisorX ;
@@ -16,6 +35,7 @@ void UI_DrawSmoothQuad(glm::vec2 position, glm::vec2 scale, float rotation , glm
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
 
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
 
@@ -35,6 +55,7 @@ void UI_NormalMapDraw(glm::vec2 position, glm::vec2 scale, unsigned int NormalMa
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);	
 	
+	if(CheckScreenBounds(position,scale,rotation)) return;
 	int TQA = -1;
 	for (int i = 0; i < SceneLayers[SLI].NormalMaps.size(); i++)
 		if (SceneLayers[SLI].NormalMaps[i].material.NormalMap == NormalMap && SceneLayers[SLI].NormalMaps[i].material.Texture == Texture && SceneLayers[SLI].NormalMaps[i].material.HeightMap == HeightMap)
@@ -70,6 +91,7 @@ void UI_DrawQuadWithMaterial(cube c, Material material, float rotation, glm::vec
 
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
@@ -106,6 +128,7 @@ void UI_DrawQuadWithMaterial(glm::vec2 position, glm::vec2 scale, Material mater
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
 
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
 
@@ -140,6 +163,7 @@ void UI_DrawTexturedQuad(glm::vec2 position, glm::vec2 scale, unsigned int textu
 
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
@@ -186,6 +210,7 @@ void UI_DrawTexturedQuad(cube c, unsigned int texture, glm::vec4 color, float ro
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
 
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
 
@@ -239,7 +264,7 @@ void UI_DrawCircle(glm::vec2 position, float r, glm::vec4 color, bool Lighted, u
 
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
-
+	if(CheckScreenBounds(position,scale)) return;
 
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
@@ -263,6 +288,7 @@ void UI_DrawCircle(ball b, glm::vec4 color, bool Lighted, unsigned int NormalMap
 
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
+	if(CheckScreenBounds(position,scale)) return;
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
 
@@ -283,6 +309,7 @@ void UI_DrawCube(glm::vec2 position, glm::vec2 scale, float rotation, glm::vec4 
 
 	position *= glm::vec2(aspx, aspy);
 	scale *= glm::vec2(aspx, aspy);
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 
 
@@ -309,6 +336,7 @@ void UI_DrawCube(cube c, glm::vec4 color, float rotation, bool Lighted, unsigned
 	glm::vec2 position = c.position;
 	position *= glm::vec2(aspx, aspy);
 	glm::vec2 scale = glm::vec2(c.width, c.height) * glm::vec2(aspx, aspy);
+	if(CheckScreenBounds(position,scale,rotation)) return;
 
 	int SLI = FindSceneLayer(Z_Index, Additive);// ,bool Additive =false
 
@@ -372,6 +400,8 @@ void _UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::ve
 
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;
+
+		if(CheckScreenBounds(glm::vec2(xpos,ypos),glm::vec2(w,h))) continue;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos, ypos + h, 0.0, 0.0 },
@@ -382,6 +412,7 @@ void _UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::ve
 			{ xpos + w, ypos, 1.0, 1.0 },
 			{ xpos + w, ypos + h, 1.0, 0.0 }
 		};
+		
 		// Render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 		// Update content of VBO memory
