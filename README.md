@@ -20,7 +20,7 @@ Linux version is highly untested.
 - Neural network class for no reason.
 - Scene class that can store all sorts of data about a scene. (For now can only use already implemented objects, like quads, polygons, particles, textures etc.)
 Scene redactor preview:
-![github3](https://github.com/gfifgfifofich/Engine/blob/main/VS%20project/opengltry2/Textures/Redactor%20preview%20.png)
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/Redactor%20preview%20.png)
 
 
 ## libraries
