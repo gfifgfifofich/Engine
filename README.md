@@ -202,6 +202,7 @@ There are a simple NeuralNetwork class with easy setup for simulations and games
 
 
 ## libraries
+All of the libraries are copied inside, thats why "Languages" tab is broken, but project requeres no setup. just clone and build all
 [Dear imgui](https://github.com/ocornut/imgui), 
 [GLM](https://github.com/g-truc/glm), 
 [GLFW](https://github.com/glfw/glfw), 
