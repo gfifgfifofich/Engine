@@ -6,9 +6,14 @@ dependencies/freetype/CMakeFiles/freetype.dir/src/smooth/smooth.c.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/freetype/include/freetype/config/ftconfig.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build/dependencies/freetype/include/freetype/config/ftoption.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/config/ftstdlib.h \
-  /usr/lib/clang/17/include/stddef.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
-  /usr/lib/clang/17/include/limits.h /usr/include/limits.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
+  /usr/lib/clang/18/include/limits.h /usr/include/limits.h \
   /usr/include/bits/libc-header-start.h /usr/include/features.h \
   /usr/include/features-time64.h /usr/include/bits/wordsize.h \
   /usr/include/bits/timesize.h /usr/include/stdc-predef.h \
@@ -20,7 +25,8 @@ dependencies/freetype/CMakeFiles/freetype.dir/src/smooth/smooth.c.o: \
   /usr/include/bits/pthread_stack_min.h /usr/include/bits/posix2_lim.h \
   /usr/include/string.h /usr/include/bits/types/locale_t.h \
   /usr/include/bits/types/__locale_t.h /usr/include/strings.h \
-  /usr/include/stdio.h /usr/lib/clang/17/include/stdarg.h \
+  /usr/include/stdio.h /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
   /usr/include/bits/types.h /usr/include/bits/typesizes.h \
   /usr/include/bits/time64.h /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
@@ -50,6 +56,10 @@ dependencies/freetype/CMakeFiles/freetype.dir/src/smooth/smooth.c.o: \
   /usr/include/bits/stdlib-float.h /usr/include/setjmp.h \
   /usr/include/bits/setjmp.h \
   /usr/include/bits/types/struct___jmp_buf_tag.h \
+  /usr/lib/clang/18/include/__stdarg_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_arg.h \
+  /usr/lib/clang/18/include/__stdarg___va_copy.h \
+  /usr/lib/clang/18/include/__stdarg_va_copy.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/config/integer-types.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/config/public-macros.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/freetype/include/freetype/config/mac-support.h \

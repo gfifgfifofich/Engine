@@ -201,7 +201,7 @@ AVCODEC_INCLUDE_DIRS:PATH=/usr/include
 AVCODEC_LIBRARIES:FILEPATH=/usr/lib/libavcodec.so
 
 //The AVCODEC version number.
-AVCODEC_VERSION:STRING=60.31.102
+AVCODEC_VERSION:STRING=61.3.100
 
 //The AVDEVICE CFLAGS.
 AVDEVICE_DEFINITIONS:STRING=
@@ -213,7 +213,7 @@ AVDEVICE_INCLUDE_DIRS:PATH=/usr/include
 AVDEVICE_LIBRARIES:FILEPATH=/usr/lib/libavdevice.so
 
 //The AVDEVICE version number.
-AVDEVICE_VERSION:STRING=60.3.100
+AVDEVICE_VERSION:STRING=61.1.100
 
 //The AVFORMAT CFLAGS.
 AVFORMAT_DEFINITIONS:STRING=
@@ -225,7 +225,7 @@ AVFORMAT_INCLUDE_DIRS:PATH=/usr/include
 AVFORMAT_LIBRARIES:FILEPATH=/usr/lib/libavformat.so
 
 //The AVFORMAT version number.
-AVFORMAT_VERSION:STRING=60.16.100
+AVFORMAT_VERSION:STRING=61.1.100
 
 //The AVUTIL CFLAGS.
 AVUTIL_DEFINITIONS:STRING=
@@ -237,7 +237,7 @@ AVUTIL_INCLUDE_DIRS:PATH=/usr/include
 AVUTIL_LIBRARIES:FILEPATH=/usr/lib/libavutil.so
 
 //The AVUTIL version number.
-AVUTIL_VERSION:STRING=58.29.100
+AVUTIL_VERSION:STRING=59.8.100
 
 //Path to a file.
 BROTLIDEC_INCLUDE_DIRS:PATH=/usr/include
@@ -261,10 +261,10 @@ BZIP2_LIBRARY_DEBUG:FILEPATH=BZIP2_LIBRARY_DEBUG-NOTFOUND
 BZIP2_LIBRARY_RELEASE:FILEPATH=/usr/lib/libbz2.so
 
 //Path to a program.
-CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
+CMAKE_ADDR2LINE:FILEPATH=/usr/bin/llvm-addr2line
 
 //Path to a program.
-CMAKE_AR:FILEPATH=/usr/bin/ar
+CMAKE_AR:FILEPATH=/usr/bin/llvm-ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
@@ -274,13 +274,13 @@ CMAKE_BUILD_TYPE:STRING=
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //LLVM archiver
-CMAKE_CXX_COMPILER_AR:FILEPATH=CMAKE_CXX_COMPILER_AR-NOTFOUND
+CMAKE_CXX_COMPILER_AR:FILEPATH=/usr/bin/llvm-ar
 
 //`clang-scan-deps` dependency scanner
 CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS:FILEPATH=/usr/bin/clang-scan-deps
 
 //Generate index for LLVM archive
-CMAKE_CXX_COMPILER_RANLIB:FILEPATH=CMAKE_CXX_COMPILER_RANLIB-NOTFOUND
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/usr/bin/llvm-ranlib
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -298,13 +298,13 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //LLVM archiver
-CMAKE_C_COMPILER_AR:FILEPATH=CMAKE_C_COMPILER_AR-NOTFOUND
+CMAKE_C_COMPILER_AR:FILEPATH=/usr/bin/llvm-ar
 
 //`clang-scan-deps` dependency scanner
 CMAKE_C_COMPILER_CLANG_SCAN_DEPS:FILEPATH=/usr/bin/clang-scan-deps
 
 //Generate index for LLVM archive
-CMAKE_C_COMPILER_RANLIB:FILEPATH=CMAKE_C_COMPILER_RANLIB-NOTFOUND
+CMAKE_C_COMPILER_RANLIB:FILEPATH=/usr/bin/llvm-ranlib
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -325,7 +325,7 @@ CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 CMAKE_DEBUG_POSTFIX:STRING=
 
 //Path to a program.
-CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
+CMAKE_DLLTOOL:FILEPATH=/usr/bin/llvm-dlltool
 
 //Flags used by the linker during all build types.
 CMAKE_EXE_LINKER_FLAGS:STRING=
@@ -426,13 +426,13 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=/usr/bin/nm
+CMAKE_NM:FILEPATH=/usr/bin/llvm-nm
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
+CMAKE_OBJCOPY:FILEPATH=/usr/bin/llvm-objcopy
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
+CMAKE_OBJDUMP:FILEPATH=/usr/bin/llvm-objdump
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -459,10 +459,10 @@ CMAKE_PROJECT_VERSION_PATCH:STATIC=0
 CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //Path to a program.
-CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
+CMAKE_RANLIB:FILEPATH=/usr/bin/llvm-ranlib
 
 //Path to a program.
-CMAKE_READELF:FILEPATH=/usr/bin/readelf
+CMAKE_READELF:FILEPATH=/usr/bin/llvm-readelf
 
 //Flags used by the linker during the creation of shared libraries
 // during all build types.
@@ -512,7 +512,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=/usr/bin/strip
+CMAKE_STRIP:FILEPATH=/usr/bin/llvm-strip
 
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
@@ -796,7 +796,7 @@ POSTPROC_INCLUDE_DIRS:PATH=/usr/include
 POSTPROC_LIBRARIES:FILEPATH=/usr/lib/libpostproc.so
 
 //The POSTPROC version number.
-POSTPROC_VERSION:STRING=57.3.100
+POSTPROC_VERSION:STRING=58.1.100
 
 //The PulseAudio include directory
 PULSEAUDIO_INCLUDE_DIR:PATH=/usr/include
@@ -850,7 +850,7 @@ SWRESAMPLE_INCLUDE_DIRS:PATH=/usr/include
 SWRESAMPLE_LIBRARIES:FILEPATH=/usr/lib/libswresample.so
 
 //The SWRESAMPLE version number.
-SWRESAMPLE_VERSION:STRING=4.12.100
+SWRESAMPLE_VERSION:STRING=5.1.100
 
 //The SWSCALE CFLAGS.
 SWSCALE_DEFINITIONS:STRING=
@@ -862,7 +862,7 @@ SWSCALE_INCLUDE_DIRS:PATH=/usr/include
 SWSCALE_LIBRARIES:FILEPATH=/usr/lib/libswscale.so
 
 //The SWSCALE version number.
-SWSCALE_VERSION:STRING=7.5.100
+SWSCALE_VERSION:STRING=8.1.100
 
 //Path to a program.
 WAYLAND_SCANNER_EXECUTABLE:FILEPATH=/usr/bin/wayland-scanner
@@ -1438,9 +1438,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=/run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/build
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=29
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=30
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=5
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=1
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -1645,7 +1645,7 @@ FFMPEG_INCLUDE_DIRS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: FFMPEG_LIBRARIES
 FFMPEG_LIBRARIES-ADVANCED:INTERNAL=1
 //Details about finding ALSA
-FIND_PACKAGE_MESSAGE_DETAILS_ALSA:INTERNAL=[/usr/lib/libasound.so][/usr/include][v1.2.11()]
+FIND_PACKAGE_MESSAGE_DETAILS_ALSA:INTERNAL=[/usr/lib/libasound.so][/usr/include][v1.2.12()]
 //Details about finding BZip2
 FIND_PACKAGE_MESSAGE_DETAILS_BZip2:INTERNAL=[/usr/lib/libbz2.so][/usr/include][v1.0.8()]
 //Details about finding BrotliDec
@@ -1655,7 +1655,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_FFmpeg:INTERNAL=[/usr/lib/libavformat.so;/usr/lib/l
 //Details about finding Git
 FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[/usr/bin/git][v2.45.2()]
 //Details about finding HarfBuzz
-FIND_PACKAGE_MESSAGE_DETAILS_HarfBuzz:INTERNAL=[/usr/include/harfbuzz][/usr/lib/libharfbuzz.so][ON][v8.5.0(2.0.0)]
+FIND_PACKAGE_MESSAGE_DETAILS_HarfBuzz:INTERNAL=[/usr/include/harfbuzz][/usr/lib/libharfbuzz.so][ON][v9.0.0(2.0.0)]
 //Details about finding JACK
 FIND_PACKAGE_MESSAGE_DETAILS_JACK:INTERNAL=[/usr/lib/libjack.so][/usr/include][v()]
 //Details about finding MySOFA
@@ -1850,7 +1850,7 @@ PC_AVCODEC_STATIC_LIBS:INTERNAL=
 PC_AVCODEC_STATIC_LIBS_L:INTERNAL=
 PC_AVCODEC_STATIC_LIBS_OTHER:INTERNAL=
 PC_AVCODEC_STATIC_LIBS_PATHS:INTERNAL=
-PC_AVCODEC_VERSION:INTERNAL=60.31.102
+PC_AVCODEC_VERSION:INTERNAL=61.3.100
 PC_AVCODEC_libavcodec_INCLUDEDIR:INTERNAL=
 PC_AVCODEC_libavcodec_LIBDIR:INTERNAL=
 PC_AVCODEC_libavcodec_PREFIX:INTERNAL=
@@ -1876,16 +1876,16 @@ PC_AVDEVICE_STATIC_CFLAGS:INTERNAL=-I/usr/include
 PC_AVDEVICE_STATIC_CFLAGS_I:INTERNAL=
 PC_AVDEVICE_STATIC_CFLAGS_OTHER:INTERNAL=
 PC_AVDEVICE_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
-PC_AVDEVICE_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lavdevice;-lm;-latomic;-lraw1394;-lavc1394;-lrom1394;-liec61883;-ljack;-ldrm;-lxcb;-lxcb-shm;-lxcb-shape;-lxcb-xfixes;-lasound;-lGL;-lpulse;-pthread;-lSDL2;-lv4l2;-lXv;-lX11;-lXext;-L/usr/lib;-lavfilter;-pthread;-lm;-latomic;-lbs2b;-lrubberband;-lfftw3;-lsamplerate;-lstdc++;-lharfbuzz;-lfribidi;-lplacebo;-lvmaf;-lass;-lva;-lvidstab;-lm;-fopenmp;-lzimg;-lOpenCL;-lfontconfig;-lfreetype;-lfreetype;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lswscale;-lm;-latomic;-lpostproc;-lm;-latomic;-lavformat;-lm;-latomic;-lxml2;-lbz2;-lmodplug;-lopenmpt;-lstdc++;-lvapoursynth-script;-lvapoursynth;-lbluray;-lgmp;-lz;-lgnutls;-lsrt;-lssh;-lavcodec;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lwebpmux;-pthread;-lm;-latomic;-llzma;-ldav1d;-lopencore-amrwb;-lrsvg-2;-lm;-lgio-2.0;-lglib-2.0;-lgdk_pixbuf-2.0;-lgobject-2.0;-lcairo;-lsnappy;-lstdc++;-laom;-lgsm;-ljxl;-ljxl_threads;-lmp3lame;-lm;-lopencore-amrnb;-lopenjp2;-lopus;-lrav1e;-lspeex;-lSvtAv1Enc;-ltheoraenc;-ltheoradec;-logg;-lvorbis;-lvorbisenc;-lwebp;-lx264;-lx265;-lxvidcore;-lz;-lva;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lswresample;-lm;-lsoxr;-latomic;-lavutil;-pthread;-lva-drm;-lva;-lva-x11;-lva;-lvdpau;-lX11;-lm;-ldrm;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lOpenCL;-lva;-latomic;-lX11
+PC_AVDEVICE_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lavdevice;-lm;-latomic;-lraw1394;-lavc1394;-lrom1394;-liec61883;-ljack;-ldrm;-lxcb;-lxcb-shm;-lxcb-shape;-lxcb-xfixes;-lasound;-lGL;-lpulse;-pthread;-lSDL2;-lv4l2;-lXv;-lX11;-lXext;-L/usr/lib;-lavfilter;-pthread;-lm;-latomic;-lbs2b;-lrubberband;-lfftw3;-lsamplerate;-lstdc++;-lharfbuzz;-lfribidi;-lplacebo;-lvmaf;-lass;-lva;-lvidstab;-lm;-fopenmp;-lzimg;-lOpenCL;-lfontconfig;-lfreetype;-lfreetype;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lswscale;-lm;-latomic;-lpostproc;-lm;-latomic;-lavformat;-lm;-latomic;-ldvdnav;-lpthread;-ldvdread;-lxml2;-lbz2;-lmodplug;-lopenmpt;-lstdc++;-lvapoursynth-script;-lvapoursynth;-lbluray;-lgmp;-lz;-L/usr/lib/mbedtls2;-lmbedtls;-lsrt;-lssh;-lavcodec;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lwebpmux;-pthread;-lm;-latomic;-llzma;-ldav1d;-lopencore-amrwb;-lrsvg-2;-lm;-lgio-2.0;-lglib-2.0;-lgdk_pixbuf-2.0;-lgobject-2.0;-lcairo;-lsnappy;-lstdc++;-laom;-lgsm;-ljxl;-ljxl_threads;-lmp3lame;-lm;-lopencore-amrnb;-lopenjp2;-lopus;-lrav1e;-lspeex;-lSvtAv1Enc;-ltheoraenc;-ltheoradec;-logg;-lvorbis;-lvorbisenc;-lwebp;-lx264;-lx265;-lxvidcore;-lz;-lva;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lswresample;-lm;-lsoxr;-latomic;-lavutil;-pthread;-lva-drm;-lva;-lva-x11;-lva;-lvdpau;-lX11;-lm;-ldrm;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lOpenCL;-lva;-latomic;-lX11
 PC_AVDEVICE_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread;-pthread;-fopenmp;-pthread;-pthread
 PC_AVDEVICE_STATIC_LIBDIR:INTERNAL=
-PC_AVDEVICE_STATIC_LIBRARIES:INTERNAL=avdevice;m;atomic;raw1394;avc1394;rom1394;iec61883;jack;drm;xcb;xcb-shm;xcb-shape;xcb-xfixes;asound;GL;pulse;SDL2;v4l2;Xv;X11;Xext;avfilter;m;atomic;bs2b;rubberband;fftw3;samplerate;stdc++;harfbuzz;fribidi;placebo;vmaf;ass;va;vidstab;m;zimg;OpenCL;fontconfig;freetype;freetype;vpl;dl;stdc++;swscale;m;atomic;postproc;m;atomic;avformat;m;atomic;xml2;bz2;modplug;openmpt;stdc++;vapoursynth-script;vapoursynth;bluray;gmp;z;gnutls;srt;ssh;avcodec;vpx;m;vpx;m;vpx;m;vpx;m;webpmux;m;atomic;lzma;dav1d;opencore-amrwb;rsvg-2;m;gio-2.0;glib-2.0;gdk_pixbuf-2.0;gobject-2.0;cairo;snappy;stdc++;aom;gsm;jxl;jxl_threads;mp3lame;m;opencore-amrnb;openjp2;opus;rav1e;speex;SvtAv1Enc;theoraenc;theoradec;ogg;vorbis;vorbisenc;webp;x264;x265;xvidcore;z;va;vpl;dl;stdc++;swresample;m;soxr;atomic;avutil;va-drm;va;va-x11;va;vdpau;X11;m;drm;vpl;dl;stdc++;OpenCL;va;atomic;X11
-PC_AVDEVICE_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib;/usr/lib;/usr/lib/pkgconfig/../;/usr/lib/pkgconfig/../;/usr/lib/pkgconfig/../
+PC_AVDEVICE_STATIC_LIBRARIES:INTERNAL=avdevice;m;atomic;raw1394;avc1394;rom1394;iec61883;jack;drm;xcb;xcb-shm;xcb-shape;xcb-xfixes;asound;GL;pulse;SDL2;v4l2;Xv;X11;Xext;avfilter;m;atomic;bs2b;rubberband;fftw3;samplerate;stdc++;harfbuzz;fribidi;placebo;vmaf;ass;va;vidstab;m;zimg;OpenCL;fontconfig;freetype;freetype;vpl;dl;stdc++;swscale;m;atomic;postproc;m;atomic;avformat;m;atomic;dvdnav;pthread;dvdread;xml2;bz2;modplug;openmpt;stdc++;vapoursynth-script;vapoursynth;bluray;gmp;z;mbedtls;srt;ssh;avcodec;vpx;m;vpx;m;vpx;m;vpx;m;webpmux;m;atomic;lzma;dav1d;opencore-amrwb;rsvg-2;m;gio-2.0;glib-2.0;gdk_pixbuf-2.0;gobject-2.0;cairo;snappy;stdc++;aom;gsm;jxl;jxl_threads;mp3lame;m;opencore-amrnb;openjp2;opus;rav1e;speex;SvtAv1Enc;theoraenc;theoradec;ogg;vorbis;vorbisenc;webp;x264;x265;xvidcore;z;va;vpl;dl;stdc++;swresample;m;soxr;atomic;avutil;va-drm;va;va-x11;va;vdpau;X11;m;drm;vpl;dl;stdc++;OpenCL;va;atomic;X11
+PC_AVDEVICE_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib;/usr/lib;/usr/lib/pkgconfig/../;/usr/lib/mbedtls2;/usr/lib/pkgconfig/../;/usr/lib/pkgconfig/../
 PC_AVDEVICE_STATIC_LIBS:INTERNAL=
 PC_AVDEVICE_STATIC_LIBS_L:INTERNAL=
 PC_AVDEVICE_STATIC_LIBS_OTHER:INTERNAL=
 PC_AVDEVICE_STATIC_LIBS_PATHS:INTERNAL=
-PC_AVDEVICE_VERSION:INTERNAL=60.3.100
+PC_AVDEVICE_VERSION:INTERNAL=61.1.100
 PC_AVDEVICE_libavdevice_INCLUDEDIR:INTERNAL=
 PC_AVDEVICE_libavdevice_LIBDIR:INTERNAL=
 PC_AVDEVICE_libavdevice_PREFIX:INTERNAL=
@@ -1911,16 +1911,16 @@ PC_AVFORMAT_STATIC_CFLAGS:INTERNAL=-I/usr/include
 PC_AVFORMAT_STATIC_CFLAGS_I:INTERNAL=
 PC_AVFORMAT_STATIC_CFLAGS_OTHER:INTERNAL=
 PC_AVFORMAT_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
-PC_AVFORMAT_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lavformat;-lm;-latomic;-lxml2;-lbz2;-lmodplug;-lopenmpt;-lstdc++;-lvapoursynth-script;-lvapoursynth;-lbluray;-lgmp;-lz;-lgnutls;-lsrt;-lssh;-L/usr/lib;-lavcodec;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lwebpmux;-pthread;-lm;-latomic;-llzma;-ldav1d;-lopencore-amrwb;-lrsvg-2;-lm;-lgio-2.0;-lglib-2.0;-lgdk_pixbuf-2.0;-lgobject-2.0;-lcairo;-lsnappy;-lstdc++;-laom;-lgsm;-ljxl;-ljxl_threads;-lmp3lame;-lm;-lopencore-amrnb;-lopenjp2;-lopus;-lrav1e;-lspeex;-lSvtAv1Enc;-ltheoraenc;-ltheoradec;-logg;-lvorbis;-lvorbisenc;-lwebp;-lx264;-lx265;-lxvidcore;-lz;-lva;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lswresample;-lm;-lsoxr;-latomic;-lavutil;-pthread;-lva-drm;-lva;-lva-x11;-lva;-lvdpau;-lX11;-lm;-ldrm;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lOpenCL;-lva;-latomic;-lX11
+PC_AVFORMAT_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lavformat;-lm;-latomic;-ldvdnav;-lpthread;-ldvdread;-lxml2;-lbz2;-lmodplug;-lopenmpt;-lstdc++;-lvapoursynth-script;-lvapoursynth;-lbluray;-lgmp;-lz;-L/usr/lib/mbedtls2;-lmbedtls;-lsrt;-lssh;-L/usr/lib;-lavcodec;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lvpx;-lm;-lwebpmux;-pthread;-lm;-latomic;-llzma;-ldav1d;-lopencore-amrwb;-lrsvg-2;-lm;-lgio-2.0;-lglib-2.0;-lgdk_pixbuf-2.0;-lgobject-2.0;-lcairo;-lsnappy;-lstdc++;-laom;-lgsm;-ljxl;-ljxl_threads;-lmp3lame;-lm;-lopencore-amrnb;-lopenjp2;-lopus;-lrav1e;-lspeex;-lSvtAv1Enc;-ltheoraenc;-ltheoradec;-logg;-lvorbis;-lvorbisenc;-lwebp;-lx264;-lx265;-lxvidcore;-lz;-lva;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lswresample;-lm;-lsoxr;-latomic;-lavutil;-pthread;-lva-drm;-lva;-lva-x11;-lva;-lvdpau;-lX11;-lm;-ldrm;-L/usr/lib/pkgconfig/../;-lvpl;-ldl;-lstdc++;-lOpenCL;-lva;-latomic;-lX11
 PC_AVFORMAT_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread;-pthread
 PC_AVFORMAT_STATIC_LIBDIR:INTERNAL=
-PC_AVFORMAT_STATIC_LIBRARIES:INTERNAL=avformat;m;atomic;xml2;bz2;modplug;openmpt;stdc++;vapoursynth-script;vapoursynth;bluray;gmp;z;gnutls;srt;ssh;avcodec;vpx;m;vpx;m;vpx;m;vpx;m;webpmux;m;atomic;lzma;dav1d;opencore-amrwb;rsvg-2;m;gio-2.0;glib-2.0;gdk_pixbuf-2.0;gobject-2.0;cairo;snappy;stdc++;aom;gsm;jxl;jxl_threads;mp3lame;m;opencore-amrnb;openjp2;opus;rav1e;speex;SvtAv1Enc;theoraenc;theoradec;ogg;vorbis;vorbisenc;webp;x264;x265;xvidcore;z;va;vpl;dl;stdc++;swresample;m;soxr;atomic;avutil;va-drm;va;va-x11;va;vdpau;X11;m;drm;vpl;dl;stdc++;OpenCL;va;atomic;X11
-PC_AVFORMAT_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib;/usr/lib;/usr/lib/pkgconfig/../;/usr/lib/pkgconfig/../
+PC_AVFORMAT_STATIC_LIBRARIES:INTERNAL=avformat;m;atomic;dvdnav;pthread;dvdread;xml2;bz2;modplug;openmpt;stdc++;vapoursynth-script;vapoursynth;bluray;gmp;z;mbedtls;srt;ssh;avcodec;vpx;m;vpx;m;vpx;m;vpx;m;webpmux;m;atomic;lzma;dav1d;opencore-amrwb;rsvg-2;m;gio-2.0;glib-2.0;gdk_pixbuf-2.0;gobject-2.0;cairo;snappy;stdc++;aom;gsm;jxl;jxl_threads;mp3lame;m;opencore-amrnb;openjp2;opus;rav1e;speex;SvtAv1Enc;theoraenc;theoradec;ogg;vorbis;vorbisenc;webp;x264;x265;xvidcore;z;va;vpl;dl;stdc++;swresample;m;soxr;atomic;avutil;va-drm;va;va-x11;va;vdpau;X11;m;drm;vpl;dl;stdc++;OpenCL;va;atomic;X11
+PC_AVFORMAT_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib;/usr/lib/mbedtls2;/usr/lib;/usr/lib/pkgconfig/../;/usr/lib/pkgconfig/../
 PC_AVFORMAT_STATIC_LIBS:INTERNAL=
 PC_AVFORMAT_STATIC_LIBS_L:INTERNAL=
 PC_AVFORMAT_STATIC_LIBS_OTHER:INTERNAL=
 PC_AVFORMAT_STATIC_LIBS_PATHS:INTERNAL=
-PC_AVFORMAT_VERSION:INTERNAL=60.16.100
+PC_AVFORMAT_VERSION:INTERNAL=61.1.100
 PC_AVFORMAT_libavformat_INCLUDEDIR:INTERNAL=
 PC_AVFORMAT_libavformat_LIBDIR:INTERNAL=
 PC_AVFORMAT_libavformat_PREFIX:INTERNAL=
@@ -1955,7 +1955,7 @@ PC_AVUTIL_STATIC_LIBS:INTERNAL=
 PC_AVUTIL_STATIC_LIBS_L:INTERNAL=
 PC_AVUTIL_STATIC_LIBS_OTHER:INTERNAL=
 PC_AVUTIL_STATIC_LIBS_PATHS:INTERNAL=
-PC_AVUTIL_VERSION:INTERNAL=58.29.100
+PC_AVUTIL_VERSION:INTERNAL=59.8.100
 PC_AVUTIL_libavutil_INCLUDEDIR:INTERNAL=
 PC_AVUTIL_libavutil_LIBDIR:INTERNAL=
 PC_AVUTIL_libavutil_PREFIX:INTERNAL=
@@ -2095,7 +2095,7 @@ PC_HARFBUZZ_STATIC_LIBS:INTERNAL=
 PC_HARFBUZZ_STATIC_LIBS_L:INTERNAL=
 PC_HARFBUZZ_STATIC_LIBS_OTHER:INTERNAL=
 PC_HARFBUZZ_STATIC_LIBS_PATHS:INTERNAL=
-PC_HARFBUZZ_VERSION:INTERNAL=8.5.0
+PC_HARFBUZZ_VERSION:INTERNAL=9.0.0
 PC_HARFBUZZ_harfbuzz_INCLUDEDIR:INTERNAL=
 PC_HARFBUZZ_harfbuzz_LIBDIR:INTERNAL=
 PC_HARFBUZZ_harfbuzz_PREFIX:INTERNAL=
@@ -2130,7 +2130,7 @@ PC_POSTPROC_STATIC_LIBS:INTERNAL=
 PC_POSTPROC_STATIC_LIBS_L:INTERNAL=
 PC_POSTPROC_STATIC_LIBS_OTHER:INTERNAL=
 PC_POSTPROC_STATIC_LIBS_PATHS:INTERNAL=
-PC_POSTPROC_VERSION:INTERNAL=57.3.100
+PC_POSTPROC_VERSION:INTERNAL=58.1.100
 PC_POSTPROC_libpostproc_INCLUDEDIR:INTERNAL=
 PC_POSTPROC_libpostproc_LIBDIR:INTERNAL=
 PC_POSTPROC_libpostproc_PREFIX:INTERNAL=
@@ -2165,7 +2165,7 @@ PC_SWRESAMPLE_STATIC_LIBS:INTERNAL=
 PC_SWRESAMPLE_STATIC_LIBS_L:INTERNAL=
 PC_SWRESAMPLE_STATIC_LIBS_OTHER:INTERNAL=
 PC_SWRESAMPLE_STATIC_LIBS_PATHS:INTERNAL=
-PC_SWRESAMPLE_VERSION:INTERNAL=4.12.100
+PC_SWRESAMPLE_VERSION:INTERNAL=5.1.100
 PC_SWRESAMPLE_libswresample_INCLUDEDIR:INTERNAL=
 PC_SWRESAMPLE_libswresample_LIBDIR:INTERNAL=
 PC_SWRESAMPLE_libswresample_PREFIX:INTERNAL=
@@ -2200,7 +2200,7 @@ PC_SWSCALE_STATIC_LIBS:INTERNAL=
 PC_SWSCALE_STATIC_LIBS_L:INTERNAL=
 PC_SWSCALE_STATIC_LIBS_OTHER:INTERNAL=
 PC_SWSCALE_STATIC_LIBS_PATHS:INTERNAL=
-PC_SWSCALE_VERSION:INTERNAL=7.5.100
+PC_SWSCALE_VERSION:INTERNAL=8.1.100
 PC_SWSCALE_libswscale_INCLUDEDIR:INTERNAL=
 PC_SWSCALE_libswscale_LIBDIR:INTERNAL=
 PC_SWSCALE_libswscale_PREFIX:INTERNAL=
@@ -2235,7 +2235,7 @@ PIPEWIRE_STATIC_LIBS:INTERNAL=
 PIPEWIRE_STATIC_LIBS_L:INTERNAL=
 PIPEWIRE_STATIC_LIBS_OTHER:INTERNAL=
 PIPEWIRE_STATIC_LIBS_PATHS:INTERNAL=
-PIPEWIRE_VERSION:INTERNAL=1.0.6
+PIPEWIRE_VERSION:INTERNAL=1.2.1
 PIPEWIRE_libpipewire-0.3_INCLUDEDIR:INTERNAL=
 PIPEWIRE_libpipewire-0.3_LIBDIR:INTERNAL=
 PIPEWIRE_libpipewire-0.3_PREFIX:INTERNAL=
@@ -2358,12 +2358,12 @@ Wayland_wayland-client_INCLUDEDIR:INTERNAL=/usr/include
 Wayland_wayland-client_LIBDIR:INTERNAL=/usr/lib
 Wayland_wayland-client_MODULE_NAME:INTERNAL=wayland-client
 Wayland_wayland-client_PREFIX:INTERNAL=/usr
-Wayland_wayland-client_VERSION:INTERNAL=1.22.0
+Wayland_wayland-client_VERSION:INTERNAL=1.23.0
 Wayland_wayland-cursor_INCLUDEDIR:INTERNAL=/usr/include
 Wayland_wayland-cursor_LIBDIR:INTERNAL=/usr/lib
 Wayland_wayland-cursor_MODULE_NAME:INTERNAL=wayland-cursor
 Wayland_wayland-cursor_PREFIX:INTERNAL=/usr
-Wayland_wayland-cursor_VERSION:INTERNAL=1.22.0
+Wayland_wayland-cursor_VERSION:INTERNAL=1.23.0
 Wayland_wayland-egl_INCLUDEDIR:INTERNAL=/usr/include
 Wayland_wayland-egl_LIBDIR:INTERNAL=/usr/lib
 Wayland_wayland-egl_MODULE_NAME:INTERNAL=wayland-egl

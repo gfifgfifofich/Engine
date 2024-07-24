@@ -13,6 +13,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/include/gnu/stubs-64.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/pstl_config.h \
+  /usr/include/tbb/tbb.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stringfwd.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/memoryfwd.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/char_traits.h \
@@ -20,7 +21,12 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cwchar \
   /usr/include/wchar.h /usr/include/bits/libc-header-start.h \
   /usr/include/bits/floatn.h /usr/include/bits/floatn-common.h \
-  /usr/lib/clang/17/include/stddef.h /usr/lib/clang/17/include/stdarg.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
   /usr/include/bits/wchar.h /usr/include/bits/types/wint_t.h \
   /usr/include/bits/types/mbstate_t.h \
   /usr/include/bits/types/__mbstate_t.h /usr/include/bits/types/__FILE.h \
@@ -113,7 +119,10 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/basic_string.tcc \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/memory_resource.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstddef \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_nullptr_t.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/uses_allocator.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/uses_allocator_args.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/tuple \
@@ -122,7 +131,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/chrono.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/ratio \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdint \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/limits \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/ctime \
@@ -131,6 +140,10 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/include/bits/types/struct_itimerspec.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/parse_numbers.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdarg \
+  /usr/lib/clang/18/include/__stdarg_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_arg.h \
+  /usr/lib/clang/18/include/__stdarg___va_copy.h \
+  /usr/lib/clang/18/include/__stdarg_va_copy.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/memory \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_tempbuf.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_uninitialized.h \
@@ -160,7 +173,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/shared_ptr_atomic.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_base.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_lockfree_defines.h \
-  /usr/lib/clang/17/include/sanitizer/tsan_interface.h \
+  /usr/lib/clang/18/include/sanitizer/tsan_interface.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/backward/auto_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/glue_memory_defs.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/execution_defs.h \
@@ -220,7 +233,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/alc.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/alext.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/efx.h \
-  /usr/lib/clang/17/include/float.h \
+  /usr/lib/clang/18/include/float.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/mutex \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/std_mutex.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/unique_lock.h \
@@ -257,11 +270,11 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/tr1/poly_hermite.tcc \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/tr1/poly_laguerre.tcc \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/tr1/riemann_zeta.tcc \
-  /usr/lib/clang/17/include/xmmintrin.h \
-  /usr/lib/clang/17/include/mmintrin.h \
-  /usr/lib/clang/17/include/mm_malloc.h \
+  /usr/lib/clang/18/include/xmmintrin.h \
+  /usr/lib/clang/18/include/mmintrin.h \
+  /usr/lib/clang/18/include/mm_malloc.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/stdlib.h \
-  /usr/lib/clang/17/include/emmintrin.h \
+  /usr/lib/clang/18/include/emmintrin.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/common/alstring.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/helpers.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/core/logging.h \
@@ -270,7 +283,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/include/pipewire-0.3/pipewire/pipewire.h \
   /usr/include/spa-0.2/spa/support/plugin.h \
   /usr/include/spa-0.2/spa/utils/defs.h \
-  /usr/lib/clang/17/include/inttypes.h /usr/include/inttypes.h \
+  /usr/lib/clang/18/include/inttypes.h /usr/include/inttypes.h \
   /usr/include/signal.h /usr/include/bits/signum-generic.h \
   /usr/include/bits/signum-arch.h /usr/include/bits/types/sig_atomic_t.h \
   /usr/include/bits/types/siginfo_t.h \
@@ -304,8 +317,11 @@ dependencies/openal/CMakeFiles/OpenAL.dir/alc/backends/pipewire.cpp.o: \
   /usr/include/pipewire-0.3/pipewire/context.h \
   /usr/include/pipewire-0.3/pipewire/core.h \
   /usr/include/pipewire-0.3/pipewire/properties.h \
-  /usr/include/spa-0.2/spa/utils/string.h \
-  /usr/lib/clang/17/include/stdbool.h \
+  /usr/include/spa-0.2/spa/utils/cleanup.h /usr/include/dirent.h \
+  /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h \
+  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+  /usr/include/bits/dirent_ext.h /usr/include/spa-0.2/spa/utils/string.h \
+  /usr/lib/clang/18/include/stdbool.h \
   /usr/include/pipewire-0.3/pipewire/loop.h \
   /usr/include/spa-0.2/spa/support/loop.h \
   /usr/include/spa-0.2/spa/support/system.h \

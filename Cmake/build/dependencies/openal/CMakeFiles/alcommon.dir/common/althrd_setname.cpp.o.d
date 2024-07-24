@@ -9,7 +9,10 @@ dependencies/openal/CMakeFiles/alcommon.dir/common/althrd_setname.cpp.o: \
   /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
   /usr/include/sched.h /usr/include/bits/types.h \
   /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
-  /usr/lib/clang/17/include/stddef.h /usr/include/bits/types/time_t.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/include/bits/types/time_t.h \
   /usr/include/bits/types/struct_timespec.h /usr/include/bits/endian.h \
   /usr/include/bits/endianness.h /usr/include/bits/sched.h \
   /usr/include/bits/types/struct_sched_param.h \

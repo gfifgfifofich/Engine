@@ -8,7 +8,15 @@ void Spring(point* p1, point* p2, glm::vec2 Difference, float stiffness, float a
 
 	glm::vec2 Change1 = Difference * 0.5f * stiffness;
 	glm::vec2 Change2 = -Difference * 0.5f * stiffness;
-	glm::vec2 norm = Normalize(p2->position - p1->position);
+	glm::vec2 posdif = p2->position - p1->position;
+	float dist = length(posdif);
+	if(dist<0.0001f)
+	{
+		p2->position.y += 0.0002f;
+		posdif = p2->position - p1->position;
+		dist = length(posdif);
+	}
+	glm::vec2 norm = posdif/dist;
 
 
 	glm::vec2 vel1 = p1->velocity - p2->velocity;
@@ -26,8 +34,14 @@ void Spring(point* p1, point* p2, glm::vec2 Difference, float stiffness, float a
 void SpringBetweenBalls(ball* a, ball* b, float springLength, float stiffness, float absorption )
 {
 	glm::vec2 posdif = b->position - a->position;
-
-	glm::vec2 Difference = posdif - Normalize(posdif) * springLength;
+	float dist = length(posdif);
+	if(dist<0.0001f)
+	{
+		b->position.y += 0.0002f;
+		posdif = b->position - a->position;
+		dist = length(posdif);
+	}
+	glm::vec2 Difference = posdif - (posdif/dist) * springLength;
 
 
 
@@ -74,7 +88,14 @@ void FixedSpringBetweenBalls(ball* a, ball* b, glm::vec2 SpringVector, float sti
 void SpringBetweenPoints(point* a, point* b, float springLength, float stiffness, float absorption )
 {
 	glm::vec2 posdif = b->position - a->position;
-	glm::vec2 SpringVector = Normalize(posdif) * springLength;
+	float dist = length(posdif);
+	if(dist<0.0001f)
+	{
+		b->position.y += 0.0002f;
+		posdif = b->position - a->position;
+		dist = length(posdif);
+	}
+	glm::vec2 SpringVector = (posdif/dist) * springLength;
 
 	glm::vec2 Difference = posdif - SpringVector;
 
@@ -84,7 +105,14 @@ void SpringBetweenPoints(point* a, point* b, float springLength, float stiffness
 void SpringBallToPoint(ball* a, point* b, float springLength, float stiffness, float absorption )
 {
 	glm::vec2 posdif = b->position - a->position;
-	glm::vec2 SpringVector = Normalize(posdif) * springLength;
+	float dist = length(posdif);
+	if(dist<0.0001f)
+	{
+		b->position.y += 0.0002f;
+		posdif = b->position - a->position;
+		dist = length(posdif);
+	}
+	glm::vec2 SpringVector = (posdif/dist) * springLength;
 
 	glm::vec2 Difference = posdif - SpringVector;
 

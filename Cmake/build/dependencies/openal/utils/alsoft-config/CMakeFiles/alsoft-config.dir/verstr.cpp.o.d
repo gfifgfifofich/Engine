@@ -13,10 +13,17 @@ dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/verstr.cpp.
   /usr/include/gnu/stubs-64.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/pstl_config.h \
+  /usr/include/tbb/tbb.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/version.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstddef \
-  /usr/lib/clang/17/include/stddef.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/__stddef_nullptr_t.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/utility \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_relops.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_pair.h \
@@ -87,7 +94,7 @@ dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/verstr.cpp.
   /usr/include/qt/QtCore/qatomic_cxx11.h \
   /usr/include/qt/QtCore/qgenericatomic.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_base.h \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/wchar.h /usr/include/bits/stdint-uintn.h \
   /usr/include/bits/stdint-least.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_lockfree_defines.h \
@@ -99,7 +106,12 @@ dependencies/openal/utils/alsoft-config/CMakeFiles/alsoft-config.dir/verstr.cpp.
   /usr/include/qt/QtCore/qarraydata.h /usr/include/string.h \
   /usr/include/strings.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/stdlib.h \
-  /usr/lib/clang/17/include/stdarg.h \
+  /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_arg.h \
+  /usr/lib/clang/18/include/__stdarg___va_copy.h \
+  /usr/lib/clang/18/include/__stdarg_va_copy.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/string \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/requires_hosted.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stringfwd.h \

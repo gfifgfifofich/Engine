@@ -158,7 +158,7 @@ public:
 	int start = 0;
 	int Normastart = 0;
 	int threadcount = std::thread::hardware_concurrency();
-	float delta = 0.017f;
+	float Partdelta = 0.017f;
 
 	int SceneLayerIndex = -1;
 	int NormalMapIndex = -1;

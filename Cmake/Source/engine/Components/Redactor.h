@@ -17,7 +17,7 @@ inline bool s_Fullscreen = true;
 
 inline int substeps = 10;
 
-inline std::string MapFileName =  "./Scenes/Sun.sav";
+inline std::string MapFileName =  "./Scenes/tutorial.sav";
 
 void PreReady();
 void Ready();

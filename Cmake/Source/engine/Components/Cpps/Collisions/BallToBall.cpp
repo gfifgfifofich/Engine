@@ -64,7 +64,6 @@ void BallToPointCollision(ball* b, glm::vec2 point, float roughness)
 
 	}
 }
-// proper, physically correct collision of 2 balls
 void BtBCollision(ball* b1, ball* b2, float roughness)
 {
 
@@ -75,7 +74,13 @@ void BtBCollision(ball* b1, ball* b2, float roughness)
 	{
 		float dist = length(dif);
 		float distancedifference = (b1->r + b2->r) - dist;
-
+		if(dist<0.0001f)
+		{
+			b2->position.y += 0.0002f;
+			dif = b2->position - b1->position;
+			dist = length(dif);
+			distancedifference = (b1->r + b2->r) - dist;
+		}
 		// all the normals
 		glm::vec2 n2 = dif / dist;
 		glm::vec2 n1 = -n2;
@@ -131,6 +136,51 @@ void BtBCollision(ball* b1, ball* b2, float roughness)
 		if (!b1->Kinematic) b1->velocity = velocity1;
 
 		if (!b2->Kinematic) b2->velocity = velocity2;
+
+
+	}
+
+}
+
+void BalltoStaticBallCollision(ball* b1, ball* b2, float roughness)
+{
+
+
+
+	glm::vec2 dif = b2->position - b1->position;
+	if (dif.x * dif.x + dif.y * dif.y < (b1->r + b2->r) * (b1->r + b2->r))
+	{
+		float dist = length(dif);
+		float distancedifference = (b1->r + b2->r) - dist;
+		if(dist<0.0001f)
+		{
+			b2->position.y += 0.0002f;
+			dif = b2->position - b1->position;
+			dist = length(dif);
+			distancedifference = (b1->r + b2->r) - dist;
+		}
+		// all the normals
+		glm::vec2 n2 = dif / dist;
+		glm::vec2 n1 = -n2;
+		glm::vec2 CollisionLine = glm::vec2(-n1.y, n1.x);
+
+
+
+		//velocities
+		// "untached" component of velocity
+		glm::vec2 velocity1 = DOT(b1->velocity, CollisionLine) * CollisionLine;
+
+		float energy1 = DOT(b1->velocity, n1);// basicly, a component of velocity, that is changed after collision
+
+	
+		velocity1 -= n1 * roughness * energy1;
+
+		//positions
+		b1->position = b1->position + n1 * (distancedifference);
+		
+
+		b1->velocity = velocity1;
+
 
 
 	}

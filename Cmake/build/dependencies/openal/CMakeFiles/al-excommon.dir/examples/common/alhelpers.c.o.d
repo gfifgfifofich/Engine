@@ -7,10 +7,13 @@ dependencies/openal/CMakeFiles/al-excommon.dir/examples/common/alhelpers.c.o: \
   /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
   /usr/include/stdc-predef.h /usr/include/sys/cdefs.h \
   /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
-  /usr/include/gnu/stubs-64.h /usr/lib/clang/17/include/stddef.h \
-  /usr/lib/clang/17/include/stdarg.h /usr/include/bits/types.h \
-  /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
-  /usr/include/bits/types/__fpos_t.h \
+  /usr/include/gnu/stubs-64.h /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/bits/time64.h /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
   /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
@@ -24,12 +27,15 @@ dependencies/openal/CMakeFiles/al-excommon.dir/examples/common/alhelpers.c.o: \
   /usr/include/bits/types/__locale_t.h /usr/include/strings.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/alc.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/alext.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/wchar.h /usr/include/bits/stdint-intn.h \
   /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/efx.h \
-  /usr/lib/clang/17/include/float.h /usr/include/sys/time.h \
+  /usr/lib/clang/18/include/float.h /usr/include/sys/time.h \
   /usr/include/bits/types/time_t.h \
   /usr/include/bits/types/struct_timeval.h /usr/include/sys/select.h \
   /usr/include/bits/select.h /usr/include/bits/types/sigset_t.h \

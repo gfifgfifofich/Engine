@@ -1,7 +1,7 @@
 #pragma once
 // openAL
 #include <AL/alext.h>
-
+#include <map>
 inline std::vector <ALuint*> sources;
 inline std::vector <ALuint*> sounds;
 inline std::vector <unsigned int> soundsArray;
@@ -48,3 +48,32 @@ void PlaySound(unsigned int* sound, glm::vec2 position, float pitch = 1.0f, floa
 void PlaySound(unsigned int* dst, unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f);
 void PlaySound(unsigned int** dst, unsigned int* sound, glm::vec2 position, float pitch = 1.0f, float gain = 1.0f);
 void ProcessAL();
+
+
+
+
+struct soundpool
+{
+
+	unsigned int sound =0;
+	unsigned int sourceamount = 0;
+	std::vector<unsigned int> ssources;
+	std::vector<int> sourceUsageAmount;
+	std::vector<glm::vec2> avgpositions;
+	std::vector<glm::vec2> avgvelocities;
+	std::vector<float> avggains;
+	std::vector<float> avgpitches;
+	bool continuous = false;
+	int LastSourceAmout = 0;
+
+	void Update();
+	void AddSound(glm::vec2 position,float gain,float pitch,glm::vec2 velocity,bool startover);
+	void Clear();
+	void Delete();
+};
+inline std::vector<soundpool> Sounds;
+
+
+void addsound(unsigned int sound, bool looping = false, unsigned int sourceamount = 10);
+
+void playsound(unsigned int sound, glm::vec2 position,float gain = 1.0f,float pitch = 1.0f,glm::vec2 velocity = {0.0f,0.0f},bool startover = false);

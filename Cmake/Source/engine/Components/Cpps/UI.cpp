@@ -401,7 +401,7 @@ void _UI_DrawText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::ve
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;
 
-		if(CheckScreenBounds(glm::vec2(xpos,ypos),glm::vec2(w,h))) continue;
+		if(CheckScreenBounds(glm::vec2(xpos,ypos) ,glm::vec2(w,h))) continue;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos, ypos + h, 0.0, 0.0 },

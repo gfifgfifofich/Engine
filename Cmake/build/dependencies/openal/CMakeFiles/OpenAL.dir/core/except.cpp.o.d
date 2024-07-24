@@ -12,15 +12,26 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o: \
   /usr/include/gnu/stubs-64.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/pstl_config.h \
-  /usr/lib/clang/17/include/stdarg.h \
+  /usr/include/tbb/tbb.h /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_arg.h \
+  /usr/lib/clang/18/include/__stdarg___va_copy.h \
+  /usr/lib/clang/18/include/__stdarg_va_copy.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/exception \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/exception.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/version.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/exception_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/exception_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/cxxabi_init_exception.h \
-  /usr/lib/clang/17/include/stddef.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/__stddef_nullptr_t.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/typeinfo \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/hash_bytes.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/new \
@@ -128,7 +139,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_relops.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/common/opthelpers.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdint \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/memory \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_tempbuf.h \
@@ -157,7 +168,7 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/except.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/shared_ptr_atomic.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_base.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_lockfree_defines.h \
-  /usr/lib/clang/17/include/sanitizer/tsan_interface.h \
+  /usr/lib/clang/18/include/sanitizer/tsan_interface.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/backward/auto_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/glue_memory_defs.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/execution_defs.h

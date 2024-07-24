@@ -2,16 +2,22 @@ dependencies/GLFW/src/CMakeFiles/glfw.dir/null_window.c.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/null_window.c \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/internal.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/../include/GLFW/glfw3.h \
-  /usr/lib/clang/17/include/stddef.h /usr/lib/clang/17/include/stdint.h \
-  /usr/include/stdint.h /usr/include/bits/libc-header-start.h \
-  /usr/include/features.h /usr/include/features-time64.h \
-  /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
-  /usr/include/stdc-predef.h /usr/include/sys/cdefs.h \
-  /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
-  /usr/include/gnu/stubs-64.h /usr/include/bits/types.h \
-  /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
-  /usr/include/bits/wchar.h /usr/include/bits/stdint-intn.h \
-  /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
+  /usr/include/bits/libc-header-start.h /usr/include/features.h \
+  /usr/include/features-time64.h /usr/include/bits/wordsize.h \
+  /usr/include/bits/timesize.h /usr/include/stdc-predef.h \
+  /usr/include/sys/cdefs.h /usr/include/bits/long-double.h \
+  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/bits/time64.h /usr/include/bits/wchar.h \
+  /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
+  /usr/include/bits/stdint-least.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/platform.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/null_platform.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/wl_platform.h \
@@ -21,8 +27,13 @@ dependencies/GLFW/src/CMakeFiles/glfw.dir/null_window.c.o: \
   /usr/include/bits/floatn-common.h /usr/include/bits/flt-eval-method.h \
   /usr/include/bits/fp-logb.h /usr/include/bits/fp-fast.h \
   /usr/include/bits/mathcalls-helper-functions.h \
-  /usr/include/bits/mathcalls.h /usr/lib/clang/17/include/inttypes.h \
-  /usr/include/inttypes.h /usr/lib/clang/17/include/stdarg.h \
+  /usr/include/bits/mathcalls.h /usr/lib/clang/18/include/inttypes.h \
+  /usr/include/inttypes.h /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_arg.h \
+  /usr/lib/clang/18/include/__stdarg___va_copy.h \
+  /usr/lib/clang/18/include/__stdarg_va_copy.h \
   /usr/include/wayland-version.h /usr/include/xkbcommon/xkbcommon.h \
   /usr/include/stdio.h /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
@@ -34,7 +45,7 @@ dependencies/GLFW/src/CMakeFiles/glfw.dir/null_window.c.o: \
   /usr/include/xkbcommon/xkbcommon-keysyms.h \
   /usr/include/xkbcommon/xkbcommon-compat.h \
   /usr/include/xkbcommon/xkbcommon-compose.h \
-  /usr/lib/clang/17/include/stdbool.h \
+  /usr/lib/clang/18/include/stdbool.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/xkb_unicode.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/GLFW/src/posix_poll.h \
   /usr/include/poll.h /usr/include/sys/poll.h /usr/include/bits/poll.h \

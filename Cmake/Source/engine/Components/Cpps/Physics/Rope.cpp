@@ -4,15 +4,22 @@
 #include "../../Include/Drawing.h"
 #include "../../Include/Physics/Rope.h"
 
-void Rope(ball* a, ball* b, float length)
+void Rope(ball* a, ball* b, float maxlength)
 {
 
 	glm::vec2 posdif = b->position - a->position;
-	if (sqrlength(posdif) > length * length)
+	if (sqrlength(posdif) > maxlength * maxlength)
 	{
-		glm::vec2 norm = Normalize(posdif);
+		float dist = length(posdif);
+		if(dist<0.0001f)
+		{
+			b->position.y += 0.0002f;
+			posdif = b->position - a->position;
+			dist = length(posdif);
+		}
+		glm::vec2 norm = posdif/dist;
 
-		glm::vec2 Difference = posdif - norm * length;
+		glm::vec2 Difference = posdif - norm * maxlength;
 
 
 
@@ -29,15 +36,22 @@ void Rope(ball* a, ball* b, float length)
 		}
 	}
 }
-void MRope(ball* a, ball* b, float length)
+void MRope(ball* a, ball* b, float maxlength)
 {
 
 	glm::vec2 posdif = b->position - a->position;
-	if (sqrlength(posdif) > length * length)
+	if (sqrlength(posdif) > maxlength * maxlength)
 	{
-		glm::vec2 norm = Normalize(posdif);
+		float dist = length(posdif);
+		if(dist<0.0001f)
+		{
+			b->position.y += 0.0002f;
+			posdif = b->position - a->position;
+			dist = length(posdif);
+		}
+		glm::vec2 norm = posdif/dist;
 
-		glm::vec2 Difference = posdif - norm * length;
+		glm::vec2 Difference = posdif - norm * maxlength;
 
 
 		float mdivisor = 1.0f / (a->mass + b->mass);

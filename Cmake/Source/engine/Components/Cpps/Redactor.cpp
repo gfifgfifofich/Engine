@@ -96,13 +96,6 @@ void _StartScenethreads()
 void _DeleteScenethreads()
 {
 	_Scenethreads_stop = true;
-
-	for(int i=0;i<threadcount;i++)
-	{
-		std::unique_lock<std::mutex> lm(_SceneMutexes[i]);
-		_SceneConVars[i].notify_one();
-	}
-
 	for(int thr = 0;thr<threadcount;thr++)
 	{
 		_Scenethreads[thr].~thread();
@@ -1544,7 +1537,9 @@ void On_Create()
 	//Map.Assets.push_back(new MaterialObject());
 
 	w->Use();
+	
 	GameScene = &Map;
+	
 	Ready();
 	w->End();
 	
@@ -1777,7 +1772,7 @@ void On_Update()
 		{
 		float size = 100;
 		int AssetStep = 20.0f;
-		int MaxAmountRow = cw->ViewportSize.x/(size + AssetStep)-1; 	
+		int MaxAmountRow = cw->ViewportSize.x/(size + AssetStep * 2.0f)-1; 	
 		int counterX = 0;
 		float AssetstepX = 0.0f;
 
@@ -1890,7 +1885,13 @@ void On_Update()
 	
 	Corner = { WIDTH * -0.5f, HEIGHT * 0.5f - CameraPosition.y };
 	Corner += glm::vec2(20.0f, -25.0f);
-
+	if(!Paused && Running)
+	{
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		SelectedAsset =NULL;
+		SelectedAssetID=-1;
+	}
 	if(SelectedAsset!=NULL || SelectedNode!=NULL)
 		ProcessSelectedNodeUI();
 
@@ -2384,6 +2385,13 @@ void On_Update()
 		grabbed = false;		
 	}
 	
+	if(!Paused && Running)
+	{
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		SelectedAsset =NULL;
+		SelectedAssetID=-1;
+	}
 	GameScene = &Map;
 	Map.dt = delta * Simulation_speed /substeps;
 
@@ -2402,6 +2410,7 @@ void On_Update()
 	threadNodestep = Map.Nodes.size()/threadcount;
 	threadNodeEnd = Map.Nodes.size();
 	threadsprepass = true;
+	
 	if (Map.Nodes.size() > threadcount)
 	{
 		for(auto thr : iter)
@@ -2441,7 +2450,6 @@ void On_Update()
 
 	}
 	threadsprepass = false;
-
 	for(int s=0;s<substeps ;s++)
 	{
 
@@ -2497,8 +2505,13 @@ void On_Update()
 		}
 	}
 	if(!Paused && Running)
-		Process(delta * Simulation_speed / substeps);
-
+	{
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		SelectedAsset =NULL;
+		SelectedAssetID=-1;
+		Process(delta * Simulation_speed);
+	}
 	if(Paused || !Running)
 	{
 		UpdateListenerPosition();
@@ -2525,10 +2538,15 @@ int main()
 	//initEngine("Redactor", 1920,1000,false);
 	PreReady();
 	initEngine("Redactor",s_Resolution.x,s_Resolution.y,s_Fullscreen);
+	std::cout<<"\nexited, saving...";
 	Map.SaveAs(MapFileName + ".back");
+	std::cout<<"\nsaved, sound...";
 	AL_Destroy();
-	_DeleteScenethreads();
+	std::cout<<"\ndeleted, scene...";
 	Destroy();
+	std::cout<<"\ndeleted, threads...";
+	_DeleteScenethreads();
+	std::cout<<"\ndeleted";
 	return 0;
 }
 

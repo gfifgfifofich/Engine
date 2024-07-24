@@ -1,9 +1,14 @@
 dependencies/glew/build/cmake/CMakeFiles/glew.dir/__/__/src/glew.c.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/glew/src/glew.c \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/glew/build/cmake/../../include/GL/glew.h \
-  /usr/lib/clang/17/include/stddef.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/libc-header-start.h /usr/include/features.h \
   /usr/include/features-time64.h /usr/include/bits/wordsize.h \
   /usr/include/bits/timesize.h /usr/include/stdc-predef.h \

@@ -7,10 +7,13 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: \
   /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
   /usr/include/stdc-predef.h /usr/include/sys/cdefs.h \
   /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
-  /usr/include/gnu/stubs-64.h /usr/lib/clang/17/include/stddef.h \
-  /usr/lib/clang/17/include/stdarg.h /usr/include/bits/types.h \
-  /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
-  /usr/include/bits/types/__fpos_t.h \
+  /usr/include/gnu/stubs-64.h /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h \
+  /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/bits/time64.h /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
   /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
@@ -23,9 +26,10 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/x86_64-pc-linux-gnu/bits/os_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/pstl_config.h \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
-  /usr/include/bits/wchar.h /usr/include/bits/stdint-intn.h \
-  /usr/include/bits/stdint-uintn.h /usr/include/bits/stdint-least.h \
+  /usr/include/tbb/tbb.h /usr/lib/clang/18/include/stdint.h \
+  /usr/include/stdint.h /usr/include/bits/wchar.h \
+  /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
+  /usr/include/bits/stdint-least.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/utility \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_relops.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stl_pair.h \
@@ -78,8 +82,9 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/stringfwd.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/postypes.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cwchar \
-  /usr/include/wchar.h /usr/include/bits/types/wint_t.h \
-  /usr/include/bits/types/mbstate_t.h /usr/include/bits/types/locale_t.h \
+  /usr/include/wchar.h /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/include/bits/types/wint_t.h /usr/include/bits/types/mbstate_t.h \
+  /usr/include/bits/types/locale_t.h \
   /usr/include/bits/types/__locale_t.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/shared_ptr_base.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/typeinfo \
@@ -114,12 +119,15 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/exception \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/exception_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/cxxabi_init_exception.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_nullptr_t.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/nested_exception.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/shared_ptr_atomic.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_base.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_lockfree_defines.h \
-  /usr/lib/clang/17/include/sanitizer/tsan_interface.h \
+  /usr/lib/clang/18/include/sanitizer/tsan_interface.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/backward/auto_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/glue_memory_defs.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/execution_defs.h \
@@ -129,6 +137,10 @@ dependencies/openal/CMakeFiles/OpenAL.dir/core/logging.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cctype \
   /usr/include/ctype.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdarg \
+  /usr/lib/clang/18/include/__stdarg_va_list.h \
+  /usr/lib/clang/18/include/__stdarg_va_arg.h \
+  /usr/lib/clang/18/include/__stdarg___va_copy.h \
+  /usr/lib/clang/18/include/__stdarg_va_copy.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdio \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstring \
   /usr/include/string.h /usr/include/strings.h \

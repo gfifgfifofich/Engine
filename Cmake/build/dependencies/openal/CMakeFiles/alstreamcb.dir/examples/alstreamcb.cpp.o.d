@@ -11,10 +11,11 @@ dependencies/openal/CMakeFiles/alstreamcb.dir/examples/alstreamcb.cpp.o: \
   /usr/include/gnu/stubs-64.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/x86_64-pc-linux-gnu/bits/cpu_defines.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/pstl_config.h \
+  /usr/include/tbb/tbb.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/atomic_base.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/new \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/exception.h \
-  /usr/lib/clang/17/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/18/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/libc-header-start.h /usr/include/bits/types.h \
   /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
   /usr/include/bits/wchar.h /usr/include/bits/stdint-intn.h \
@@ -29,9 +30,10 @@ dependencies/openal/CMakeFiles/alstreamcb.dir/examples/alstreamcb.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdint \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/limits \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/ctime \
-  /usr/include/time.h /usr/lib/clang/17/include/stddef.h \
-  /usr/include/bits/time.h /usr/include/bits/timex.h \
-  /usr/include/bits/types/struct_timeval.h \
+  /usr/include/time.h /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h \
+  /usr/lib/clang/18/include/__stddef_null.h /usr/include/bits/time.h \
+  /usr/include/bits/timex.h /usr/include/bits/types/struct_timeval.h \
   /usr/include/bits/types/clock_t.h /usr/include/bits/types/time_t.h \
   /usr/include/bits/types/struct_tm.h \
   /usr/include/bits/types/struct_timespec.h /usr/include/bits/endian.h \
@@ -47,12 +49,13 @@ dependencies/openal/CMakeFiles/alstreamcb.dir/examples/alstreamcb.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstring \
   /usr/include/string.h /usr/include/strings.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdlib \
-  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
-  /usr/include/bits/waitstatus.h /usr/include/bits/floatn.h \
-  /usr/include/bits/floatn-common.h /usr/include/sys/types.h \
-  /usr/include/endian.h /usr/include/bits/byteswap.h \
-  /usr/include/bits/uintn-identity.h /usr/include/sys/select.h \
-  /usr/include/bits/select.h /usr/include/bits/types/sigset_t.h \
+  /usr/include/stdlib.h /usr/lib/clang/18/include/__stddef_wchar_t.h \
+  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+  /usr/include/bits/floatn.h /usr/include/bits/floatn-common.h \
+  /usr/include/sys/types.h /usr/include/endian.h \
+  /usr/include/bits/byteswap.h /usr/include/bits/uintn-identity.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/bits/types/sigset_t.h \
   /usr/include/bits/types/__sigset_t.h /usr/include/bits/pthreadtypes.h \
   /usr/include/bits/thread-shared-types.h \
   /usr/include/bits/pthreadtypes-arch.h \
@@ -62,7 +65,8 @@ dependencies/openal/CMakeFiles/alstreamcb.dir/examples/alstreamcb.cpp.o: \
   /usr/include/bits/stdlib-float.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/std_abs.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/cstdio \
-  /usr/include/stdio.h /usr/lib/clang/17/include/stdarg.h \
+  /usr/include/stdio.h /usr/lib/clang/18/include/stdarg.h \
+  /usr/lib/clang/18/include/__stdarg___gnuc_va_list.h \
   /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
@@ -130,10 +134,13 @@ dependencies/openal/CMakeFiles/alstreamcb.dir/examples/alstreamcb.cpp.o: \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/exception \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/exception_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/cxxabi_init_exception.h \
-  /usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_ptrdiff_t.h \
+  /usr/lib/clang/18/include/__stddef_nullptr_t.h \
+  /usr/lib/clang/18/include/__stddef_max_align_t.h \
+  /usr/lib/clang/18/include/__stddef_offsetof.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/nested_exception.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/bits/shared_ptr_atomic.h \
-  /usr/lib/clang/17/include/sanitizer/tsan_interface.h \
+  /usr/lib/clang/18/include/sanitizer/tsan_interface.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/backward/auto_ptr.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/glue_memory_defs.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/14.1.1/../../../../include/c++/14.1.1/pstl/execution_defs.h \
@@ -176,6 +183,6 @@ dependencies/openal/CMakeFiles/alstreamcb.dir/examples/alstreamcb.cpp.o: \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/alc.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/alext.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/include/AL/efx.h \
-  /usr/lib/clang/17/include/float.h \
+  /usr/lib/clang/18/include/float.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/examples/common/alhelpers.h \
   /run/media/gfif/32D0BC88D0BC53B7/Engine/Cmake/dependencies/openal/common/win_main_utf8.h

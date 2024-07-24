@@ -6,8 +6,16 @@
 void Strut(ball* a, ball* b, float StrutLength, bool Draw)
 {
 	glm::vec2 posdif = b->position - a->position;
+	
+	float dist = length(posdif);
+	if(dist<0.0001f)
+	{
+		b->position.y += 0.0002f;
+		posdif = b->position - a->position;
+		dist = length(posdif);
+	}
 
-	glm::vec2 norm = Normalize(posdif);
+	glm::vec2 norm = posdif/dist;
 
 	glm::vec2 Difference = posdif - norm * StrutLength;
 

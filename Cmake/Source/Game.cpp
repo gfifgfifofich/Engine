@@ -29,13 +29,18 @@ void PreReady()
     NodeConstructors.insert({9,[](){ return (Node*)new CustomNode();}});
     NodeConstructorNames.insert({9,"Customstussdsdsd"});
 }
+
+unsigned int Sound;
+
 void Ready()
 {
 
+    
 }
 
 void Process(float dt)
 {
+    //Draw scene 
     GameScene->Draw();
 }
 

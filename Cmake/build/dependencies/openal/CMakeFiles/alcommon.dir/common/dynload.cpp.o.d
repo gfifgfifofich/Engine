@@ -7,5 +7,6 @@ dependencies/openal/CMakeFiles/alcommon.dir/common/dynload.cpp.o: \
   /usr/include/bits/timesize.h /usr/include/stdc-predef.h \
   /usr/include/sys/cdefs.h /usr/include/bits/long-double.h \
   /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
-  /usr/lib/clang/17/include/stddef.h /usr/include/bits/dlfcn.h \
+  /usr/lib/clang/18/include/stddef.h \
+  /usr/lib/clang/18/include/__stddef_size_t.h /usr/include/bits/dlfcn.h \
   /usr/include/bits/dl_find_object.h

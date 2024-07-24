@@ -398,7 +398,8 @@ void initEngine(const char* Name, GLuint width, GLuint height, bool fullScreen)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
+		
+		if(glfwWindowShouldClose(window)) return;
 		//ScreenMousePosition = { (lastX - WIDTH * 0.5f) ,(-lastY + HEIGHT * 0.5f) };
 
 		//MousePosition.x = (lastX - WIDTH * 0.5f) / CameraScale.x + CameraPosition.x;

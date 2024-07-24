@@ -13,7 +13,7 @@ bool _pthreads_stop;
 std::thread* _pthreads;
 std::condition_variable* _pConVars;
 std::mutex* _pMutexes;
-std::vector<int> _pthreadsStates;// 1 waiting | 0 working | -1 done
+static inline std::atomic<bool>* _pthreadsStates;// 1 waiting | 0 working | -1 done
    
 
 ParticleEmiter* _ptheadstarget;
@@ -26,10 +26,9 @@ void _pthead_Process(int thr)
 {
 	std::unique_lock<std::mutex> lm(_pMutexes[thr]);
 	_pConVars[thr].wait(lm);
-	_pthreadsStates[thr] = 0;
 	if(_ptheadstarget!=NULL)
 		_ptheadstarget->_Process(thr);
-	_pthreadsStates[thr]=1;
+	_pthreadsStates[thr].store(1);
 }
 
 void _Startpthread(int t)
@@ -38,7 +37,6 @@ void _Startpthread(int t)
 	{
 		_pthead_Process(t);
 	}
-	_pthreadsStates[t]=-1;
 }
 
 void _Startpthreads()
@@ -48,11 +46,12 @@ void _Startpthreads()
 	_pMutexes = new std::mutex[threadcount];
 	_pConVars = new std::condition_variable[threadcount];
 	_pthreads = new std::thread[threadcount];
+	_pthreadsStates = new std::atomic<bool>[threadcount];
 
 	for(int i=0;i<threadcount;i++)
 	{
 		_pthreads[i] = std::thread(_Startpthread,i);
-		_pthreadsStates.push_back(1);
+		_pthreadsStates[i].store(true);
 	}
 }
 
@@ -164,7 +163,7 @@ int ParticleEmiter::AddLightCube(glm::vec2 position, glm::vec2 scale, glm::vec4 
 
 void ParticleEmiter::Process(float dt)
 {
-	delta = dt;
+	Partdelta = dt;
 
 
 	if (ShowWindow)
@@ -412,30 +411,32 @@ void ParticleEmiter::Process(float dt)
 		{
 			for(auto thr : iter)
 			{
+				_pthreadsStates[thr].store(0);
 				std::unique_lock<std::mutex> lm(_pMutexes[thr]);
 				_pConVars[thr].notify_one();
 			}
 
 			bool wait = true;
-			bool err = false;
+			float startWaittime = glfwGetTime(); 
 			while(wait)
 			{
 				wait = false;
 				for(int thr = 0;thr<threadcount;thr++)
-					{
-						if(_pthreadsStates[thr] == 0)
-							wait = true;
-						if(_pthreadsStates[thr] ==-1)
-							{
-								err = true;
-								break;
-							}
+				{
+					if(!_pthreadsStates[thr].load())
+						wait = true;
+				}
+				if(glfwGetTime() - startWaittime > Partdelta*10.0f) // something happend with threads
+				{
+					std::cout<<"\nsomething happend with threads in particles";
+					for(int thr = 0;thr<threadcount;thr++)
+					{						
+						_pConVars[thr].notify_one();
+						_pthreadsStates[thr].store(1);
 					}
-				if(err)
 					break;
+				}	
 			}
-			if(err)
-				std::cout<<"   Missing threads in particles   ";
 		}
 		else
 		{
@@ -601,13 +602,13 @@ void ParticleEmiter::_Process(int thr)
 	if (thr == 0)
 		begin =0;
 
-	if (thr == threadcount)
+	if (thr == threadcount || threadcount == 1)
 		end =Particles.size() ;
 
 	for (int i = begin; i < end; i++)
 		if (i < Particles.size())
 		{
-			Particles[i].time -= delta;
+			Particles[i].time -= Partdelta;
 			if (Particles[i].time > 0.0f)
 			{
 				float stage = Particles[i].time / lifetime;
@@ -618,14 +619,14 @@ void ParticleEmiter::_Process(int thr)
 				glm::vec2 Size = EndSize + (SizeDif * stage);
 				glm::vec4 color = EndColor + (ColorDif * stage);
 
-				Particles[i].position += Particles[i].velocity * delta;
-				Particles[i].velocity += acceleration * delta;
-				Particles[i].velocity += glm::vec2(-Particles[i].velocity.y, Particles[i].velocity.x) * Particles[i].OrbitalVelocity * delta;
-				Particles[i].velocity -= Particles[i].velocity * VelocityDamper * delta;
+				Particles[i].position += Particles[i].velocity * Partdelta;
+				Particles[i].velocity += acceleration * Partdelta;
+				Particles[i].velocity += glm::vec2(-Particles[i].velocity.y, Particles[i].velocity.x) * Particles[i].OrbitalVelocity * Partdelta;
+				Particles[i].velocity -= Particles[i].velocity * VelocityDamper * Partdelta;
 
-				Particles[i].Rotation += Particles[i].RotationVelocity * delta;
-				Particles[i].RotationVelocity += RotationAcceleration * delta;
-				Particles[i].RotationVelocity -= Particles[i].RotationVelocity * RotationDamper * delta;
+				Particles[i].Rotation += Particles[i].RotationVelocity * Partdelta;
+				Particles[i].RotationVelocity += RotationAcceleration * Partdelta;
+				Particles[i].RotationVelocity -= Particles[i].RotationVelocity * RotationDamper * Partdelta;
 				if (influenced)
 				{
 					for (int s = 0; s < CaptureSpheres.size(); s++)
@@ -633,15 +634,15 @@ void ParticleEmiter::_Process(int thr)
 						float dist = sqrlength(Particles[i].position - CaptureSpheres[s].position);
 						if (dist < CaptureSpheres[s].r * CaptureSpheres[s].r)
 						{
-							Particles[i].velocity += CaptureSpheres[s].velocity * delta;
+							Particles[i].velocity += CaptureSpheres[s].velocity * Partdelta;
 							if (CaptureSpheres[s].attractive)
 							{
 								glm::vec2 dir = (CaptureSpheres[s].position - Particles[i].position);
 								if (sqrlength(dir) <= 1.0f)
-									Particles[i].velocity += (dir)*CaptureSpheres[s].attractionStrength * abs(CaptureSpheres[s].attractionStrength) * delta;
+									Particles[i].velocity += (dir)*CaptureSpheres[s].attractionStrength * abs(CaptureSpheres[s].attractionStrength) * Partdelta;
 								else
 								{
-									Particles[i].velocity += (dir) * CaptureSpheres[s].attractionStrength * abs(CaptureSpheres[s].attractionStrength) * delta;
+									Particles[i].velocity += (dir) * CaptureSpheres[s].attractionStrength * abs(CaptureSpheres[s].attractionStrength) * Partdelta;
 								}
 							}
 						}
@@ -651,17 +652,17 @@ void ParticleEmiter::_Process(int thr)
 						float dist = sqrlength(Particles[i].position - SpheresOfInfluence[s].position);
 						if (dist < SpheresOfInfluence[s].r * SpheresOfInfluence[s].r)
 						{
-							Particles[i].velocity += SpheresOfInfluence[s].velocity * delta;
+							Particles[i].velocity += SpheresOfInfluence[s].velocity * Partdelta;
 							if (SpheresOfInfluence[s].attractive)
 							{
 								glm::vec2 dir = (SpheresOfInfluence[s].position - Particles[i].position);
 								if (sqrlength(dir) <= 1.0f)
-									Particles[i].velocity += (dir)*SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * delta;
+									Particles[i].velocity += (dir)*SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * Partdelta;
 								else
 								{
 									float sdist = sqrt(dist);
 									dir /= sdist;
-									Particles[i].velocity += (dir / (sdist)) * SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * delta;
+									Particles[i].velocity += (dir / (sdist)) * SpheresOfInfluence[s].attractionStrength * abs(SpheresOfInfluence[s].attractionStrength) * Partdelta;
 								}
 							}
 						}
@@ -675,17 +676,17 @@ void ParticleEmiter::_Process(int thr)
 						{
 							float dist = sqrlength(Particles[i].position - CubesOfInfluence[s].position);
 
-							Particles[i].velocity += CubesOfInfluence[s].velocity * delta;
+							Particles[i].velocity += CubesOfInfluence[s].velocity * Partdelta;
 							if (CubesOfInfluence[s].attractive)
 							{
 								glm::vec2 dir = (CubesOfInfluence[s].position - Particles[i].position);
 								if (sqrlength(dir) <= 1.0f)
-									Particles[i].velocity += (dir)*CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * delta;
+									Particles[i].velocity += (dir)*CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * Partdelta;
 								else
 								{
 									float sdist = sqrt(dist);
 									dir /= sdist;
-									Particles[i].velocity += (dir / (sdist)) * CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * delta;
+									Particles[i].velocity += (dir / (sdist)) * CubesOfInfluence[s].attractionStrength * abs(CubesOfInfluence[s].attractionStrength) * Partdelta;
 								}
 							}
 						}
@@ -902,10 +903,10 @@ void ParticleEmiter::Spawn(glm::vec2 position, int amount)
 	}
 void ParticleEmiter::Spawn(glm::vec2 position, glm::vec2 velocity, int amount, float LifeTime)
 	{
-		Particle p;
 		for (int i = 0; i < amount; i++)
 		{
 
+			Particle p;
 			p.position = position;
 			p.Rotation = InitialRotation;
 			p.RotationVelocity = RotationVelocity;

@@ -104,7 +104,8 @@ void AL_Reload()
 
 void  AL_Destroy()
 {
-	
+	for(auto x : Sounds)
+		x.Delete();
 	alcCloseDevice(Device);
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(Context);
@@ -311,23 +312,19 @@ void PlaySound(unsigned int** dst, unsigned int* sound, glm::vec2 position, floa
 }
 void ProcessAL()
 {
-	for (int i = 0; i < soundsArray.size(); i++)
+	
+	int i = 0;
+	while (i < soundsArray.size())
 	{
-		bool del = true;
-		while (del && i < soundsArray.size())
+		if (!SourcePlaying(&soundsArray[i]) || soundsArray[i] == 0)
 		{
-			del = false;
-			if (!SourcePlaying(&soundsArray[i]) || soundsArray[i] == 0)
-			{
-				del = true;
+			alSourceStop(soundsArray[i]);
+			alDeleteSources(1, &soundsArray[i]);
 
-				alSourceStop(soundsArray[i]);
-				alDeleteSources(1, &soundsArray[i]);
-
-				soundsArray[i] = soundsArray[soundsArray.size() - 1];
-				soundsArray.pop_back();
-			}
+			soundsArray[i] = soundsArray[soundsArray.size() - 1];
+			soundsArray.pop_back();
 		}
+		else i++;
 	}
 	for (int i = 0; i < soundsArray2.size(); i++)
 	{
@@ -356,3 +353,144 @@ void ProcessAL()
 		}
 	}
 }
+
+
+void soundpool::Update()
+{
+
+	for(int i=0;i<ssources.size();i++)
+	{
+		
+		if(avggains[i]>0.0f && sourceUsageAmount[i]>0)
+		{
+
+			
+			avgpositions[i] /= (float)sourceUsageAmount[i];
+			avgvelocities[i] /= (float)sourceUsageAmount[i];
+			avgpitches[i] /= (float)sourceUsageAmount[i];
+			SetSourceGain(&ssources[i],avggains[i]);
+			SetSourcePosition(&ssources[i],avgpositions[i]);
+			SetSourceVelocity(&ssources[i],glm::vec3(avgvelocities[i],0.0f));
+			SetSourcePitch(&ssources[i],avgpitches[i]);
+			SetSourceLooping(&ssources[i],continuous);
+			if(continuous)
+			{	if(!SourcePlaying(&ssources[i]))
+					PlaySource(&ssources[i]);
+			}
+			else
+			{
+				if(SourcePlaying(&ssources[i]))
+					StopSource(&ssources[i]);
+				PlaySource(&ssources[i]);	
+			}
+		}
+		else if(avggains[i] < 0.002f && SourcePlaying(&ssources[i]) && continuous)
+		{
+			StopSource(&ssources[i]);
+		}
+		
+		avgvelocities[i] = glm::vec2(0.0f);
+		avggains[i] = 0.0f;
+		avgpitches[i] = 0.0f;
+		sourceUsageAmount[i] = 0;
+		avgpositions[i] = CameraPosition;
+		
+		if(!alIsSource(ssources[i]))
+		{
+			GenSource(&ssources[i]);
+			SetSourceSound(&ssources[i],&sound);
+			SetSourceLooping(&ssources[i],continuous);
+		}
+	}
+}
+void soundpool::AddSound(glm::vec2 position,float gain,float pitch,glm::vec2 velocity,bool startover)
+{
+	if(gain<0.01f)
+		return;
+	//if(sqrlength(CameraPosition - position) > (WIDTH)*(WIDTH))
+	//	return;
+	float ll = -1;
+	int id = -1;
+	for(int i=0;i<sourceamount;i++)
+	{
+		float score = 0.0f;
+		score += sqrlength(avgpositions[i] - position);
+		score += sourceUsageAmount[i] * 10000.0f;
+		
+		if(score < ll|| ll<0.0f)
+		{
+			ll = score;
+			id = i;
+			if(ll<0.0f);
+				break;
+		}
+	}
+	if(id <0)
+		{
+			std::cout<<"\nSound not found ";
+			return;
+		}
+	sourceUsageAmount[id]++;
+	if(sourceUsageAmount[id]==1)
+		avgpositions[id] = position;
+	else 
+		avgpositions[id] += position;
+	
+	avgvelocities[id] += velocity;
+	avggains[id] += gain;
+	avgpitches[id] += pitch;
+	if(startover || !continuous)
+	{
+		if(SourcePlaying(&ssources[id]))
+			StopSource(&ssources[id]);
+		PlaySource(&ssources[id]);	
+	}
+
+}
+void soundpool::Delete()
+{
+	for(int i=0;i<ssources.size();i++)
+	{
+		StopSource(&ssources[i]);
+		DeleteSource(&ssources[i]);
+	}
+}
+
+
+void addsound(unsigned int sound, bool looping, unsigned int sourceamount)
+{
+	soundpool ss;
+	ss.sound = sound;
+	ss.sourceamount = sourceamount;
+	ss.continuous = looping;
+	ss.ssources.resize(sourceamount);
+	ss.avgpositions.resize(sourceamount);
+	ss.avgvelocities.resize(sourceamount);
+	ss.avggains.resize(sourceamount);
+	ss.avgpitches.resize(sourceamount);
+	ss.sourceUsageAmount.resize(sourceamount);
+	int divider = sqrt(sourceamount);
+	for(int i=0;i<sourceamount;i++)
+	{
+		GenSource(&ss.ssources[i]);
+		SetSourceSound(&ss.ssources[i],&sound);
+		SetSourceLooping(&ss.ssources[i],looping);
+		int y = i/divider;
+
+		ss.avgpositions[i]=glm::vec2(((i%divider)-divider/2),y - divider/2);
+		ss.avgpositions[i].x = ss.avgpositions[i].x ;
+		ss.avgpositions[i].y = ss.avgpositions[i].y ;
+		SetSourcePosition(&ss.ssources[i],ss.avgpositions[i]);
+		ss.avgvelocities[i]=glm::vec2(0.0f);
+		ss.avggains[i]=0.0f;
+		ss.avgpitches[i]=0.0f;
+		ss.sourceUsageAmount[i] = 0;
+	}
+	Sounds.push_back(ss);
+}
+void playsound(unsigned int sound, glm::vec2 position,float gain,float pitch ,glm::vec2 velocity,bool startover)
+{
+	for(int i=0;i<Sounds.size();i++)
+		if(Sounds[i].sound == sound) Sounds[i].AddSound(position,gain,pitch,velocity,startover); 
+}
+
