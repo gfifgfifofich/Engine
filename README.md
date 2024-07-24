@@ -101,7 +101,7 @@ Check the redactor.cpp and ECS.H to see how it works,
 redactor.cpp is the main UI of the engine, it runs everything that is on cpu, Engine.cpp does everything that is GPU related.
 To add custom object type to the scene: 
 ```cpp
-// derive from Node its children
+// derive from Node or its children
 class CustomNode : public Object
 {
 public:
