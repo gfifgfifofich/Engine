@@ -1,5 +1,5 @@
 ## Build
-
+in a Cmake directory
 ```bash
 mkdir build
 cd build
