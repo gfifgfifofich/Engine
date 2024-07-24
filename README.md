@@ -193,7 +193,7 @@ ParticleEmmiter class (Should be renamed to just particles sometime).
 Set its material, set its mode with a string(will change to enum sometime), make other setup, like lifetime of particles, startsize, endsize, etc.
 than at any point of time you can call one of the Spawn functions of this particles, and this is a particle system. Drawing works multithreaded here. and dont forget to Process(dt) somewhere.
 simple particle simulation 
-![github3](https://github.com/gfifgfifofich/Engine/blob/main/VS%20project/opengltry2/Textures/Cool%20picture.png)
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/Cool%20picture.png)
 
 
 #### Neural Networks
@@ -202,7 +202,9 @@ There are a simple NeuralNetwork class with easy setup for simulations and games
 
 
 ## libraries
-All of the libraries are copied inside, thats why "Languages" tab is broken, but project requeres no setup. just clone and build all
+All of the libraries are copied inside, thats why "Languages" tab is broken, but project requeres no setup. just clone and build all.
+
+Used libraries: 
 [Dear imgui](https://github.com/ocornut/imgui), 
 [GLM](https://github.com/g-truc/glm), 
 [GLFW](https://github.com/glfw/glfw), 
