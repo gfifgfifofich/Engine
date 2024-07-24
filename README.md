@@ -99,6 +99,44 @@ Redactor was made using this stuff and Windows, so here is a preview. source htt
 ###Scenes and redactor.
 Check the redactor.cpp and ECS.H to see how it works,
 redactor.cpp is the main UI of the engine, it runs everything that is on cpu, Engine.cpp does everything that is GPU related.
+To add custom object type to the scene: 
+```cpp
+// derive from Node its children
+class CustomNode : public Object
+{
+public:
+    
+    CustomNode()
+    {
+	    // set type to be your type (lastnode == big number, just to avoid collision with engine stuff)
+            // each class need unique type
+	    type = NodeType::LASTNODE + 1;
+	    // starting name, can be changed from redactor
+	    Name = "Abobus";
+            // just call this
+	    ObjectPreconstructor();
+    }
+    // one of the functions, activates on resize atempt (hold alt + LMB while object selected and move mouse)
+    virtual void OnResize(glm::vec2 prevdif,glm::vec2 mp, glm::vec2 prevmp) override
+    {
+        Scale -= prevdif;
+        Scale += mp-prevmp;
+    }
+};
+
+// this funcion starts before everything in enhine, use to setup stuff like new object constructors etc.
+void PreReady()
+{
+
+	// just copy this code and change CustomNode to YourNode, and NodeType::LASTNODE + 1 to your id 
+   	NodeConstructors.insert({NodeType::LASTNODE + 1,[](){ return (Node*)new CustomNode();}});
+	// this setups name in editor,       and id again
+	NodeConstructorNames.insert({NodeType::LASTNODE + 1,"Customstussdsdsd"});
+
+
+    /// other code
+}
+```
 Redactor preview: 
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/Redactor%20preview%20.png)
 
