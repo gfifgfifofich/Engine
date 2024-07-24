@@ -9,7 +9,7 @@ cmake --build ./
 
 ## Features
 Every aspect of engine is either a class (cube, texture, scene, sound...) or a function (DrawTexture(), DrawMaterial()...), nothing is "hidden" in the engine.
-All functions and classes can be seen in Cmake/Source/engine/Components/Include like UI.h, Drawing.h ect.
+All functions and classes can be seen in Cmake/Source/engine/Components/Include like UI.h, Drawing.h etc.
 ### Drawing
 Drawing functions can be used at any point of execution, the only exception is multitheading.
 When color gets higher than 1.0f, it gets affected by bloom (glow effect). 
@@ -92,12 +92,12 @@ void Process(float dt)
 ### UserInterface
 UI works the same way as drawing. every function that starts with "UI_" draws to screen space, and is not affected by CameraScale or CameraPosition.
 Example UI_DrawCircle() or UI_DrawQuadWithMaterial. 
-there are functions to make actual user interface, like UI_Button, UI_Slider, UI_TextBox, ect.
+there are functions to make actual user interface, like UI_Button, UI_Slider, UI_TextBox, etc.
 And as every part of engine, nothing requeres setup, freing memory or anything else, Calling function - button exists, stoppen calling it - button disapears
 Redactor was made using this stuff and Windows, so here is a preview. source https://github.com/gfifgfifofich/Engine/blob/main/Cmake/Source/engine/Components/Redactor.h
 
 ###Scenes and redactor.
-Check the redactor.cpp and ECS.H to see how it works,
+Check the redactor.cpp and ECS.h in components/objects to see structure,
 redactor.cpp is the main UI of the engine, it runs everything that is on cpu, Engine.cpp does everything that is GPU related.
 To add custom object type to the scene: 
 ```cpp
