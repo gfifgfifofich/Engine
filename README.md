@@ -38,6 +38,7 @@ void Process(float dt)
 }
 ```
 Result:
+
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/swappy-20240724_122151.png)
 
 Also there are Windows. They are the only thing that is "hidden in the engine", and can be accessed by IDs.
