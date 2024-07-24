@@ -37,6 +37,9 @@ void Process(float dt)
     DrawQuadWithMaterial({0.0f,0.0f},{100.0f,100.0f},m,0.0f,{10.0f,0.0f,0.0f,1.0f});
 }
 ```
+Result:
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/swappy-20240724_122151.png)
+
 Also there are Windows. They are the only thing that is "hidden in the engine", and can be accessed by IDs.
 ```cpp
 unsigned int ExampleWindow; 
