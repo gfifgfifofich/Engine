@@ -1,5 +1,5 @@
 ## Build
-
+in a Cmake directory
 ```bash
 mkdir build
 cd build
@@ -9,7 +9,7 @@ cmake --build ./
 
 ## Features
 Every aspect of engine is either a class (cube, texture, scene, sound...) or a function (DrawTexture(), DrawMaterial()...), nothing is "hidden" in the engine.
-All functions and classes can be seen in Cmake/Source/engine/Components/Include like UI.h, Drawing.h ect.
+All functions and classes can be seen in Cmake/Source/engine/Components/Include like UI.h, Drawing.h etc.
 ### Drawing
 Drawing functions can be used at any point of execution, the only exception is multitheading.
 When color gets higher than 1.0f, it gets affected by bloom (glow effect). 
@@ -92,13 +92,51 @@ void Process(float dt)
 ### UserInterface
 UI works the same way as drawing. every function that starts with "UI_" draws to screen space, and is not affected by CameraScale or CameraPosition.
 Example UI_DrawCircle() or UI_DrawQuadWithMaterial. 
-there are functions to make actual user interface, like UI_Button, UI_Slider, UI_TextBox, ect.
+there are functions to make actual user interface, like UI_Button, UI_Slider, UI_TextBox, etc.
 And as every part of engine, nothing requeres setup, freing memory or anything else, Calling function - button exists, stoppen calling it - button disapears
 Redactor was made using this stuff and Windows, so here is a preview. source https://github.com/gfifgfifofich/Engine/blob/main/Cmake/Source/engine/Components/Redactor.h
 
 ###Scenes and redactor.
-Check the redactor.cpp and ECS.H to see how it works,
+Check the redactor.cpp and ECS.h in components/objects to see structure,
 redactor.cpp is the main UI of the engine, it runs everything that is on cpu, Engine.cpp does everything that is GPU related.
+To add custom object type to the scene: 
+```cpp
+// derive from Node or its children
+class CustomNode : public Object
+{
+public:
+    
+    CustomNode()
+    {
+	    // set type to be your type (lastnode == big number, just to avoid collision with engine stuff)
+            // each class need unique type
+	    type = NodeType::LASTNODE + 1;
+	    // starting name, can be changed from redactor
+	    Name = "Abobus";
+            // just call this
+	    ObjectPreconstructor();
+    }
+    // one of the functions, activates on resize atempt (hold alt + LMB while object selected and move mouse)
+    virtual void OnResize(glm::vec2 prevdif,glm::vec2 mp, glm::vec2 prevmp) override
+    {
+        Scale -= prevdif;
+        Scale += mp-prevmp;
+    }
+};
+
+// this funcion starts before everything in enhine, use to setup stuff like new object constructors etc.
+void PreReady()
+{
+
+	// just copy this code and change CustomNode to YourNode, and NodeType::LASTNODE + 1 to your id 
+   	NodeConstructors.insert({NodeType::LASTNODE + 1,[](){ return (Node*)new CustomNode();}});
+	// this setups name in editor,       and id again
+	NodeConstructorNames.insert({NodeType::LASTNODE + 1,"Customstussdsdsd"});
+
+
+    /// other code
+}
+```
 Redactor preview: 
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/Redactor%20preview%20.png)
 
@@ -193,7 +231,7 @@ ParticleEmmiter class (Should be renamed to just particles sometime).
 Set its material, set its mode with a string(will change to enum sometime), make other setup, like lifetime of particles, startsize, endsize, etc.
 than at any point of time you can call one of the Spawn functions of this particles, and this is a particle system. Drawing works multithreaded here. and dont forget to Process(dt) somewhere.
 simple particle simulation 
-![github3](https://github.com/gfifgfifofich/Engine/blob/main/VS%20project/opengltry2/Textures/Cool%20picture.png)
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/Cool%20picture.png)
 
 
 #### Neural Networks
@@ -202,6 +240,9 @@ There are a simple NeuralNetwork class with easy setup for simulations and games
 
 
 ## libraries
+All of the libraries are copied inside, thats why "Languages" tab is broken, but project requeres no setup. just clone and build all.
+
+Used libraries: 
 [Dear imgui](https://github.com/ocornut/imgui), 
 [GLM](https://github.com/g-truc/glm), 
 [GLFW](https://github.com/glfw/glfw), 
