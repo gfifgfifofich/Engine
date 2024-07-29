@@ -7,7 +7,7 @@ public:
     
     CustomNode()
     {
-	    type = 8;
+	    type = NodeType::LASTNODE + 1;
 	    Name = "Abobus";
 	    ObjectPreconstructor();
 
@@ -26,8 +26,8 @@ public:
 void PreReady()
 {
     
-    NodeConstructors.insert({9,[](){ return (Node*)new CustomNode();}});
-    NodeConstructorNames.insert({9,"Customstussdsdsd"});
+    NodeConstructors.insert({NodeType::LASTNODE + 1,[](){ return (Node*)new CustomNode();}});
+    NodeConstructorNames.insert({NodeType::LASTNODE + 1,"Customstussdsdsd"});
 }
 
 unsigned int Sound;

@@ -25,15 +25,13 @@ void main()
 	scrSpace.y =gl_FragCoord.y / scr.y;
 	vec4 SurfaceNormal = texture(NormalMap,scrSpace).rgba;
 
-	float diff = (Pos.z-SurfaceNormal.a)/sizeZ;
+	float sizezdiv = 1.0f / sizeZ;
+	float diff = (Pos.z-SurfaceNormal.a) *sizezdiv;
+	vec2 uv = TexCoords - vec2(0.5f,0.5f);
+	float light = 1.0f - clamp(sqrt(uv.x*uv.x + uv.y*uv.y + diff*diff) * 2.0f,0.0f,1.0f);
 
-	vec2 lightpos = TexCoords + normalize(TexCoords - vec2(0.5f,0.5f)) * diff;
 
-	lightpos.x = clamp(lightpos.x,0.0f,1.0f);
-	lightpos.y = clamp(lightpos.y,0.0f,1.0f);
-
-	vec4 LightColor = texture(Texture, lightpos).rgba;    
-	LightColor *= color;
+	vec4 LightColor = color * light;    
 	vec4 BaseCol = texture(BaseColor, scrSpace).rgba;
 
 	scrSpace.x /=aspect;
@@ -44,6 +42,11 @@ void main()
 	vec4 Col;
 	Col = clamp(dot(rel.xyz,SurfaceNormal.xyz),0.0f,1.0f)*LightColor*BaseCol;
 	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor*BaseCol;
-	Col = Col.rgba + volume*LightColor.rgba;
+	
+	float diffff = clamp((Pos.z - SurfaceNormal.a)* sizezdiv,0.0f,1.0f);
+	if(diffff >0.0f)
+		Col = Col.rgba + volume*LightColor.rgba * (diffff);
+	else if (SurfaceNormal.a == 0.0f)// empty space
+		Col = Col.rgba + volume*LightColor.rgba;
 	FragColor = vec4(Col.rgb,min(Col.a,1.0f));
 }

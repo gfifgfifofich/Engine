@@ -2,10 +2,11 @@
 layout (location = 0) in vec4 aPos;
 layout (location = 1) in float angle;
 layout (location = 2) in vec4 aPosScale;
+layout (location = 4) in float Depth;
 
 
 out vec2 TexCoords;
-out float Angle;
+out vec2 AngleDepth;
 
 uniform float aspect;
 uniform bool flipY = false;
@@ -25,7 +26,7 @@ void main()
 
     pos.x *=aspect;
 	gl_Position =  pos;
-	Angle = angle;
+	AngleDepth = vec2(angle,Depth);
 	
 	if(!flipX)
 		TexCoords.x = aPos.z;
@@ -36,6 +37,7 @@ void main()
 		TexCoords.y = aPos.w;
 	else
 		TexCoords.y = 1.0f-aPos.w;
+	
 	
 	
 }  
