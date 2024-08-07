@@ -1445,48 +1445,6 @@ void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
-void fLoadTextureFromData(unsigned int* texture, int width, int height, float* Data, int chanelsAmount)
-{
-	if (*texture != NULL)
-	{
-		glDeleteTextures(1, texture);
-		*texture = NULL;
-	}
-	glGenTextures(1, texture);
-	glBindTexture(GL_TEXTURE_2D, *texture);
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-
-
-	if (chanelsAmount == 1)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, Data);
-
-	if (chanelsAmount == 2)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32F, width, height, 0, GL_RG, GL_FLOAT, Data);
-
-	if (chanelsAmount == 3)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, Data);
-
-	if (chanelsAmount == 4)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, Data);
-
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-
-	//Data = *new unsigned char*;
-
-	/*glDeleteTextures(1, texture);
-	*texture = NULL;
-	std::cout << "Failed to load texture" << std::endl;
-*/
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-}
 
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq , int shape )
 {
@@ -1619,7 +1577,7 @@ void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape,bool filter
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	int i =  shape;
-	glUniform1i(glGetUniformLocation(GenNormalMapShader, "Type"), i);
+	glUniform1i(glGetUniformLocation(GenPrimitiveTextureShader, "Type"), i);
 
 	glBindVertexArray(ScreenVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1767,8 +1725,8 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 	glViewport(0, 0, WIDTH, HEIGHT);
 }
 
-
-void CopyTexture(glm::vec2 size, unsigned int* to,unsigned int from,int mode)// mode: 0 - all, 1 - (r,g,b,1.0f) , 2 - (0,0,0,a), 3 - (a,a,a,a)  
+// mode: 0 - all, 1 - (r,g,b,1.0f) , 2 - (0,0,0,a), 3 - (a,a,a,a) 
+void CopyTexture(glm::vec2 size, unsigned int* to,unsigned int from,int mode) 
 {
 	if (from == NULL || !glIsTexture(from))
 		return;
