@@ -228,9 +228,9 @@ Other stuff that this engine has.
 
 #### Particles
 ParticleEmmiter class (Should be renamed to just particles sometime).
-Set its material, set its mode with a string(will change to enum sometime), make other setup, like lifetime of particles, startsize, endsize, etc.
+Set its material, set its mode with a string(will change to enum sometime), make other setup, like lifetime of particles, startsize, endsize, etc. (just check all the parametrs in the class)
 than at any point of time you can call one of the Spawn functions of this particles, and this is a particle system. Drawing works multithreaded here. and dont forget to Process(dt) somewhere.
-simple particle simulation 
+simple particle simulation: 
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/Cool%20picture.png)
 
 
@@ -265,7 +265,7 @@ const int outsize2 = 3'000;//3k intermidiate
 const int outsize3 = 50;// 50 output
 // 230'150'000 weights, 
 // on 1660 (slightly weaker than 1070) it runs at 20-22 fps
-// 4 603 000 000/s, 4.5 BILLION, full 32bit float parrameters per second. 
+// 4 603 000 000/s, 4.5 BILLION, full 32bit float parrameters per second. And that is with all other Engine-stuff like UI, PBR, lighting, bloom etc 
 // on a architecture that can run on a GPU's starting from 1992. (its just textures)
 
 // NN on CPU. since NeuralNetwork class consists of litteraly 2 arrays,
@@ -362,8 +362,10 @@ void Process(float dt)
 }
 
 ```
-Result: (22.4 fps)
+Result:
 ![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/swappy-20240808_130134.png)
+
+22.4 fps. Upper left texture - all 200 million weights of the first layer. As it turns out, 20k textures are quite problematic to display. Bottom riht texture - 1d output.
 
 ## libraries
 All of the libraries are copied inside, thats why "Languages" tab is broken, but project requeres no setup. just clone and build all.
