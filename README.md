@@ -274,7 +274,7 @@ const int outsize3 = 50;// 50 output
 // all the weights and biases can be grabbed from its arrays directly, wia poiters to a start of each layer.
 // data layouts are fully compatible
 
-// hardcoded arrays of NN on CPU.
+// hardcoded arrays of NN. Representation of NN on CPU.
 float Weights[insize * outsize];
 float Biases[outsize];
 float Weights2[outsize * outsize2];
