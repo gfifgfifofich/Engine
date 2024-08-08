@@ -267,8 +267,10 @@ const int outsize3 = 50;// 50 output
 // 230'150'000 weights,
 
 // on 1660 (slightly weaker than 1070) it runs at 20-22 fps
-// 4 603 000 000/s. 4.5 BILLION, full 32bit float parrameters per second. And that is with all other Engine-stuff like UI, PBR, lighting, bloom etc 
-// on a architecture that can run on a GPU's starting from 1992. (its just textures)
+// 4 603 000 000/s. 4.5 BILLION, full 32bit float parrameters per second.
+// And that is with all other Engine-stuff like UI, PBR, lighting, bloom etc
+// And each layer can have its own activation function
+// on a architecture that can run on GPU's starting from 1992. (its just textures)
 
 // Since NeuralNetwork class consists of litteraly 2 arrays,
 // all the weights and biases can be grabbed from its arrays directly, wia poiters to a start of each layer.
