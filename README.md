@@ -236,6 +236,7 @@ simple particle simulation:
 
 #### Neural Networks
 There are a simple NeuralNetwork class with easy setup for simulations and games. check its headerfile to see more. its highly optimized (whole neural network is cramped into 2 c-arrays, and it is easily runnable in multithreading).
+
 There is also functions to run any parts/whole neural network on a GPU, without any CUDA or anithyng else. 
 ```cpp
 // all the textures
@@ -263,14 +264,17 @@ const int outsize = 10'000;// 10k intermidiate
 const int outsize2 = 3'000;//3k intermidiate
 //150'000 weights
 const int outsize3 = 50;// 50 output
-// 230'150'000 weights, 
+// 230'150'000 weights,
+
 // on 1660 (slightly weaker than 1070) it runs at 20-22 fps
-// 4 603 000 000/s, 4.5 BILLION, full 32bit float parrameters per second. And that is with all other Engine-stuff like UI, PBR, lighting, bloom etc 
+// 4 603 000 000/s. 4.5 BILLION, full 32bit float parrameters per second. And that is with all other Engine-stuff like UI, PBR, lighting, bloom etc 
 // on a architecture that can run on a GPU's starting from 1992. (its just textures)
 
-// NN on CPU. since NeuralNetwork class consists of litteraly 2 arrays,
+// Since NeuralNetwork class consists of litteraly 2 arrays,
 // all the weights and biases can be grabbed from its arrays directly, wia poiters to a start of each layer.
 // data layouts are fully compatible
+
+// hardcoded arrays of NN on CPU.
 float Weights[insize * outsize];
 float Biases[outsize];
 float Weights2[outsize * outsize2];
