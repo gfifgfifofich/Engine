@@ -1003,8 +1003,8 @@ void EndOfWindow()
 
 void PreLoadShaders()
 {
-
-
+	
+	LoadShader(&NNShader, "./engine/Shaders/NeuralNetworks/NN.vert", "./engine/Shaders/NeuralNetworks/NNRun.frag");
 	LoadShader(&FillScreenShader, "engine/Shaders/Default.vert", "engine/Shaders/FillScreen.frag");
 
 	LoadShader(&InctanceQuadShader, "engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
@@ -1444,6 +1444,79 @@ void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned 
 */
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+}
+void fLoadTextureFromData(unsigned int* texture, int width, int height, float* Data, int chanelsAmount)
+{
+	if (*texture != NULL)
+	{
+		glDeleteTextures(1, texture);
+		*texture = NULL;
+	}
+	glGenTextures(1, texture);
+	glBindTexture(GL_TEXTURE_2D, *texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	if (chanelsAmount == 1)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, Data);
+
+	if (chanelsAmount == 2)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32F, width, height, 0, GL_RG, GL_FLOAT, Data);
+
+	if (chanelsAmount == 3)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, Data);
+
+	if (chanelsAmount == 4)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, Data);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+char* readTexture(unsigned int texture, glm::ivec2 size, int channels)
+{
+
+	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
+	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+
+
+	char* buffer = new char[size.x * size.y * channels];
+	for(int i =0;i<size.x * size.y * channels;i++)
+		buffer[i]= 0.0f;
+	glBindTexture(GL_TEXTURE_2D, texture);
+	if(channels == 1)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_UNSIGNED_BYTE, buffer);
+	else if(channels == 2)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RG, GL_UNSIGNED_BYTE, buffer);
+	else if(channels == 3)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer);
+	else if(channels == 4)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+	return buffer;
+}
+float* freadTexture(unsigned int texture, glm::ivec2 size, int channels)
+{
+
+	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
+	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+
+
+	float* buffer = new float[size.x * size.y * channels];
+	for(int i =0;i<size.x * size.y * channels;i++)
+		buffer[i]= 0.0f;
+	glBindTexture(GL_TEXTURE_2D, texture);
+	if(channels == 1)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, buffer);
+	else if(channels == 2)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RG, GL_FLOAT, buffer);
+	else if(channels == 3)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, buffer);
+	else if(channels == 4)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, buffer);
+
+	return buffer;
 }
 
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq , int shape )

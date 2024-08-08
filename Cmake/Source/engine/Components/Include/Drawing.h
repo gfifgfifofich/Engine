@@ -66,12 +66,8 @@ CubeNormalMapTexture,
 NegativeNormalMapTexture,
 LightSphereTexture,
 
-///////Was moved into window class
-//Buffers
-//FrameBuffer, ColorBuffer,
-//NormalMapFBO, NormalMapColorBuffer,
-//LightColorFBO, LightColorBuffer,
-
+//NeuralNetworks
+NNShader,
 
 //VertexObjects
 quadVAO, quadVBO,
@@ -409,6 +405,13 @@ void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm
 
 void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount = 4);
 void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned char* Data, int chanelsAmount = 4);
+void fLoadTextureFromData(unsigned int* texture, int width, int height, float* Data, int chanelsAmount);
+//returns NEW char[]
+char* readTexture(unsigned int texture, glm::ivec2 size, int channels = 1);
+//returns NEW float[]
+float* freadTexture(unsigned int texture, glm::ivec2 size, int channels = 1);
+
+
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers = 3, float freq = 10, int shape = ROUND);
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape = ROUND,bool filter = 0);
 void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND);

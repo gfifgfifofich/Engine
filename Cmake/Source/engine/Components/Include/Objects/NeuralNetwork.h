@@ -81,3 +81,5 @@ public:
 		Delete();
 	}
 };
+void RunNNLayerOnGPU(int inSize,int outSize,int InstanceCount,int Func,
+					unsigned int* OutTexture, unsigned int packedInTexture,unsigned int packedWeightsTexture,unsigned int packedBiasesTexture);
