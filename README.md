@@ -265,7 +265,7 @@ const int outsize2 = 3'000;//3k intermidiate
 const int outsize3 = 50;// 50 output
 // 230'150'000 weights, 
 // on 1660 (slightly weaker than 1070) it runs at 20-22 fps
-// 4 603 000 000/s, 4.5 BILLION parrameters per second. 
+// 4 603 000 000/s, 4.5 BILLION, full 32bit float parrameters per second. 
 // on a architecture that can run on a GPU's starting from 1992. (its just textures)
 
 // NN on CPU. since NeuralNetwork class consists of litteraly 2 arrays,
@@ -313,16 +313,14 @@ void Ready()
 		Biases3[i] = rand() %1000 * 0.0001f;
 		Out3[i] = 0.0f;
 	}
-	
+
+	// fload all textures into gpu
 	fLoadTextureFromData(&T_Weights,insize,outsize,Weights,1);
 	fLoadTextureFromData(&T_Biases,outsize,1,Biases,1);
-	
 	fLoadTextureFromData(&T_Weights2,outsize,outsize2,Weights2,1);
 	fLoadTextureFromData(&T_Biases2,outsize2,1,Biases2,1);
-
 	fLoadTextureFromData(&T_Weights3,outsize2,outsize3,Weights3,1);
 	fLoadTextureFromData(&T_Biases3,outsize3,1,Biases3,1);
-
 	fLoadTextureFromData(&T_In,insize,1,In,1);
 	fLoadTextureFromData(&T_Out,outsize,1,Out,1);
 	fLoadTextureFromData(&T_Out2,outsize2,1,Out2,1);
@@ -364,7 +362,8 @@ void Process(float dt)
 }
 
 ```
-
+Result: (22.4 fps)
+![github3](https://github.com/gfifgfifofich/Engine/blob/main/Cmake/resources/Textures/swappy-20240808_130134.png)
 
 ## libraries
 All of the libraries are copied inside, thats why "Languages" tab is broken, but project requeres no setup. just clone and build all.
