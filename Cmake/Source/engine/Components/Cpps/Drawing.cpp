@@ -1518,6 +1518,24 @@ float* freadTexture(unsigned int texture, glm::ivec2 size, int channels)
 
 	return buffer;
 }
+void freadTexture(float* buffer, unsigned int texture, glm::ivec2 size, int channels)
+{
+
+	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
+	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	if(channels == 1)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, buffer);
+	else if(channels == 2)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RG, GL_FLOAT, buffer);
+	else if(channels == 3)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, buffer);
+	else if(channels == 4)
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, buffer);
+
+}
 
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers , float freq , int shape )
 {

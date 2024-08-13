@@ -410,7 +410,8 @@ void fLoadTextureFromData(unsigned int* texture, int width, int height, float* D
 char* readTexture(unsigned int texture, glm::ivec2 size, int channels = 1);
 //returns NEW float[]
 float* freadTexture(unsigned int texture, glm::ivec2 size, int channels = 1);
-
+//freadtexture, but providing buffer of correct size is on users side. can be just a vector.data()
+void freadTexture(float* buffer, unsigned int texture, glm::ivec2 size, int channels);
 
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers = 3, float freq = 10, int shape = ROUND);
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape = ROUND,bool filter = 0);
