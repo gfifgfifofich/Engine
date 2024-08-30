@@ -1,2 +1,3 @@
 Cmake/dependencies/** linguist-vendored
+Cmake/Source/engine/Components/Include/AL/** linguist-vendored
 *.h linguist-language=cpp
