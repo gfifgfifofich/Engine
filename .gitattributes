@@ -1,2 +1,2 @@
-Cmake/dependencies/* linguist-vendored
+Cmake/dependencies/** linguist-vendored
 *.h linguist-language=cpp
