@@ -330,11 +330,6 @@ void GPU_BallCollideProcess(BallGrid* BallGrid,float dt, glm::vec2 force = {0.0f
 	{
 		glGenTextures(1, &BallGrid->BufferBallsPV);		
 	}
-	else
-	{
-		glDeleteTextures(1,&BallGrid->BufferBallsPV);
-		glGenTextures(1, &BallGrid->BufferBallsPV);	
-	}
 	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
 	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
 	unsigned int framebuffer;
@@ -448,9 +443,9 @@ void Ready()
 
 void Process(float dt)
 {
-	bg.UpdateStructure();
 	for(int s=0;s<10;s++)
 	{
+		bg.UpdateStructure();
 		bg.SetToGPU();
 		GPU_BallCollideProcess(&bg,std::min(dt,0.017f) * 0.1f ,{0.0f,-10.0f});
 		bg.GetFromGPU();
