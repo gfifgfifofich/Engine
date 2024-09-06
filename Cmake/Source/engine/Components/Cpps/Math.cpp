@@ -5,6 +5,8 @@
 glm::vec2 Normalize(glm::vec2 a)
 {
 	float length = sqrt(a.x * a.x + a.y * a.y);
+	if(length< 0.000001f)
+		return {0.0f,1.0f};// just up vector
 	return a / length;
 }
 

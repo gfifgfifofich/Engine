@@ -40,8 +40,12 @@ void Window::RecalculateSize()
 	w_ScreenDivisorX = 1.0f / w_ScreenDivisorX;
 	w_ScreenDivisorY = 1.0f / w_ScreenDivisorY;
 	w_ScaleMultiplyer = 1.0f / ViewportSize.y * 2.0f;
-
+	
+	if(framebuffer !=NULL)
+		glDeleteFramebuffers(1,&framebuffer);
 	glGenFramebuffers(1, &framebuffer);
+	if(Texture !=NULL)
+		glDeleteTextures(1,&Texture);
 	glGenTextures(1, &Texture);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
@@ -57,8 +61,12 @@ void Window::RecalculateSize()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Texture, 0);
 
+	if(NormalMapFBO !=NULL)
+		glDeleteFramebuffers(1,&NormalMapFBO);
 	glGenFramebuffers(1, &NormalMapFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, NormalMapFBO);
+	if(NormalMapColorBuffer !=NULL)
+		glDeleteTextures(1,&NormalMapColorBuffer);
 	glGenTextures(1, &NormalMapColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, NormalMapColorBuffer);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, ViewportSize.x, ViewportSize.y, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -70,6 +78,10 @@ void Window::RecalculateSize()
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, NormalMapColorBuffer, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	if(LightColorFBO !=NULL)
+		glDeleteFramebuffers(1,&LightColorFBO);
+	if(LightColorBuffer !=NULL)
+		glDeleteTextures(1,&LightColorBuffer);
 	glGenFramebuffers(1, &LightColorFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, LightColorFBO);
 	glGenTextures(1, &LightColorBuffer);
@@ -1003,8 +1015,8 @@ void EndOfWindow()
 
 void PreLoadShaders()
 {
-	
-	LoadShader(&NNShader, "./engine/Shaders/NeuralNetworks/NN.vert", "./engine/Shaders/NeuralNetworks/NNRun.frag");
+
+
 	LoadShader(&FillScreenShader, "engine/Shaders/Default.vert", "engine/Shaders/FillScreen.frag");
 
 	LoadShader(&InctanceQuadShader, "engine/Shaders/Quad/instance.vert", "engine/Shaders/Quad/Quad.frag");
@@ -1365,6 +1377,8 @@ void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount)
 		glDeleteTextures(1, texture);
 		*texture = NULL;
 	}
+	if(strlen(filename)<=0)
+		return;
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -1454,10 +1468,13 @@ void fLoadTextureFromData(unsigned int* texture, int width, int height, float* D
 	}
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
+	// set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
 
 	if (chanelsAmount == 1)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, Data);
@@ -1471,69 +1488,17 @@ void fLoadTextureFromData(unsigned int* texture, int width, int height, float* D
 	if (chanelsAmount == 4)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, Data);
 
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+
+	//Data = *new unsigned char*;
+
+	/*glDeleteTextures(1, texture);
+	*texture = NULL;
+	std::cout << "Failed to load texture" << std::endl;
+*/
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-}
-char* readTexture(unsigned int texture, glm::ivec2 size, int channels)
-{
-
-	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
-	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
-
-
-	char* buffer = new char[size.x * size.y * channels];
-	for(int i =0;i<size.x * size.y * channels;i++)
-		buffer[i]= 0.0f;
-	glBindTexture(GL_TEXTURE_2D, texture);
-	if(channels == 1)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_UNSIGNED_BYTE, buffer);
-	else if(channels == 2)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RG, GL_UNSIGNED_BYTE, buffer);
-	else if(channels == 3)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-	else if(channels == 4)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
-	return buffer;
-}
-float* freadTexture(unsigned int texture, glm::ivec2 size, int channels)
-{
-
-	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
-	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
-
-
-	float* buffer = new float[size.x * size.y * channels];
-	for(int i =0;i<size.x * size.y * channels;i++)
-		buffer[i]= 0.0f;
-	glBindTexture(GL_TEXTURE_2D, texture);
-	if(channels == 1)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, buffer);
-	else if(channels == 2)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RG, GL_FLOAT, buffer);
-	else if(channels == 3)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, buffer);
-	else if(channels == 4)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, buffer);
-
-	return buffer;
-}
-void freadTexture(float* buffer, unsigned int texture, glm::ivec2 size, int channels)
-{
-
-	glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
-	glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
-
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-	if(channels == 1)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, buffer);
-	else if(channels == 2)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RG, GL_FLOAT, buffer);
-	else if(channels == 3)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, buffer);
-	else if(channels == 4)
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, buffer);
 
 }
 
@@ -1668,7 +1633,7 @@ void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape,bool filter
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 
 	int i =  shape;
-	glUniform1i(glGetUniformLocation(GenPrimitiveTextureShader, "Type"), i);
+	glUniform1i(glGetUniformLocation(GenNormalMapShader, "Type"), i);
 
 	glBindVertexArray(ScreenVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1816,8 +1781,8 @@ void GenGradientTexture(unsigned int* texture1, glm::vec4 Color1 , glm::vec4 Col
 	glViewport(0, 0, WIDTH, HEIGHT);
 }
 
-// mode: 0 - all, 1 - (r,g,b,1.0f) , 2 - (0,0,0,a), 3 - (a,a,a,a) 
-void CopyTexture(glm::vec2 size, unsigned int* to,unsigned int from,int mode) 
+
+void CopyTexture(glm::vec2 size, unsigned int* to,unsigned int from,int mode)// mode: 0 - all, 1 - (r,g,b,1.0f) , 2 - (0,0,0,a), 3 - (a,a,a,a)  
 {
 	if (from == NULL || !glIsTexture(from))
 		return;

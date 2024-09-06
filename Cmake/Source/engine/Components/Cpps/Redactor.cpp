@@ -49,7 +49,6 @@ inline std::thread* _Scenethreads;
 inline std::condition_variable* _SceneConVars;
 inline std::mutex* _SceneMutexes;
 static inline std::atomic<bool>* _ScenethreadsStates;// 1 waiting | 0 working | -1 done/broken
-   
 
 void _Scenethead_Process(int thr);
 void _StartScenethread(int t);
@@ -138,14 +137,14 @@ Texture tex;
 
 std::string TexturePath;
 
-
 glm::vec2 PrevDifference = { 0.0f,0.0f };
 glm::vec2 Corner = { 0.0f,0.0f };
 
 glm::ivec3 tmpIndex = glm::ivec3(-1);
 int indexCreationState = 0;
 float Simulation_speed = 1.0f;
-
+bool grid = true;
+float grid_step = 15.0f;
 
 int NewObjectId = 0;
 int NewAssetId = 1;
@@ -1438,8 +1437,6 @@ float InspectorWindowMaxScroll = 0.0f;
 float ProjectWindowMaxScroll = 0.0f;
 float ConsoleWindowMaxScroll = 0.0f;
 
-glm::vec4 EditorColor = { 0.025f,0.025f,0.025f,1.0f };
-glm::vec4 SceneBackgroundColor = { 0.0f,0.0f,0.0f,0.0f };
 
 bool Test[10];
 bool sTestb[10];
@@ -1458,7 +1455,153 @@ std::string AssetWindowSelectionNames[3]= {"Assets","EventGraph","Animation"};//
 std::string InspectorWindowSelectionNames[3]= {"Properties","none","none"};// placeholder 
 
 
+glm::vec2 PrevMousePos = glm::vec2(0.0f);
+bool MMBJustPressedWindow[4];
 
+bool grabbedWindow[3];// bools for window resizing
+bool grabbedAnyWindow = false;// bools for window resizing
+glm::vec2 GrabStartMousePos = { 0.0f,0.0f };
+bool initialsizecalc = true;
+
+// Undo implementation:
+// any action == +new item in list, clear all steps forward (no redo options)
+// undo == load map 1 step before
+// redo == load map 1 step above if possible
+// on undo/redo, save();load();
+// Normal implementation would be a text comparison like in github, because there is already a DataStorage, which is a txt save. 
+std::vector<DataStorage> UndoLine;
+bool ActionDoneThisFrame = false;
+
+void ProcessScene(Scene* scn,bool mt,bool mainScene)
+{
+	GameScene = scn;
+	scn->dt = delta * Simulation_speed /substeps;
+	
+	
+	//listenerVel = { Entities[0]->CP.midvel.x ,Entities[0]->CP.midvel.y ,1.0f };
+	listenerPos.z = 1.0f / (CameraScale.x);
+	std::vector <int> iter;
+	iter.resize(threadcount);
+	
+	
+	
+	for (int i = 0; i < threadcount; i++)
+		iter[i] = i;
+
+	scn->Update();
+	threadNodestep = scn->Nodes.size()/threadcount;
+	threadNodeEnd = scn->Nodes.size();
+	threadsprepass = true;
+	
+	if (scn->Nodes.size() > threadcount && mt)
+	{
+		for(auto thr : iter)
+		{
+			_ScenethreadsStates[thr] = 0;
+			std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
+			_SceneConVars[thr].notify_one();
+		}
+		bool wait = true;
+		float startWaittime = glfwGetTime(); 
+		while(wait)
+		{
+			wait = false;
+			for(int thr = 0;thr<threadcount;thr++)
+			{
+				if(!_ScenethreadsStates[thr].load())
+					wait = true;
+			}
+			if(glfwGetTime() - startWaittime  > delta*3.0f) // something happend with threads
+			{
+				std::cout<<"something happend with threads\n";
+				for(int thr = 0;thr<threadcount;thr++)
+				{						
+					_SceneConVars[thr].notify_one();
+					_ScenethreadsStates[thr].store(1);
+				}
+				break;
+			}	
+		}
+	}
+	else
+	{
+		int buf = threadcount;
+		threadcount=1;
+		_mt_SceneProcess(0);
+		threadcount = buf;
+
+	}
+	threadsprepass = false;
+	for(int s=0;s<substeps ;s++)
+	{
+
+		if (scn->Nodes.size() > threadcount && mt)
+		{
+			for(auto thr : iter)
+			{
+				_ScenethreadsStates[thr].store(0);
+				std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
+				_SceneConVars[thr].notify_one();
+			}
+			//_SceneBarrier.arrive_and_wait();
+			//for(auto thr : iter)
+			//{
+			//	std::unique_lock<std::mutex> lm(_SceneMutexWaiters[thr]);
+			//	_SceneConVarWaiters[thr].wait(lm);		
+			//}
+			bool wait = true;
+			float startWaittime = glfwGetTime(); 
+			while(wait)
+			{
+				wait = false;
+				for(int thr = 0;thr<threadcount;thr++)
+				{
+					if(!_ScenethreadsStates[thr].load())
+						wait = true;
+				}
+				if(glfwGetTime() - startWaittime > delta*3.0f) // something happend with threads
+				{
+					std::cout<<"\nsomething happend with threads";
+					for(int thr = 0;thr<threadcount;thr++)
+					{						
+						_SceneConVars[thr].notify_one();
+						_ScenethreadsStates[thr].store(1);
+					}
+					break;
+				}	
+			}
+		}
+		else
+		{
+			int buf = threadcount;
+			threadcount=1;
+			_mt_SceneProcess(0);
+			threadcount = buf;
+
+		}
+
+		if(!Paused && Running)
+		{
+			scn->Process(delta * Simulation_speed / substeps);
+			if(mainScene)SubSteppedProcess(delta * Simulation_speed / substeps, s);
+		}
+	}
+	if(!Paused && Running &&mainScene)
+	{
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		SelectedAsset =NULL;
+		SelectedAssetID=-1;
+		Process(delta * Simulation_speed);
+	}
+	if(Paused || !Running)
+	{
+		if(mainScene)UpdateListenerPosition();
+		scn->Draw(delta * Simulation_speed);
+	}
+	
+	GameScene = &Map;
+}
 
 
 
@@ -1545,16 +1688,6 @@ void On_Create()
 	
 	_StartScenethreads();
 }
-
-glm::vec2 PrevMousePos = glm::vec2(0.0f);
-bool MMBJustPressedWindow[4];
-
-bool grabbedWindow[3];// bools for window resizing
-bool grabbedAnyWindow = false;// bools for window resizing
-glm::vec2 GrabStartMousePos = { 0.0f,0.0f };
-bool initialsizecalc = true;
-std::string sTest[10];
-
 
 
 
@@ -1895,36 +2028,6 @@ void On_Update()
 	if(SelectedAsset!=NULL || SelectedNode!=NULL)
 		ProcessSelectedNodeUI();
 
-	// if (CurrentTexture != NULL)
-	// 	ShowRedactorWindow(CurrentTexture);
-
-
-	// if (CurrentParticleEmiter != NULL)
-	// 	ShowRedactorWindow(CurrentParticleEmiter);
-
-	// if (SelectedBall != NULL)
-	// 	ShowRedactorWindow(SelectedBall);
-
-	// if (SelectedCube != NULL)
-	// 	ShowRedactorWindow(SelectedCube);
-
-
-	// if (SelectedPoint != NULL)
-	// 	ShowRedactorWindow(SelectedPoint);
-
-	// if (CurrentLightSource != NULL)
-	// 	ShowRedactorWindow(CurrentLightSource);
-
-	// if (CurrentShader != NULL)
-	// 	ShowRedactorWindow(CurrentShader);
-
-	// if (SelectedPolygon != NULL)
-	// 	ShowRedactorWindow(SelectedPolygon);
-
-	// if (SelectedMesh != NULL)
-	// 	ShowRedactorWindow(SelectedMesh);
-
-
 	if (HEIGHT * 0.5f < abs(Corner.y + CameraPosition.y))
 	{
 		if (InspectorWindowScroll > 0.0f)
@@ -2084,8 +2187,15 @@ void On_Update()
 			AqueredCameraScale = { 1.0f,1.0f };
 		}
 
+		
+		b = false;
+		Corner.y += UI_button(&b, "VSync", Corner).y * -1.0f - step;
 
-
+		if(b) 
+		{
+			VSync = !VSync;
+			glfwSwapInterval(VSync);
+		}
 		Corner.y += UI_DrawText("Save file:", Corner, 0.35f).y * -1.0f - step;
 		Corner.y += UI_TextBox(&MapFileName, Corner,128).y * -1.0f - step;
 		b = false;
@@ -2104,14 +2214,22 @@ void On_Update()
 			SelectedNodeID = -1;
 			SelectedAsset =NULL;
 			SelectedAssetID=-1;
+			UndoLine.clear();
 			
 		}
 
 		
-		
+		Corner.y += UI_CheckBox(&grid, "Grid", Corner).y * -1.0f - step;
+		if(grid)
+		{
+			
+			Corner.y += UI_Drag(&grid_step, "Gtid step", Corner , 1.0f).y * -1.0f - step;
+		}
 
 		
-
+		std::string ulinesizestr = "Undo buffer size: ";
+		ulinesizestr += std::to_string(UndoLine.size());
+		Corner.y += UI_DrawText(ulinesizestr, Corner , 0.35f).y * -1.0f - step;
 		
 		Corner.y += UI_DrawText("EditorColor", Corner , 0.35f).y * -1.0f - step;
 		float xsize = 0.0f;
@@ -2137,10 +2255,10 @@ void On_Update()
 	default:
 		break;
 	}
-	
-	iw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
-	pw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
-	cw->backgroundColor = { EditorColor.r * 0.3f,EditorColor.g * 0.3f,EditorColor.b * 0.3f,1.0f };
+	float constcolorwhiteaddition = 0.008f;
+	iw->backgroundColor = { EditorColor.r * 0.3f + constcolorwhiteaddition,EditorColor.g * 0.3f + constcolorwhiteaddition,EditorColor.b * 0.3f + constcolorwhiteaddition,1.0f };
+	pw->backgroundColor = { EditorColor.r * 0.3f + constcolorwhiteaddition,EditorColor.g * 0.3f + constcolorwhiteaddition,EditorColor.b * 0.3f + constcolorwhiteaddition,1.0f };
+	cw->backgroundColor = { EditorColor.r * 0.3f + constcolorwhiteaddition,EditorColor.g * 0.3f + constcolorwhiteaddition,EditorColor.b * 0.3f + constcolorwhiteaddition,1.0f };
 	w->backgroundColor = SceneBackgroundColor;
 	GetWindow(0)->backgroundColor = EditorColor;
 	//Nodes of Scene
@@ -2204,6 +2322,7 @@ void On_Update()
 			Running = true;
 			Paused = false;
 			Map.SaveAs("PreRunSave.sav");
+			//Ready();
 
 		}
 	}
@@ -2284,6 +2403,8 @@ void On_Update()
 			
 			for (int i = 0; i < Map.Nodes.size(); i++)
 			{
+				if(Map.Nodes[i]->Delete)
+					continue;
 				bool mousetouched = Map.Nodes[i]->SelectionCheck(MousePosition);
 				
 
@@ -2313,7 +2434,22 @@ void On_Update()
 		if(GrabbedNode != NULL && grabbed && PrevMousePosition != MousePosition && keys[GLFW_KEY_LEFT_CONTROL])
 		{
 			GrabbedNode->position -=PrevDifference;
+			
 			PrevDifference = (MousePosition - PrevMousePosition);
+
+			if(grid)
+			{
+				glm::vec2 steppedpos = GrabbedNode->position / grid_step;
+				steppedpos.x = roundf(steppedpos.x);
+				steppedpos.y = roundf(steppedpos.y);
+				GrabbedNode->position = steppedpos * grid_step;
+
+				glm::vec2 steppedPrevDifference = PrevDifference/ grid_step;
+				steppedPrevDifference.x = roundf(steppedPrevDifference.x);
+				steppedPrevDifference.y = roundf(steppedPrevDifference.y);
+				PrevDifference = steppedPrevDifference * grid_step;
+			}
+
 			GrabbedNode->position +=PrevDifference;
 
 		}
@@ -2392,135 +2528,18 @@ void On_Update()
 		SelectedAsset =NULL;
 		SelectedAssetID=-1;
 	}
-	GameScene = &Map;
-	Map.dt = delta * Simulation_speed /substeps;
-
-	
-	//listenerVel = { Entities[0]->CP.midvel.x ,Entities[0]->CP.midvel.y ,1.0f };
-	listenerPos.z = 1.0f / (CameraScale.x);
-	std::vector <int> iter;
-	iter.resize(threadcount);
-	
-	
-	
-	for (int i = 0; i < threadcount; i++)
-		iter[i] = i;
-
-	Map.Update();
-	threadNodestep = Map.Nodes.size()/threadcount;
-	threadNodeEnd = Map.Nodes.size();
-	threadsprepass = true;
-	
-	if (Map.Nodes.size() > threadcount)
-	{
-		for(auto thr : iter)
-		{
-			_ScenethreadsStates[thr] = 0;
-			std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
-			_SceneConVars[thr].notify_one();
-		}
-		bool wait = true;
-		float startWaittime = glfwGetTime(); 
-		while(wait)
-		{
-			wait = false;
-			for(int thr = 0;thr<threadcount;thr++)
-			{
-				if(!_ScenethreadsStates[thr].load())
-					wait = true;
-			}
-			if(glfwGetTime() - startWaittime  > delta*10.0f) // something happend with threads
-			{
-				std::cout<<"something happend with threads\n";
-				for(int thr = 0;thr<threadcount;thr++)
-				{						
-					_SceneConVars[thr].notify_one();
-					_ScenethreadsStates[thr].store(1);
-				}
-				break;
-			}	
-		}
-	}
-	else
-	{
-		int buf = threadcount;
-		threadcount=1;
-		_mt_SceneProcess(0);
-		threadcount = buf;
-
-	}
-	threadsprepass = false;
-	for(int s=0;s<substeps ;s++)
-	{
-
-		if (Map.Nodes.size() > threadcount)
-		{
-			for(auto thr : iter)
-			{
-				_ScenethreadsStates[thr].store(0);
-				std::unique_lock<std::mutex> lm(_SceneMutexes[thr]);
-				_SceneConVars[thr].notify_one();
-			}
-			//_SceneBarrier.arrive_and_wait();
-			//for(auto thr : iter)
-			//{
-			//	std::unique_lock<std::mutex> lm(_SceneMutexWaiters[thr]);
-			//	_SceneConVarWaiters[thr].wait(lm);		
-			//}
-			bool wait = true;
-			float startWaittime = glfwGetTime(); 
-			while(wait)
-			{
-				wait = false;
-				for(int thr = 0;thr<threadcount;thr++)
-				{
-					if(!_ScenethreadsStates[thr].load())
-						wait = true;
-				}
-				if(glfwGetTime() - startWaittime > delta*10.0f) // something happend with threads
-				{
-					std::cout<<"\nsomething happend with threads";
-					for(int thr = 0;thr<threadcount;thr++)
-					{						
-						_SceneConVars[thr].notify_one();
-						_ScenethreadsStates[thr].store(1);
-					}
-					break;
-				}	
-			}
-		}
-		else
-		{
-			int buf = threadcount;
-			threadcount=1;
-			_mt_SceneProcess(0);
-			threadcount = buf;
-
-		}
-
-		if(!Paused && Running)
-		{
-			Map.Process(delta * Simulation_speed / substeps);
-			SubSteppedProcess(delta * Simulation_speed / substeps, s);
-		}
-	}
-	if(!Paused && Running)
-	{
-		SelectedNode = NULL;
-		SelectedNodeID = -1;
-		SelectedAsset =NULL;
-		SelectedAssetID=-1;
-		Process(delta * Simulation_speed);
-	}
-	if(Paused || !Running)
-	{
-		UpdateListenerPosition();
-		Map.Draw(delta * Simulation_speed);
-	}
+	ProcessScene(&Map,true,true);
 
 
 	GetWindow(SceneWindowID)->End();
-
+	if(JustPressedkey[GLFW_KEY_DELETE] && SelectedNode !=NULL)
+	{
+		SelectedNode->Delete = true;
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		GrabbedNode= NULL;
+		GrabbedNodeID = -1;
+	}
 	if(cleanSelection)
 	{
 		SelectedNode = NULL;
@@ -2528,6 +2547,52 @@ void On_Update()
 		SelectedAsset =NULL;
 		SelectedAssetID=-1;
 	}
+	if(keys[GLFW_KEY_LEFT_CONTROL] && bJustPressedkey[GLFW_KEY_Z] && UndoLine.size()>1)
+	{
+		UndoLine.pop_back();
+		Map.LoadFromds(UndoLine.back());
+		SelectedNode = NULL;
+		SelectedNodeID = -1;
+		SelectedAsset =NULL;
+		SelectedAssetID=-1;
+		ActionDoneThisFrame = false;
+	}
+	else
+	{
+		bool actiondone = false;
+		for(int i=0;i<1024;i++)
+		{
+			if(keys[i] && i !=GLFW_KEY_LEFT_CONTROL && i !=GLFW_KEY_Z)
+			{
+				actiondone = true;
+				break;
+			}
+		}
+		if(!actiondone)
+			for(int i=0;i<64;i++)
+			{
+				if(buttons[i])
+				{
+					actiondone = true;
+					break;
+				}
+			}
+
+
+		if(actiondone)
+		{
+			DataStorage tmpds = Map.SaveAsds();
+			if(UndoLine.size()==0)
+				UndoLine.push_back(tmpds);
+			else
+			{
+				if(!buttons[GLFW_MOUSE_BUTTON_1])
+				if(UndoLine.back().ToString() != tmpds.ToString())
+					UndoLine.push_back(tmpds);
+			}
+		}
+	}
+	
 	//for (int i = 0; i < Windows.size(); i++)
 	//	std::cout<<"\ni "<<i<<" ls = "<<Windows[i].w_LightSources.size();
 }

@@ -20,6 +20,10 @@ public:
 
 	void SaveAs(std::string filename);
 	void LoadFrom(std::string filename);
+
+	DataStorage SaveAsds();
+	void LoadFromds(DataStorage ds);
+
 	void Rescale(glm::vec2 scale, int Z_Index = 0);
 
 	void Update();

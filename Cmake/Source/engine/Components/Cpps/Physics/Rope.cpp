@@ -81,7 +81,7 @@ void DecorativeRope::Init(ball* b1, ball* b2, float length )
 	this->length = length;
 
 	for (int i = 0; i < 5; i++)
-		rope[i].position = b1->position + i * 0.25f * (b1->position - b2->position);
+		rope[i].position = b1->position + i * 0.2f * (b2->position - b1->position);
 }
 void DecorativeRope::Process(float dt)
 {

@@ -466,11 +466,11 @@ public:
 	CO_Ball();
 	virtual void Ready() override;
 	virtual void MTPreProcess() override;
+	virtual void PreProcess() override;
 
 	UI_DataPack GetUIDataCO_Ball();
 	virtual std::vector<UI_DataPack> GetUIData() override;
 	
-	virtual void Draw() override;
 	virtual void DebugDraw() override;
 	virtual bool SelectionCheck(glm::vec2 point) override;
 };
@@ -483,6 +483,8 @@ public:
 	CO_Cube();
 	virtual void Ready() override;
 	virtual void MTPreProcess() override;
+	virtual void PreProcess() override;
+	
 	UI_DataPack GetUIDataCO_Cube();
 	virtual std::vector<UI_DataPack> GetUIData() override;
 	virtual bool SelectionCheck(glm::vec2 point) override;
@@ -502,6 +504,9 @@ public:
 	virtual void Draw() override;
 	virtual void DebugDraw() override;
 };
+
+
+
 
 class ParticleObject : public Node
 {

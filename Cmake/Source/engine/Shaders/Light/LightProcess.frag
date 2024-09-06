@@ -24,6 +24,8 @@ void main()
 	scrSpace.x =gl_FragCoord.x / scr.x;
 	scrSpace.y =gl_FragCoord.y / scr.y;
 	vec4 SurfaceNormal = texture(NormalMap,scrSpace).rgba;
+	vec4 BaseCol = texture(BaseColor, scrSpace).rgba;
+	vec4 clampedBase = clamp(BaseCol,0.0f,1.0f);
 
 	float sizezdiv = 1.0f / sizeZ;
 	float diff = (Pos.z-SurfaceNormal.a) *sizezdiv;
@@ -32,7 +34,6 @@ void main()
 
 
 	vec4 LightColor = color * light;    
-	vec4 BaseCol = texture(BaseColor, scrSpace).rgba;
 
 	scrSpace.x /=aspect;
 	scrSpace /= CameraScale;
@@ -40,8 +41,8 @@ void main()
 	vec3 rel = normalize(vec3(Pos.xy-scrSpace,Pos.z-SurfaceNormal.a));
 
 	vec4 Col;
-	Col = clamp(dot(rel.xyz,SurfaceNormal.xyz),0.0f,1.0f)*LightColor*BaseCol;
-	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor*BaseCol;
+	Col = clamp(dot(rel.xyz,SurfaceNormal.xyz),0.0f,1.0f)*LightColor*clampedBase;
+	if(SurfaceNormal.x==0 && SurfaceNormal.y==0) Col=LightColor*clampedBase;
 	
 	float diffff = clamp((Pos.z - SurfaceNormal.a)* sizezdiv,0.0f,1.0f);
 	if(diffff >0.0f)

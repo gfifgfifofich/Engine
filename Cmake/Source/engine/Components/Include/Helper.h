@@ -22,6 +22,7 @@
 #include <string>
 #include <strstream>
 #include <vector>
+#include <map>
 
 
 #include <glm/glm.hpp>

@@ -48,6 +48,7 @@ int main()
 #include <string>
 #include <strstream>
 #include <vector>
+#include <map>
 
 
 #include <glm/glm.hpp>
@@ -178,6 +179,7 @@ glm::vec4 AmbientColor = glm::vec4(1.0f);
 #include "Include/Text.h"
 #include "Include/UI.h"
 
+#include "Include/SaveToFile.h";
 #include "Include/Objects/Bodies.h";
 #include "Include/Objects/Graph.h";
 #include "Include/Objects/Particle.h";
@@ -186,7 +188,6 @@ glm::vec4 AmbientColor = glm::vec4(1.0f);
 
 #include "Include/Objects/Scene.h";
 #include "Include/Objects/SoftBody.h";
-#include "Include/SaveToFile.h";
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);

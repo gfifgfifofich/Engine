@@ -602,7 +602,7 @@ void ParticleEmiter::_Process(int thr)
 	if (thr == 0)
 		begin =0;
 
-	if (thr == threadcount || threadcount == 1)
+	if (thr == threadcount -1 || threadcount == 1)
 		end =Particles.size() ;
 
 	for (int i = begin; i < end; i++)

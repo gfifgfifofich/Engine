@@ -1,6 +1,10 @@
 #pragma once
-#include "../Engine.h"
 
+#include <string>
+#include <strstream>
+#include <vector>
+#include <map>
+#include <glm/glm.hpp>
 class DataStorage
 {
 public:
@@ -34,4 +38,5 @@ public:
 
 	void Save(std::string filename);
 	void Load(std::string filename);
+	std::string ToString();
 };

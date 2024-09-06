@@ -1,4 +1,5 @@
 #include "../Include/SaveToFile.h"
+#include "../Engine.h"
 
 
 void DataStorage::AddObject(std::string ObjectName)
@@ -166,6 +167,30 @@ void DataStorage::Save(std::string filename)
 	}
 	File.close();
 }
+
+std::string DataStorage::ToString()
+{
+	std::string File = "";
+
+	for (auto i : data)
+	{
+		File += i.first;
+		File += "\n{";
+
+		for (auto p : i.second)
+		{
+			File += "\n	";
+			File += p.first;
+			File += " ";
+			File += p.second;
+			File += "";
+		}
+
+		File += "\n}\n";
+	}
+	return File;
+}
+
 void DataStorage::Load(std::string filename)
 {
 	data.clear();

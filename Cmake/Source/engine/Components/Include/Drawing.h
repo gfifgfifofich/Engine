@@ -5,7 +5,6 @@
 #include "Objects/Quad.h"
 #include "Objects/Polygon.h"
 
-#include <map>
 
 
 
@@ -66,8 +65,12 @@ CubeNormalMapTexture,
 NegativeNormalMapTexture,
 LightSphereTexture,
 
-//NeuralNetworks
-NNShader,
+///////Was moved into window class
+//Buffers
+//FrameBuffer, ColorBuffer,
+//NormalMapFBO, NormalMapColorBuffer,
+//LightColorFBO, LightColorBuffer,
+
 
 //VertexObjects
 quadVAO, quadVBO,
@@ -121,9 +124,9 @@ class Texture
 {
 public:
 	int id = 0;//meaningless number
-	std::string FileName;
+	std::string FileName = "";
 	int Type = 0;// 0-Texture, 1-ROUNDNOIZE, 2-SQUERENOIZE, 3-SMOOTH_EDGENOIZE;
-	unsigned int texture;
+	unsigned int texture = NULL;
 
 	float Noize_Frequency = 10;
 	int Noize_Layers = 3;
@@ -405,14 +408,6 @@ void DrawBall(ball b, glm::vec4 Color1 = glm::vec4(1.0f), glm::vec4 Color2 = glm
 
 void LoadTexture(const char* filename, unsigned int* texture, int chanelsAmount = 4);
 void LoadTextureFromData(unsigned int* texture, int width, int height, unsigned char* Data, int chanelsAmount = 4);
-void fLoadTextureFromData(unsigned int* texture, int width, int height, float* Data, int chanelsAmount);
-//returns NEW char[]
-char* readTexture(unsigned int texture, glm::ivec2 size, int channels = 1);
-//returns NEW float[]
-float* freadTexture(unsigned int texture, glm::ivec2 size, int channels = 1);
-//freadtexture, but providing buffer of correct size is on users side. can be just a vector.data()
-void freadTexture(float* buffer, unsigned int texture, glm::ivec2 size, int channels);
-
 void GenNoizeTexture(unsigned int* texture1, int Size, int Layers = 3, float freq = 10, int shape = ROUND);
 void GenPrimitiveTexture(unsigned int* texture1, int Size, int shape = ROUND,bool filter = 0);
 void GenNormalMapTexture(unsigned int* texture1, int Size, int shape = ROUND);

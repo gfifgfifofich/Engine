@@ -1,41 +1,101 @@
 #version 330 core
-out float FragValue;
-// will process one layer of nn, 
+in vec2 TexCoords;
+out vec4 FragValue;
+uniform int BallsCount = 1;
+uniform float delta = 0.017f;
+uniform float Radius = 5.0f;
+uniform vec2 force = vec2(0.0f);
 
-uniform int inSize = 10;// X
-uniform int outSize = 10;// X
-uniform int InstanceCount = 1;// X
-uniform int Func = 0; //Activation function of layer 
-
-uniform sampler2D weights; // [inSize][outSize];
-uniform sampler2D biases; // [outSize][1];
-uniform sampler2D data_in; // [inSize][InstanceCount]
-//uniform sampler2D data_out;// [outSize][InstanceCount] // this will be outputed wia FragValue
-
-float GetBias(int i)
+uniform sampler2D Balls; 
+float invbc = 0.1f; 
+float DOT(vec2 v1, vec2 v2)
 {
-	return texture(biases,vec2( (float(i+0.5f) / inSize),0.0f)).r;
+	return v1.x * v2.x + v1.y * v2.y;
+}
+float sqrlength(vec2 p)
+{
+	return (p.x*p.x + p.y*p.y);
 }
 
-float GetWeight(int i)
+vec4 GetBall(int i)
 {
-	return texture(weights,vec2( (float(i+0.5f) / inSize),(gl_FragCoord.x / outSize) )).r;
+	return texture(Balls,vec2( (float(i+0.2f) * invbc),0.0f));
 }
 
-float GetIn(int i)
-{
-	return texture(data_in,vec2( (float(i+0.5f) / inSize), (gl_FragCoord.y / InstanceCount))).r;
-}
 
-float Run()
+vec4 Run()
 {
-	float sum = GetBias(int(gl_FragCoord.x));
+	
 
-	for(int i=0;i<inSize;i++)
+	invbc = 1.0f / BallsCount;
+	vec4 b1 = texture(Balls, TexCoords);
+	vec4 buff = b1;
+	for(int i=0;i<BallsCount;i++)
 	{
-		sum += GetWeight(i) * GetIn(i);
+		vec4 b2 = GetBall(i);
+		vec2 dif = vec2(b2.x - buff.x,b2.y - buff.y);
+		if ((dif.x * dif.x + dif.y * dif.y) < (Radius + Radius) * (Radius + Radius))
+		{
+
+
+			float dist = length(dif);
+			float distancedifference = (Radius + Radius) - dist;
+			if(sqrlength(buff.xy - b2.xy)< 0.001f)
+				continue;
+			if(dist<0.00000001f)
+			{
+				//b1.xy += vec2(TexCoords); 
+				continue;
+			}
+
+			vec2 n2 = dif/dist;
+			vec2 n1 = -n2;
+			vec2 CollisionLine = vec2(-n1.y, n1.x);
+
+
+
+			float energy1 = DOT(buff.zw, n2);
+			float energy2 = DOT(b2.zw, n2);
+
+
+			b1.xy = b1.xy + n1.xy * distancedifference * 0.5f;
+			b1.zw -= n1 * energy2 + n2 * energy1;
+		}
+
 	}
-	return sum;
+
+	float roughness = 0.5f;
+
+	if(b1.x>2000.0f)
+	{
+		b1.x = 2000.0f;
+		b1.z *= -roughness;
+		b1.w *= roughness;
+	}
+	if(b1.x<0.0f)
+	{
+		b1.x = 0.0f;
+		b1.z *= -roughness;
+		b1.w *= roughness;
+	}
+	if(b1.y>2000.0f)
+	{
+		b1.y = 2000.0f;
+		b1.w *= -roughness;
+		b1.z *= roughness;
+	}
+	if(b1.y<10.0f)
+	{
+		b1.y = 10.0f;
+		b1.w *= -roughness;
+		b1.z *= roughness;
+	}
+	b1.z += force.x * delta;  // velocity += force
+	b1.w += force.y * delta;  // velocity += force
+	b1.x += b1.z * delta;//pos+=velocity
+	b1.y += b1.w * delta;//pos+=velocity
+	return b1;
+
 }
 
 void main()
